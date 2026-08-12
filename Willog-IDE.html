@@ -111,7 +111,7 @@
     background: transparent;
   }
   textarea::placeholder { color: #6a6a6a; }
-  textarea::selection { background: rgba(38, 79, 120, .9); }
+  textarea::selection { background: #0e639c; color: #fff; }
 
   .h-keyword  { color: #569cd6; }
   .h-function { color: #dcdcaa; }
@@ -186,19 +186,32 @@
     min-height: 0;
     border-left: 1px solid #3c3c3c;
   }
+  .console-wrap { flex: 1; display: flex; flex-direction: row; min-height: 0; min-width: 0; }
+  .console-gutter {
+    flex: 0 0 auto;
+    width: 44px;
+    overflow: hidden;
+    background: #1e1e1e;
+    border-right: 1px solid #3c3c3c;
+    color: #6a6a6a;
+    font: 12px/21px Consolas, 'Courier New', monospace;
+    padding: 8px 6px 8px 8px;
+    text-align: right;
+    user-select: none;
+  }
   .console {
     flex: 1;
+    min-width: 0;
     background: #1e1e1e;
-    overflow-y: auto;
+    overflow: auto;
     padding: 8px 12px;
     font: 14px/21px Consolas, 'Courier New', monospace;
   }
   .console .placeholder { color: #6a6a6a; font-style: italic; }
-  .console .log { padding: 1px 0; white-space: pre-wrap; word-break: break-word; }
+  .console .log { padding: 0; white-space: pre; }
   .console .log.assign { color: #8a8a8a; }
   .console .log.error { color: #f48771; }
   .console .log.info { color: #4fc3f7; }
-  .console .log .ln { color: #6a6a6a; font-size: 11px; background: #2d2d2d; border-radius: 3px; padding: 0 5px; margin-right: 8px; }
 
   .statusbar {
     flex: 0 0 auto;
@@ -380,7 +393,7 @@
     border-radius: 6px;
     width: 100%;
     flex: 1 1 auto;
-    min-height: 220px;
+    min-height: 0;
     display: block;
     cursor: grab;
     touch-action: none;
@@ -580,43 +593,6 @@
     padding: 1px 7px;
   }
 
-  /* ===== Janela de tradução para Python ===== */
-  .py-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden; }
-  .py-output {
-    font-family: Consolas, 'Courier New', monospace;
-    font-size: 13px;
-    line-height: 1.55;
-    background: #1a1a1a;
-    border: 1px solid #3c3c3c;
-    border-left: 3px solid #4fc3f7;
-    border-radius: 6px;
-    padding: 12px 14px;
-    margin: 0;
-    color: #d4d4d4;
-    white-space: pre;
-    overflow: auto;
-    flex: 1;
-    min-height: 320px;
-    max-height: 60vh;
-  }
-  #pyOverlay .modal { width: 780px; }
-  .py-actions { display: flex; gap: 8px; flex: 0 0 auto; }
-  .py-warnings {
-    color: #e0a35c;
-    font-size: 12px;
-    line-height: 1.5;
-    background: rgba(224, 163, 92, .08);
-    border: 1px solid rgba(224, 163, 92, .25);
-    border-radius: 6px;
-    padding: 8px 12px;
-    white-space: pre-wrap;
-    flex: 0 0 auto;
-    max-height: 130px;
-    overflow-y: auto;
-    display: none;
-  }
-  body.light .py-output { background: #fafafa; border-color: #d8d8d8; border-left-color: #0078d4; color: #1f1f1f; }
-  body.light .py-warnings { color: #9a6700; background: rgba(0, 120, 212, .05); border-color: rgba(0, 120, 212, .2); }
 
   /* ===== Sobre o Willog ===== */
   #sobreOverlay .modal { width: 460px; }
@@ -634,6 +610,82 @@
   .sobre-author { font-size: 16px; font-weight: 700; color: #4fc3f7; }
   body.light .sobre-text { color: #333; }
   body.light .sobre-author { color: #0078d4; }
+
+  /* ===== Referência rápida ===== */
+  #quickRefOverlay .modal { width: 620px; }
+  .quickref-body { padding: 12px 14px; }
+  .quickref-search {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 7px 10px;
+    border: 1px solid #3c3c3c;
+    border-radius: 6px;
+    background: #1e1e1e;
+    color: #e0e0e0;
+    font-size: 13px;
+    outline: none;
+    margin-bottom: 10px;
+  }
+  .quickref-search:focus { border-color: #0078d4; }
+  .quickref-list { display: flex; flex-direction: column; }
+  .quickref-item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 7px 10px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: #c8c8c8;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    font-size: 13px;
+  }
+  .quickref-item:hover { background: #2d2d2d; border-color: #3c3c3c; }
+  .quickref-item .q-name { font-family: Consolas, 'Courier New', monospace; color: #4fc3f7; font-weight: 600; }
+  .quickref-item .q-tag { font-size: 10px; color: #6a9955; text-transform: uppercase; letter-spacing: .4px; }
+  .quickref-item .q-desc { color: #8a8a8a; font-size: 12px; flex: 1; min-width: 0; }
+  .quickref-item .q-chev { color: #6a6a6a; font-size: 11px; transition: transform .15s; }
+  .quickref-item.open .q-chev { transform: rotate(90deg); }
+  .quickref-example {
+    display: none;
+    margin: 0 10px 10px 10px;
+    padding: 10px 12px;
+    background: #1e1e1e;
+    border: 1px solid #3c3c3c;
+    border-left: 3px solid #0078d4;
+    border-radius: 6px;
+  }
+  .quickref-item.open + .quickref-example { display: block; }
+  .quickref-example pre {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #dcdcaa;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .quickref-example .qr-actions { margin-top: 8px; }
+  .quickref-example button {
+    background: #0e639c;
+    border: 1px solid #1177bb;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .quickref-example button:hover { background: #1177bb; }
+  .quickref-empty { color: #8a8a8a; padding: 12px; text-align: center; font-size: 13px; }
+  body.light .quickref-search { background: #fff; border-color: #d8d8d8; color: #1f1f1f; }
+  body.light .quickref-item { color: #333; }
+  body.light .quickref-item:hover { background: #f0f0f0; border-color: #e0e0e0; }
+  body.light .quickref-item .q-name { color: #0078d4; }
+  body.light .quickref-item .q-tag { color: #008000; }
+  body.light .quickref-item .q-desc { color: #666; }
+  body.light .quickref-example { background: #fafafa; border-color: #e0e0e0; border-left-color: #0078d4; }
+  body.light .quickref-example pre { color: #333; }
 
   /* ===== Modo claro ===== */
   body.light {
@@ -661,11 +713,11 @@
   body.light .h-comment { color: #008000; }
   body.light .h-identifier, body.light .h-op { color: #1f1f1f; }
   body.light .console { background: #ffffff; }
+  body.light .console-gutter { background: #ffffff; border-right-color: #e0e0e0; color: #999; }
   body.light .console .placeholder { color: #999; }
   body.light .console .log.assign { color: #666; }
   body.light .console .log.error { color: #d13438; }
   body.light .console .log.info { color: #0078d4; }
-  body.light .console .log .ln { color: #888; background: #eee; }
   body.light .console-panel { border-left-color: #d8d8d8; }
   body.light .modal { background: #ffffff; border-color: #c8c8c8; }
   body.light .modal-head { background: #f3f3f3; border-color: #d8d8d8; }
@@ -731,9 +783,9 @@
   <button id="btnClear">Limpar Editor</button>
   <button id="btnSave">Salvar (.wil)</button>
   <button id="btnLoad">Carregar</button>
-  <button id="btnToPython" title="Traduz o código do editor para Python">&#8644; Python</button>
   <span class="spacer"></span>
   <button id="btnManual">Manual</button>
+  <button id="btnQuickRef">Refer&ecirc;ncia r&aacute;pida</button>
   <button id="btnClearConsole">Limpar</button>
   <button id="btnTheme">Modo Claro</button>
   <button id="btnFullscreen">Tela Cheia</button>
@@ -760,8 +812,11 @@
         <span class="dot" id="runStatus"></span>
       </span>
     </div>
-    <div class="console" id="console">
-      <div class="placeholder">Pressione Executar para ver a saída do programa.</div>
+    <div class="console-wrap">
+      <div class="console-gutter" id="consoleGutter"></div>
+      <div class="console" id="console">
+        <div class="placeholder">Pressione Executar para ver a sa&iacute;da do programa.</div>
+      </div>
     </div>
   </div>
 </main>
@@ -877,14 +932,14 @@
       </div>
 
       <div class="manual-item">
-        <span class="mi-name">sen&atilde;o | sen&atilde;o:</span>
+        <span class="mi-name">sen&atilde;o:</span>
         <span class="mi-desc">Executa um bloco quando a condi&ccedil;&atilde;o do <code>se</code> for falsa.</span>
         <button class="tab-jump" data-tab="panel-condicionais">ver na aba Condicionais &rarr;</button>
       </div>
 
       <div class="manual-item">
         <span class="mi-name">para cada &lt;vari&aacute;vel&gt; em &lt;cole&ccedil;&atilde;o&gt;:</span>
-        <span class="mi-desc">Repete o bloco indentado para cada item da cole&ccedil;&atilde;o.</span>
+        <span class="mi-desc">Repete o bloco indentado para cada item da cole&ccedil;&atilde;o. O "cada" &eacute; opcional: <code>para &lt;vari&aacute;vel&gt; em &lt;cole&ccedil;&atilde;o&gt;:</code> funciona igual.</span>
         <button class="tab-jump" data-tab="panel-lacos">ver na aba La&ccedil;os &rarr;</button>
       </div>
 
@@ -903,20 +958,20 @@
     </div>
     <div class="manual-panel" id="panel-condicionais">
 
-      <div class="manual-note">Os blocos do <code>se</code> e do <code>sen&atilde;o</code> s&atilde;o delimitados pela <b>indenta&ccedil;&atilde;o</b>.</div>
+      <div class="manual-note">Os blocos do <code>se</code> e do <code>sen&atilde;o:</code> s&atilde;o delimitados pela <b>indenta&ccedil;&atilde;o</b>.</div>
 
       <div class="mi-section"><span class="ms-icon">&#9670;</span><h4>Estrutura Condicional</h4></div>
 
       <div class="manual-item">
-        <span class="mi-name">se / sen&atilde;o</span>
-        <span class="mi-desc">Executa o bloco indentado se a condi&ccedil;&atilde;o for verdadeira; o <code>sen&atilde;o</code> (ou <code>sen&atilde;o:</code>) roda quando for falsa.</span>
+        <span class="mi-name">se / sen&atilde;o:</span>
+        <span class="mi-desc">Executa o bloco indentado se a condi&ccedil;&atilde;o for verdadeira; o <code>sen&atilde;o:</code> roda quando for falsa.</span>
         <div class="mi-example">
           <pre class="manual-pre">a = 10
 b = 3
 se a > b:
-    mostre "a é maior que b"
-    senão:
-    mostre "b é maior que a"</pre>
+  mostre "a é maior que b"
+senão:
+  mostre "b é maior que a"</pre>
           <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">a é maior que b</span></span>
         </div>
       </div>
@@ -944,7 +999,7 @@ se a > b:
     </div>
     <div class="manual-panel" id="panel-lacos">
 
-      <div class="manual-note">Todos os la&ccedil;os usam <b>indenta&ccedil;&atilde;o</b> para delimitar o bloco repetido. <code>para cada &lt;vari&aacute;vel&gt; em &lt;cole&ccedil;&atilde;o&gt;:</code> percorre os itens; <code>repita(&lt;quantidade&gt;):</code> repete n vezes; <code>enquanto &lt;condi&ccedil;&atilde;o&gt;:</code> repete enquanto a condi&ccedil;&atilde;o for verdadeira.</div>
+      <div class="manual-note">Todos os la&ccedil;os usam <b>indenta&ccedil;&atilde;o</b> para delimitar o bloco repetido. <code>para cada &lt;vari&aacute;vel&gt; em &lt;cole&ccedil;&atilde;o&gt;:</code> (ou apenas <code>para &lt;vari&aacute;vel&gt; em &lt;cole&ccedil;&atilde;o&gt;:</code>) percorre os itens; <code>repita(&lt;quantidade&gt;):</code> repete n vezes; <code>enquanto &lt;condi&ccedil;&atilde;o&gt;:</code> repete enquanto a condi&ccedil;&atilde;o for verdadeira.</div>
 
       <div class="mi-section"><span class="ms-icon">&#8635;</span><h4>La&ccedil;os</h4></div>
 
@@ -982,6 +1037,9 @@ enquanto n &lt;= 5:
           <pre class="manual-pre">para cada item em (1,10,3):
     mostre item</pre>
           <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,4,7,10</span></span>
+          <pre class="manual-pre">para x em (1,10):   # "para cada" e&acute; opcional
+    mostre x</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,5,6,7,8,9,10</span></span>
         </div>
       </div>
 
@@ -1479,6 +1537,23 @@ para cada numero em lista:
         </div>
       </div>
 
+      <div class="manual-item">
+        <span class="mi-name">subconjuntos(A)</span>
+        <span class="mi-desc">Lista todos os subconjuntos de A, numerados de 1 a 2^n.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>A := {1,2,3}</span></span>
+          <span class="mi-row"><span>mostre subconjuntos(A)</span><span class="mi-arrow">&rarr;</span></span>
+          <span class="mi-row"><span class="ex">A(1):={}</span></span>
+          <span class="mi-row"><span class="ex">A(2):={1}</span></span>
+          <span class="mi-row"><span class="ex">A(3):={2}</span></span>
+          <span class="mi-row"><span class="ex">A(4):={3}</span></span>
+          <span class="mi-row"><span class="ex">A(5):={1,2}</span></span>
+          <span class="mi-row"><span class="ex">A(6):={1,3}</span></span>
+          <span class="mi-row"><span class="ex">A(7):={2,3}</span></span>
+          <span class="mi-row"><span class="ex">A(8):={1,2,3}</span></span>
+        </div>
+      </div>
+
       <div class="mi-section"><span class="ms-icon">&#8644;</span><h4>Itera&ccedil;&atilde;o e Convers&atilde;o</h4></div>
 
       <div class="manual-item">
@@ -1557,7 +1632,7 @@ para cada item em A:
         <button class="plot-zoom-btn" id="plotZoomIn" title="Aumentar zoom (Zoom+)" aria-label="Aumentar zoom">+</button>
         <button class="plot-zoom-btn" id="plotZoomReset" title="Redefinir zoom" aria-label="Redefinir zoom">&#8635;</button>
       </div>
-      <canvas id="plotCanvas"></canvas>
+      <canvas id="plotCanvas" class="plot-canvas"></canvas>
       <div class="plot-info" id="plotInfo"></div>
     </div>
   </div>
@@ -1575,23 +1650,6 @@ para cada item em A:
   </div>
 </div>
 
-<div class="modal-overlay" id="pyOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h2>Tradu&ccedil;&atilde;o para Python</h2>
-      <button class="modal-close" id="pyClose" title="Fechar">&times;</button>
-    </div>
-    <div class="modal-body py-body">
-      <pre class="py-output" id="pyOutput"></pre>
-      <div class="py-warnings" id="pyWarnings"></div>
-      <div class="py-actions">
-        <button id="pyCopy" class="primary">Copiar</button>
-        <button id="pyDownload">Baixar (.py)</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="modal-overlay" id="sobreOverlay">
   <div class="modal sobre-modal">
     <div class="modal-head">
@@ -1603,6 +1661,20 @@ para cada item em A:
       <div class="sobre-text">Desenvolvido por:</div>
       <div class="sobre-author">Wilson Jos&eacute; Andriolli Junior</div>
       <div class="sobre-text">2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="quickRefOverlay">
+  <div class="modal quickref-modal">
+    <div class="modal-head">
+      <h2>Refer&ecirc;ncia r&aacute;pida &mdash; Willog</h2>
+      <button class="modal-close" id="quickRefClose" title="Fechar">&times;</button>
+    </div>
+    <div class="modal-body quickref-body">
+      <input type="text" id="quickRefSearch" class="quickref-search" placeholder="Filtrar comandos e fun&ccedil;&otilde;es..." />
+      <div class="quickref-list" id="quickRefList"></div>
+      <div class="quickref-empty" id="quickRefEmpty" style="display:none">Nenhum comando ou fun&ccedil;&atilde;o encontrado.</div>
     </div>
   </div>
 </div>
@@ -1710,17 +1782,25 @@ function janelaCor(v, padrao) {
   if (!hex) throw new Error('cor desconhecida "' + v + '"');
   return hex;
 }
-function callFunction(name, args) {
+function callFunction(name, args, rawName) {
   function nv(i) { return numVal(args[i]); }
+  function elwise(arg, fn) {
+    if (Array.isArray(arg)) return arg.map(function (e) { return elwise(e, fn); });
+    return fn(numVal(arg));
+  }
   if (name === 'raizq') {
     if (args.length !== 1) throw new Error('raizq espera 1 argumento');
-    var r = Math.sqrt(nv(0));
-    return mkNum(r, r % 1 !== 0);
+    return elwise(args[0], function (v) {
+      var r = Math.sqrt(v);
+      return mkNum(r, r % 1 !== 0);
+    });
   }
   if (name === 'raizc') {
     if (args.length !== 1) throw new Error('raizc espera 1 argumento');
-    var r = Math.cbrt(nv(0));
-    return mkNum(r, r % 1 !== 0);
+    return elwise(args[0], function (v) {
+      var r = Math.cbrt(v);
+      return mkNum(r, r % 1 !== 0);
+    });
   }
   if (name === 'pi') {
     if (args.length === 0) return mkNum(Number(Math.PI.toFixed(2)), false);
@@ -1729,37 +1809,47 @@ function callFunction(name, args) {
   }
   if (name === 'cos') {
     if (args.length !== 1) throw new Error('cos espera 1 argumento');
-    var r = Math.cos(nv(0) * (GRAUS_MODE ? Math.PI / 180 : 1));
-    return mkNum(r, r % 1 !== 0);
+    return elwise(args[0], function (v) {
+      var r = Math.cos(v * (GRAUS_MODE ? Math.PI / 180 : 1));
+      return mkNum(r, r % 1 !== 0);
+    });
   }
   if (name === 'sen') {
     if (args.length !== 1) throw new Error('sen espera 1 argumento');
-    var r = Math.sin(nv(0) * (GRAUS_MODE ? Math.PI / 180 : 1));
-    return mkNum(r, r % 1 !== 0);
+    return elwise(args[0], function (v) {
+      var r = Math.sin(v * (GRAUS_MODE ? Math.PI / 180 : 1));
+      return mkNum(r, r % 1 !== 0);
+    });
   }
   if (name === 'tan') {
     if (args.length !== 1) throw new Error('tan espera 1 argumento');
-    var r = Math.tan(nv(0) * (GRAUS_MODE ? Math.PI / 180 : 1));
-    return mkNum(r, r % 1 !== 0);
+    return elwise(args[0], function (v) {
+      var r = Math.tan(v * (GRAUS_MODE ? Math.PI / 180 : 1));
+      return mkNum(r, r % 1 !== 0);
+    });
   }
   if (name === 'arcocos') {
     if (args.length !== 1) throw new Error('arcocos espera 1 argumento');
-    var ac = nv(0);
-    if (ac < -1 || ac > 1) throw new Error('arcocos espera um número entre -1 e 1');
-    var r = Math.acos(ac) * (GRAUS_MODE ? 180 / Math.PI : 1);
-    return mkNum(r, r % 1 !== 0);
+    return elwise(args[0], function (v) {
+      if (v < -1 || v > 1) throw new Error('arcocos espera um número entre -1 e 1');
+      var r = Math.acos(v) * (GRAUS_MODE ? 180 / Math.PI : 1);
+      return mkNum(r, r % 1 !== 0);
+    });
   }
   if (name === 'arcosen') {
     if (args.length !== 1) throw new Error('arcosen espera 1 argumento');
-    var as = nv(0);
-    if (as < -1 || as > 1) throw new Error('arcosen espera um número entre -1 e 1');
-    var r = Math.asin(as) * (GRAUS_MODE ? 180 / Math.PI : 1);
-    return mkNum(r, r % 1 !== 0);
+    return elwise(args[0], function (v) {
+      if (v < -1 || v > 1) throw new Error('arcosen espera um número entre -1 e 1');
+      var r = Math.asin(v) * (GRAUS_MODE ? 180 / Math.PI : 1);
+      return mkNum(r, r % 1 !== 0);
+    });
   }
   if (name === 'arcotan') {
     if (args.length !== 1) throw new Error('arcotan espera 1 argumento');
-    var r = Math.atan(nv(0)) * (GRAUS_MODE ? 180 / Math.PI : 1);
-    return mkNum(r, r % 1 !== 0);
+    return elwise(args[0], function (v) {
+      var r = Math.atan(v) * (GRAUS_MODE ? 180 / Math.PI : 1);
+      return mkNum(r, r % 1 !== 0);
+    });
   }
   if (name === 'média') {
     if (args.length === 0) throw new Error('média espera ao menos 1 argumento');
@@ -1844,10 +1934,10 @@ function callFunction(name, args) {
         if (primes[p] * primes[p] > candidate) break;
         if (candidate % primes[p] === 0) { prime = false; break; }
       }
-      if (prime) primes.push(mkNum(candidate, false));
+      if (prime) primes.push(candidate);
       candidate++;
     }
-    return primes;
+    return primes.map(function (pv) { return mkNum(pv, false); });
   }
   if (name === 'fibonacci' || name === 'fibo') {
     if (args.length !== 1) throw new Error(name + ' espera 1 argumento');
@@ -1913,6 +2003,10 @@ function callFunction(name, args) {
   if (name === 'menos') {
     if (args.length !== 2) throw new Error('menos espera 2 conjuntos');
     return setDifference(asSet(args[0], 'menos'), asSet(args[1], 'menos'));
+  }
+  if (name === 'subconjuntos') {
+    if (args.length !== 1) throw new Error('subconjuntos espera 1 argumento');
+    return formatSubconjuntos(args[0], rawName || 'S');
   }
   if (name === 'paraLista') {
     if (args.length !== 1) throw new Error('paraLista espera 1 argumento');
@@ -3274,6 +3368,26 @@ function parse(input, env) {
             GRAUS_MODE = prevMode;
           }
         }
+        if (t.name === 'subconjuntos') {
+          var sparts = [];
+          var sdepth = 0;
+          while (true) {
+            var spt = peek();
+            if (!spt) throw new Error('Parêntese não fechado em subconjuntos');
+            if (isOp(spt) && spt.text === '(') sdepth++;
+            if (isOp(spt) && spt.text === ')') {
+              if (sdepth === 0) break;
+              sdepth--;
+            }
+            sparts.push(spt.src);
+            next();
+          }
+          expectOp(')');
+          var ssrc = sparts.join('');
+          var sval = parse(ssrc, env);
+          var snm = ssrc.trim().match(/^[A-Za-z_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF][A-Za-z0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]*$/);
+          return callFunction('subconjuntos', [sval], snm ? snm[0] : 'S');
+        }
         var args = [];
         if (!(isOp(peek()) && peek().text === ')')) {
           while (true) {
@@ -3747,6 +3861,31 @@ function formatTabela(xs, ys) {
   return lines.join('\n');
 }
 
+function formatSubconjuntos(setVal, name) {
+  var elems = asSet(setVal, 'subconjuntos');
+  var n = elems.length;
+  if (n > 20) throw new Error('subconjuntos: conjunto muito grande (2^' + n + ' subconjuntos)');
+  var lines = [];
+  var num = 1;
+  for (var k = 0; k <= n; k++) {
+    var combo = [];
+    (function gen(start) {
+      if (combo.length === k) {
+        var sub = [];
+        for (var c = 0; c < combo.length; c++) sub.push(elems[combo[c]]);
+        lines.push(name + '(' + (num++) + '):=' + formatValue(makeSet(sub)));
+        return;
+      }
+      for (var i = start; i < n; i++) {
+        combo.push(i);
+        gen(i + 1);
+        combo.pop();
+      }
+    })(0);
+  }
+  return lines.join('\n');
+}
+
 function formatValue(v) {
   if (typeof v === 'string') return v;
   if (typeof v === 'boolean') return v ? 'verdadeiro' : 'falso';
@@ -3835,8 +3974,8 @@ function toStatements(code) {
 }
 
 function isSe(text) { return /^se\b/.test(text); }
-function isSenao(text) { return /^(sen[ãâ]o|senao)\b/.test(text); }
-function isParaCada(text) { return /^para cada\b/.test(text); }
+function isSenao(text) { return /^(sen[ãâ]o|senao)\s*:\s*$/.test(text); }
+function isParaCada(text) { return /^para\b/.test(text); }
 function isRepita(text) { return /^repita\b/.test(text); }
 function isEnquanto(text) { return /^enquanto\b/.test(text); }
 
@@ -3853,10 +3992,10 @@ function extractEnquanto(text) {
 }
 
 function extractParaCada(text) {
-  var rest = text.replace(/^para cada\b/, '').trim();
+  var rest = text.replace(/^para(?:\s+cada)?\b/, '').trim();
   rest = rest.replace(/:+\s*$/, '').trim();
   var m = rest.match(/^([A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF_][A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF_]*)\s+em\s+(.+)$/);
-  if (!m) throw new Error('Sintaxe inválida: use "para cada <variável> em <expressão>:"');
+  if (!m) throw new Error('Sintaxe inválida: use "para <variável> em <expressão>:" ou "para cada <variável> em <expressão>:"');
   return { varName: m[1], expr: m[2].trim() };
 }
 
@@ -4072,7 +4211,10 @@ function execStatement(line, lineNo, env, out) {
             } else if (/^(janela|ponto|linha|círculo)\s*\(/.test(line)) {
               parse(line, env);
             } else {
-              out.push({ kind: 'return', text: formatValue(parse(line, env)), lineNo: lineNo });
+              var exprVal = parse(line, env);
+              if (exprVal !== undefined) {
+                out.push({ kind: 'return', text: formatValue(exprVal), lineNo: lineNo });
+              }
             }
           }
         }
@@ -4193,668 +4335,6 @@ function executeProgram(code) {
 }
 
 // ============================================================
-//  TRADUTOR WILLOG → PYTHON
-// ============================================================
-
-var PY_FLAGS = {
-  math: false, random: false, statistics: false, os: false, plt: false,
-  wleia: false, wraizc: false, wprimos: false, wfibonacci: false,
-  westat: false, wtabela: false, wfracao: false, wparalista: false
-};
-
-var PY_USER_FUNCS = {};
-var PY_WARNINGS = [];
-
-function pyNeed(k) { PY_FLAGS[k] = true; }
-
-function pySimple(s) {
-  return /^(?:-?\d+(?:\.\d+)?|(?:[A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*\.)*[A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*(?:\(.*\)|\[.*\])?|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\(.*\)|\[.*\]|\{.*\})$/.test(s);
-}
-function pyMaybeParen(s) { return pySimple(s) ? s : '(' + s + ')'; }
-
-function pyStringLiteral(v) {
-  var out = '"';
-  for (var i = 0; i < v.length; i++) {
-    var ch = v[i];
-    if (ch === '\n') out += '\\n';
-    else if (ch === '\t') out += '\\t';
-    else if (ch === '\\') out += '\\\\';
-    else if (ch === '"') out += '\\"';
-    else out += ch;
-  }
-  return out + '"';
-}
-
-function pyInterpString(raw) {
-  var out = 'f"';
-  var i = 0, n = raw.length;
-  while (i < n) {
-    var ch = raw[i];
-    if (ch === '\\' && i + 1 < n) {
-      out += '\\' + raw[i + 1];
-      i += 2;
-      continue;
-    }
-    if (ch === '{') {
-      var k = i + 1, depth = 1, quote = null, close = -1;
-      while (k < n) {
-        var ck = raw[k];
-        if (quote) {
-          if (ck === '\\') { k += 2; continue; }
-          if (ck === quote) quote = null;
-          k++;
-          continue;
-        }
-        if (ck === '"' || ck === "'") { quote = ck; k++; continue; }
-        if (ck === '{') { depth++; k++; continue; }
-        if (ck === '}') { depth--; if (depth === 0) { close = k; break; } k++; continue; }
-        k++;
-      }
-      if (close === -1) { out += '{{'; i++; continue; }
-      var exprTxt = raw.slice(i + 1, close);
-      var pyExprTxt = '';
-      try { pyExprTxt = translateExpr(exprTxt, {}); }
-      catch (e) { pyExprTxt = exprTxt; }
-      out += '{' + pyExprTxt + '}';
-      i = close + 1;
-      continue;
-    }
-    if (ch === '}') { out += '}}'; i++; continue; }
-    out += ch;
-    i++;
-  }
-  return out + '"';
-}
-
-function pyRange(elems, opts) {
-  var rng;
-  if (elems.length === 3) {
-    var dir = /^\s*-/.test(elems[2]) ? -1 : 1;
-    var stop = dir < 0
-      ? '(' + pyMaybeParen(elems[1]) + ' - 1)'
-      : '(' + pyMaybeParen(elems[1]) + ' + 1)';
-    rng = 'range(' + pyMaybeParen(elems[0]) + ', ' + stop + ', ' + pyMaybeParen(elems[2]) + ')';
-  } else {
-    rng = 'range(' + pyMaybeParen(elems[0]) + ', (' + pyMaybeParen(elems[1]) + ' + 1))';
-  }
-  return (opts && opts.rangeAsList === false) ? rng : 'list(' + rng + ')';
-}
-
-var PY_BUILTIN_NAMES = ['raizq', 'raizc', 'pi', 'média', 'primos', 'fibonacci', 'fibo', 'inteiro', 'decimal',
-  'fração', 'união', 'intersecção', 'menos', 'paraLista', 'paraTexto', 'paraNúmero', 'paraNumero',
-  'inversa', 'transposta', 'determinante', 'plotar', 'tabela', 'cos', 'sen', 'tan', 'arcocos', 'arcosen',
-  'arcotan', 'aleatório', 'aleatorio', 'estatísticas', 'janela', 'ponto', 'linha', 'círculo'];
-
-function pyGrausTrig(fn, arg, opts) {
-  var inner = (opts && opts.graus) ? 'math.radians(' + pyMaybeParen(arg) + ')' : pyMaybeParen(arg);
-  return fn + '(' + inner + ')';
-}
-
-function pyCall(name, args, opts) {
-  var a = function (i) { return args[i]; };
-  if (name === 'raizq') { pyNeed('math'); return 'math.sqrt(' + pyMaybeParen(a(0)) + ')'; }
-  if (name === 'raizc') { pyNeed('math'); pyNeed('wraizc'); return 'w_raizc(' + pyMaybeParen(a(0)) + ')'; }
-  if (name === 'pi') {
-    pyNeed('math');
-    return args.length === 0 ? 'math.pi' : 'round(math.pi, ' + pyMaybeParen(a(0)) + ')';
-  }
-  if (name === 'sen') { pyNeed('math'); return pyGrausTrig('math.sin', a(0), opts); }
-  if (name === 'cos') { pyNeed('math'); return pyGrausTrig('math.cos', a(0), opts); }
-  if (name === 'tan') { pyNeed('math'); return pyGrausTrig('math.tan', a(0), opts); }
-  if (name === 'arcosen') {
-    pyNeed('math');
-    var as = 'math.asin(' + pyMaybeParen(a(0)) + ')';
-    return (opts && opts.graus) ? 'math.degrees(' + as + ')' : as;
-  }
-  if (name === 'arcocos') {
-    pyNeed('math');
-    var ac = 'math.acos(' + pyMaybeParen(a(0)) + ')';
-    return (opts && opts.graus) ? 'math.degrees(' + ac + ')' : ac;
-  }
-  if (name === 'arcotan') {
-    pyNeed('math');
-    var at = 'math.atan(' + pyMaybeParen(a(0)) + ')';
-    return (opts && opts.graus) ? 'math.degrees(' + at + ')' : at;
-  }
-  if (name === 'média') {
-    pyNeed('statistics');
-    return 'statistics.mean([' + args.join(', ') + '])';
-  }
-  if (name === 'inteiro') return 'int(' + pyMaybeParen(a(0)) + ')';
-  if (name === 'decimal') {
-    var dv = pyMaybeParen(a(0));
-    return '(' + dv + ' - int(' + dv + '))';
-  }
-  if (name === 'fração') { pyNeed('wfracao'); return 'w_fracao(' + pyMaybeParen(a(0)) + ')'; }
-  if (name === 'aleatório' || name === 'aleatorio') {
-    pyNeed('random');
-    return 'random.randint(' + pyMaybeParen(a(0)) + ', ' + pyMaybeParen(a(1)) + ')';
-  }
-  if (name === 'primos') { pyNeed('wprimos'); return 'w_primos(' + pyMaybeParen(a(0)) + ')'; }
-  if (name === 'fibonacci' || name === 'fibo') { pyNeed('wfibonacci'); return 'w_fibonacci(' + pyMaybeParen(a(0)) + ')'; }
-  if (name === 'união') {
-    var us = 'set(' + pyMaybeParen(a(0)) + ')';
-    for (var ui = 1; ui < args.length; ui++) us += ' | set(' + pyMaybeParen(a(ui)) + ')';
-    return us;
-  }
-  if (name === 'intersecção') {
-    var ise = 'set(' + pyMaybeParen(a(0)) + ')';
-    for (var ii = 1; ii < args.length; ii++) ise += ' & set(' + pyMaybeParen(a(ii)) + ')';
-    return ise;
-  }
-  if (name === 'menos') return 'set(' + pyMaybeParen(a(0)) + ') - set(' + pyMaybeParen(a(1)) + ')';
-  if (name === 'paraLista') { pyNeed('wparalista'); return 'w_paralista(' + pyMaybeParen(a(0)) + ')'; }
-  if (name === 'paraTexto') return 'str(' + pyMaybeParen(a(0)) + ')';
-  if (name === 'paraNúmero' || name === 'paraNumero') return 'float(' + pyMaybeParen(a(0)) + ')';
-  if (name === 'tabela') { pyNeed('wtabela'); return 'w_tabela(' + pyMaybeParen(a(0)) + ', ' + pyMaybeParen(a(1)) + ')'; }
-  if (name === 'estatísticas') { pyNeed('westat'); return 'w_estatisticas(' + args.join(', ') + ')'; }
-  if (name === 'plotar') {
-    pyNeed('plt');
-    PY_WARNINGS.push('plotar(Y, X): no Willog o primeiro argumento é o eixo Y');
-    return 'plt.plot(' + pyMaybeParen(a(1)) + ', ' + pyMaybeParen(a(0)) + ')';
-  }
-  if (name === 'janela' || name === 'ponto' || name === 'linha' || name === 'círculo') {
-    PY_WARNINGS.push(name + '(...) não é traduzido (gráficos de janela)');
-    return 'None  # ' + name + '(...) não traduzido';
-  }
-  if (name === 'inversa' || name === 'transposta' || name === 'determinante') {
-    PY_WARNINGS.push(name + '(...) requer numpy — não traduzido');
-    return 'None  # ' + name + '(...) requer numpy';
-  }
-  if (args.length !== 1) {
-    PY_WARNINGS.push(name + '(...) não reconhecido como função');
-    return 'None  # ' + name + '(...)';
-  }
-  return name + '[' + pyMaybeParen(a(0)) + ']';
-}
-
-function translateExpr(src, opts) {
-  opts = opts || {};
-  var toks = evalTokenize(src);
-  var pos = 0;
-  function peek() { return toks[pos]; }
-  function next() { return toks[pos++]; }
-  function isOp(text) { var t = peek(); return !!t && t.type === 'OP' && t.text === text; }
-  function isWord(w) { var t = peek(); return !!t && t.type === 'ID' && t.name === w; }
-
-  function parseExpr() { return parseOr(); }
-  function parseOr() {
-    var left = parseAnd();
-    while (isWord('ou')) { next(); var r = parseAnd(); left = pyMaybeParen(left) + ' or ' + pyMaybeParen(r); }
-    return left;
-  }
-  function parseAnd() {
-    var left = parseCmp();
-    while (isWord('e')) { next(); var r = parseCmp(); left = pyMaybeParen(left) + ' and ' + pyMaybeParen(r); }
-    return left;
-  }
-  var PY_COMP = { '=': '==', '==': '==', '!=': '!=', '<>': '!=', '<': '<', '>': '>', '<=': '<=', '>=': '>=' };
-  function parseCmp() {
-    var left = parseAdd();
-    while (isOp('=') || isOp('==') || isOp('!=') || isOp('<>') || isOp('<') || isOp('>') || isOp('<=') || isOp('>=')) {
-      var op = next().text;
-      var r = parseAdd();
-      left = pyMaybeParen(left) + ' ' + PY_COMP[op] + ' ' + pyMaybeParen(r);
-    }
-    return left;
-  }
-  function parseAdd() {
-    var left = parseTerm();
-    while (isOp('+') || isOp('-')) {
-      var op = next().text;
-      var r = parseTerm();
-      left = pyMaybeParen(left) + ' ' + op + ' ' + pyMaybeParen(r);
-    }
-    return left;
-  }
-  function parseTerm() {
-    var left = parsePow();
-    while (isOp('*') || isOp('/')) {
-      var op = next().text;
-      var r = parsePow();
-      left = pyMaybeParen(left) + ' ' + op + ' ' + pyMaybeParen(r);
-    }
-    return left;
-  }
-  function parsePow() {
-    var left = parseUn();
-    if (isOp('**')) {
-      next();
-      var r = parsePow();
-      if (left.charAt(0) === '-') left = '(' + left + ')';
-      left = pyMaybeParen(left) + ' ** ' + pyMaybeParen(r);
-    }
-    return left;
-  }
-  function parseUn() {
-    if (isOp('-')) { next(); return '-' + pyMaybeParen(parseUn()); }
-    if (isWord('não') || isWord('nao')) { next(); return 'not ' + pyMaybeParen(parseUn()); }
-    return parsePrim();
-  }
-  function parsePrim() {
-    var v = parsePrimInner();
-    while (isOp('.')) {
-      next();
-      var pt = peek();
-      if (!pt || pt.type !== 'ID') throw new Error('Propriedade esperada após "."');
-      next();
-      var margs = null;
-      if (isOp('(')) {
-        next();
-        margs = [];
-        if (!isOp(')')) {
-          while (true) {
-            margs.push(parseExpr());
-            if (isOp(',')) { next(); continue; }
-            break;
-          }
-        }
-        next();
-      }
-      if (pt.name === 'ordenada') {
-        v = 'sorted(' + pyMaybeParen(v) + ')';
-      } else if (pt.name === 'adicionar') {
-        if (!margs || margs.length === 0) throw new Error('adicionar espera ao menos 1 argumento');
-        if (margs.length === 1) v = pyMaybeParen(v) + '.append(' + margs[0] + ')';
-        else v = pyMaybeParen(v) + '.extend([' + margs.join(', ') + '])';
-      } else {
-        throw new Error('Propriedade desconhecida: "' + pt.name + '"');
-      }
-    }
-    return v;
-  }
-  function parsePrimInner() {
-    var t = peek();
-    if (!t) throw new Error('Expressão incompleta');
-    if (t.type === 'NUM') { next(); return t.src; }
-    if (t.type === 'STR') {
-      next();
-      return t.interp ? pyInterpString(t.raw) : pyStringLiteral(t.value);
-    }
-    if (t.type === 'ID') {
-      next();
-      if (t.name === 'verdadeiro' || t.name === 'true') return 'True';
-      if (t.name === 'falso' || t.name === 'false') return 'False';
-      if (JANELA_COR_NOMES.indexOf(t.name) >= 0) return '"' + t.name + '"';
-      if (isOp('(')) {
-        next();
-        if (t.name === 'expandir' || t.name === 'derivada' || t.name === 'integral') {
-          var sDepth = 0;
-          var sSrc = '';
-          while (true) {
-            var st = peek();
-            if (!st) throw new Error('Parêntese não fechado em ' + t.name);
-            if (isOp('(')) sDepth++;
-            if (isOp(')')) { if (sDepth === 0) break; sDepth--; }
-            sSrc += st.src;
-            next();
-          }
-          next();
-          PY_WARNINGS.push(t.name + '(...) não é traduzido (simplificação simbólica)');
-          return 'None  # ' + t.name + '(...) não traduzido';
-        }
-        if (t.name === 'graus') {
-          var gDepth = 0;
-          var gSrc = '';
-          while (true) {
-            var gt = peek();
-            if (!gt) throw new Error('Parêntese não fechado em graus');
-            if (isOp('(')) gDepth++;
-            if (isOp(')')) { if (gDepth === 0) break; gDepth--; }
-            gSrc += gt.src;
-            next();
-          }
-          next();
-          return translateExpr(gSrc, { graus: true, rangeAsList: opts.rangeAsList });
-        }
-        var args = [];
-        if (!isOp(')')) {
-          while (true) {
-            args.push(parseExpr());
-            if (isOp(',')) { next(); continue; }
-            break;
-          }
-        }
-        next();
-        if (PY_BUILTIN_NAMES.indexOf(t.name) >= 0) return pyCall(t.name, args, opts);
-        if (PY_USER_FUNCS[t.name]) return t.name + '(' + args.join(', ') + ')';
-        if (args.length !== 1) {
-          PY_WARNINGS.push(t.name + '(...) nao reconhecido como funcao');
-          return 'None  # ' + t.name + '(...)';
-        }
-        return t.name + '[' + pyMaybeParen(args[0]) + ']';
-      }
-      return t.name;
-    }
-    if (isOp('(')) {
-      next();
-      var first = parseExpr();
-      if (isOp(',')) {
-        var elems = [first];
-        while (isOp(',')) { next(); elems.push(parseExpr()); }
-        next();
-        if (elems.length < 2 || elems.length > 3) throw new Error('Intervalo deve ter 2 ou 3 valores');
-        return pyRange(elems, opts);
-      }
-      next();
-      return '(' + first + ')';
-    }
-    if (isOp('[')) {
-      next();
-      var arr = [];
-      if (!isOp(']')) {
-        while (true) {
-          arr.push(parseExpr());
-          if (isOp(',')) { next(); continue; }
-          break;
-        }
-      }
-      next();
-      return '[' + arr.join(', ') + ']';
-    }
-    if (isOp('{')) {
-      next();
-      var setEl = [];
-      if (!isOp('}')) {
-        while (true) {
-          setEl.push(parseExpr());
-          if (isOp(',')) { next(); continue; }
-          break;
-        }
-      }
-      next();
-      return '{' + setEl.join(', ') + '}';
-    }
-    throw new Error('Expressão inválida');
-  }
-  var res = parseExpr();
-  if (pos < toks.length) throw new Error('Operador inesperado: ' + toks[pos].src);
-  return res;
-}
-
-function pySplitTop(src) {
-  var parts = [];
-  var cur = '';
-  var depth = 0;
-  var quote = null;
-  for (var i = 0; i < src.length; i++) {
-    var c = src[i];
-    if (quote) {
-      cur += c;
-      if (c === '\\' && i + 1 < src.length) { cur += src[i + 1]; i++; }
-      else if (c === quote) quote = null;
-    } else {
-      if (c === '"' || c === "'") { quote = c; cur += c; }
-      else if (c === '(' || c === '[' || c === '{') { depth++; cur += c; }
-      else if (c === ')' || c === ']' || c === '}') { depth--; cur += c; }
-      else if (c === ',' && depth === 0) { parts.push(cur.trim()); cur = ''; }
-      else cur += c;
-    }
-  }
-  parts.push(cur.trim());
-  return parts;
-}
-
-function translateStmt(text, indent) {
-  var trim = text.trim();
-  var lines = [];
-  if (/^(retorne|retornar)\b/.test(trim)) {
-    var retExpr = trim.replace(/^(retorne|retornar)\b/, '').trim();
-    lines.push(indent + 'return ' + (retExpr ? translateExpr(retExpr) : 'None'));
-    return lines;
-  }
-  if (/^mostre\b/.test(trim) || /^mostrar\b/.test(trim)) {
-    lines.push(indent + 'print(' + translateExpr(trim.replace(/^(mostre|mostrar)\b/, '').trim()) + ')');
-    return lines;
-  }
-  if (/^limpe\b/.test(trim)) {
-    pyNeed('os');
-    lines.push(indent + 'os.system("cls" if os.name == "nt" else "clear")');
-    return lines;
-  }
-  var readM = trim.match(LEIA_ASSIGN_RE);
-  if (readM) {
-    pyNeed('wleia');
-    var msg = readM[2].trim();
-    lines.push(indent + readM[1] + ' = w_leia(' + (msg ? translateExpr(msg) : '""') + ')');
-    return lines;
-  }
-  var lazyM = trim.match(LAZY_ASSIGN_RE);
-  if (lazyM) {
-    lines.push(indent + lazyM[1] + ' = ' + translateExpr(lazyM[2]) + '  # (atribuição preguiçosa)');
-    return lines;
-  }
-  var cm = trim.match(COMPOUND_ASSIGN_RE);
-  if (cm) {
-    lines.push(indent + cm[1] + ' ' + cm[2] + ' ' + translateExpr(cm[3]));
-    return lines;
-  }
-  if (/^plotar\s*\(/.test(trim)) {
-    var parts = pySplitTop(trim.replace(/^plotar\s*\(/, '').replace(/\)\s*$/, ''));
-    if (parts.length === 2) {
-      pyNeed('plt');
-      lines.push(indent + 'plt.plot(' + translateExpr(parts[1]) + ', ' + translateExpr(parts[0]) + ')');
-      lines.push(indent + 'plt.show()');
-    } else {
-      lines.push(indent + '# plotar(...) — argumentos inválidos');
-    }
-    return lines;
-  }
-  if (/^(janela|ponto|linha|círculo)\s*\(/.test(trim)) {
-    PY_WARNINGS.push(trim + ' → não traduzido (gráficos de janela)');
-    lines.push(indent + '# ' + trim + '  # gráficos de janela não traduzidos');
-    return lines;
-  }
-  var m = trim.match(ASSIGN_RE);
-  if (m) {
-    lines.push(indent + m[1] + ' = ' + translateExpr(m[2]));
-    return lines;
-  }
-  if (/^[A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*\.[A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*\s*\(/.test(trim)) {
-    lines.push(indent + translateExpr(trim));
-    return lines;
-  }
-  lines.push(indent + 'print(' + translateExpr(trim) + ')');
-  return lines;
-}
-
-function translateNodes(nodes, indent) {
-  var lines = [];
-  var sub = '    ';
-  for (var i = 0; i < nodes.length; i++) {
-    var n = nodes[i];
-    if (n.type === 'if') {
-      lines.push(indent + 'if ' + translateExpr(n.cond) + ':');
-      var thenL = translateNodes(n.then, indent + sub);
-      lines = lines.concat(thenL.length ? thenL : [indent + sub + 'pass']);
-      if (n.els.length > 0) {
-        lines.push(indent + 'else:');
-        var elseL = translateNodes(n.els, indent + sub);
-        lines = lines.concat(elseL.length ? elseL : [indent + sub + 'pass']);
-      }
-    } else if (n.type === 'for') {
-      lines.push(indent + 'for ' + n.var + ' in ' + translateExpr(n.expr, { rangeAsList: false }) + ':');
-      var bL = translateNodes(n.body, indent + sub);
-      lines = lines.concat(bL.length ? bL : [indent + sub + 'pass']);
-    } else if (n.type === 'repeat') {
-      lines.push(indent + 'for _ in range(' + translateExpr(n.count) + '):');
-      var rL = translateNodes(n.body, indent + sub);
-      lines = lines.concat(rL.length ? rL : [indent + sub + 'pass']);
-    } else if (n.type === 'while') {
-      lines.push(indent + 'while ' + translateExpr(n.cond) + ':');
-      var wL = translateNodes(n.body, indent + sub);
-      lines = lines.concat(wL.length ? wL : [indent + sub + 'pass']);
-    } else if (n.type === 'func') {
-      lines.push(indent + 'def ' + n.name + '(' + n.params.join(', ') + '):');
-      var fL = translateNodes(n.body, indent + sub);
-      lines = lines.concat(fL.length ? fL : [indent + sub + 'pass']);
-    } else {
-      lines = lines.concat(translateStmt(n.text, indent));
-    }
-  }
-  return lines;
-}
-
-function pyHelpers() {
-  var h = [];
-  if (PY_FLAGS.wleia) {
-    h.push('def w_leia(msg):');
-    h.push('    s = input(msg).strip()');
-    h.push("    if s == '': return s");
-    h.push("    t = s.replace(',', '.') if '.' not in s else s");
-    h.push('    try: return int(t)');
-    h.push('    except ValueError:');
-    h.push('        try: return float(t)');
-    h.push('        except ValueError: return s');
-  }
-  if (PY_FLAGS.wraizc) {
-    h.push('def w_raizc(x):');
-    h.push('    return math.copysign(abs(x) ** (1 / 3), x)');
-  }
-  if (PY_FLAGS.wprimos) {
-    h.push('def w_primos(n):');
-    h.push('    primos = []');
-    h.push('    c = 2');
-    h.push('    while len(primos) < n:');
-    h.push('        ok = True');
-    h.push('        for p in primos:');
-    h.push('            if p * p > c: break');
-    h.push('            if c % p == 0:');
-    h.push('                ok = False');
-    h.push('                break');
-    h.push('        if ok: primos.append(c)');
-    h.push('        c += 1');
-    h.push('    return primos');
-  }
-  if (PY_FLAGS.wfibonacci) {
-    h.push('def w_fibonacci(n):');
-    h.push('    fib = []');
-    h.push('    a = b = 1');
-    h.push('    while len(fib) < n:');
-    h.push('        fib.append(a)');
-    h.push('        a, b = b, a + b');
-    h.push('    return fib');
-  }
-  if (PY_FLAGS.wfracao) {
-    h.push('def w_fracao(x):');
-    h.push('    from fractions import Fraction');
-    h.push('    sign = -1 if x < 0 else 1');
-    h.push('    ax = abs(x)');
-    h.push('    ip = int(ax)');
-    h.push('    fr = ax - ip');
-    h.push('    if fr < 1e-10: return str(sign * ip)');
-    h.push('    f = Fraction(fr).limit_denominator(1000000)');
-    h.push('    num = ip * f.denominator + f.numerator');
-    h.push('    if sign < 0: num = -num');
-    h.push('    return str(num) + "/" + str(f.denominator)');
-  }
-  if (PY_FLAGS.wparalista) {
-    h.push('def w_paralista(x):');
-    h.push('    if isinstance(x, (list, tuple)) and len(x) > 0 and isinstance(x[0], (list, tuple)):');
-    h.push('        out = []');
-    h.push('        for row in x: out.extend(row)');
-    h.push('        return out');
-    h.push('    if isinstance(x, set):');
-    h.push('        return sorted([v for v in x if isinstance(v, (int, float))]) + sorted([v for v in x if isinstance(v, str)])');
-    h.push('    return list(x)');
-  }
-  if (PY_FLAGS.westat) {
-    h.push('def w_numstr(x):');
-    h.push('    if float(x).is_integer(): return str(int(x))');
-    h.push('    return repr(float(x))');
-    h.push('def w_estatisticas(*args):');
-    h.push('    vals = []');
-    h.push('    for a in args:');
-    h.push('        if isinstance(a, (list, tuple)): vals.extend(a)');
-    h.push('        else: vals.append(a)');
-    h.push('    vals = [float(v) for v in vals]');
-    h.push("    if not vals: raise ValueError('estatísticas espera ao menos 1 número')");
-    h.push('    s = sorted(vals)');
-    h.push('    n = len(vals)');
-    h.push('    mid = n // 2');
-    h.push('    mediana = s[mid] if n % 2 else (s[mid - 1] + s[mid]) / 2');
-    h.push('    media = sum(vals) / n');
-    h.push('    prod = 1');
-    h.push('    for v in vals:');
-    h.push("        if v < 0: raise ValueError('estatísticas: média geométrica requer valores não negativos')");
-    h.push('        prod *= v');
-    h.push('    geome = prod ** (1 / n)');
-    h.push('    var = sum((v - media) ** 2 for v in vals) / n');
-    h.push('    dp = var ** 0.5');
-    h.push('    from collections import Counter');
-    h.push('    freq = Counter(vals)');
-    h.push('    mf = max(freq.values())');
-    h.push("    moda = 'amodal (todos os valores são únicos)' if mf == 1 else ', '.join(str(k) for k, v in sorted(freq.items()) if v == mf)");
-    h.push('    rol = ", ".join(w_numstr(v) for v in vals)');
-    h.push("    return '\\n'.join([");
-    h.push("        'Valor mínimo: ' + w_numstr(min(vals)),");
-    h.push("        'Valor máximo: ' + w_numstr(max(vals)),");
-    h.push("        'Média aritmética: ' + w_numstr(media),");
-    h.push("        'Média geométrica: ' + w_numstr(geome),");
-    h.push("        'Moda: ' + moda,");
-    h.push("        'Mediana: ' + w_numstr(mediana),");
-    h.push("        'Variância: ' + w_numstr(var),");
-    h.push("        'Desvio padrão: ' + w_numstr(dp),");
-    h.push("        'Rol ordenado dos valores: ' + rol])");
-  }
-  if (PY_FLAGS.wtabela) {
-    h.push('def w_tabela(xs, ys):');
-    h.push('    rows = list(zip(xs, ys))');
-    h.push('    if not rows: return "x | y"');
-    h.push('    w0 = max([len(str(a)) for a, _ in rows] + [1])');
-    h.push('    w1 = max([len(str(b)) for _, b in rows] + [1])');
-    h.push("    out = ['x'.rjust(w0) + ' | ' + 'y'.rjust(w1)]");
-    h.push("    for a, b in rows: out.append(str(a).rjust(w0) + ' | ' + str(b).rjust(w1))");
-    h.push("    return '\\n'.join(out)");
-  }
-  return h;
-}
-
-function collectUserFuncs(nodes, set) {
-  for (var i = 0; i < nodes.length; i++) {
-    var n = nodes[i];
-    if (n.type === 'func') set[n.name] = true;
-    if (n.then) collectUserFuncs(n.then, set);
-    if (n.els) collectUserFuncs(n.els, set);
-    if (n.body) collectUserFuncs(n.body, set);
-  }
-}
-
-function translateProgram(code) {
-  PY_FLAGS = {
-    math: false, random: false, statistics: false, os: false, plt: false,
-    wleia: false, wraizc: false, wprimos: false, wfibonacci: false,
-    westat: false, wtabela: false, wfracao: false, wparalista: false
-  };
-  PY_WARNINGS = [];
-  var nodes;
-  try {
-    nodes = parseProgram(code);
-  } catch (e) {
-    return { ok: false, error: (e.lineNo ? 'linha ' + e.lineNo + ': ' : '') + e.message, warnings: PY_WARNINGS.slice() };
-  }
-  PY_USER_FUNCS = {};
-  collectUserFuncs(nodes, PY_USER_FUNCS);
-  var body;
-  try {
-    body = translateNodes(nodes, '');
-  } catch (e) {
-    return { ok: false, error: e.message, warnings: PY_WARNINGS.slice() };
-  }
-  var header = ['# Tradução automática: Willog → Python'];
-  if (PY_FLAGS.math) header.push('import math');
-  if (PY_FLAGS.random) header.push('import random');
-  if (PY_FLAGS.statistics) header.push('import statistics');
-  if (PY_FLAGS.os) header.push('import os');
-  if (PY_FLAGS.plt) header.push('import matplotlib.pyplot as plt');
-  var helpers = pyHelpers();
-  var out = header;
-  if (helpers.length > 0) out = out.concat([''], ['# ---- Funções auxiliares ----'], helpers);
-  out = out.concat([''], body);
-  return { ok: true, code: out.join('\n'), warnings: PY_WARNINGS.slice() };
-}
-
-// ============================================================
 //  SYNTAX HIGHLIGHTING
 // ============================================================
 
@@ -4894,7 +4374,7 @@ function tokenizeHighlight(code) {
           word === 'definir' || word === 'função' || word === 'funcao' || word === 'retorne' || word === 'retornar' ||
           word === 'e' || word === 'ou' || word === 'não' || word === 'nao' ||
           word === 'verdadeiro' || word === 'falso') tokens.push({ type: 'keyword', text: word });
-      else if ((word === 'raizq' || word === 'raizc' || word === 'média' || word === 'pi' || word === 'primos' || word === 'fibonacci' || word === 'fibo' || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'expandir' || word === 'união' || word === 'intersecção' || word === 'menos' || word === 'paraLista' || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero' || word === 'inversa' || word === 'transposta' || word === 'determinante' || word === 'plotar' || word === 'tabela' || word === 'derivada' || word === 'integral' || word === 'graus' || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio' || word === 'estatísticas' || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo') && code[j4] === '(') tokens.push({ type: 'function', text: word });
+      else if ((word === 'raizq' || word === 'raizc' || word === 'média' || word === 'pi' || word === 'primos' || word === 'fibonacci' || word === 'fibo' || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'expandir' || word === 'união' || word === 'intersecção' || word === 'menos' || word === 'subconjuntos' || word === 'paraLista' || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero' || word === 'inversa' || word === 'transposta' || word === 'determinante' || word === 'plotar' || word === 'tabela' || word === 'derivada' || word === 'integral' || word === 'graus' || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio' || word === 'estatísticas' || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo') && code[j4] === '(') tokens.push({ type: 'function', text: word });
       else tokens.push({ type: 'identifier', text: word });
       i = j4;
     } else {
@@ -4913,6 +4393,7 @@ var editor   = document.getElementById('code');
 var highlight = document.getElementById('highlight');
 var gutter   = document.getElementById('lineNumbers');
 var consoleEl = document.getElementById('console');
+var consoleGutter = document.getElementById('consoleGutter');
 var btnRun   = document.getElementById('btnRun');
 var runStatus = document.getElementById('runStatus');
 var statusbar = document.getElementById('statusbar');
@@ -4964,12 +4445,26 @@ function saveCode() {
   try { localStorage.setItem(CODE_STORAGE_KEY, editor.value); } catch (e) {}
 }
 
+function syncConsoleGutter() {
+  var lines = 0;
+  var logs = consoleEl.children;
+  for (var i = 0; i < logs.length; i++) {
+    if (logs[i].classList.contains('placeholder')) continue;
+    lines += logs[i].textContent.split('\n').length;
+  }
+  var html = '';
+  for (var j = 1; j <= lines; j++) html += '<div class="cg-line">' + j + '</div>';
+  consoleGutter.innerHTML = html;
+  consoleGutter.scrollTop = consoleEl.scrollTop;
+}
+
 function clearConsole() {
   consoleEl.innerHTML = '';
   var ph = document.createElement('div');
   ph.className = 'placeholder';
   ph.textContent = 'Pressione Executar para ver a saída do programa.';
   consoleEl.appendChild(ph);
+  syncConsoleGutter();
 }
 
 function addConsole(rec) {
@@ -4980,14 +4475,15 @@ function addConsole(rec) {
   if (rec.kind === 'error') div.className += ' error';
   else if (rec.kind === 'assign') div.className += ' assign';
   else if (rec.kind === 'info') div.className += ' info';
-  if ((rec.kind === 'error' || rec.kind === 'return') && rec.lineNo) {
-    div.innerHTML = '<span class="ln">linha ' + rec.lineNo + '</span>' + escapeHtml(rec.text);
-  } else {
-    div.textContent = rec.text;
-  }
+  div.textContent = rec.text;
   consoleEl.appendChild(div);
   consoleEl.scrollTop = consoleEl.scrollHeight;
+  syncConsoleGutter();
 }
+
+consoleEl.addEventListener('scroll', function () {
+  consoleGutter.scrollTop = consoleEl.scrollTop;
+});
 
 function addConsoleInfo(text, isError) {
   addConsole({ kind: 'info', text: text, lineNo: null, isError: !!isError });
@@ -5007,8 +4503,17 @@ function openPlot(xs, ys) {
   plotPanY = 0;
   updatePlotZoomLabel();
   document.getElementById('plotInfo').textContent = xs.length + ' ponto(s)';
+  plotModal.classList.remove('plot-mini');
+  if (!plotModal.classList.contains('plot-maximized')) {
+    plotModal.classList.add('plot-maximized');
+    plotMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
+                            '<rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
+  }
   document.getElementById('plotOverlay').classList.add('open');
   renderPlot();
+  requestAnimationFrame(function () {
+    if (lastPlot) renderPlot();
+  });
 }
 
 function renderPlot() {
@@ -5050,8 +4555,17 @@ function renderPlot() {
   xmax = vcx + bhw / plotZoom;
   ymin = vcy - bhh / plotZoom;
   ymax = vcy + bhh / plotZoom;
-  plotScaleX = (xmax - xmin) / (W - padL - padR);
-  plotScaleY = (ymax - ymin) / (H - padT - padB);
+  var plotW = W - padL - padR;
+  var plotH = H - padT - padB;
+  var viewW = xmax - xmin;
+  var viewH = ymax - ymin;
+  var pxPerUnit = Math.min(plotW / viewW, plotH / viewH);
+  var drawW = viewW * pxPerUnit;
+  var drawH = viewH * pxPerUnit;
+  var offX = (plotW - drawW) / 2;
+  var offY = (plotH - drawH) / 2;
+  plotScaleX = 1 / pxPerUnit;
+  plotScaleY = 1 / pxPerUnit;
 
   function niceStep(range, target) {
     var raw = range / target;
@@ -5064,23 +4578,22 @@ function renderPlot() {
     else step = 10;
     return step * mag;
   }
-  var sx = niceStep(xmax - xmin, 8);
-  var sy = niceStep(ymax - ymin, 7);
+  var step = niceStep(Math.max(viewW, viewH), 8);
 
   function fmt(v) { return String(Number(v.toPrecision(6))); }
 
-  function X(x) { return padL + (x - xmin) / (xmax - xmin) * (W - padL - padR); }
-  function Y(y) { return H - padB - (y - ymin) / (ymax - ymin) * (H - padT - padB); }
+  function X(x) { return padL + offX + (x - xmin) * pxPerUnit; }
+  function Y(y) { return H - padB - offY - (y - ymin) * pxPerUnit; }
 
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, W, H);
   ctx.font = '11px Consolas, monospace';
   ctx.textBaseline = 'middle';
 
-  var tx0 = Math.ceil(xmin / sx) * sx;
-  var txCount = Math.floor((xmax - tx0) / sx) + 1;
+  var tx0 = Math.ceil(xmin / step) * step;
+  var txCount = Math.floor((xmax - tx0) / step) + 1;
   for (var ti = 0; ti < txCount; ti++) {
-    var tx = tx0 + ti * sx;
+    var tx = tx0 + ti * step;
     var gx = Math.round(X(tx));
     ctx.strokeStyle = '#e8e8e8';
     ctx.lineWidth = 1;
@@ -5092,10 +4605,10 @@ function renderPlot() {
     ctx.textAlign = 'center';
     ctx.fillText(fmt(tx), gx, H - padB + 16);
   }
-  var ty0 = Math.ceil(ymin / sy) * sy;
-  var tyCount = Math.floor((ymax - ty0) / sy) + 1;
+  var ty0 = Math.ceil(ymin / step) * step;
+  var tyCount = Math.floor((ymax - ty0) / step) + 1;
   for (var uj = 0; uj < tyCount; uj++) {
-    var ty = ty0 + uj * sy;
+    var ty = ty0 + uj * step;
     var gy = Math.round(Y(ty));
     ctx.strokeStyle = '#e8e8e8';
     ctx.beginPath();
@@ -5275,11 +4788,12 @@ var AC_ALL = (function () {
   add('limpe', 'limpe', false, 'Saída', 'Apaga o console');
   add('leia', 'leia ', false, 'Entrada', 'Lê um valor digitado (ex.: nome = leia "Nome: ")');
   add('se', 'se ', false, 'Controle', 'Executa um bloco se a condição for verdadeira');
-  add('senão', 'senão', false, 'Controle', 'Executa um bloco quando a condição do se é falsa');
-  add('senao', 'senao', false, 'Controle', 'Executa um bloco quando a condição do se é falsa');
+  add('senão', 'senão:', false, 'Controle', 'Executa um bloco quando a condição do se é falsa');
+  add('senao', 'senao:', false, 'Controle', 'Executa um bloco quando a condição do se é falsa');
   add('enquanto', 'enquanto ', false, 'Controle', 'Repete enquanto a condição for verdadeira');
   add('repita', 'repita()', true, 'Controle', 'Repete o bloco um número fixo de vezes');
   add('para cada', 'para cada ', false, 'Controle', 'Percorre os itens de uma coleção');
+  add('para x em', 'para x em ', false, 'Controle', 'Percorre os itens de uma coleção (sem "cada")');
   add('definir função', 'definir função ', false, 'Controle', 'Define uma nova função');
   add('retorne', 'retorne ', false, 'Controle', 'Retorna um valor de uma função');
   add('retornar', 'retornar ', false, 'Controle', 'Retorna um valor de uma função');
@@ -5311,6 +4825,7 @@ var AC_ALL = (function () {
     ['união', 'Conjuntos', 'Reúne elementos de dois ou mais conjuntos'],
     ['intersecção', 'Conjuntos', 'Elementos presentes em todos os conjuntos'],
     ['menos', 'Conjuntos', 'Elementos de A que não estão em B'],
+    ['subconjuntos', 'Conjuntos', 'Lista todos os subconjuntos de um conjunto'],
     ['paraLista', 'Conversão', 'Converte conjunto ou matriz em lista'],
     ['paraTexto', 'Conversão', 'Converte um valor em texto'],
     ['paraNúmero', 'Conversão', 'Converte texto numérico em valor'],
@@ -5340,6 +4855,76 @@ var AC_PROPS = [
   { name: 'ordenada', insert: 'ordenada', paren: false, cat: 'Lista', desc: 'Retorna a lista em ordem crescente' },
   { name: 'adicionar', insert: 'adicionar()', paren: true, cat: 'Lista', desc: 'Adiciona valores ao final da lista' }
 ];
+
+var QUICK_REF = (function () {
+  var list = [];
+  function qr(name, tag, desc, example) {
+    list.push({ name: name, tag: tag, desc: desc, example: example });
+  }
+  qr('mostre', 'Comando', 'Exibe o valor de uma expressão', 'preco = 25\nquantidade = 4\nmostre "Total: R$ " + (preco * quantidade)');
+  qr('mostrar', 'Comando', 'Exibe o valor de uma expressão (sinônimo de mostre)', 'mostrar 2 ** 10');
+  qr('limpe', 'Comando', 'Apaga o console', 'mostre "isto desaparecerá"\nlimpe\nmostre "console limpo"');
+  qr('leia', 'Comando', 'Lê um valor digitado pelo usuário', 'nome = leia "Qual o seu nome? "\nmostre "Prazer, " + nome + "!"');
+  qr('se', 'Comando', 'Executa um bloco se a condição for verdadeira', 'idade = 18\nse idade >= 18:\n  mostre "Pode votar"\nsenão:\n  mostre "Não pode votar"');
+  qr('senão', 'Comando', 'Bloco executado quando a condição do se é falsa', 'nota = 6\nse nota >= 6:\n  mostre "Aprovado"\nsenão:\n  mostre "Recuperação"');
+  qr('senao', 'Comando', 'Bloco executado quando a condição do se é falsa (sem acento)', 'a = 5\nse a == 5:\n  mostre "igual"\nsenao:\n  mostre "diferente"');
+  qr('enquanto', 'Comando', 'Repete enquanto a condição for verdadeira', 'n = 5\nenquanto n > 0:\n  mostre n\n  n = n - 1');
+  qr('repita', 'Comando', 'Repete o bloco um número fixo de vezes', 'repita(4):\n  mostre "batida"');
+  qr('para cada', 'Comando', 'Percorre os itens de uma coleção', 'frutas = ["maçã", "banana", "uva"]\npara cada fruta em frutas:\n  mostre fruta');
+  qr('para x em', 'Comando', 'Percorre os itens de uma coleção (sem "cada")', 'para n em (2, 6, 2):\n  mostre n');
+  qr('definir função', 'Comando', 'Define uma nova função', 'definir função quadrado(n):\n  retorne n * n\nmostre quadrado(7)');
+  qr('retorne', 'Comando', 'Retorna um valor de uma função', 'definir função maior(a, b):\n  se a > b:\n    retorne a\n  senão:\n    retorne b\nmostre maior(12, 9)');
+  qr('retornar', 'Comando', 'Retorna um valor de uma função (sinônimo de retorne)', 'definir função saudação(nome):\n  retornar "Olá, " + nome\nmostre saudação("Ana")');
+  qr('e', 'Comando', 'E lógico', 'idade = 25\naltura = 1.75\nse idade >= 18 e altura >= 1.60:\n  mostre "Apto"\nsenão:\n  mostre "Inapto"');
+  qr('ou', 'Comando', 'OU lógico', 'dia = 7\nse dia == 6 ou dia == 7:\n  mostre "Fim de semana"\nsenão:\n  mostre "Dia útil"');
+  qr('não', 'Comando', 'Negação lógica', 'ativo = falso\nse não ativo:\n  mostre "desativado"');
+  qr('nao', 'Comando', 'Negação lógica (sem acento)', 'ligado = verdadeiro\nse nao ligado:\n  mostre "desligado"\nsenao:\n  mostre "ligado"');
+  qr('verdadeiro', 'Valor', 'Valor booleano verdadeiro', 'aprovado = verdadeiro\nse aprovado:\n  mostre "passou"');
+  qr('falso', 'Valor', 'Valor booleano falso', 'erro = falso\nse erro:\n  mostre "falhou"\nsenao:\n  mostre "tudo certo"');
+  qr('raizq', 'Função', 'Raiz quadrada de x', 'mostre raizq(169)');
+  qr('raizc', 'Função', 'Raiz cúbica de x', 'mostre raizc(27)');
+  qr('pi', 'Função', 'Valor de pi (2 casas decimais)', 'raio = 5\narea = pi() * raio * raio\nmostre area');
+  qr('média', 'Função', 'Média aritmética dos argumentos', 'mostre média(8, 9, 10)');
+  qr('inteiro', 'Função', 'Parte inteira do número', 'mostre inteiro(9.99)');
+  qr('decimal', 'Função', 'Parte decimal do número', 'mostre decimal(9.75)');
+  qr('fração', 'Função', 'Converte decimal em fração', 'mostre fração(0.75)');
+  qr('primos', 'Função', 'Os primeiros n números primos', 'mostre primos(6)');
+  qr('fibonacci', 'Função', 'Os primeiros n números de Fibonacci', 'mostre fibonacci(7)');
+  qr('fibo', 'Função', 'Os primeiros n números de Fibonacci', 'mostre fibo(6)');
+  qr('aleatório', 'Função', 'Número aleatório inteiro entre min e max', 'mostre aleatório(100, 200)');
+  qr('aleatorio', 'Função', 'Número aleatório inteiro entre min e max (sem acento)', 'dado = aleatorio(1, 6)\nmostre "caiu: " + dado');
+  qr('cos', 'Função', 'Cosseno de x (em radianos)', 'mostre cos(3.14159265)');
+  qr('sen', 'Função', 'Seno de x (em radianos)', 'mostre sen(1.57079633)');
+  qr('tan', 'Função', 'Tangente de x (em radianos)', 'mostre tan(0.785398163)');
+  qr('arcocos', 'Função', 'Arcocosseno de x (em radianos)', 'mostre arcocos(0.5)');
+  qr('arcosen', 'Função', 'Arcosseno de x (em radianos)', 'mostre arcosen(0.5)');
+  qr('arcotan', 'Função', 'Arcotangente de x (em radianos)', 'mostre arcotan(0)');
+  qr('união', 'Função', 'Reúne elementos de dois ou mais conjuntos', 'A := {1, 2, 3}\nB := {2, 4, 6}\nmostre união(A, B)');
+  qr('intersecção', 'Função', 'Elementos presentes em todos os conjuntos', 'A := {1, 2, 3, 4}\nB := {2, 4, 6}\nmostre intersecção(A, B)');
+  qr('menos', 'Função', 'Elementos de A que não estão em B', 'A := {1, 2, 3, 4, 5}\nB := {2, 4}\nmostre menos(A, B)');
+  qr('subconjuntos', 'Função', 'Lista todos os subconjuntos de um conjunto', 'A := {1, 2, 3}\nmostre subconjuntos(A)');
+  qr('paraLista', 'Função', 'Converte conjunto ou matriz em lista', 'mostre paraLista({4, 2, 5})');
+  qr('paraTexto', 'Função', 'Converte um valor em texto', 'mostre paraTexto(3.1415)');
+  qr('paraNúmero', 'Função', 'Converte texto numérico em valor', 'mostre paraNúmero("3.14") + 1');
+  qr('paraNumero', 'Função', 'Converte texto numérico em valor (sem acento)', 'n = paraNumero("42")\nmostre n + 1');
+  qr('inversa', 'Função', 'Matriz inversa de A', 'mostre inversa([[2, 0], [0, 2]])');
+  qr('transposta', 'Função', 'Transpõe linhas e colunas de A', 'mostre transposta([[1, 0, 1], [0, 1, 0]])');
+  qr('determinante', 'Função', 'Determinante de A (escalar)', 'mostre determinante([[2, 3], [1, 4]])');
+  qr('expandir', 'Função', 'Expande uma expressão simbólica', 'mostre expandir((x - 2) ** 2)');
+  qr('derivada', 'Função', 'Derivada simbólica', 'mostre derivada(x ** 3 - x, x)');
+  qr('integral', 'Função', 'Integral indefinida ou definida', 'mostre integral(2 * x, x)');
+  qr('graus', 'Função', 'Calcula expressão com trigonométricas em graus', 'mostre graus(sen(90))');
+  qr('plotar', 'Função', 'Abre o gráfico cartesiano de y em função de x', 'x := (0, 4)\ny := x ** 2\nplotar(y, x)');
+  qr('tabela', 'Função', 'Mostra uma tabela tabulada x | y', 'x := (0, 10, 2)\ny := x * 3\nmostre tabela(x, y)');
+  qr('janela', 'Função', 'Abre uma janela gráfica', 'janela(400, 300, preto, "Meu desenho")');
+  qr('ponto', 'Função', 'Desenha um ponto na janela', 'janela(400, 300)\nponto(200, 150, azul)');
+  qr('linha', 'Função', 'Traça uma linha na janela', 'janela(400, 300)\nlinha(100, 100, 300, 200, verde)');
+  qr('círculo', 'Função', 'Desenha um círculo na janela', 'janela(400, 300)\ncírculo(200, 150, 80, verde, branco)');
+  qr('estatísticas', 'Função', 'Medidas estatísticas dos valores', 'mostre estatísticas(10, 20, 20, 30)');
+  qr('ordenada', 'Propriedade', 'Retorna a lista em ordem crescente', 'notas = [7, 3, 9, 5]\nmostre notas.ordenada');
+  qr('adicionar', 'Propriedade', 'Adiciona valores ao final da lista', 'times = ["Fla", "Cor"]\ntimes.adicionar("Pal", "Cru")\nmostre times');
+  return list;
+})();
 
 var AC_ITEMS = [];
 var AC_INDEX = -1;
@@ -5386,7 +4971,7 @@ function collectVariables(code) {
       if (!t) continue;
       var m = t.match(/^([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)\s*(?:=|:=)/);
       if (m) { vars[m[1]] = true; continue; }
-      var fm = t.match(/^para\s+cada\s+([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)\s+em\b/);
+      var fm = t.match(/^para(?:\s+cada)?\s+([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)\s+em\b/);
       if (fm) { vars[fm[1]] = true; continue; }
       var dm = t.match(/^definir\s+fun[çc](?:ão|ao)\s+([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)\s*\(/);
       if (dm) { vars[dm[1]] = true; }
@@ -5602,6 +5187,69 @@ document.getElementById('btnManual').addEventListener('click', function () {
   if (saved && document.getElementById(saved)) activateManualTab(saved);
   modalOverlay.classList.add('open');
 });
+var quickRefOverlay = document.getElementById('quickRefOverlay');
+var quickRefList = document.getElementById('quickRefList');
+var quickRefEmpty = document.getElementById('quickRefEmpty');
+var quickRefSearch = document.getElementById('quickRefSearch');
+function renderQuickRef(filter) {
+  var q = (filter || '').toLowerCase();
+  var items = QUICK_REF.filter(function (r) {
+    return !q || r.name.toLowerCase().indexOf(q) >= 0 || r.desc.toLowerCase().indexOf(q) >= 0;
+  });
+  items.sort(function (a, b) { return a.name.localeCompare(b.name, 'pt-BR'); });
+  quickRefList.innerHTML = '';
+  for (var i = 0; i < items.length; i++) {
+    (function (r) {
+      var link = document.createElement('a');
+      link.className = 'quickref-item';
+      link.href = '#';
+      link.setAttribute('role', 'button');
+      link.setAttribute('aria-expanded', 'false');
+      link.innerHTML = '<span class="q-name">' + escapeHtml(r.name) + '</span>' +
+        '<span class="q-tag">' + escapeHtml(r.tag) + '</span>' +
+        '<span class="q-desc">' + escapeHtml(r.desc) + '</span>' +
+        '<span class="q-chev">&#9656;</span>';
+      var ex = document.createElement('div');
+      ex.className = 'quickref-example';
+      var pre = document.createElement('pre');
+      pre.textContent = r.example;
+      ex.appendChild(pre);
+      var actions = document.createElement('div');
+      actions.className = 'qr-actions';
+      var btn = document.createElement('button');
+      btn.textContent = 'Inserir no editor';
+      btn.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        insertAtCursor(r.example);
+        quickRefOverlay.classList.remove('open');
+      });
+      actions.appendChild(btn);
+      ex.appendChild(actions);
+      link.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        var open = link.classList.toggle('open');
+        link.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      quickRefList.appendChild(link);
+      quickRefList.appendChild(ex);
+    })(items[i]);
+  }
+  quickRefEmpty.style.display = items.length ? 'none' : 'block';
+}
+document.getElementById('btnQuickRef').addEventListener('click', function () {
+  renderQuickRef(quickRefSearch.value);
+  quickRefOverlay.classList.add('open');
+  quickRefSearch.focus();
+});
+document.getElementById('quickRefClose').addEventListener('click', function () {
+  quickRefOverlay.classList.remove('open');
+});
+quickRefOverlay.addEventListener('click', function (e) {
+  if (e.target === quickRefOverlay) quickRefOverlay.classList.remove('open');
+});
+quickRefSearch.addEventListener('input', function () {
+  renderQuickRef(this.value);
+});
 var sobreOverlay = document.getElementById('sobreOverlay');
 document.getElementById('btnSobre').addEventListener('click', function () {
   sobreOverlay.classList.add('open');
@@ -5642,6 +5290,30 @@ btnFullscreen.addEventListener('click', function () {
   }
 });
 syncFullscreen();
+function requestAppFullscreen() {
+  var d = document.documentElement;
+  if (d.requestFullscreen) {
+    var p = d.requestFullscreen();
+    if (p && p.catch) p.catch(function () {});
+  } else if (d.webkitRequestFullscreen) {
+    d.webkitRequestFullscreen();
+  }
+}
+function tryAutoFullscreen() {
+  if (document.fullscreenElement || document.webkitFullscreenElement) return;
+  requestAppFullscreen();
+}
+var fullscreenPending = true;
+function fullscreenOnFirstGesture() {
+  if (!fullscreenPending) return;
+  fullscreenPending = false;
+  document.removeEventListener('click', fullscreenOnFirstGesture);
+  document.removeEventListener('keydown', fullscreenOnFirstGesture);
+  tryAutoFullscreen();
+}
+tryAutoFullscreen();
+document.addEventListener('click', fullscreenOnFirstGesture);
+document.addEventListener('keydown', fullscreenOnFirstGesture);
 modalClose.addEventListener('click', function () {
   modalOverlay.classList.remove('open');
 });
@@ -5723,60 +5395,6 @@ document.getElementById('janelaClose').addEventListener('click', function () {
 janelaOverlay.addEventListener('click', function (e) {
   if (e.target === janelaOverlay) janelaOverlay.classList.remove('open');
 });
-var pyOverlay = document.getElementById('pyOverlay');
-var pyOutput = document.getElementById('pyOutput');
-var pyWarningsEl = document.getElementById('pyWarnings');
-document.getElementById('btnToPython').addEventListener('click', function () {
-  var code = editor.value;
-  if (!code.trim()) { alert('Nenhum código para traduzir.'); return; }
-  var result = translateProgram(code);
-  if (!result.ok) {
-    pyOutput.textContent = 'Erro na tradução: ' + result.error;
-    pyWarningsEl.style.display = 'none';
-  } else {
-    pyOutput.textContent = result.code;
-    if (result.warnings.length > 0) {
-      pyWarningsEl.style.display = '';
-      pyWarningsEl.textContent = 'Avisos:\n' + result.warnings.join('\n');
-    } else {
-      pyWarningsEl.style.display = 'none';
-    }
-  }
-  pyOverlay.classList.add('open');
-});
-document.getElementById('pyClose').addEventListener('click', function () {
-  pyOverlay.classList.remove('open');
-});
-pyOverlay.addEventListener('click', function (e) {
-  if (e.target === pyOverlay) pyOverlay.classList.remove('open');
-});
-document.getElementById('pyCopy').addEventListener('click', function () {
-  var txt = pyOutput.textContent;
-  if (!txt) return;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(txt);
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = txt;
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); } catch (e) {}
-    document.body.removeChild(ta);
-  }
-});
-document.getElementById('pyDownload').addEventListener('click', function () {
-  var txt = pyOutput.textContent;
-  if (!txt) return;
-  var blob = new Blob([txt], { type: 'text/x-python;charset=utf-8' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'programa.py';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-});
 window.addEventListener('resize', function () {
   if (plotOverlay.classList.contains('open')) renderPlot();
   if (janelaOverlay.classList.contains('open')) renderJanela();
@@ -5786,8 +5404,8 @@ document.addEventListener('keydown', function (e) {
     modalOverlay.classList.remove('open');
     plotOverlay.classList.remove('open');
     janelaOverlay.classList.remove('open');
-    pyOverlay.classList.remove('open');
     sobreOverlay.classList.remove('open');
+    quickRefOverlay.classList.remove('open');
   }
 });
 
