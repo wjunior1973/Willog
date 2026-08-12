@@ -6,6 +6,10 @@
 <title>Willog IDE</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --w-font: 14px;
+    --w-lh: 21px;
+  }
   html, body { height: 100%; }
   body {
     font-family: 'Segoe UI', system-ui, sans-serif;
@@ -37,15 +41,80 @@
   header h1 { font-size: 18px; color: #fff; font-weight: 600; }
   header .subtitle { font-size: 12px; color: #8a8a8a; }
 
-  .toolbar {
+  /* ===== Barra de menus ===== */
+  .menubar {
     background: #252526;
     border-bottom: 1px solid #3c3c3c;
-    padding: 5px 10px;
+    padding: 3px 8px;
     display: flex;
     align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    gap: 2px;
     flex: 0 0 auto;
+    min-height: 34px;
+  }
+  .menu { position: relative; }
+  .menu-trigger {
+    background: transparent;
+    border: none;
+    color: #d4d4d4;
+    font-size: 13px;
+    font-family: inherit;
+    padding: 5px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .menu-trigger:hover, .menu-trigger.open { background: #3a3a3a; color: #fff; }
+  .menu-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 220px;
+    background: #252526;
+    border: 1px solid #3c3c3c;
+    border-radius: 7px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .55);
+    padding: 5px;
+    display: none;
+    flex-direction: column;
+    gap: 1px;
+    z-index: 150;
+  }
+  .menu:last-child .menu-dropdown { left: auto; right: 0; }
+  .menu-dropdown.open { display: flex; }
+  .menu-dropdown button {
+    background: transparent;
+    border: none;
+    color: #d4d4d4;
+    font-size: 13px;
+    font-family: inherit;
+    text-align: left;
+    padding: 7px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .menu-dropdown button:hover { background: #0e639c; color: #fff; }
+  .menu-dropdown .menu-sep { border: none; border-top: 1px solid #3c3c3c; margin: 4px 6px; }
+  .menu-item-check {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 12px;
+    font-size: 13px;
+    color: #d4d4d4;
+    cursor: pointer;
+    border-radius: 5px;
+    user-select: none;
+  }
+  .menu-item-check:hover { background: #3a3a3a; color: #fff; }
+  .menu-item-check input { accent-color: #0e639c; }
+  .run-side { margin-left: 6px; display: flex; align-items: center; gap: 8px; }
+  .run-kbd {
+    font-size: 10.5px;
+    opacity: .75;
+    margin-left: 6px;
+    font-family: Consolas, monospace;
+    font-weight: 400;
   }
   button {
     background: #3c3c3c; color: #e8e8e8;
@@ -58,7 +127,6 @@
   button:disabled { opacity: .5; cursor: default; }
   button.primary { background: #0e639c; border-color: #1177bb; color: #fff; font-weight: 600; }
   button.primary:hover:not(:disabled) { background: #1177bb; }
-  .toolbar .spacer { flex: 1; }
   .toggle { font-size: 13px; color: #b0b0b0; display: inline-flex; align-items: center; gap: 6px; }
   .toggle input { accent-color: #0e639c; }
 
@@ -83,11 +151,13 @@
     padding: 8px 8px 0 0;
     overflow: hidden;
     border-right: 1px solid #2d2d2d;
-    font: 14px/21px Consolas, 'Courier New', monospace;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: var(--w-font);
+    line-height: var(--w-lh);
     user-select: none;
     flex: 0 0 auto;
   }
-  .line-numbers div { height: 21px; }
+  .line-numbers div { height: var(--w-lh); }
 
   .code-wrap { position: relative; flex: 1; min-width: 0; background: #1e1e1e; }
   .code-wrap pre, .code-wrap textarea {
@@ -98,7 +168,9 @@
     border: none;
     outline: none;
     background: transparent;
-    font: 14px/21px Consolas, 'Courier New', monospace;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: var(--w-font);
+    line-height: var(--w-lh);
     white-space: pre;
     overflow: auto;
   }
@@ -194,7 +266,9 @@
     background: #1e1e1e;
     border-right: 1px solid #3c3c3c;
     color: #6a6a6a;
-    font: 12px/21px Consolas, 'Courier New', monospace;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: calc(var(--w-font) - 2px);
+    line-height: var(--w-lh);
     padding: 8px 6px 8px 8px;
     text-align: right;
     user-select: none;
@@ -205,7 +279,9 @@
     background: #1e1e1e;
     overflow: auto;
     padding: 8px 12px;
-    font: 14px/21px Consolas, 'Courier New', monospace;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: var(--w-font);
+    line-height: var(--w-lh);
   }
   .console .placeholder { color: #6a6a6a; font-style: italic; }
   .console .log { padding: 0; white-space: pre; }
@@ -449,6 +525,25 @@
   #janelaOverlay .modal { width: auto; min-width: 320px; max-width: 96vw; }
   body.light .janela-canvas { border-color: #d8d8d8; }
 
+  /* ===== Janela do Modo gráfico (console em canvas) ===== */
+  #graficoOverlay .modal { width: 900px; }
+  #graficoOverlay .modal.grafico-maximized {
+    width: 100vw;
+    max-width: none;
+    max-height: none;
+    height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+  .grafico-body {
+    padding: 0;
+    overflow: auto;
+    min-height: 0;
+    background: #1e1e1e;
+  }
+  #graficoCanvas { display: block; }
+  body.light .grafico-body { background: #ffffff; }
+
   /* ===== Itens do manual em blocos ===== */
   .manual-item {
     background: #212121;
@@ -687,19 +782,141 @@
   body.light .quickref-example { background: #fafafa; border-color: #e0e0e0; border-left-color: #0078d4; }
   body.light .quickref-example pre { color: #333; }
 
+  /* ===== Sugestões ===== */
+  #sugestoesOverlay .modal { width: 680px; }
+  .sugestoes-body { padding: 14px 16px; }
+  .sugestoes-summary {
+    font-size: 12.5px;
+    color: #8a8a8a;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .sugestoes-list { display: flex; flex-direction: column; gap: 6px; }
+  .sugestao-item {
+    background: #212121;
+    border: 1px solid #3a3a3a;
+    border-left: 3px solid #4fc3f7;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    color: #c8c8c8;
+    cursor: pointer;
+    line-height: 1.55;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    transition: border-color .15s, background .15s;
+  }
+  .sugestao-item:hover { border-color: #4fc3f7; background: #262626; }
+  .sugestao-item.warn { border-left-color: #ffb74d; }
+  .sugestao-item .sg-line {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 11px;
+    color: #4fc3f7;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .sugestao-item.warn .sg-line { color: #ffb74d; }
+  .sugestoes-empty {
+    color: #6a9955;
+    padding: 16px;
+    text-align: center;
+    font-size: 13px;
+    background: rgba(106, 153, 85, .1);
+    border: 1px solid rgba(106, 153, 85, .25);
+    border-radius: 6px;
+  }
+  body.light .sugestoes-summary { color: #888; }
+  body.light .sugestao-item { background: #fafafa; border-color: #e0e0e0; color: #333; }
+  body.light .sugestao-item:hover { background: #f0f0f0; border-color: #0078d4; }
+  body.light .sugestao-item .sg-line { color: #0078d4; }
+  body.light .sugestao-item.warn .sg-line { color: #b06000; }
+  body.light .sugestoes-empty { color: #008000; background: rgba(0, 128, 0, .06); border-color: rgba(0, 128, 0, .2); }
+
+  /* ===== Código comentado ===== */
+  #comentadoOverlay .modal { width: 880px; }
+  .comentado-body { padding: 12px 14px; }
+  .comentado-summary {
+    font-size: 12.5px;
+    color: #8a8a8a;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .comentado-list { display: flex; flex-direction: column; gap: 8px; }
+  .comentado-line {
+    background: #212121;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    padding: 6px 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .comentado-line.blank { opacity: .65; }
+  .comentado-line .cl-num {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 11px;
+    color: #4fc3f7;
+    flex: 0 0 28px;
+    text-align: right;
+    line-height: 19px;
+    font-weight: 600;
+    user-select: none;
+    padding-top: 4px;
+  }
+  .comentado-line .cl-inner { flex: 1; min-width: 0; }
+  .comentado-line .cl-code {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 19px;
+    background: #1a1a1a;
+    border: 1px solid #2d2d2d;
+    border-left: 3px solid #0e639c;
+    border-radius: 5px;
+    padding: 3px 10px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #d4d4d4;
+  }
+  .comentado-line .cl-comment {
+    margin-top: 5px;
+    font-size: 12.5px;
+    color: #9ccc65;
+    line-height: 1.5;
+    background: rgba(106, 153, 85, .12);
+    border-radius: 5px;
+    padding: 3px 10px;
+  }
+  .comentado-line .cl-comment::before {
+    content: '\203A';
+    color: #4fc3f7;
+    margin-right: 7px;
+    font-weight: 700;
+  }
+
   /* ===== Modo claro ===== */
   body.light {
     background: #ffffff;
     color: #1f1f1f;
   }
   body.light header,
-  body.light .toolbar,
+  body.light .menubar,
   body.light .console-head { background: #f3f3f3; border-color: #d8d8d8; }
   body.light header h1 { color: #1f1f1f; }
   body.light button { background: #e6e6e6; color: #1f1f1f; border-color: #c8c8c8; }
   body.light button:hover { background: #d6d6d6; }
   body.light button.primary { background: #0e639c; border-color: #1177bb; color: #fff; }
   body.light .toggle { color: #555; }
+  body.light .menu-trigger { color: #333; }
+  body.light .menu-trigger:hover, body.light .menu-trigger.open { background: #e0e0e0; color: #000; }
+  body.light .menu-dropdown { background: #fff; border-color: #d8d8d8; box-shadow: 0 8px 24px rgba(0, 0, 0, .18); }
+  body.light .menu-dropdown button { color: #333; }
+  body.light .menu-dropdown button:hover { background: #0078d4; color: #fff; }
+  body.light .menu-dropdown .menu-sep { border-top-color: #e0e0e0; }
+  body.light .menu-item-check { color: #333; }
+  body.light .menu-item-check:hover { background: #e0e0e0; color: #000; }
+  body.light .menu-item-check input { accent-color: #0078d4; }
   body.light .splitter { background: #d8d8d8; }
   body.light .line-numbers { background: #fafafa; color: #8a8a8a; border-right-color: #e0e0e0; }
   body.light .code-wrap { background: #ffffff; }
@@ -765,6 +982,12 @@
   body.light .autocomplete .ac-item .ac-desc { color: #888; }
   body.light .autocomplete .ac-item.selected { background: #0078d4; }
   body.light .autocomplete .ac-item.selected .ac-name, body.light .autocomplete .ac-item.selected .ac-desc { color: #fff; }
+  body.light .comentado-summary { color: #888; }
+  body.light .comentado-line { background: #ffffff; border-color: #e2e2e2; }
+  body.light .comentado-line .cl-num { color: #0078d4; }
+  body.light .comentado-line .cl-code { background: #fafafa; border-color: #e8e8e8; border-left-color: #0078d4; color: #1f1f1f; }
+  body.light .comentado-line .cl-comment { color: #008000; background: rgba(0, 128, 0, .08); }
+  body.light .comentado-line .cl-comment::before { color: #0078d4; }
 
 </style>
 </head>
@@ -778,19 +1001,50 @@
   </div>
 </header>
 
-<div class="toolbar">
-  <button id="btnRun" class="primary">&#9654; Executar</button>
-  <button id="btnClear">Limpar Editor</button>
-  <button id="btnSave">Salvar (.wil)</button>
-  <button id="btnLoad">Carregar</button>
-  <span class="spacer"></span>
-  <button id="btnManual">Manual</button>
-  <button id="btnQuickRef">Refer&ecirc;ncia r&aacute;pida</button>
-  <button id="btnClearConsole">Limpar</button>
-  <button id="btnTheme">Modo Claro</button>
-  <button id="btnFullscreen">Tela Cheia</button>
-  <button id="btnSobre">Sobre o Willog</button>
-</div>
+<nav class="menubar">
+  <div class="menu">
+    <button class="menu-trigger" data-menu="menu-arquivo" type="button">Arquivo</button>
+    <div class="menu-dropdown" id="menu-arquivo">
+      <button id="btnSave" type="button">Salvar (.wil)</button>
+      <button id="btnLoad" type="button">Carregar...</button>
+      <hr class="menu-sep">
+      <button id="btnClear" type="button">Limpar Editor</button>
+    </div>
+  </div>
+  <div class="menu">
+    <button class="menu-trigger" data-menu="menu-console" type="button">Console</button>
+    <div class="menu-dropdown" id="menu-console">
+      <button id="btnClearConsole" type="button">Limpar Console</button>
+      <button id="btnGrafico" type="button">Console em Janela</button>
+      <hr class="menu-sep">
+      <label class="menu-item-check"><input type="checkbox" id="chkAssign" checked> Mostrar atribui&ccedil;&otilde;es</label>
+    </div>
+  </div>
+  <div class="menu">
+    <button class="menu-trigger" data-menu="menu-exibir" type="button">Exibir</button>
+    <div class="menu-dropdown" id="menu-exibir">
+      <button id="btnZoomIn" type="button">Zoom + <span class="run-kbd">Ctrl +</span></button>
+      <button id="btnZoomOut" type="button">Zoom - <span class="run-kbd">Ctrl -</span></button>
+      <hr class="menu-sep">
+      <button id="btnTheme" type="button">Modo Claro</button>
+      <button id="btnFullscreen" type="button">Tela Cheia</button>
+    </div>
+  </div>
+  <div class="menu">
+    <button class="menu-trigger" data-menu="menu-ajuda" type="button">Ajuda</button>
+    <div class="menu-dropdown" id="menu-ajuda">
+      <button id="btnManual" type="button">Manual de Refer&ecirc;ncia</button>
+      <button id="btnQuickRef" type="button">Refer&ecirc;ncia R&aacute;pida</button>
+      <button id="btnSugestoes" type="button">Revis&atilde;o do C&oacute;digo</button>
+      <button id="btnComentado" type="button">C&oacute;digo Comentado</button>
+      <hr class="menu-sep">
+      <button id="btnSobre" type="button">Sobre o Willog</button>
+    </div>
+  </div>
+  <div class="run-side">
+    <button id="btnRun" class="primary" type="button">&#9654; Executar <span class="run-kbd">Ctrl+Enter</span></button>
+  </div>
+</nav>
 
 <main>
   <div class="editor-wrap">
@@ -808,7 +1062,6 @@
     <div class="console-head">
       <span>Console</span>
       <span class="head-right">
-        <label class="toggle"><input type="checkbox" id="chkAssign" checked> Mostrar atribuições</label>
         <span class="dot" id="runStatus"></span>
       </span>
     </div>
@@ -877,17 +1130,17 @@
         <span class="mi-name">&lt;vari&aacute;vel&gt; := &lt;express&atilde;o&gt;</span>
         <span class="mi-desc">Define uma vari&aacute;vel de forma <b>pregui&ccedil;osa</b>: a express&atilde;o s&oacute; &eacute; calculada quando a vari&aacute;vel for usada.</span>
         <div class="mi-example">
-          <span class="mi-row"><span>x := (1, 3)</span></span>
+          <span class="mi-row"><span>x := intervalo(1, 3)</span></span>
           <span class="mi-row"><span>y := 2 * x</span></span>
           <span class="mi-row"><span>mostre y</span><span class="mi-arrow">&rarr;</span><span class="ex">2,4,6</span></span>
         </div>
       </div>
 
       <div class="manual-item">
-        <span class="mi-name">(in&iacute;cio, fim[, passo])</span>
-        <span class="mi-desc">Cria um intervalo num&eacute;rico do in&iacute;cio at&eacute; o fim (inclusive), com passo opcional.</span>
+        <span class="mi-name">intervalo(in&iacute;cio, fim[, passo])</span>
+        <span class="mi-desc">Cria um intervalo num&eacute;rico do in&iacute;cio at&eacute; o fim (inclusive), com passo opcional. A forma antiga <code>(in&iacute;cio, fim[, passo])</code> continua funcionando.</span>
         <div class="mi-example">
-          <span class="mi-row"><span>x := (-2, 2, 1)</span><span class="mi-arrow">&rarr;</span><span class="ex">-2,-1,0,1,2</span></span>
+          <span class="mi-row"><span>x := intervalo(-2, 2, 1)</span><span class="mi-arrow">&rarr;</span><span class="ex">-2,-1,0,1,2</span></span>
         </div>
       </div>
 
@@ -1028,18 +1281,19 @@ enquanto n &lt;= 5:
       </div>
 
       <div class="manual-item">
-        <span class="mi-name">em (in&iacute;cio, fim[, passo])</span>
+        <span class="mi-name">em intervalo(in&iacute;cio, fim[, passo])</span>
         <span class="mi-desc">Percorre os n&uacute;meros do in&iacute;cio at&eacute; o fim (inclusive), usando o passo quando informado.</span>
         <div class="mi-example">
-          <pre class="manual-pre">para cada item em (1,10):
+          <pre class="manual-pre">para cada item em intervalo(1,10):
     mostre item</pre>
           <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,5,6,7,8,9,10</span></span>
-          <pre class="manual-pre">para cada item em (1,10,3):
+          <pre class="manual-pre">para cada item em intervalo(1,10,3):
     mostre item</pre>
           <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,4,7,10</span></span>
-          <pre class="manual-pre">para x em (1,10):   # "para cada" e&acute; opcional
+          <pre class="manual-pre">para x em intervalo(1,10):   # "para cada" &eacute; opcional
     mostre x</pre>
           <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,5,6,7,8,9,10</span></span>
+          <span class="mi-row"><span class="mi-desc">A forma antiga <code>(in&iacute;cio, fim)</code> tamb&eacute;m continua funcionando no la&ccedil;o.</span></span>
         </div>
       </div>
 
@@ -1175,6 +1429,54 @@ para cada numero em lista:
           <span class="mi-row"><span>lista = [1,2,3]</span></span>
           <span class="mi-row"><span>lista.adicionar(7, 8, 9)</span></span>
           <span class="mi-row"><span>mostre lista</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,7,8,9</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista.aleat&oacute;rio</span>
+        <span class="mi-desc">Sorteia um item qualquer da lista (tamb&eacute;m aceito sem acento: <code>lista.aleatorio</code>).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>lista = [1,2,3,4,5]</span></span>
+          <span class="mi-row"><span>mostre lista.aleat&oacute;rio</span><span class="mi-arrow">&rarr;</span><span class="ex">um dos itens da lista, sorteado</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista.embaralhar</span>
+        <span class="mi-desc">Embaralha os itens da lista (modifica a pr&oacute;pria lista) e retorna a lista embaralhada.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>lista = [1,2,3,4,5,6]</span></span>
+          <span class="mi-row"><span>mostre lista.embaralhar</span><span class="mi-arrow">&rarr;</span><span class="ex">os mesmos itens, em ordem aleat&oacute;ria (ex.: 3,6,4,1,2,5)</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista.combina&ccedil;&atilde;o(n)</span>
+        <span class="mi-desc">Mostra, um por linha, todos os arranjos de n itens tirados da lista, sem repetir posi&ccedil;&otilde;es. n deve ser inteiro entre 1 e a quantidade de itens da lista (tamb&eacute;m aceito sem acento: <code>lista.combinacao(n)</code>).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>lista = [1,2,3]</span></span>
+          <span class="mi-row"><span>mostre lista.combina&ccedil;&atilde;o(2)</span><span class="mi-arrow">&rarr;</span></span>
+          <span class="mi-row"><span class="ex">1,2</span></span>
+          <span class="mi-row"><span class="ex">1,3</span></span>
+          <span class="mi-row"><span class="ex">2,1</span></span>
+          <span class="mi-row"><span class="ex">2,3</span></span>
+          <span class="mi-row"><span class="ex">3,1</span></span>
+          <span class="mi-row"><span class="ex">3,2</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista.arranjo(n)</span>
+        <span class="mi-desc">Mostra, um por linha, todos os grupos de n itens tirados da lista sem repetir e sem importar a ordem. n deve ser inteiro entre 1 e a quantidade de itens da lista.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>lista = [1,2,3,4]</span></span>
+          <span class="mi-row"><span>lista.arranjo(2)</span><span class="mi-arrow">&rarr;</span></span>
+          <span class="mi-row"><span class="ex">1,2</span></span>
+          <span class="mi-row"><span class="ex">1,3</span></span>
+          <span class="mi-row"><span class="ex">1,4</span></span>
+          <span class="mi-row"><span class="ex">2,3</span></span>
+          <span class="mi-row"><span class="ex">2,4</span></span>
+          <span class="mi-row"><span class="ex">3,4</span></span>
         </div>
       </div>
 
@@ -1444,7 +1746,7 @@ para cada numero em lista:
           <span class="mi-name">plotar(y, x)</span>
           <span class="mi-desc">Abre uma janela com o gr&aacute;fico cartesiano de y em fun&ccedil;&atilde;o de x.</span>
           <div class="mi-example">
-            <span class="mi-row"><span>x := (-2,2)</span></span>
+            <span class="mi-row"><span>x := intervalo(-2,2)</span></span>
             <span class="mi-row"><span>y := 2*x+3</span></span>
             <span class="mi-row"><span>plotar(y, x)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre o gr&aacute;fico</span></span>
           </div>
@@ -1453,7 +1755,7 @@ para cada numero em lista:
           <span class="mi-name">tabela(x, y)</span>
           <span class="mi-desc">Mostra uma tabela tabulada com cabe&ccedil;alho <code>x | y</code> e colunas separadas por <code>|</code>.</span>
           <div class="mi-example">
-            <span class="mi-row"><span>x := (-5,5)</span></span>
+            <span class="mi-row"><span>x := intervalo(-5,5)</span></span>
             <span class="mi-row"><span>y := x+1</span></span>
             <span class="mi-row"><span>tabela(x, y)</span><span class="mi-arrow">&rarr;</span></span>
             <span class="mi-row"><span class="ex">x&nbsp;&nbsp;|&nbsp;y</span></span>
@@ -1488,6 +1790,14 @@ para cada numero em lista:
           <div class="mi-example">
             <span class="mi-row"><span>janela(500, 300); c&iacute;rculo(250, 150, 60, azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e desenha um c&iacute;rculo azul de raio 60 no centro, sem preenchimento</span></span>
             <span class="mi-row"><span>janela(500, 300); c&iacute;rculo(250, 150, 60, azul, amarelo)</span><span class="mi-arrow">&rarr;</span><span class="ex">o mesmo c&iacute;rculo, agora com interior amarelo</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">texto(x, y, "texto", cor, tamanho da fonte)</span>
+          <span class="mi-desc">Escreve o texto nas coordenadas (x, y) na janela aberta com o comando <b>janela</b>. A cor pode ser preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom ou rosa (padr&atilde;o branco). O tamanho da fonte &eacute; dado em pixels (padr&atilde;o 14). Execute <b>janela</b> antes de <b>texto</b>.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500, 300); texto(50, 50, "Ol&aacute;, mundo!", amarelo)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e escreve "Ol&aacute;, mundo!" em amarelo a partir do ponto (50, 50)</span></span>
+            <span class="mi-row"><span>janela(500, 300); texto(50, 50, "T&iacute;tulo", branco, 32)</span><span class="mi-arrow">&rarr;</span><span class="ex">escreve o texto com fonte de 32 pixels</span></span>
           </div>
         </div>
       </div>
@@ -1650,6 +1960,21 @@ para cada item em A:
   </div>
 </div>
 
+<div class="modal-overlay" id="graficoOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Console</h2>
+      <div class="plot-controls">
+        <button id="graficoCopy" title="Copiar conteúdo para a área de transferência">Copiar</button>
+        <button class="modal-close" id="graficoClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body grafico-body">
+      <canvas id="graficoCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="sobreOverlay">
   <div class="modal sobre-modal">
     <div class="modal-head">
@@ -1675,6 +2000,38 @@ para cada item em A:
       <input type="text" id="quickRefSearch" class="quickref-search" placeholder="Filtrar comandos e fun&ccedil;&otilde;es..." />
       <div class="quickref-list" id="quickRefList"></div>
       <div class="quickref-empty" id="quickRefEmpty" style="display:none">Nenhum comando ou fun&ccedil;&atilde;o encontrado.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="sugestoesOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Sugest&otilde;es de melhorias</h2>
+      <div class="plot-controls">
+        <button id="sugestoesReanalisar" title="Reanalisar o c&oacute;digo do editor">Reanalisar</button>
+        <button class="modal-close" id="sugestoesClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body sugestoes-body">
+      <div class="sugestoes-summary" id="sugestoesSummary"></div>
+      <div class="sugestoes-list" id="sugestoesList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="comentadoOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>C&oacute;digo Comentado &mdash; Willog</h2>
+      <div class="plot-controls">
+        <button id="comentadoAtualizar" title="Reanalisar o c&oacute;digo do editor">Atualizar</button>
+        <button class="modal-close" id="comentadoClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body comentado-body">
+      <div class="comentado-summary" id="comentadoSummary"></div>
+      <div class="comentado-list" id="comentadoList"></div>
     </div>
   </div>
 </div>
@@ -1787,6 +2144,10 @@ function callFunction(name, args, rawName) {
   function elwise(arg, fn) {
     if (Array.isArray(arg)) return arg.map(function (e) { return elwise(e, fn); });
     return fn(numVal(arg));
+  }
+  if (name === 'intervalo') {
+    if (args.length < 2 || args.length > 3) throw new Error('intervalo espera 2 ou 3 argumentos: intervalo(início, fim[, passo])');
+    return buildRange(args);
   }
   if (name === 'raizq') {
     if (args.length !== 1) throw new Error('raizq espera 1 argumento');
@@ -2152,6 +2513,33 @@ function callFunction(name, args, rawName) {
     lastJanela.circles.push({ x: cx, y: cy, r: cr, c: cc, fill: cf });
     renderJanela();
     return 'círculo desenhado';
+  }
+  if (name === 'texto') {
+    if (args.length < 3 || args.length > 5) {
+      throw new Error('texto espera de 3 a 5 argumentos: texto(x, y, "texto", cor, tamanho da fonte)');
+    }
+    var tx = numVal(args[0]);
+    var ty = numVal(args[1]);
+    if (typeof tx !== 'number' || !isFinite(tx) || typeof ty !== 'number' || !isFinite(ty)) {
+      throw new Error('texto espera números para as coordenadas x e y');
+    }
+    if (typeof args[2] !== 'string') {
+      throw new Error('texto: o conteúdo deve ser um texto entre aspas');
+    }
+    if (!lastJanela) {
+      throw new Error('texto: execute janela(largura, altura) antes de usar texto');
+    }
+    if (tx < 0 || tx > lastJanela.w || ty < 0 || ty > lastJanela.h) {
+      throw new Error('texto: coordenada fora da janela (largura ' + lastJanela.w + ', altura ' + lastJanela.h + ')');
+    }
+    var tc = janelaCor(args[3], '#ffffff');
+    var tfs = args.length >= 5 ? numVal(args[4]) : 14;
+    if (typeof tfs !== 'number' || !isFinite(tfs) || tfs <= 0) {
+      throw new Error('texto: o tamanho da fonte deve ser um número positivo (em pixels)');
+    }
+    lastJanela.texts.push({ x: tx, y: ty, t: args[2], c: tc, s: tfs });
+    renderJanela();
+    return 'texto desenhado';
   }
   if (name === 'paraNúmero' || name === 'paraNumero') {
     if (args.length !== 1) throw new Error('paraNúmero espera 1 argumento');
@@ -3397,7 +3785,7 @@ function parse(input, env) {
           }
         }
         expectOp(')');
-        if (t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi' || t.name === 'média' || t.name === 'primos' || t.name === 'fibonacci' || t.name === 'fibo' || t.name === 'inteiro' || t.name === 'decimal' || t.name === 'fração' || t.name === 'união' || t.name === 'intersecção' || t.name === 'menos' || t.name === 'paraLista' || t.name === 'paraTexto' || t.name === 'paraNúmero' || t.name === 'paraNumero' || t.name === 'inversa' || t.name === 'transposta' || t.name === 'determinante' || t.name === 'plotar' || t.name === 'tabela' || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'aleatorio' || t.name === 'estatísticas' || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo') {
+        if (t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi' || t.name === 'média' || t.name === 'primos' || t.name === 'fibonacci' || t.name === 'fibo' || t.name === 'inteiro' || t.name === 'decimal' || t.name === 'fração' || t.name === 'união' || t.name === 'intersecção' || t.name === 'menos' || t.name === 'paraLista' || t.name === 'paraTexto' || t.name === 'paraNúmero' || t.name === 'paraNumero' || t.name === 'inversa' || t.name === 'transposta' || t.name === 'determinante' || t.name === 'plotar' || t.name === 'tabela' || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'aleatorio' || t.name === 'estatísticas' || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo' || t.name === 'texto' || t.name === 'intervalo') {
           return callFunction(t.name, args);
         }
         var base = (t.name in env) ? env[t.name] : undefined;
@@ -3775,6 +4163,93 @@ function getProperty(v, name, args) {
     if (args === null || args.length === 0) throw new Error('adicionar espera ao menos 1 argumento');
     for (var k = 0; k < args.length; k++) v.push(args[k]);
     return v;
+  }
+  if (name === 'aleatório' || name === 'aleatorio') {
+    if (args !== null) throw new Error('"aleatório" não recebe argumentos');
+    if (!Array.isArray(v)) throw new Error('"aleatório" só se aplica a listas');
+    if (v.length === 0) throw new Error('aleatório: lista vazia');
+    return v[Math.floor(Math.random() * v.length)];
+  }
+  if (name === 'embaralhar') {
+    if (args !== null) throw new Error('"embaralhar" não recebe argumentos');
+    if (!Array.isArray(v)) throw new Error('"embaralhar" só se aplica a listas');
+    for (var s = v.length - 1; s > 0; s--) {
+      var r = Math.floor(Math.random() * (s + 1));
+      var tmp = v[s]; v[s] = v[r]; v[r] = tmp;
+    }
+    return v;
+  }
+  if (name === 'combinação' || name === 'combinacao') {
+    if (!Array.isArray(v)) throw new Error('"combinação" só se aplica a listas');
+    if (args === null || args.length !== 1) throw new Error('combinação espera 1 argumento (a quantidade de itens)');
+    var cn = numVal(args[0]);
+    if (typeof cn !== 'number' || !isFinite(cn) || Math.floor(cn) !== cn) {
+      throw new Error('combinação: a quantidade deve ser um número inteiro');
+    }
+    if (cn < 1 || cn > v.length) {
+      throw new Error('combinação: a quantidade deve estar entre 1 e ' + v.length);
+    }
+    var count = 1;
+    for (var ci = 0; ci < cn; ci++) count *= (v.length - ci);
+    if (count > 100000) {
+      throw new Error('combinação: quantidade de combinações muito grande (' + count + ')');
+    }
+    var combos = [];
+    var used = {};
+    var cur = [];
+    (function gen() {
+      if (cur.length === cn) {
+        combos.push(cur.slice());
+        return;
+      }
+      for (var gi = 0; gi < v.length; gi++) {
+        if (used[gi]) continue;
+        used[gi] = true;
+        cur.push(v[gi]);
+        gen();
+        cur.pop();
+        used[gi] = false;
+      }
+    })();
+    var lines = [];
+    for (var l = 0; l < combos.length; l++) {
+      lines.push(combos[l].map(function (x) { return formatValue(x); }).join(','));
+    }
+    return lines.join('\n');
+  }
+  if (name === 'arranjo') {
+    if (!Array.isArray(v)) throw new Error('"arranjo" só se aplica a listas');
+    if (args === null || args.length !== 1) throw new Error('arranjo espera 1 argumento (a quantidade de itens)');
+    var an = numVal(args[0]);
+    if (typeof an !== 'number' || !isFinite(an) || Math.floor(an) !== an) {
+      throw new Error('arranjo: a quantidade deve ser um número inteiro');
+    }
+    if (an < 1 || an > v.length) {
+      throw new Error('arranjo: a quantidade deve estar entre 1 e ' + v.length);
+    }
+    var acount = 1;
+    for (var ai = 0; ai < an; ai++) acount = Math.round(acount * (v.length - ai) / (ai + 1));
+    if (acount > 100000) {
+      throw new Error('arranjo: quantidade de arranjos muito grande (' + acount + ')');
+    }
+    var arCombo = [];
+    var arCur = [];
+    (function agen(start) {
+      if (arCur.length === an) {
+        arCombo.push(arCur.slice());
+        return;
+      }
+      for (var ag = start; ag < v.length; ag++) {
+        arCur.push(v[ag]);
+        agen(ag + 1);
+        arCur.pop();
+      }
+    })(0);
+    var alines = [];
+    for (var al = 0; al < arCombo.length; al++) {
+      alines.push(arCombo[al].map(function (x) { return formatValue(x); }).join(','));
+    }
+    return alines.join('\n');
   }
   throw new Error('Propriedade desconhecida: "' + name + '"');
 }
@@ -4207,8 +4682,11 @@ function execStatement(line, lineNo, env, out) {
               env[m[1]] = val;
               out.push({ kind: 'assign', text: m[1] + ' = ' + formatValue(val), lineNo: lineNo });
             } else if (/^[A-Za-z_\u00C0-\u00FF][\w\u00C0-\u00FF]*\.[A-Za-z_\u00C0-\u00FF][\w\u00C0-\u00FF]*\s*\(/.test(line)) {
-              parse(line, env);
-            } else if (/^(janela|ponto|linha|círculo)\s*\(/.test(line)) {
+              var propVal = parse(line, env);
+              if (propVal !== undefined && /\.(?:combina[çc]?[ãa]o|arranjo)\s*\(/.test(line)) {
+                out.push({ kind: 'return', text: formatValue(propVal), lineNo: lineNo });
+              }
+            } else if (/^(janela|ponto|linha|círculo|texto)\s*\(/.test(line)) {
               parse(line, env);
             } else {
               var exprVal = parse(line, env);
@@ -4374,7 +4852,7 @@ function tokenizeHighlight(code) {
           word === 'definir' || word === 'função' || word === 'funcao' || word === 'retorne' || word === 'retornar' ||
           word === 'e' || word === 'ou' || word === 'não' || word === 'nao' ||
           word === 'verdadeiro' || word === 'falso') tokens.push({ type: 'keyword', text: word });
-      else if ((word === 'raizq' || word === 'raizc' || word === 'média' || word === 'pi' || word === 'primos' || word === 'fibonacci' || word === 'fibo' || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'expandir' || word === 'união' || word === 'intersecção' || word === 'menos' || word === 'subconjuntos' || word === 'paraLista' || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero' || word === 'inversa' || word === 'transposta' || word === 'determinante' || word === 'plotar' || word === 'tabela' || word === 'derivada' || word === 'integral' || word === 'graus' || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio' || word === 'estatísticas' || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo') && code[j4] === '(') tokens.push({ type: 'function', text: word });
+      else if ((word === 'raizq' || word === 'raizc' || word === 'média' || word === 'pi' || word === 'primos' || word === 'fibonacci' || word === 'fibo' || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'expandir' || word === 'união' || word === 'intersecção' || word === 'menos' || word === 'subconjuntos' || word === 'paraLista' || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero' || word === 'inversa' || word === 'transposta' || word === 'determinante' || word === 'plotar' || word === 'tabela' || word === 'derivada' || word === 'integral' || word === 'graus' || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio' || word === 'estatísticas' || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo' || word === 'texto' || word === 'intervalo') && code[j4] === '(') tokens.push({ type: 'function', text: word });
       else tokens.push({ type: 'identifier', text: word });
       i = j4;
     } else {
@@ -4404,6 +4882,11 @@ var mainEl = document.querySelector('main');
 var modalOverlay = document.getElementById('modalOverlay');
 var modalClose = document.getElementById('modalClose');
 var running = false;
+
+var EDITOR_FONT_MIN = 8;
+var EDITOR_FONT_MAX = 30;
+var editorFontSize = 14;
+var editorLineHeight = 21;
 
 var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
 
@@ -4661,7 +5144,7 @@ function janelaBorda(bg) {
 }
 
 function openJanela(w, h, bg, titulo) {
-  lastJanela = { w: w, h: h, bg: bg || '#000000', points: [], lines: [], circles: [] };
+  lastJanela = { w: w, h: h, bg: bg || '#000000', points: [], lines: [], circles: [], texts: [] };
   document.getElementById('janelaTitle').textContent = titulo || 'Janela';
   document.getElementById('janelaOverlay').classList.add('open');
   renderJanela();
@@ -4717,6 +5200,15 @@ function renderJanela() {
     ctx.beginPath();
     ctx.arc(lastJanela.points[p].x, lastJanela.points[p].y, 2.5, 0, Math.PI * 2);
     ctx.fill();
+  }
+  ctx.font = '14px Consolas, monospace';
+  ctx.textBaseline = 'top';
+  ctx.textAlign = 'left';
+  for (var t = 0; t < lastJanela.texts.length; t++) {
+    var txt = lastJanela.texts[t];
+    ctx.fillStyle = txt.c;
+    ctx.font = txt.s + 'px Consolas, monospace';
+    ctx.fillText(txt.t, txt.x, txt.y);
   }
 }
 
@@ -4814,6 +5306,7 @@ var AC_ALL = (function () {
     ['primos', 'Matemática', 'Os primeiros n números primos'],
     ['fibonacci', 'Matemática', 'Os primeiros n números de Fibonacci'],
     ['fibo', 'Matemática', 'Os primeiros n números de Fibonacci'],
+    ['intervalo', 'Intervalo', 'Cria um intervalo numérico do início até o fim (inclusive), com passo opcional'],
     ['aleatório', 'Matemática', 'Número aleatório inteiro entre min e max'],
     ['aleatorio', 'Matemática', 'Número aleatório inteiro entre min e max'],
     ['cos', 'Trigonometria', 'Cosseno de x (em radianos)'],
@@ -4843,6 +5336,7 @@ var AC_ALL = (function () {
     ['ponto', 'Gráficos', 'Desenha um ponto na janela'],
     ['linha', 'Gráficos', 'Traça uma linha na janela'],
     ['círculo', 'Gráficos', 'Desenha um círculo na janela'],
+    ['texto', 'Gráficos', 'Escreve um texto na janela'],
     ['estatísticas', 'Estatística', 'Medidas estatísticas dos valores']
   ];
   for (var i = 0; i < fns.length; i++) {
@@ -4853,7 +5347,13 @@ var AC_ALL = (function () {
 
 var AC_PROPS = [
   { name: 'ordenada', insert: 'ordenada', paren: false, cat: 'Lista', desc: 'Retorna a lista em ordem crescente' },
-  { name: 'adicionar', insert: 'adicionar()', paren: true, cat: 'Lista', desc: 'Adiciona valores ao final da lista' }
+  { name: 'adicionar', insert: 'adicionar()', paren: true, cat: 'Lista', desc: 'Adiciona valores ao final da lista' },
+  { name: 'aleatório', insert: 'aleatório', paren: false, cat: 'Lista', desc: 'Sorteia um item aleatório da lista' },
+  { name: 'aleatorio', insert: 'aleatorio', paren: false, cat: 'Lista', desc: 'Sorteia um item aleatório da lista (sem acento)' },
+  { name: 'embaralhar', insert: 'embaralhar', paren: false, cat: 'Lista', desc: 'Embaralha os itens da lista (modifica a própria lista)' },
+  { name: 'combinação', insert: 'combinação()', paren: true, cat: 'Lista', desc: 'Mostra os arranjos de n itens da lista' },
+  { name: 'combinacao', insert: 'combinacao()', paren: true, cat: 'Lista', desc: 'Mostra os arranjos de n itens da lista (sem acento)' },
+  { name: 'arranjo', insert: 'arranjo()', paren: true, cat: 'Lista', desc: 'Mostra as combinações de n itens da lista, sem repetição' }
 ];
 
 var QUICK_REF = (function () {
@@ -4871,7 +5371,7 @@ var QUICK_REF = (function () {
   qr('enquanto', 'Comando', 'Repete enquanto a condição for verdadeira', 'n = 5\nenquanto n > 0:\n  mostre n\n  n = n - 1');
   qr('repita', 'Comando', 'Repete o bloco um número fixo de vezes', 'repita(4):\n  mostre "batida"');
   qr('para cada', 'Comando', 'Percorre os itens de uma coleção', 'frutas = ["maçã", "banana", "uva"]\npara cada fruta em frutas:\n  mostre fruta');
-  qr('para x em', 'Comando', 'Percorre os itens de uma coleção (sem "cada")', 'para n em (2, 6, 2):\n  mostre n');
+  qr('para x em', 'Comando', 'Percorre os itens de uma coleção (sem "cada")', 'para n em intervalo(2, 6, 2):\n  mostre n');
   qr('definir função', 'Comando', 'Define uma nova função', 'definir função quadrado(n):\n  retorne n * n\nmostre quadrado(7)');
   qr('retorne', 'Comando', 'Retorna um valor de uma função', 'definir função maior(a, b):\n  se a > b:\n    retorne a\n  senão:\n    retorne b\nmostre maior(12, 9)');
   qr('retornar', 'Comando', 'Retorna um valor de uma função (sinônimo de retorne)', 'definir função saudação(nome):\n  retornar "Olá, " + nome\nmostre saudação("Ana")');
@@ -4891,6 +5391,7 @@ var QUICK_REF = (function () {
   qr('primos', 'Função', 'Os primeiros n números primos', 'mostre primos(6)');
   qr('fibonacci', 'Função', 'Os primeiros n números de Fibonacci', 'mostre fibonacci(7)');
   qr('fibo', 'Função', 'Os primeiros n números de Fibonacci', 'mostre fibo(6)');
+  qr('intervalo', 'Função', 'Cria um intervalo numérico do início até o fim (inclusive), com passo opcional', 'para n em intervalo(1, 10, 2):\n  mostre n');
   qr('aleatório', 'Função', 'Número aleatório inteiro entre min e max', 'mostre aleatório(100, 200)');
   qr('aleatorio', 'Função', 'Número aleatório inteiro entre min e max (sem acento)', 'dado = aleatorio(1, 6)\nmostre "caiu: " + dado');
   qr('cos', 'Função', 'Cosseno de x (em radianos)', 'mostre cos(3.14159265)');
@@ -4914,15 +5415,22 @@ var QUICK_REF = (function () {
   qr('derivada', 'Função', 'Derivada simbólica', 'mostre derivada(x ** 3 - x, x)');
   qr('integral', 'Função', 'Integral indefinida ou definida', 'mostre integral(2 * x, x)');
   qr('graus', 'Função', 'Calcula expressão com trigonométricas em graus', 'mostre graus(sen(90))');
-  qr('plotar', 'Função', 'Abre o gráfico cartesiano de y em função de x', 'x := (0, 4)\ny := x ** 2\nplotar(y, x)');
-  qr('tabela', 'Função', 'Mostra uma tabela tabulada x | y', 'x := (0, 10, 2)\ny := x * 3\nmostre tabela(x, y)');
+  qr('plotar', 'Função', 'Abre o gráfico cartesiano de y em função de x', 'x := intervalo(0, 4)\ny := x ** 2\nplotar(y, x)');
+  qr('tabela', 'Função', 'Mostra uma tabela tabulada x | y', 'x := intervalo(0, 10, 2)\ny := x * 3\nmostre tabela(x, y)');
   qr('janela', 'Função', 'Abre uma janela gráfica', 'janela(400, 300, preto, "Meu desenho")');
   qr('ponto', 'Função', 'Desenha um ponto na janela', 'janela(400, 300)\nponto(200, 150, azul)');
   qr('linha', 'Função', 'Traça uma linha na janela', 'janela(400, 300)\nlinha(100, 100, 300, 200, verde)');
   qr('círculo', 'Função', 'Desenha um círculo na janela', 'janela(400, 300)\ncírculo(200, 150, 80, verde, branco)');
+  qr('texto', 'Função', 'Escreve um texto na janela (cor e tamanho da fonte opcionais)', 'janela(400, 300)\ntexto(50, 50, "Olá, mundo!", branco, 28)');
   qr('estatísticas', 'Função', 'Medidas estatísticas dos valores', 'mostre estatísticas(10, 20, 20, 30)');
   qr('ordenada', 'Propriedade', 'Retorna a lista em ordem crescente', 'notas = [7, 3, 9, 5]\nmostre notas.ordenada');
   qr('adicionar', 'Propriedade', 'Adiciona valores ao final da lista', 'times = ["Fla", "Cor"]\ntimes.adicionar("Pal", "Cru")\nmostre times');
+  qr('aleatório', 'Propriedade', 'Sorteia um item aleatório da lista', 'lista = [1, 2, 3, 4, 5]\nmostre lista.aleatório');
+  qr('aleatorio', 'Propriedade', 'Sorteia um item aleatório da lista (sem acento)', 'lista = [1, 2, 3, 4, 5]\nmostre lista.aleatorio');
+  qr('embaralhar', 'Propriedade', 'Embaralha os itens da lista (modifica a própria lista)', 'lista = [1, 2, 3, 4, 5, 6]\nmostre lista.embaralhar');
+  qr('combinação', 'Propriedade', 'Mostra os arranjos de n itens da lista', 'lista = [1, 2, 3]\nmostre lista.combinação(2)');
+  qr('combinacao', 'Propriedade', 'Mostra os arranjos de n itens da lista (sem acento)', 'lista = [1, 2, 3]\nmostre lista.combinacao(2)');
+  qr('arranjo', 'Propriedade', 'Mostra as combinações de n itens da lista, sem repetição', 'lista = [1, 2, 3, 4]\nlista.arranjo(2)');
   return list;
 })();
 
@@ -5004,7 +5512,7 @@ function acItemsFor(word, inProperty) {
 function measureTextWidth(text) {
   var canvas = measureTextWidth._canvas || (measureTextWidth._canvas = document.createElement('canvas'));
   var ctx = canvas.getContext('2d');
-  ctx.font = '14px Consolas, "Courier New", monospace';
+  ctx.font = editorFontSize + 'px Consolas, "Courier New", monospace';
   return ctx.measureText(text).width;
 }
 
@@ -5016,7 +5524,7 @@ function acPosition() {
   var line = parts.length - 1;
   var colText = parts[parts.length - 1];
   var wrap = acEl.parentElement;
-  var top = 8 + line * 21 - editor.scrollTop;
+  var top = 8 + line * editorLineHeight - editor.scrollTop;
   var left = 12 + measureTextWidth(colText) - editor.scrollLeft;
   var estH = Math.min(acEl.scrollHeight || 220, 220);
   var flip = top + 24 + estH > wrap.clientHeight && top > wrap.clientHeight / 2;
@@ -5111,6 +5619,45 @@ acEl.addEventListener('mousedown', function (e) {
   acAccept();
 });
 
+// ============================================================
+//  BARRA DE MENUS
+// ============================================================
+var menuTriggers = document.querySelectorAll('.menu-trigger');
+var menuDropdowns = document.querySelectorAll('.menu-dropdown');
+function closeAllMenus() {
+  for (var i = 0; i < menuTriggers.length; i++) menuTriggers[i].classList.remove('open');
+  for (var j = 0; j < menuDropdowns.length; j++) menuDropdowns[j].classList.remove('open');
+}
+function anyMenuOpen() {
+  for (var i = 0; i < menuDropdowns.length; i++) {
+    if (menuDropdowns[i].classList.contains('open')) return true;
+  }
+  return false;
+}
+function openMenu(trigger) {
+  closeAllMenus();
+  trigger.classList.add('open');
+  var dd = document.getElementById(trigger.getAttribute('data-menu'));
+  if (dd) dd.classList.add('open');
+}
+for (var mt = 0; mt < menuTriggers.length; mt++) {
+  (function (tr) {
+    tr.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (tr.classList.contains('open')) closeAllMenus();
+      else openMenu(tr);
+    });
+    tr.addEventListener('mouseenter', function () {
+      if (anyMenuOpen()) openMenu(tr);
+    });
+  })(menuTriggers[mt]);
+}
+document.addEventListener('click', closeAllMenus);
+var menuChecks = document.querySelectorAll('.menu-dropdown .menu-item-check');
+for (var mc = 0; mc < menuChecks.length; mc++) {
+  menuChecks[mc].addEventListener('click', function (e) { e.stopPropagation(); });
+}
+
 // Eventos
 btnRun.addEventListener('click', run);
 document.getElementById('btnClearConsole').addEventListener('click', clearConsole);
@@ -5123,6 +5670,31 @@ document.getElementById('btnClear').addEventListener('click', function () {
 document.getElementById('btnSave').addEventListener('click', function () {
   var code = editor.value;
   if (!code.trim()) { alert('Nada para salvar.'); return; }
+  if (typeof process !== 'undefined' && process.versions && process.versions.nw) {
+    var saveInput = document.getElementById('nwSaveInput');
+    if (!saveInput) {
+      saveInput = document.createElement('input');
+      saveInput.type = 'file';
+      saveInput.id = 'nwSaveInput';
+      saveInput.setAttribute('nwsaveas', 'programa.wil');
+      saveInput.style.display = 'none';
+      document.body.appendChild(saveInput);
+      saveInput.addEventListener('change', function () {
+        var path = saveInput.value;
+        if (!path) return;
+        try {
+          var fs = require('fs');
+          if (!/\.wil$/i.test(path)) path += '.wil';
+          fs.writeFileSync(path, editor.value, 'utf8');
+        } catch (err) {
+          alert('Erro ao salvar: ' + err.message);
+        }
+        saveInput.value = '';
+      });
+    }
+    saveInput.click();
+    return;
+  }
   var name = window.prompt('Nome do arquivo:', 'programa');
   if (name === null) return;
   name = name.trim();
@@ -5260,6 +5832,460 @@ document.getElementById('sobreClose').addEventListener('click', function () {
 sobreOverlay.addEventListener('click', function (e) {
   if (e.target === sobreOverlay) sobreOverlay.classList.remove('open');
 });
+var sugestoesOverlay = document.getElementById('sugestoesOverlay');
+var sugestoesList = document.getElementById('sugestoesList');
+var sugestoesSummary = document.getElementById('sugestoesSummary');
+
+var SUG_KEYWORDS = ['mostre', 'mostrar', 'limpe', 'leia', 'se', 'senão', 'senao', 'repita', 'enquanto', 'para', 'cada', 'em', 'definir', 'função', 'funcao', 'retorne', 'retornar', 'e', 'ou', 'não', 'nao', 'verdadeiro', 'falso', 'true', 'false'];
+var SUG_FUNCS = ['raizq', 'raizc', 'pi', 'média', 'primos', 'fibonacci', 'fibo', 'intervalo', 'inteiro', 'decimal', 'fração', 'expandir', 'união', 'intersecção', 'menos', 'subconjuntos', 'paraLista', 'paraTexto', 'paraNúmero', 'paraNumero', 'inversa', 'transposta', 'determinante', 'plotar', 'tabela', 'derivada', 'integral', 'graus', 'cos', 'sen', 'tan', 'arcocos', 'arcosen', 'arcotan', 'aleatório', 'aleatorio', 'estatísticas', 'janela', 'ponto', 'linha', 'círculo', 'texto'];
+
+function sugestoesMaskStrings(line) {
+  var out = '';
+  var quote = null;
+  for (var i = 0; i < line.length; i++) {
+    var ch = line[i];
+    if (quote) {
+      if (quote === '"' && ch === '{') {
+        var depth = 1;
+        out += '{';
+        i++;
+        var innerQuote = null;
+        while (i < line.length && depth > 0) {
+          var c2 = line[i];
+          if (innerQuote) {
+            if (c2 === '\\' && i + 1 < line.length) { out += '  '; i += 2; continue; }
+            if (c2 === innerQuote) innerQuote = null;
+            out += ' ';
+            i++;
+            continue;
+          }
+          if (c2 === '"' || c2 === "'") { innerQuote = c2; out += ' '; i++; continue; }
+          if (c2 === '{') depth++;
+          else if (c2 === '}') depth--;
+          out += c2;
+          i++;
+        }
+        i--;
+        continue;
+      }
+      out += ' ';
+      if (ch === '\\' && i + 1 < line.length) { out += ' '; i++; }
+      else if (ch === quote) quote = null;
+    } else if (ch === '"' || ch === "'") {
+      quote = ch;
+      out += ' ';
+    } else {
+      out += ch;
+    }
+  }
+  return out;
+}
+
+function scanReads(text) {
+  var out = [];
+  var masked = sugestoesMaskStrings(text);
+  var re = /[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF_][A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]*/g;
+  var m;
+  while ((m = re.exec(masked)) !== null) {
+    var name = m[0];
+    if (SUG_KEYWORDS.indexOf(name) >= 0) continue;
+    if (SUG_FUNCS.indexOf(name) >= 0) continue;
+    if (m.index > 0 && masked[m.index - 1] === '.') continue;
+    if (out.indexOf(name) < 0) out.push(name);
+  }
+  return out;
+}
+
+function analyzeSuggestions(code) {
+  var items = [];
+  var stmts = toStatements(code);
+  var allReads = {};
+  var writes = [];
+  var loopVars = {};
+
+  function markReads(list) {
+    for (var i = 0; i < list.length; i++) allReads[list[i]] = true;
+  }
+
+  for (var i = 0; i < stmts.length; i++) {
+    var s = stmts[i];
+    var text = s.text;
+    var m;
+    if (isDefinirFuncao(text)) {
+      var fm = text.match(/^definir\s+fun[çc](?:ão|ao)\s+([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)\s*\(/);
+      if (fm) writes.push({ var: fm[1], line: s.lineNo, func: true });
+    } else if (isParaCada(text)) {
+      try {
+        var pc = extractParaCada(text);
+        loopVars[pc.varName] = true;
+        writes.push({ var: pc.varName, line: s.lineNo });
+        markReads(scanReads(pc.expr));
+      } catch (e) {}
+    } else if ((m = text.match(LEIA_ASSIGN_RE))) {
+      writes.push({ var: m[1], line: s.lineNo });
+      markReads(scanReads(m[2]));
+    } else if ((m = text.match(LAZY_ASSIGN_RE))) {
+      writes.push({ var: m[1], line: s.lineNo });
+      markReads(scanReads(m[2]));
+    } else if ((m = text.match(COMPOUND_ASSIGN_RE))) {
+      writes.push({ var: m[1], line: s.lineNo });
+      allReads[m[1]] = true;
+      markReads(scanReads(m[3]));
+    } else if ((m = text.match(ASSIGN_RE))) {
+      writes.push({ var: m[1], line: s.lineNo });
+      markReads(scanReads(m[2]));
+    } else {
+      markReads(scanReads(text));
+    }
+  }
+
+  var flagUnused = {};
+  for (var w = 0; w < writes.length; w++) {
+    var wv = writes[w].var;
+    if (writes[w].func) {
+      if (!allReads[wv]) {
+        items.push({ line: writes[w].line, sev: 'info', msg: "A função '" + wv + "' é definida mas nunca é chamada." });
+      }
+      continue;
+    }
+    if (loopVars[wv]) continue;
+    if (!allReads[wv] && !flagUnused[wv]) {
+      flagUnused[wv] = true;
+      items.push({ line: writes[w].line, sev: 'warn', msg: "A variável '" + wv + "' é atribuída mas nunca é usada." });
+    }
+  }
+
+  var lines = code.split('\n');
+  for (var li = 0; li < lines.length; li++) {
+    var lineText = lines[li];
+    if (lineText.length > 120) {
+      items.push({ line: li + 1, sev: 'info', msg: 'Linha muito longa (' + lineText.length + ' caracteres). Considere quebrá-la em partes menores.' });
+    }
+    if (lineText.length > 0 && /[ \t]+$/.test(lineText)) {
+      items.push({ line: li + 1, sev: 'info', msg: 'Espaços em branco no final da linha.' });
+    }
+  }
+
+  var perLine = {};
+  for (var si = 0; si < stmts.length; si++) {
+    var pl = stmts[si].lineNo;
+    perLine[pl] = (perLine[pl] || 0) + 1;
+  }
+  var seenSemi = {};
+  for (var pi2 = 0; pi2 < stmts.length; pi2++) {
+    var pl2 = stmts[pi2].lineNo;
+    if (perLine[pl2] > 1 && !seenSemi[pl2]) {
+      seenSemi[pl2] = true;
+      items.push({ line: pl2, sev: 'info', msg: 'Linha com ' + perLine[pl2] + ' comandos separados por ";". Considere separá-los em linhas distintas para facilitar a leitura.' });
+    }
+  }
+
+  var mostreLiterals = {};
+  for (var si2 = 0; si2 < stmts.length; si2++) {
+    var st2 = stmts[si2];
+    var t2 = st2.text;
+    if (isSe(t2)) {
+      var cond = extractSeCond(t2).trim();
+      if (/^(verdadeiro|true|falso|false)$/.test(cond)) {
+        items.push({ line: st2.lineNo, sev: 'warn', msg: "A condição do 'se' é constante (" + cond + "). O bloco sempre será executado (ou nunca)." });
+      }
+    } else if (isEnquanto(t2)) {
+      var wc = extractEnquanto(t2).trim();
+      if (/^(verdadeiro|true)$/.test(wc)) {
+        items.push({ line: st2.lineNo, sev: 'warn', msg: "'enquanto verdadeiro' cria um laço infinito, pois a linguagem não tem comando de saída do laço." });
+      } else if (/^(falso|false)$/.test(wc)) {
+        items.push({ line: st2.lineNo, sev: 'warn', msg: "A condição do 'enquanto' é constante (" + wc + "). O bloco nunca será executado." });
+      }
+    } else if (isRepita(t2)) {
+      var rc = extractRepita(t2).trim();
+      if (/^-?\d+(\.\d+)?$/.test(rc)) {
+        var rv = parseFloat(rc);
+        if (rv <= 0) items.push({ line: st2.lineNo, sev: 'warn', msg: "'repita(" + rc + ")' nunca executa o bloco." });
+      }
+    } else if (/^mostre\b|^mostrar\b/.test(t2)) {
+      var rest3 = t2.replace(/^(mostre|mostrar)\b/, '').trim();
+      var cm = rest3.match(/^"([^"]*)"\s*\+\s*(?!["'])(.+?)\s*$/);
+      if (cm && cm[1].indexOf('{') < 0) {
+        items.push({ line: st2.lineNo, sev: 'info', msg: 'Dica: use interpolação para juntar texto e valores. Ex.: "' + cm[1] + '" + ' + cm[2] + ' pode virar "' + cm[1] + '{' + cm[2] + '}".' });
+      }
+      var lm = rest3.match(/^"([^"]*)"\s*$/);
+      if (lm) {
+        var key = lm[1];
+        if (!mostreLiterals[key]) mostreLiterals[key] = [];
+        mostreLiterals[key].push(st2.lineNo);
+      }
+    }
+  }
+  for (var mk2 in mostreLiterals) {
+    if (mostreLiterals[mk2].length >= 3) {
+      items.push({ line: mostreLiterals[mk2][0], sev: 'info', msg: 'A mensagem "' + mk2 + '" é exibida ' + mostreLiterals[mk2].length + ' vezes. Se for uma repetição, considere usar um laço (repita).' });
+    }
+  }
+
+  for (var si4 = 0; si4 < stmts.length; si4++) {
+    var st4 = stmts[si4];
+    if (st4.indent > 0 && /^(retorne|retornar)\b/.test(st4.text)) {
+      var retName = /^(retorne|retornar)\b/.exec(st4.text)[1];
+      var k = si4 + 1;
+      while (k < stmts.length && stmts[k].indent >= st4.indent) {
+        if (!/^(sen[ãâ]o|senao)\b/.test(stmts[k].text)) {
+          items.push({ line: stmts[k].lineNo, sev: 'info', msg: "'" + retName + "' seguido de mais comandos: as linhas seguintes nunca serão executadas (código inacessível)." });
+        }
+        k++;
+      }
+    }
+  }
+
+  return items;
+}
+
+function jumpToLine(ln) {
+  var lines = editor.value.split('\n');
+  var pos = 0;
+  for (var i = 0; i < ln - 1 && i < lines.length; i++) pos += lines[i].length + 1;
+  editor.focus();
+  editor.setSelectionRange(pos, pos);
+  editor.scrollTop = Math.max(0, (ln - 1) * editorLineHeight - 60);
+  highlight.scrollTop = editor.scrollTop;
+  gutter.scrollTop = editor.scrollTop;
+  updateStatus();
+}
+
+function renderSugestoes() {
+  var items = analyzeSuggestions(editor.value);
+  items.sort(function (a, b) { return a.line - b.line; });
+  sugestoesList.innerHTML = '';
+  var warns = 0, infos = 0;
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].sev === 'warn') warns++;
+    else infos++;
+  }
+  var totalLines = editor.value.split('\n').length;
+  var summary = 'Código analisado: ' + totalLines + ' linha(s). ';
+  if (items.length === 0) {
+    sugestoesSummary.textContent = summary + 'Nenhuma sugestão encontrada.';
+    var empty = document.createElement('div');
+    empty.className = 'sugestoes-empty';
+    empty.textContent = 'Nenhuma sugestão encontrada. Bom trabalho!';
+    sugestoesList.appendChild(empty);
+    return;
+  }
+  sugestoesSummary.textContent = summary + items.length + ' sugestões: ' + warns + ' aviso(s), ' + infos + ' dica(s). Clique numa sugestão para ir até a linha.';
+  for (var j = 0; j < items.length; j++) {
+    var it = items[j];
+    var div = document.createElement('div');
+    div.className = 'sugestao-item' + (it.sev === 'warn' ? ' warn' : '');
+    div.setAttribute('data-line', it.line);
+    div.innerHTML = '<span class="sg-line">Linha ' + it.line + '</span><span>' + escapeHtml(it.msg) + '</span>';
+    sugestoesList.appendChild(div);
+  }
+}
+document.getElementById('btnSugestoes').addEventListener('click', function () {
+  renderSugestoes();
+  sugestoesOverlay.classList.add('open');
+});
+document.getElementById('sugestoesClose').addEventListener('click', function () {
+  sugestoesOverlay.classList.remove('open');
+});
+document.getElementById('sugestoesReanalisar').addEventListener('click', renderSugestoes);
+sugestoesOverlay.addEventListener('click', function (e) {
+  if (e.target === sugestoesOverlay) sugestoesOverlay.classList.remove('open');
+});
+sugestoesList.addEventListener('click', function (e) {
+  var item = e.target.closest ? e.target.closest('.sugestao-item') : null;
+  if (!item) return;
+  var ln = Number(item.getAttribute('data-line'));
+  if (ln > 0) jumpToLine(ln);
+  sugestoesOverlay.classList.remove('open');
+});
+var comentadoOverlay = document.getElementById('comentadoOverlay');
+
+function comentadoCodeHtml(text) {
+  var tokens = tokenizeHighlight(text);
+  var html = '';
+  for (var i = 0; i < tokens.length; i++) {
+    html += '<span class="h-' + tokens[i].type + '">' + escapeHtml(tokens[i].text) + '</span>';
+  }
+  return html;
+}
+
+function splitCommentPart(rawLine) {
+  var quote = null;
+  for (var i = 0; i < rawLine.length; i++) {
+    var ch = rawLine[i];
+    if (quote) {
+      if (ch === '\\' && i + 1 < rawLine.length) i++;
+      else if (ch === quote) quote = null;
+    } else if (ch === '"' || ch === "'") {
+      quote = ch;
+    } else if (ch === '#') {
+      return { code: rawLine.slice(0, i), comment: rawLine.slice(i) };
+    }
+  }
+  return { code: rawLine, comment: null };
+}
+
+function stripQuotes(s) {
+  var t = s.trim();
+  if (t.length >= 2 && (t.charAt(0) === '"' || t.charAt(0) === "'") && t.charAt(t.length - 1) === t.charAt(0)) {
+    return t.slice(1, -1);
+  }
+  return s;
+}
+
+function comentarComando(text) {
+  var t = text.trim();
+  if (!t) return null;
+  if (isSenao(t)) {
+    return 'Bloco "senão": executado quando a condição do "se" anterior for falsa.';
+  }
+  if (isSe(t)) {
+    var cond = extractSeCond(t);
+    return 'Estrutura "se": se a condição "' + cond + '" for verdadeira, o bloco indentado a seguir é executado.';
+  }
+  if (isDefinirFuncao(t)) {
+    var m = t.match(/^definir\s+fun[çc](?:ão|ao)\s+([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)\s*\(([^)]*)\)\s*:?\s*$/);
+    if (m) {
+      var params = [];
+      var rawParams = m[2].split(',');
+      for (var i = 0; i < rawParams.length; i++) {
+        var p = rawParams[i].trim();
+        if (p) params.push(p);
+      }
+      return 'Define a função "' + m[1] + '" com ' + (params.length ? 'os parâmetros ' + params.join(', ') : 'nenhum parâmetro') + '. O bloco indentado a seguir é o corpo da função e só é executado quando a função for chamada.';
+    }
+  }
+  if (isParaCada(t)) {
+    var pc = extractParaCada(t);
+    return 'Laço "para": percorre os itens de "' + pc.expr + '". A cada repetição, o item atual é guardado na variável "' + pc.varName + '" e o bloco indentado a seguir é executado.';
+  }
+  if (isRepita(t)) {
+    var cnt = extractRepita(t);
+    return 'Laço "repita": executa o bloco indentado a seguir "' + cnt + '" vez(es).';
+  }
+  if (isEnquanto(t)) {
+    var wc = extractEnquanto(t);
+    return 'Laço "enquanto": enquanto a condição "' + wc + '" for verdadeira, o bloco indentado a seguir é executado (a condição é reavaliada a cada repetição).';
+  }
+  var m2;
+  if ((m2 = t.match(LEIA_ASSIGN_RE))) {
+    var msg = stripQuotes(m2[2]);
+    return 'Comando "leia": pausa o programa e pede um valor ao usuário' + (msg ? ' (mensagem: "' + msg + '")' : '') + '. O valor digitado é armazenado na variável "' + m2[1] + '".';
+  }
+  if ((m2 = t.match(LAZY_ASSIGN_RE))) {
+    return 'Define a variável "' + m2[1] + '" de forma preguiçosa: a expressão "' + m2[2].trim() + '" só é calculada quando a variável for usada em outra parte do programa.';
+  }
+  if ((m2 = t.match(COMPOUND_ASSIGN_RE))) {
+    var opDesc = { '**=': 'eleva a', '+=': 'soma', '-=': 'subtrai', '*=': 'multiplica por', '/=': 'divide por' }[m2[2]] || m2[2];
+    return 'Atualiza a variável "' + m2[1] + '": ' + opDesc + ' "' + m2[3].trim() + '" e guarda o resultado de volta na variável.';
+  }
+  if ((m2 = t.match(ASSIGN_RE))) {
+    return 'Armazena o resultado da expressão "' + m2[2].trim() + '" na variável "' + m2[1] + '".';
+  }
+  if (/^(mostre|mostrar)\b/.test(t)) {
+    var rest = stripQuotes(t.replace(/^(mostre|mostrar)\b/, '').trim());
+    return 'Comando "mostre": exibe no console o valor de "' + rest + '".';
+  }
+  if (/^limpe\b/.test(t)) {
+    return 'Comando "limpe": apaga todo o conteúdo atual do console durante a execução.';
+  }
+  if (/^(retorne|retornar)\b/.test(t)) {
+    var rr = t.replace(/^(retorne|retornar)\b/, '').trim();
+    return rr ? 'Comando "retorne": encerra a função e devolve o valor de "' + rr + '" para quem a chamou.' : 'Comando "retorne": encerra a função sem devolver valor.';
+  }
+  return 'Executa a expressão "' + t + '".';
+}
+
+function gerarComentarioLinha(rawLine) {
+  var trimmed = rawLine.trim();
+  var isBlank = trimmed === '';
+  var cmt = splitCommentPart(rawLine);
+  var comments = [];
+  var stmts = 0;
+  var isBlock = false;
+
+  if (cmt.comment && cmt.code.trim() === '') {
+    comments.push('Comentário: "' + cmt.comment.trim() + '". Esta linha é ignorada na execução.');
+  } else {
+    var parts = splitStatements(cmt.code);
+    for (var i = 0; i < parts.length; i++) {
+      var t = parts[i].trim();
+      if (!t) continue;
+      stmts++;
+      var c = comentarComando(t);
+      if (c) {
+        if (/^(Estrutura|Laço|Bloco)/.test(c)) isBlock = true;
+        comments.push(c);
+      }
+    }
+    if (cmt.comment) {
+      comments.push('No final da linha há um comentário ("' + cmt.comment.trim() + '") que é ignorado na execução.');
+    }
+  }
+
+  if (comments.length === 0) {
+    comments.push('Linha em branco — ignorada na execução.');
+  }
+
+  return { code: rawLine, isBlank: isBlank, comments: comments, stmts: stmts, isBlock: isBlock, commentCount: cmt.comment ? 1 : 0 };
+}
+
+function renderComentado() {
+  var code = editor.value;
+  var lines = code.split('\n');
+  var listEl = document.getElementById('comentadoList');
+  var summaryEl = document.getElementById('comentadoSummary');
+  listEl.innerHTML = '';
+  if (!code.trim()) {
+    summaryEl.textContent = 'O editor está vazio. Digite um código Willog para ver a explicação de cada linha.';
+    var empty = document.createElement('div');
+    empty.className = 'sugestoes-empty';
+    empty.textContent = 'Nenhum código para comentar.';
+    listEl.appendChild(empty);
+    return;
+  }
+  var totalStmts = 0;
+  var totalBlocks = 0;
+  var totalCmts = 0;
+  for (var i = 0; i < lines.length; i++) {
+    var info = gerarComentarioLinha(lines[i]);
+    totalStmts += info.stmts;
+    totalBlocks += info.isBlock ? 1 : 0;
+    totalCmts += info.commentCount;
+    var row = document.createElement('div');
+    row.className = 'comentado-line' + (info.isBlank ? ' blank' : '');
+    var num = document.createElement('span');
+    num.className = 'cl-num';
+    num.textContent = i + 1;
+    row.appendChild(num);
+    var inner = document.createElement('div');
+    inner.className = 'cl-inner';
+    var codeEl = document.createElement('div');
+    codeEl.className = 'cl-code';
+    codeEl.innerHTML = comentadoCodeHtml(info.code) || '&nbsp;';
+    inner.appendChild(codeEl);
+    for (var c = 0; c < info.comments.length; c++) {
+      var cEl = document.createElement('div');
+      cEl.className = 'cl-comment';
+      cEl.textContent = info.comments[c];
+      inner.appendChild(cEl);
+    }
+    row.appendChild(inner);
+    listEl.appendChild(row);
+  }
+  summaryEl.textContent = 'Análise: ' + lines.length + ' linha(s), ' + totalStmts + ' comando(s), ' + totalBlocks + ' estrutura(s) de bloco, ' + totalCmts + ' comentário(s). Cada linha mostra o que acontece quando o programa é executado.';
+}
+document.getElementById('btnComentado').addEventListener('click', function () {
+  renderComentado();
+  comentadoOverlay.classList.add('open');
+});
+document.getElementById('comentadoClose').addEventListener('click', function () {
+  comentadoOverlay.classList.remove('open');
+});
+document.getElementById('comentadoAtualizar').addEventListener('click', renderComentado);
+comentadoOverlay.addEventListener('click', function (e) {
+  if (e.target === comentadoOverlay) comentadoOverlay.classList.remove('open');
+});
 var btnTheme = document.getElementById('btnTheme');
 function applyTheme(light) {
   document.body.classList.toggle('light', light);
@@ -5290,30 +6316,32 @@ btnFullscreen.addEventListener('click', function () {
   }
 });
 syncFullscreen();
-function requestAppFullscreen() {
-  var d = document.documentElement;
-  if (d.requestFullscreen) {
-    var p = d.requestFullscreen();
-    if (p && p.catch) p.catch(function () {});
-  } else if (d.webkitRequestFullscreen) {
-    d.webkitRequestFullscreen();
+
+var btnZoomIn = document.getElementById('btnZoomIn');
+var btnZoomOut = document.getElementById('btnZoomOut');
+function zoomIn() {
+  if (editorFontSize < EDITOR_FONT_MAX) {
+    editorFontSize += 1;
+    applyZoom();
   }
 }
-function tryAutoFullscreen() {
-  if (document.fullscreenElement || document.webkitFullscreenElement) return;
-  requestAppFullscreen();
+function zoomOut() {
+  if (editorFontSize > EDITOR_FONT_MIN) {
+    editorFontSize -= 1;
+    applyZoom();
+  }
 }
-var fullscreenPending = true;
-function fullscreenOnFirstGesture() {
-  if (!fullscreenPending) return;
-  fullscreenPending = false;
-  document.removeEventListener('click', fullscreenOnFirstGesture);
-  document.removeEventListener('keydown', fullscreenOnFirstGesture);
-  tryAutoFullscreen();
+function applyZoom() {
+  editorLineHeight = Math.round(editorFontSize * 1.5);
+  document.documentElement.style.setProperty('--w-font', editorFontSize + 'px');
+  document.documentElement.style.setProperty('--w-lh', editorLineHeight + 'px');
+  try { localStorage.setItem('willprogZoom', String(editorFontSize)); } catch (e) {}
+  syncAll();
+  updateStatus();
 }
-tryAutoFullscreen();
-document.addEventListener('click', fullscreenOnFirstGesture);
-document.addEventListener('keydown', fullscreenOnFirstGesture);
+btnZoomIn.addEventListener('click', zoomIn);
+btnZoomOut.addEventListener('click', zoomOut);
+
 modalClose.addEventListener('click', function () {
   modalOverlay.classList.remove('open');
 });
@@ -5395,17 +6423,162 @@ document.getElementById('janelaClose').addEventListener('click', function () {
 janelaOverlay.addEventListener('click', function (e) {
   if (e.target === janelaOverlay) janelaOverlay.classList.remove('open');
 });
+var graficoOverlay = document.getElementById('graficoOverlay');
+function graficoWrap(ctx, text, maxWidth) {
+  var lines = [];
+  var cur = '';
+  for (var i = 0; i < text.length; i++) {
+    var test = cur + text[i];
+    if (ctx.measureText(test).width > maxWidth && cur !== '') {
+      lines.push(cur);
+      cur = text[i];
+    } else {
+      cur = test;
+    }
+  }
+  if (cur !== '') lines.push(cur);
+  if (lines.length === 0) lines.push('');
+  return lines;
+}
+function renderGrafico() {
+  var canvas = document.getElementById('graficoCanvas');
+  var body = document.querySelector('#graficoOverlay .grafico-body');
+  if (!body || !canvas) return;
+  var cs = window.getComputedStyle(consoleEl);
+  var fontFamily = cs.fontFamily || "Consolas, 'Courier New', monospace";
+  var fontSize = parseFloat(cs.fontSize) || 14;
+  var lineHeight = parseFloat(cs.lineHeight) || 21;
+  var bg = cs.backgroundColor || '#1e1e1e';
+  var textPad = parseFloat(cs.paddingLeft) || 12;
+  var padTop = parseFloat(cs.paddingTop) || 8;
+  var gs = window.getComputedStyle(consoleGutter);
+  var gutterBg = gs.backgroundColor || '#1e1e1e';
+  var gutterColor = gs.color || '#6a6a6a';
+  var gutterWidth = parseFloat(gs.width) || 44;
+  var gutterPadRight = parseFloat(gs.paddingRight) || 6;
+  var gutterPadTop = parseFloat(gs.paddingTop) || 8;
+
+  var entries = [];
+  var kids = consoleEl.children;
+  for (var i = 0; i < kids.length; i++) {
+    var kid = kids[i];
+    entries.push({ color: window.getComputedStyle(kid).color, text: kid.textContent });
+  }
+  if (entries.length === 0) {
+    entries.push({ color: '#8a8a8a', text: 'Console vazio.' });
+  }
+
+  var dpr = window.devicePixelRatio || 1;
+  var ctx = canvas.getContext('2d');
+  ctx.font = fontSize + 'px ' + fontFamily;
+
+  var availW = Math.max(body.clientWidth - gutterWidth - textPad * 2, 100);
+  var rows = [];
+  for (var e = 0; e < entries.length; e++) {
+    var raw = entries[e].text.split('\n');
+    for (var r = 0; r < raw.length; r++) {
+      var ws = graficoWrap(ctx, raw[r], availW);
+      for (var w = 0; w < ws.length; w++) {
+        rows.push({ text: ws[w], color: entries[e].color });
+      }
+    }
+  }
+
+  var width = Math.max(Math.round(availW + gutterWidth + textPad * 2), 320);
+  var height = Math.max(Math.round(rows.length * lineHeight + padTop * 2), 60);
+
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  canvas.style.width = width + 'px';
+  canvas.style.height = height + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+  ctx.fillStyle = gutterBg;
+  ctx.fillRect(0, 0, gutterWidth, height);
+
+  ctx.font = fontSize + 'px ' + fontFamily;
+  ctx.textBaseline = 'top';
+  var y = padTop;
+  for (var r2 = 0; r2 < rows.length; r2++) {
+    ctx.fillStyle = gutterColor;
+    ctx.textAlign = 'right';
+    ctx.fillText(String(r2 + 1), gutterWidth - gutterPadRight, y);
+    ctx.fillStyle = rows[r2].color;
+    ctx.textAlign = 'left';
+    ctx.fillText(rows[r2].text, gutterWidth + textPad, y);
+    y += lineHeight;
+  }
+}
+function consoleText() {
+  var parts = [];
+  var kids = consoleEl.children;
+  for (var i = 0; i < kids.length; i++) {
+    if (kids[i].classList.contains('placeholder')) continue;
+    parts.push(kids[i].textContent);
+  }
+  return parts.join('\n');
+}
+function copyConsoleText() {
+  var text = consoleText();
+  if (!text) text = 'Console vazio.';
+  var done = function () {
+    var btn = document.getElementById('graficoCopy');
+    if (btn) {
+      var old = btn.textContent;
+      btn.textContent = 'Copiado!';
+      setTimeout(function () { btn.textContent = old; }, 1500);
+    }
+  };
+  function fallback() {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, fallback);
+  } else {
+    fallback();
+  }
+}
+function openGrafico() {
+  var gm = document.querySelector('#graficoOverlay .modal');
+  if (gm) gm.classList.add('grafico-maximized');
+  graficoOverlay.classList.add('open');
+  requestAnimationFrame(renderGrafico);
+}
+document.getElementById('btnGrafico').addEventListener('click', openGrafico);
+document.getElementById('graficoCopy').addEventListener('click', copyConsoleText);
+document.getElementById('graficoClose').addEventListener('click', function () {
+  graficoOverlay.classList.remove('open');
+});
+graficoOverlay.addEventListener('click', function (e) {
+  if (e.target === graficoOverlay) graficoOverlay.classList.remove('open');
+});
 window.addEventListener('resize', function () {
   if (plotOverlay.classList.contains('open')) renderPlot();
   if (janelaOverlay.classList.contains('open')) renderJanela();
+  if (graficoOverlay.classList.contains('open')) renderGrafico();
 });
 document.addEventListener('keydown', function (e) {
+  if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) { e.preventDefault(); zoomIn(); return; }
+  if ((e.ctrlKey || e.metaKey) && (e.key === '-' || e.key === '_')) { e.preventDefault(); zoomOut(); return; }
   if (e.key === 'Escape') {
+    closeAllMenus();
     modalOverlay.classList.remove('open');
     plotOverlay.classList.remove('open');
     janelaOverlay.classList.remove('open');
+    graficoOverlay.classList.remove('open');
     sobreOverlay.classList.remove('open');
     quickRefOverlay.classList.remove('open');
+    sugestoesOverlay.classList.remove('open');
+    comentadoOverlay.classList.remove('open');
   }
 });
 
@@ -5476,7 +6649,10 @@ window.addEventListener('resize', syncAll);
 var savedCode = null;
 try { savedCode = localStorage.getItem(CODE_STORAGE_KEY); } catch (e) {}
 if (savedCode && savedCode.trim()) editor.value = savedCode;
-syncAll();
+var savedZoom = null;
+try { savedZoom = parseInt(localStorage.getItem('willprogZoom'), 10); } catch (e) {}
+if (isFinite(savedZoom)) editorFontSize = Math.max(EDITOR_FONT_MIN, Math.min(EDITOR_FONT_MAX, savedZoom));
+applyZoom();
 </script>
 </body>
 </html>
