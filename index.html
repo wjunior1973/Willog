@@ -284,7 +284,7 @@
     line-height: var(--w-lh);
   }
   .console .placeholder { color: #6a6a6a; font-style: italic; }
-  .console .log { padding: 0; white-space: pre; }
+  .console .log { padding: 0; white-space: pre-wrap; overflow-wrap: break-word; word-wrap: break-word; font-weight: bold; }
   .console .log.assign { color: #8a8a8a; }
   .console .log.error { color: #f48771; }
   .console .log.info { color: #4fc3f7; }
@@ -965,8 +965,8 @@
   body.light .manual-item > .mi-name { color: #795e26; background: rgba(121, 94, 38, .06); border-color: rgba(121, 94, 38, .2); }
   body.light .manual-item > .mi-name::before { color: #0078d4; }
   body.light .manual-item > .mi-desc { color: #444; }
-  body.light .manual-item > .mi-example { background: #fafafa; border-color: #e8e8e8; border-left-color: #0078d4; }
-  body.light .manual-item > .mi-example .mi-arrow { color: #999; }
+  body.light .manual-item > .mi-example { background: #fafafa; border-color: #e8e8e8; border-left-color: #0078d4; color: #444; }
+  body.light .manual-item > .mi-example .mi-arrow { color: #666; }
   body.light .manual-item > .mi-example .manual-pre { background: transparent; }
   body.light .manual-note { background: rgba(0, 120, 212, .06); border-color: rgba(0, 120, 212, .2); border-left-color: #0078d4; color: #1f1f1f; }
   body.light .mi-section h4 { color: #666; }
@@ -997,7 +997,7 @@
   <span class="logo">W</span>
   <div>
     <h1>Willog IDE</h1>
-    <span class="subtitle">Pseudolinguagem de programação &mdash; Editor e interpretador</span>
+    <span class="subtitle">Linguagem de programação - Editor e interpretador</span>
   </div>
 </header>
 
@@ -1156,6 +1156,32 @@
         </div>
       </div>
 
+      <div class="mi-section"><span class="ms-icon">&#8629;</span><h4>Persist&ecirc;ncia de Dados</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">salvar(diret&oacute;rio, arquivo, valor1, valor2, ...)</span>
+        <span class="mi-desc">Salva vari&aacute;veis, textos e n&uacute;meros em um arquivo de texto. O dire&oacute;rio e o nome do arquivo s&atilde;o fornecidos entre aspas; os demais argumentos s&atilde;o as vari&aacute;veis (ou valores) a guardar.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">nome = "João"
+idade = 20
+salvar("dados", "perfil.txt", nome, idade)</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">grava nome="Jo&atilde;o" e idade=20 no arquivo dados/perfil.txt</span></span>
+          <span class="mi-row"><span class="mi-desc">No navegador, os dados ficam no armazenamento local (chave dire&oacute;rio/arquivo); no NW.js o arquivo &eacute; gravado de verdade no disco.</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">carregar(diret&oacute;rio, arquivo, vari&aacute;vel1, vari&aacute;vel2, ...)</span>
+        <span class="mi-desc">L&ecirc; o arquivo de texto e devolve os valores salvos &agrave;s vari&aacute;veis informadas. O valor &eacute; atribu&iacute;do pelo nome da vari&aacute;vel (quando o nome confere) ou, na falta, na ordem em que os valores aparecem no arquivo.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">nome = ""
+idade = 0
+carregar("dados", "perfil.txt", nome, idade)
+mostre nome + " tem " + idade + " anos"</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">Jo&atilde;o tem 20 anos</span></span>
+        </div>
+      </div>
+
       <div class="mi-section"><span class="ms-icon">;</span><h4>Comandos M&uacute;ltiplos</h4></div>
 
       <div class="manual-item">
@@ -1163,6 +1189,17 @@
         <span class="mi-desc">Separa v&aacute;rios comandos na mesma linha.</span>
         <div class="mi-example">
           <span class="mi-row"><span>a=10;b=20;c=30</span><span class="mi-arrow">&rarr;</span><span class="ex">equivale a 3 linhas separadas</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">_</span>
+        <span class="mi-desc">Dentro de um texto, no final da linha, indica que o texto continua na pr&oacute;xima linha do Editor. O <code>_</code> e a quebra de linha s&atilde;o removidos e o texto &eacute; unido como se tudo estivesse numa linha s&oacute;. Fora de um texto, o <code>_</code> no fim da linha n&atilde;o continua nada.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">mensagem = "Willog _
+é um IDE"
+mostre mensagem</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">Willog é um IDE</span></span>
         </div>
       </div>
 
@@ -1533,6 +1570,30 @@ para cada numero em lista:
           <span class="mi-name">raizc(x)</span>
           <span class="mi-desc">Raiz c&uacute;bica de x.</span>
           <div class="mi-example"><span class="mi-row"><span>raizc(8)</span><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">log(x, base)</span>
+          <span class="mi-desc">Logaritmo de x na base informada.</span>
+          <div class="mi-example"><span class="mi-row"><span>log(8, 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">logn(x) | ln(x)</span>
+          <span class="mi-desc">Logaritmo natural de x (base e).</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>logn(10)</span><span class="mi-arrow">&rarr;</span><span class="ex">2.30258509299405</span></span>
+            <span class="mi-row"><span>ln(10)</span><span class="mi-arrow">&rarr;</span><span class="ex">2.30258509299405</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">arredondar(x, casas) | arred(x, casas)</span>
+          <span class="mi-desc">Arredonda x com o n&uacute;mero de casas decimais informado (at&eacute; 15 casas).</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>n&uacute;mero = 1.333333333</span></span>
+            <span class="mi-row"><span>mostre arredondar(n&uacute;mero, 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.33</span></span>
+            <span class="mi-row"><span>mostre arredondar(n&uacute;mero, 6)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.333333</span></span>
+            <span class="mi-row"><span>mostre arred(n&uacute;mero, 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.33</span></span>
+            <span class="mi-row"><span>mostre arred(n&uacute;mero, 6)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.333333</span></span>
+          </div>
         </div>
         <div class="manual-item">
           <span class="mi-name">pi()</span>
@@ -2139,6 +2200,290 @@ function janelaCor(v, padrao) {
   if (!hex) throw new Error('cor desconhecida "' + v + '"');
   return hex;
 }
+// ============================================================
+//  PERSISTÊNCIA DE DADOS: salvar / carregar
+// ============================================================
+
+function isNwRuntime() {
+  return typeof process !== 'undefined' && process.versions && process.versions.nw && typeof require === 'function';
+}
+
+function saveStorageKey(dir, name) {
+  return 'willprog_save_' + String(dir).trim() + '/' + String(name).trim();
+}
+
+function splitTopLevelArgs(src) {
+  var args = [];
+  var cur = '';
+  var depth = 0;
+  var inStr = null;
+  for (var i = 0; i < src.length; i++) {
+    var c = src[i];
+    if (inStr) {
+      cur += c;
+      if (c === '\\' && i + 1 < src.length) { cur += src[i + 1]; i++; }
+      else if (c === inStr) inStr = null;
+    } else if (c === '"' || c === "'") {
+      inStr = c;
+      cur += c;
+    } else if (c === '(' || c === '[') {
+      depth++;
+      cur += c;
+    } else if (c === ')' || c === ']') {
+      depth--;
+      cur += c;
+    } else if (c === ',' && depth === 0) {
+      args.push(cur);
+      cur = '';
+    } else {
+      cur += c;
+    }
+  }
+  args.push(cur);
+  return args;
+}
+
+function serializeValueForSave(v) {
+  if (typeof v === 'string') {
+    var esc = v.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
+    return '"' + esc + '"';
+  }
+  if (v && typeof v === 'object' && v.wpn) return formatNumber(v.v, v.f);
+  if (typeof v === 'number') return formatNumber(v, false);
+  if (typeof v === 'boolean') return v ? 'verdadeiro' : 'falso';
+  if (Array.isArray(v)) return '[' + v.map(serializeValueForSave).join(',') + ']';
+  if (v && typeof v === 'object' && v.wpset) return '{' + v.v.map(serializeValueForSave).join(',') + '}';
+  if (v && typeof v === 'object' && v.wpFunc) throw new Error('salvar: não é possível salvar uma função');
+  if (v === undefined || v === null) return '""';
+  return '"' + String(v).replace(/"/g, '\\"') + '"';
+}
+
+function splitSaveValueTopLevel(s) {
+  var parts = [];
+  var cur = '';
+  var inStr = null;
+  var depth = 0;
+  for (var i = 0; i < s.length; i++) {
+    var c = s[i];
+    if (inStr) {
+      cur += c;
+      if (c === '\\' && i + 1 < s.length) { cur += s[i + 1]; i++; }
+      else if (c === inStr) inStr = null;
+    } else if (c === '"' || c === "'") {
+      inStr = c;
+      cur += c;
+    } else if (c === '[' || c === '{') {
+      depth++;
+      cur += c;
+    } else if (c === ']' || c === '}') {
+      depth--;
+      cur += c;
+    } else if (c === ',' && depth === 0) {
+      parts.push(cur);
+      cur = '';
+    } else {
+      cur += c;
+    }
+  }
+  if (cur !== '' || parts.length > 0) parts.push(cur);
+  return parts;
+}
+
+function deserializeSaveValue(text) {
+  var t = text.trim();
+  if (t === '') return '';
+  var q = t.charAt(0);
+  if (q === '"' || q === "'") {
+    var out = '';
+    var i = 1;
+    while (i < t.length) {
+      var c = t[i];
+      if (c === '\\' && i + 1 < t.length) {
+        var e = t[i + 1];
+        if (e === 'n') out += '\n';
+        else if (e === 't') out += '\t';
+        else if (e === 'r') out += '\r';
+        else out += e;
+        i += 2;
+        continue;
+      }
+      if (c === q) break;
+      out += c;
+      i++;
+    }
+    return out;
+  }
+  if (t === 'verdadeiro') return true;
+  if (t === 'falso') return false;
+  if (t.charAt(0) === '[') {
+    var closeB = t.lastIndexOf(']');
+    if (closeB === -1) return t;
+    var parts = splitSaveValueTopLevel(t.slice(1, closeB));
+    var list = [];
+    for (var j = 0; j < parts.length; j++) {
+      var p = parts[j].trim();
+      if (p !== '') list.push(deserializeSaveValue(p));
+    }
+    return list;
+  }
+  if (t.charAt(0) === '{') {
+    var closeC = t.lastIndexOf('}');
+    if (closeC === -1) return t;
+    var parts2 = splitSaveValueTopLevel(t.slice(1, closeC));
+    var elems = [];
+    for (var j2 = 0; j2 < parts2.length; j2++) {
+      var p2 = parts2[j2].trim();
+      if (p2 !== '') elems.push(deserializeSaveValue(p2));
+    }
+    return makeSet(elems);
+  }
+  var num = Number(t);
+  if (t !== '' && !isNaN(num)) return mkNum(num, t.indexOf('.') >= 0);
+  return t;
+}
+
+function parseSaveFile(content) {
+  var entries = [];
+  var lines = content.split(/\r?\n/);
+  for (var li = 0; li < lines.length; li++) {
+    var line = lines[li].trim();
+    if (!line) continue;
+    var eq = -1;
+    var inStr = null;
+    for (var k = 0; k < line.length; k++) {
+      var c = line[k];
+      if (inStr) {
+        if (c === '\\') k++;
+        else if (c === inStr) inStr = null;
+      } else if (c === '"' || c === "'") {
+        inStr = c;
+      } else if (c === '=') {
+        eq = k;
+        break;
+      }
+    }
+    if (eq <= 0) continue;
+    var key = line.slice(0, eq).trim();
+    var val = line.slice(eq + 1).trim();
+    if (!key) continue;
+    entries.push({ key: key, value: val });
+  }
+  return entries;
+}
+
+function writeSaveFile(dir, name, content) {
+  if (isNwRuntime()) {
+    var fs = require('fs');
+    var path = require('path');
+    var p = path.join(dir, name);
+    fs.mkdirSync(path.dirname(p), { recursive: true });
+    fs.writeFileSync(p, content, 'utf8');
+    return 'Arquivo salvo em "' + p + '"';
+  }
+  var key = saveStorageKey(dir, name);
+  try {
+    localStorage.setItem(key, content);
+  } catch (e) {
+    throw new Error('salvar: não foi possível gravar "' + key + '": ' + e.message);
+  }
+  return 'Arquivo "' + key + '" salvo (armazenamento local do navegador)';
+}
+
+function readSaveFile(dir, name) {
+  if (isNwRuntime()) {
+    var fs = require('fs');
+    var path = require('path');
+    var p = path.join(dir, name);
+    try {
+      return fs.readFileSync(p, 'utf8');
+    } catch (e) {
+      throw new Error('carregar: arquivo não encontrado: "' + p + '"');
+    }
+  }
+  var key = saveStorageKey(dir, name);
+  var val = null;
+  try { val = localStorage.getItem(key); } catch (e) {}
+  if (val === null) throw new Error('carregar: arquivo não encontrado: "' + key + '"');
+  return val;
+}
+
+function execSalvar(src, env) {
+  var args = splitTopLevelArgs(src);
+  if (args.length < 3) {
+    throw new Error('salvar espera ao menos 3 argumentos: salvar(diretório, arquivo, valor1, valor2, ...)');
+  }
+  var dirRaw = args[0].trim();
+  var fileRaw = args[1].trim();
+  if (!dirRaw || !fileRaw) throw new Error('salvar: informe o diretório e o nome do arquivo');
+  var dirVal = String(formatValue(parse(dirRaw, env)));
+  var fileVal = String(formatValue(parse(fileRaw, env)));
+  if (!fileVal) throw new Error('salvar: o nome do arquivo não pode ser vazio');
+  var entries = [];
+  for (var i = 2; i < args.length; i++) {
+    var raw = args[i].trim();
+    var idm = raw.match(/^[A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*$/);
+    var key;
+    var val;
+    if (idm && raw in env) {
+      key = raw;
+      var st = env[raw];
+      if (st && st.wpLazy) val = lazyEval(st, env);
+      else val = st;
+    } else {
+      key = '_' + (i - 1);
+      val = parse(raw, env);
+    }
+    entries.push({ key: key, value: val });
+  }
+  var lines = entries.map(function (e) {
+    return e.key + '=' + serializeValueForSave(e.value);
+  }).join('\n');
+  return writeSaveFile(dirVal, fileVal, lines);
+}
+
+function execCarregar(src, env) {
+  var args = splitTopLevelArgs(src);
+  if (args.length < 3) {
+    throw new Error('carregar espera ao menos 3 argumentos: carregar(diretório, arquivo, variável1, variável2, ...)');
+  }
+  var dirRaw = args[0].trim();
+  var fileRaw = args[1].trim();
+  var dirVal = String(formatValue(parse(dirRaw, env)));
+  var fileVal = String(formatValue(parse(fileRaw, env)));
+  if (!fileVal) throw new Error('carregar: o nome do arquivo não pode ser vazio');
+  var content = readSaveFile(dirVal, fileVal);
+  var entries = parseSaveFile(content);
+  if (entries.length === 0) throw new Error('carregar: o arquivo "' + fileVal + '" está vazio ou não tem dados válidos');
+  var targets = [];
+  for (var i = 2; i < args.length; i++) {
+    var raw = args[i].trim();
+    var idm = raw.match(/^[A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*$/);
+    if (!idm) throw new Error('carregar: o argumento "' + raw + '" deve ser o nome de uma variável');
+    targets.push(idm[0]);
+  }
+  var used = {};
+  var assigned = 0;
+  for (var t = 0; t < targets.length; t++) {
+    var name = targets[t];
+    var idx = -1;
+    for (var ei = 0; ei < entries.length; ei++) {
+      if (!used[ei] && entries[ei].key === name) { idx = ei; break; }
+    }
+    if (idx === -1) {
+      for (var ei2 = 0; ei2 < entries.length; ei2++) {
+        if (!used[ei2]) { idx = ei2; break; }
+      }
+    }
+    if (idx === -1) {
+      throw new Error('carregar: o arquivo "' + fileVal + '" não tem valores suficientes para preencher ' + targets.length + ' variável(is)');
+    }
+    used[idx] = true;
+    env[name] = deserializeSaveValue(entries[idx].value);
+    assigned++;
+  }
+  return 'Carregado "' + fileVal + '": ' + assigned + ' valor(es) atribuído(s)';
+}
+
 function callFunction(name, args, rawName) {
   function nv(i) { return numVal(args[i]); }
   function elwise(arg, fn) {
@@ -2161,6 +2506,33 @@ function callFunction(name, args, rawName) {
     return elwise(args[0], function (v) {
       var r = Math.cbrt(v);
       return mkNum(r, r % 1 !== 0);
+    });
+  }
+  if (name === 'log') {
+    if (args.length !== 2) throw new Error('log espera 2 argumentos: log(x, base)');
+    var lbase = numVal(args[1]);
+    return elwise(args[0], function (v) {
+      var r = Math.log(v) / Math.log(lbase);
+      return mkNum(r, r % 1 !== 0);
+    });
+  }
+  if (name === 'logn' || name === 'ln') {
+    if (args.length !== 1) throw new Error(name + ' espera 1 argumento');
+    return elwise(args[0], function (v) {
+      var r = Math.log(v);
+      return mkNum(r, r % 1 !== 0);
+    });
+  }
+  if (name === 'arredondar' || name === 'arred') {
+    if (args.length !== 2) throw new Error(name + ' espera 2 argumentos: ' + name + '(x, casas decimais)');
+    var nd = numVal(args[1]);
+    if (typeof nd !== 'number' || !isFinite(nd) || Math.floor(nd) !== nd || nd < 0) {
+      throw new Error(name + ': a quantidade de casas deve ser um número inteiro não negativo');
+    }
+    if (nd > 15) throw new Error(name + ': no máximo 15 casas decimais');
+    return elwise(args[0], function (v) {
+      var r = Number(v.toFixed(nd));
+      return mkNum(r, true);
     });
   }
   if (name === 'pi') {
@@ -3642,6 +4014,25 @@ function parse(input, env) {
       if (JANELA_COR_NOMES.indexOf(t.name) >= 0) return t.name;
       if (isOp(peek()) && peek().text === '(') {
         next();
+        if (t.name === 'salvar' || t.name === 'carregar') {
+          var svParts = [];
+          var svDepth = 0;
+          while (true) {
+            var svt = peek();
+            if (!svt) throw new Error('Parêntese não fechado em ' + t.name);
+            if (isOp(svt) && svt.text === '(') svDepth++;
+            if (isOp(svt) && svt.text === ')') {
+              if (svDepth === 0) break;
+              svDepth--;
+            }
+            svParts.push(svt.src);
+            next();
+          }
+          expectOp(')');
+          var svSrc = svParts.join('');
+          if (t.name === 'salvar') return execSalvar(svSrc, env);
+          return execCarregar(svSrc, env);
+        }
         if (t.name === 'expandir') {
           var parts = [];
           var depth = 0;
@@ -3785,7 +4176,7 @@ function parse(input, env) {
           }
         }
         expectOp(')');
-        if (t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi' || t.name === 'média' || t.name === 'primos' || t.name === 'fibonacci' || t.name === 'fibo' || t.name === 'inteiro' || t.name === 'decimal' || t.name === 'fração' || t.name === 'união' || t.name === 'intersecção' || t.name === 'menos' || t.name === 'paraLista' || t.name === 'paraTexto' || t.name === 'paraNúmero' || t.name === 'paraNumero' || t.name === 'inversa' || t.name === 'transposta' || t.name === 'determinante' || t.name === 'plotar' || t.name === 'tabela' || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'aleatorio' || t.name === 'estatísticas' || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo' || t.name === 'texto' || t.name === 'intervalo') {
+        if (t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi' || t.name === 'média' || t.name === 'primos' || t.name === 'fibonacci' || t.name === 'fibo' || t.name === 'inteiro' || t.name === 'decimal' || t.name === 'fração' || t.name === 'união' || t.name === 'intersecção' || t.name === 'menos' || t.name === 'paraLista' || t.name === 'paraTexto' || t.name === 'paraNúmero' || t.name === 'paraNumero' || t.name === 'inversa' || t.name === 'transposta' || t.name === 'determinante' || t.name === 'plotar' || t.name === 'tabela' || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'aleatorio' || t.name === 'estatísticas' || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo' || t.name === 'texto' || t.name === 'intervalo' || t.name === 'log' || t.name === 'logn' || t.name === 'ln' || t.name === 'arredondar' || t.name === 'arred') {
           return callFunction(t.name, args);
         }
         var base = (t.name in env) ? env[t.name] : undefined;
@@ -4433,16 +4824,48 @@ function countIndent(str) {
   return n;
 }
 
+function stringOpenAtEnd(text) {
+  var quote = null;
+  for (var i = 0; i < text.length; i++) {
+    var ch = text[i];
+    if (quote) {
+      if (ch === '\\' && i + 1 < text.length) { i++; continue; }
+      if (ch === quote) quote = null;
+    } else if (ch === '"' || ch === "'") {
+      quote = ch;
+    }
+  }
+  return quote;
+}
+
+function endsWithStringContinuation(text) {
+  if (!stringOpenAtEnd(text)) return false;
+  return /_\s*$/.test(text);
+}
+
 function toStatements(code) {
   var stmts = [];
-  var lines = code.split('\n');
-  for (var i = 0; i < lines.length; i++) {
-    var indent = countIndent(lines[i]);
-    var parts = splitStatements(stripInlineComment(lines[i]));
+  var rawLines = code.split('\n');
+  var i = 0;
+  while (i < rawLines.length) {
+    var indent = countIndent(rawLines[i]);
+    var logical = rawLines[i];
+    var firstLine = i + 1;
+    while (i + 1 < rawLines.length && endsWithStringContinuation(logical)) {
+      logical = logical.replace(/_\s*$/, '');
+      i++;
+      logical += rawLines[i].replace(/^[ \t]+/, '');
+    }
+    if (endsWithStringContinuation(logical)) {
+      logical = logical.replace(/_\s*$/, '');
+    }
+    i++;
+    logical = stripInlineComment(logical);
+    var parts = splitStatements(logical.trim());
     for (var j = 0; j < parts.length; j++) {
       var text = parts[j].trim();
       if (!text) continue;
-      stmts.push({ indent: indent, text: text, lineNo: i + 1 });
+      stmts.push({ indent: indent, text: text, lineNo: firstLine });
     }
   }
   return stmts;
@@ -4852,7 +5275,7 @@ function tokenizeHighlight(code) {
           word === 'definir' || word === 'função' || word === 'funcao' || word === 'retorne' || word === 'retornar' ||
           word === 'e' || word === 'ou' || word === 'não' || word === 'nao' ||
           word === 'verdadeiro' || word === 'falso') tokens.push({ type: 'keyword', text: word });
-      else if ((word === 'raizq' || word === 'raizc' || word === 'média' || word === 'pi' || word === 'primos' || word === 'fibonacci' || word === 'fibo' || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'expandir' || word === 'união' || word === 'intersecção' || word === 'menos' || word === 'subconjuntos' || word === 'paraLista' || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero' || word === 'inversa' || word === 'transposta' || word === 'determinante' || word === 'plotar' || word === 'tabela' || word === 'derivada' || word === 'integral' || word === 'graus' || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio' || word === 'estatísticas' || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo' || word === 'texto' || word === 'intervalo') && code[j4] === '(') tokens.push({ type: 'function', text: word });
+      else if ((word === 'raizq' || word === 'raizc' || word === 'média' || word === 'pi' || word === 'primos' || word === 'fibonacci' || word === 'fibo' || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'expandir' || word === 'união' || word === 'intersecção' || word === 'menos' || word === 'subconjuntos' || word === 'paraLista' || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero' || word === 'inversa' || word === 'transposta' || word === 'determinante' || word === 'plotar' || word === 'tabela' || word === 'derivada' || word === 'integral' || word === 'graus' || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio' || word === 'estatísticas' || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo' || word === 'texto' || word === 'intervalo' || word === 'log' || word === 'logn' || word === 'ln' || word === 'arredondar' || word === 'arred' || word === 'salvar' || word === 'carregar') && code[j4] === '(') tokens.push({ type: 'function', text: word });
       else tokens.push({ type: 'identifier', text: word });
       i = j4;
     } else {
@@ -4931,9 +5354,11 @@ function saveCode() {
 function syncConsoleGutter() {
   var lines = 0;
   var logs = consoleEl.children;
+  var lh = editorLineHeight;
   for (var i = 0; i < logs.length; i++) {
     if (logs[i].classList.contains('placeholder')) continue;
-    lines += logs[i].textContent.split('\n').length;
+    var h = logs[i].getBoundingClientRect().height;
+    lines += Math.max(1, Math.round(h / lh));
   }
   var html = '';
   for (var j = 1; j <= lines; j++) html += '<div class="cg-line">' + j + '</div>';
@@ -4950,11 +5375,12 @@ function clearConsole() {
   syncConsoleGutter();
 }
 
-function addConsole(rec) {
+function addConsole(rec, isFinal) {
   var ph = consoleEl.querySelector('.placeholder');
   if (ph) ph.remove();
   var div = document.createElement('div');
   div.className = 'log';
+  if (isFinal) div.className += ' final';
   if (rec.kind === 'error') div.className += ' error';
   else if (rec.kind === 'assign') div.className += ' assign';
   else if (rec.kind === 'info') div.className += ' info';
@@ -5225,6 +5651,11 @@ async function run() {
   var showAssign = chkAssign.checked;
   var errors = 0;
 
+  var lastOut = -1;
+  for (var li = 0; li < records.length; li++) {
+    if (records[li].kind === 'out' || records[li].kind === 'return') lastOut = li;
+  }
+
   if (records.length === 0) {
     addConsoleInfo('Nenhum código para executar.');
   }
@@ -5234,7 +5665,7 @@ async function run() {
     if (rec.kind === 'clear') { clearConsole(); continue; }
     if (rec.kind === 'assign' && !showAssign) continue;
     if (rec.kind === 'error') errors++;
-    addConsole(rec);
+    addConsole(rec, i === lastOut);
     await sleep(15);
   }
 
@@ -5295,9 +5726,16 @@ var AC_ALL = (function () {
   add('nao', 'nao ', false, 'Lógica', 'Negação lógica');
   add('verdadeiro', 'verdadeiro', false, 'Valor', 'Valor booleano verdadeiro');
   add('falso', 'falso', false, 'Valor', 'Valor booleano falso');
+  add('salvar', 'salvar()', true, 'Arquivos', 'Salva variáveis, textos e números em um arquivo de texto');
+  add('carregar', 'carregar()', true, 'Arquivos', 'Lê um arquivo de texto e devolve os valores às variáveis');
   var fns = [
     ['raizq', 'Matemática', 'Raiz quadrada de x'],
     ['raizc', 'Matemática', 'Raiz cúbica de x'],
+    ['log', 'Matemática', 'Logaritmo de x na base informada'],
+    ['logn', 'Matemática', 'Logaritmo natural de x'],
+    ['ln', 'Matemática', 'Logaritmo natural de x'],
+    ['arredondar', 'Matemática', 'Arredonda x com um número de casas decimais'],
+    ['arred', 'Matemática', 'Arredonda x com um número de casas decimais'],
     ['pi', 'Matemática', 'Valor de pi (2 casas decimais)'],
     ['média', 'Matemática', 'Média aritmética dos argumentos'],
     ['inteiro', 'Matemática', 'Parte inteira do número'],
@@ -5381,8 +5819,15 @@ var QUICK_REF = (function () {
   qr('nao', 'Comando', 'Negação lógica (sem acento)', 'ligado = verdadeiro\nse nao ligado:\n  mostre "desligado"\nsenao:\n  mostre "ligado"');
   qr('verdadeiro', 'Valor', 'Valor booleano verdadeiro', 'aprovado = verdadeiro\nse aprovado:\n  mostre "passou"');
   qr('falso', 'Valor', 'Valor booleano falso', 'erro = falso\nse erro:\n  mostre "falhou"\nsenao:\n  mostre "tudo certo"');
+  qr('salvar', 'Função', 'Salva variáveis, textos e números em um arquivo de texto', 'nome = "Ana"\nidade = 12\nsalvar("dados", "perfil.txt", nome, idade)');
+  qr('carregar', 'Função', 'Lê um arquivo de texto e devolve os valores às variáveis', 'nome = ""\nidade = 0\ncarregar("dados", "perfil.txt", nome, idade)\nmostre nome + " tem " + idade + " anos"');
   qr('raizq', 'Função', 'Raiz quadrada de x', 'mostre raizq(169)');
   qr('raizc', 'Função', 'Raiz cúbica de x', 'mostre raizc(27)');
+  qr('log', 'Função', 'Logaritmo de x na base informada', 'mostre log(8, 2)');
+  qr('logn', 'Função', 'Logaritmo natural de x', 'mostre logn(10)');
+  qr('ln', 'Função', 'Logaritmo natural de x (sinônimo de logn)', 'mostre ln(10)');
+  qr('arredondar', 'Função', 'Arredonda x com um número de casas decimais', 'numero = 1.333333333\nmostre arredondar(numero, 2)');
+  qr('arred', 'Função', 'Arredonda x com um número de casas decimais (sinônimo de arredondar)', 'numero = 1.333333333\nmostre arred(numero, 6)');
   qr('pi', 'Função', 'Valor de pi (2 casas decimais)', 'raio = 5\narea = pi() * raio * raio\nmostre area');
   qr('média', 'Função', 'Média aritmética dos argumentos', 'mostre média(8, 9, 10)');
   qr('inteiro', 'Função', 'Parte inteira do número', 'mostre inteiro(9.99)');
@@ -5837,7 +6282,7 @@ var sugestoesList = document.getElementById('sugestoesList');
 var sugestoesSummary = document.getElementById('sugestoesSummary');
 
 var SUG_KEYWORDS = ['mostre', 'mostrar', 'limpe', 'leia', 'se', 'senão', 'senao', 'repita', 'enquanto', 'para', 'cada', 'em', 'definir', 'função', 'funcao', 'retorne', 'retornar', 'e', 'ou', 'não', 'nao', 'verdadeiro', 'falso', 'true', 'false'];
-var SUG_FUNCS = ['raizq', 'raizc', 'pi', 'média', 'primos', 'fibonacci', 'fibo', 'intervalo', 'inteiro', 'decimal', 'fração', 'expandir', 'união', 'intersecção', 'menos', 'subconjuntos', 'paraLista', 'paraTexto', 'paraNúmero', 'paraNumero', 'inversa', 'transposta', 'determinante', 'plotar', 'tabela', 'derivada', 'integral', 'graus', 'cos', 'sen', 'tan', 'arcocos', 'arcosen', 'arcotan', 'aleatório', 'aleatorio', 'estatísticas', 'janela', 'ponto', 'linha', 'círculo', 'texto'];
+var SUG_FUNCS = ['raizq', 'raizc', 'pi', 'média', 'primos', 'fibonacci', 'fibo', 'intervalo', 'inteiro', 'decimal', 'fração', 'expandir', 'união', 'intersecção', 'menos', 'subconjuntos', 'paraLista', 'paraTexto', 'paraNúmero', 'paraNumero', 'inversa', 'transposta', 'determinante', 'plotar', 'tabela', 'derivada', 'integral', 'graus', 'cos', 'sen', 'tan', 'arcocos', 'arcosen', 'arcotan', 'aleatório', 'aleatorio', 'estatísticas', 'janela', 'ponto', 'linha', 'círculo', 'texto', 'log', 'logn', 'ln', 'arredondar', 'arred', 'salvar', 'carregar'];
 
 function sugestoesMaskStrings(line) {
   var out = '';
@@ -6186,6 +6631,12 @@ function comentarComando(text) {
     var rest = stripQuotes(t.replace(/^(mostre|mostrar)\b/, '').trim());
     return 'Comando "mostre": exibe no console o valor de "' + rest + '".';
   }
+  if (/^salvar\s*\(/.test(t)) {
+    return 'Comando "salvar": grava o valor das variáveis em um arquivo de texto (diretório e nome do arquivo entre aspas).';
+  }
+  if (/^carregar\s*\(/.test(t)) {
+    return 'Comando "carregar": lê um arquivo de texto salvo com "salvar" e devolve os valores às variáveis informadas.';
+  }
   if (/^limpe\b/.test(t)) {
     return 'Comando "limpe": apaga todo o conteúdo atual do console durante a execução.';
   }
@@ -6462,7 +6913,7 @@ function renderGrafico() {
   var kids = consoleEl.children;
   for (var i = 0; i < kids.length; i++) {
     var kid = kids[i];
-    entries.push({ color: window.getComputedStyle(kid).color, text: kid.textContent });
+    entries.push({ color: window.getComputedStyle(kid).color, text: kid.textContent, bold: !!kid.classList && kid.classList.contains('final') });
   }
   if (entries.length === 0) {
     entries.push({ color: '#8a8a8a', text: 'Console vazio.' });
@@ -6479,7 +6930,7 @@ function renderGrafico() {
     for (var r = 0; r < raw.length; r++) {
       var ws = graficoWrap(ctx, raw[r], availW);
       for (var w = 0; w < ws.length; w++) {
-        rows.push({ text: ws[w], color: entries[e].color });
+        rows.push({ text: ws[w], color: entries[e].color, bold: entries[e].bold });
       }
     }
   }
@@ -6507,6 +6958,7 @@ function renderGrafico() {
     ctx.fillText(String(r2 + 1), gutterWidth - gutterPadRight, y);
     ctx.fillStyle = rows[r2].color;
     ctx.textAlign = 'left';
+    ctx.font = (rows[r2].bold ? 'bold ' : '') + fontSize + 'px ' + fontFamily;
     ctx.fillText(rows[r2].text, gutterWidth + textPad, y);
     y += lineHeight;
   }
@@ -6602,6 +7054,9 @@ document.addEventListener('mouseup', function () {
   if (dragging) {
     dragging = false;
     document.body.classList.remove('dragging');
+    var rect = mainEl.getBoundingClientRect();
+    var pct = rect.width > 0 ? consolePanel.getBoundingClientRect().width / rect.width * 100 : 42;
+    try { localStorage.setItem('willprogConsoleWidth', String(pct)); } catch (e) {}
   }
 });
 
@@ -6653,6 +7108,13 @@ var savedZoom = null;
 try { savedZoom = parseInt(localStorage.getItem('willprogZoom'), 10); } catch (e) {}
 if (isFinite(savedZoom)) editorFontSize = Math.max(EDITOR_FONT_MIN, Math.min(EDITOR_FONT_MAX, savedZoom));
 applyZoom();
+
+var savedWidth = null;
+try { savedWidth = parseFloat(localStorage.getItem('willprogConsoleWidth')); } catch (e) {}
+if (isFinite(savedWidth) && savedWidth > 0) {
+  var wPct = Math.max(10, Math.min(90, savedWidth));
+  consolePanel.style.flex = '0 0 ' + wPct + '%';
+}
 </script>
 </body>
 </html>
