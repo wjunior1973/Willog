@@ -544,6 +544,51 @@
   #graficoCanvas { display: block; }
   body.light .grafico-body { background: #ffffff; }
 
+  /* ===== Janela do Fluxograma (Exibir > Fluxograma) ===== */
+  #fluxoOverlay .modal {
+    width: 100vw;
+    max-width: none;
+    max-height: none;
+    height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+  #fluxoOverlay .modal-head { border-radius: 0; }
+  .fluxo-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #1e1e1e;
+    position: relative;
+  }
+  #fluxoCanvas {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    display: block;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #fluxoCanvas.dragging { cursor: grabbing; }
+  .fluxo-info {
+    flex: 0 0 auto;
+    font-size: 12px;
+    color: #8a8a8a;
+    text-align: center;
+    padding: 4px 12px;
+    border-top: 1px solid #3c3c3c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  body.light .fluxo-body { background: #ffffff; }
+  body.light .fluxo-info { color: #666; border-top-color: #e0e0e0; }
+
   /* ===== Itens do manual em blocos ===== */
   .manual-item {
     background: #212121;
@@ -1025,6 +1070,8 @@
     <div class="menu-dropdown" id="menu-exibir">
       <button id="btnZoomIn" type="button">Zoom + <span class="run-kbd">Ctrl +</span></button>
       <button id="btnZoomOut" type="button">Zoom - <span class="run-kbd">Ctrl -</span></button>
+      <hr class="menu-sep">
+      <button id="btnFluxograma" type="button">Fluxograma</button>
       <hr class="menu-sep">
       <button id="btnTheme" type="button">Modo Claro</button>
       <button id="btnFullscreen" type="button">Tela Cheia</button>
@@ -2097,6 +2144,26 @@ para cada item em A:
   </div>
 </div>
 
+<div class="modal-overlay" id="fluxoOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Fluxograma</h2>
+      <div class="plot-controls">
+        <button class="plot-zoom-btn" id="fluxoZoomOut" title="Diminuir zoom" aria-label="Diminuir zoom">&minus;</button>
+        <span class="plot-zoom-label" id="fluxoZoomLabel">Ajuste</span>
+        <button class="plot-zoom-btn" id="fluxoZoomIn" title="Aumentar zoom" aria-label="Aumentar zoom">+</button>
+        <button class="plot-zoom-btn" id="fluxoZoomReset" title="Ajustar &agrave; janela" aria-label="Ajustar &agrave; janela">&#8635;</button>
+        <button id="fluxoAtualizar" title="Reanalisar o c&oacute;digo do editor">Atualizar</button>
+        <button class="modal-close" id="fluxoClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body fluxo-body">
+      <canvas id="fluxoCanvas"></canvas>
+      <div class="fluxo-info" id="fluxoInfo"></div>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="sobreOverlay">
   <div class="modal sobre-modal">
     <div class="modal-head">
@@ -2333,10 +2400,10 @@ function splitSaveValueTopLevel(s) {
     } else if (c === '"' || c === "'") {
       inStr = c;
       cur += c;
-    } else if (c === '[' || c === '{') {
+    } else if (c === '(' || c === '[' || c === '{') {
       depth++;
       cur += c;
-    } else if (c === ']' || c === '}') {
+    } else if (c === ')' || c === ']' || c === '}') {
       depth--;
       cur += c;
     } else if (c === ',' && depth === 0) {
@@ -2358,9 +2425,9 @@ function deserializeSaveValue(text) {
     var out = '';
     var i = 1;
     while (i < t.length) {
-      var c = t[i];
+      var c = t.charAt(i);
       if (c === '\\' && i + 1 < t.length) {
-        var e = t[i + 1];
+        var e = t.charAt(i + 1);
         if (e === 'n') out += '\n';
         else if (e === 't') out += '\t';
         else if (e === 'r') out += '\r';
@@ -2502,6 +2569,10 @@ function execSalvar(src, env) {
   return writeSaveFile(dirVal, fileVal, lines);
 }
 
+function getGlobalEnv(env) {
+  return GLOBAL_ENV || env;
+}
+
 function execCarregar(src, env) {
   var args = splitTopLevelArgs(src);
   if (args.length < 3) {
@@ -2539,7 +2610,7 @@ function execCarregar(src, env) {
       throw new Error('carregar: o arquivo "' + fileVal + '" não tem valores suficientes para preencher ' + targets.length + ' variável(is)');
     }
     used[idx] = true;
-    env[name] = deserializeSaveValue(entries[idx].value);
+    getGlobalEnv(env)[name] = deserializeSaveValue(entries[idx].value);
     assigned++;
   }
   return 'Carregado "' + fileVal + '": ' + assigned + ' valor(es) atribuído(s)';
@@ -5248,6 +5319,39 @@ var COMPOUND_ASSIGN_RE = /^([A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF_][A-Z
 var LAZY_ASSIGN_RE = /^([A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF_][A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF_]*)\s*:=\s*(.+)$/;
 var LEIA_ASSIGN_RE = /^([A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF_][A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF_]*)\s*=\s*leia\b\s*(.*)$/;
 
+function parseMultiAssignLHS(line) {
+  var eq = -1;
+  var depth = 0;
+  var inStr = null;
+  for (var i = 0; i < line.length; i++) {
+    var c = line[i];
+    if (inStr) {
+      if (c === '\\' && i + 1 < line.length) i++;
+      else if (c === inStr) inStr = null;
+    } else if (c === '"' || c === "'") {
+      inStr = c;
+    } else if (c === '(' || c === '[' || c === '{') {
+      depth++;
+    } else if (c === ')' || c === ']' || c === '}') {
+      depth--;
+    } else if (c === '=' && depth === 0) {
+      eq = i;
+      break;
+    }
+  }
+  if (eq <= 0) return null;
+  var lhs = line.slice(0, eq).trim();
+  if (lhs.indexOf(',') < 0) return null;
+  var names = [];
+  var parts = lhs.split(',');
+  for (var j = 0; j < parts.length; j++) {
+    var nm = parts[j].trim();
+    if (!/^[A-Za-z_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF][A-Za-z0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]*$/.test(nm)) return null;
+    names.push(nm);
+  }
+  return { names: names, expr: line.slice(eq + 1).trim() };
+}
+
 function splitStatements(line) {
   var parts = [];
   var cur = '';
@@ -5536,9 +5640,24 @@ function execStatement(line, lineNo, env, out) {
   try {
     if (/^(retorne|retornar)\b/.test(line)) {
       var retRest = line.replace(/^(retorne|retornar)\b/, '').trim();
-      throw retRest ? { wpReturn: true, value: parse(retRest, env) } : { wpReturn: true, value: undefined };
+      if (!retRest) throw { wpReturn: true, value: undefined };
+      var retParts = splitSaveValueTopLevel(retRest);
+      var retVals = [];
+      for (var ri = 0; ri < retParts.length; ri++) {
+        retVals.push(parse(retParts[ri].trim(), env));
+      }
+      throw { wpReturn: true, value: retVals.length === 1 ? retVals[0] : retVals };
     }
-    if (/^mostre\b/.test(line) || /^mostrar\b/.test(line)) {
+    var multiM = parseMultiAssignLHS(line);
+    if (multiM) {
+      var rhsVal = parse(multiM.expr, env);
+      if (!Array.isArray(rhsVal)) throw new Error('A atribuição múltipla espera uma lista de valores (ex.: retorne 1, 2)');
+      if (rhsVal.length !== multiM.names.length) {
+        throw new Error('A atribuição múltipla espera ' + multiM.names.length + ' valor(es), mas a expressão devolveu ' + rhsVal.length);
+      }
+      for (var ma = 0; ma < multiM.names.length; ma++) env[multiM.names[ma]] = rhsVal[ma];
+      out.push({ kind: 'assign', text: multiM.names.join(', ') + ' = ' + formatValue(rhsVal), lineNo: lineNo });
+    } else if (/^mostre\b/.test(line) || /^mostrar\b/.test(line)) {
       var rest = line.replace(/^(mostre|mostrar)\b/, '').trim();
       out.push({ kind: 'out', text: formatValue(parse(rest, env)), lineNo: lineNo });
     } else if (/^limpe\b/.test(line)) {
@@ -5598,6 +5717,7 @@ function execStatement(line, lineNo, env, out) {
 }
 
 var CURRENT_OUT = null;
+var GLOBAL_ENV = null;
 
 function callUserFunc(fn, args) {
   var childEnv = Object.create(fn.env);
@@ -5685,6 +5805,7 @@ function execNodes(nodes, env, out) {
 
 function executeProgram(code) {
   var env = {};
+  GLOBAL_ENV = env;
   var out = [];
   var nodes;
   try {
@@ -6188,8 +6309,8 @@ var AC_ALL = (function () {
   add('para cada', 'para cada ', false, 'Controle', 'Percorre os itens de uma coleção');
   add('para x em', 'para x em ', false, 'Controle', 'Percorre os itens de uma coleção (sem "cada")');
   add('definir função', 'definir função ', false, 'Controle', 'Define uma nova função');
-  add('retorne', 'retorne ', false, 'Controle', 'Retorna um valor de uma função');
-  add('retornar', 'retornar ', false, 'Controle', 'Retorna um valor de uma função');
+  add('retorne', 'retorne ', false, 'Controle', 'Retorna um ou mais valores de uma função');
+  add('retornar', 'retornar ', false, 'Controle', 'Retorna um ou mais valores de uma função');
   add('e', 'e ', false, 'Lógica', 'E lógico');
   add('ou', 'ou ', false, 'Lógica', 'OU lógico');
   add('não', 'não ', false, 'Lógica', 'Negação lógica');
@@ -6294,7 +6415,7 @@ var QUICK_REF = (function () {
   qr('para cada', 'Comando', 'Percorre os itens de uma coleção', 'frutas = ["maçã", "banana", "uva"]\npara cada fruta em frutas:\n  mostre fruta');
   qr('para x em', 'Comando', 'Percorre os itens de uma coleção (sem "cada")', 'para n em intervalo(2, 6, 2):\n  mostre n');
   qr('definir função', 'Comando', 'Define uma nova função', 'definir função quadrado(n):\n  retorne n * n\nmostre quadrado(7)');
-  qr('retorne', 'Comando', 'Retorna um valor de uma função', 'definir função maior(a, b):\n  se a > b:\n    retorne a\n  senão:\n    retorne b\nmostre maior(12, 9)');
+  qr('retorne', 'Comando', 'Retorna um ou mais valores de uma função (separados por vírgula)', 'definir função troca(a, b):\n  retorne b, a\nx, y = troca(1, 2)\nmostre x + " " + y');
   qr('retornar', 'Comando', 'Retorna um valor de uma função (sinônimo de retorne)', 'definir função saudação(nome):\n  retornar "Olá, " + nome\nmostre saudação("Ana")');
   qr('e', 'Comando', 'E lógico', 'idade = 25\naltura = 1.75\nse idade >= 18 e altura >= 1.60:\n  mostre "Apto"\nsenão:\n  mostre "Inapto"');
   qr('ou', 'Comando', 'OU lógico', 'dia = 7\nse dia == 6 ou dia == 7:\n  mostre "Fim de semana"\nsenão:\n  mostre "Dia útil"');
@@ -6420,6 +6541,11 @@ function collectVariables(code) {
       if (!t) continue;
       var m = t.match(/^([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)\s*(?:=|:=)/);
       if (m) { vars[m[1]] = true; continue; }
+      var mm = parseMultiAssignLHS(t);
+      if (mm) {
+        for (var mn = 0; mn < mm.names.length; mn++) vars[mm.names[mn]] = true;
+        continue;
+      }
       var fm = t.match(/^para(?:\s+cada)?\s+([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)\s+em\b/);
       if (fm) { vars[fm[1]] = true; continue; }
       var dm = t.match(/^definir\s+fun[çc](?:ão|ao)\s+([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)\s*\(/);
@@ -6851,7 +6977,7 @@ function analyzeSuggestions(code) {
   for (var i = 0; i < stmts.length; i++) {
     var s = stmts[i];
     var text = s.text;
-    var m;
+    var m, mm;
     if (isDefinirFuncao(text)) {
       var fm = text.match(/^definir\s+fun[çc](?:ão|ao)\s+([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)\s*\(/);
       if (fm) writes.push({ var: fm[1], line: s.lineNo, func: true });
@@ -6872,6 +6998,9 @@ function analyzeSuggestions(code) {
       writes.push({ var: m[1], line: s.lineNo });
       allReads[m[1]] = true;
       markReads(scanReads(m[3]));
+    } else if ((mm = parseMultiAssignLHS(text))) {
+      for (var mn2 = 0; mn2 < mm.names.length; mn2++) writes.push({ var: mm.names[mn2], line: s.lineNo });
+      markReads(scanReads(mm.expr));
     } else if ((m = text.match(ASSIGN_RE))) {
       writes.push({ var: m[1], line: s.lineNo });
       markReads(scanReads(m[2]));
@@ -7109,6 +7238,10 @@ function comentarComando(text) {
     return 'Laço "enquanto": enquanto a condição "' + wc + '" for verdadeira, o bloco indentado a seguir é executado (a condição é reavaliada a cada repetição).';
   }
   var m2;
+  var pam = parseMultiAssignLHS(t);
+  if (pam) {
+    return 'Atribuição múltipla: distribui os valores devolvidos pela expressão "' + pam.expr + '" nas variáveis ' + pam.names.join(', ') + '.';
+  }
   if ((m2 = t.match(LEIA_ASSIGN_RE))) {
     var msg = stripQuotes(m2[2]);
     return 'Comando "leia": pausa o programa e pede um valor ao usuário' + (msg ? ' (mensagem: "' + msg + '")' : '') + '. O valor digitado é armazenado na variável "' + m2[1] + '".';
@@ -7138,7 +7271,7 @@ function comentarComando(text) {
   }
   if (/^(retorne|retornar)\b/.test(t)) {
     var rr = t.replace(/^(retorne|retornar)\b/, '').trim();
-    return rr ? 'Comando "retorne": encerra a função e devolve o valor de "' + rr + '" para quem a chamou.' : 'Comando "retorne": encerra a função sem devolver valor.';
+    return rr ? 'Comando "retorne": encerra a função e devolve o(s) valor(es) de "' + rr + '" para quem a chamou (valores separados por vírgula são devolvidos como uma lista).' : 'Comando "retorne": encerra a função sem devolver valor.';
   }
   return 'Executa a expressão "' + t + '".';
 }
@@ -7513,6 +7646,7 @@ window.addEventListener('resize', function () {
   if (plotOverlay.classList.contains('open')) renderPlot();
   if (janelaOverlay.classList.contains('open')) renderJanela();
   if (graficoOverlay.classList.contains('open')) renderGrafico();
+  if (fluxoOverlay.classList.contains('open')) fluxoRender();
 });
 document.addEventListener('keydown', function (e) {
   if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) { e.preventDefault(); zoomIn(); return; }
@@ -7523,6 +7657,7 @@ document.addEventListener('keydown', function (e) {
     plotOverlay.classList.remove('open');
     janelaOverlay.classList.remove('open');
     graficoOverlay.classList.remove('open');
+    fluxoOverlay.classList.remove('open');
     sobreOverlay.classList.remove('open');
     quickRefOverlay.classList.remove('open');
     sugestoesOverlay.classList.remove('open');
@@ -7593,6 +7728,628 @@ editor.addEventListener('scroll', function () {
   if (acIsOpen()) acPosition();
 });
 editor.addEventListener('blur', acClose);
+
+// ============================================================
+//  FLUXOGRAMA (Exibir > Fluxograma)
+//  Gera o fluxograma a partir da árvore do interpretador (parseProgram)
+// ============================================================
+
+var fluxoOverlay = document.getElementById('fluxoOverlay');
+var fluxoCanvas = document.getElementById('fluxoCanvas');
+var fluxoInfo = document.getElementById('fluxoInfo');
+var fluxoZoomLabel = document.getElementById('fluxoZoomLabel');
+var FLUXO_GRAPH = null;
+var FLUXO_LAYOUT = null;
+var fluxoScale = 1;
+var fluxoPanX = 0;
+var fluxoPanY = 0;
+var FLUXO_PAD = 26;
+var FLUXO_MAXCHARS = 42;
+var FLUXO_MEASURE = null;
+
+function fluxoCtx() {
+  if (!FLUXO_MEASURE) {
+    FLUXO_MEASURE = document.createElement('canvas').getContext('2d');
+  }
+  FLUXO_MEASURE.font = '13px Consolas, monospace';
+  return FLUXO_MEASURE;
+}
+
+function fluxoPalette() {
+  var light = document.body.classList.contains('light');
+  return {
+    bg: light ? '#ffffff' : '#1e1e1e',
+    link: light ? '#8a8a8a' : '#8a8a8a',
+    lineNo: light ? '#aaaaaa' : '#6a6a6a',
+    label: light ? '#1f1f1f' : '#d4d4d4',
+    fill: light ? '#f5f5f5' : '#252526',
+    start: light ? '#0078d4' : '#0e639c',
+    startBorder: light ? '#005a9e' : '#1177bb',
+    startText: '#ffffff',
+    rect: light ? '#005fb8' : '#569cd6',
+    diamond: light ? '#008000' : '#4ec9b0',
+    loop: light ? '#8b008b' : '#c586c0',
+    func: light ? '#795e26' : '#dcdcaa'
+  };
+}
+
+function fluxoWrap(text, maxChars) {
+  var s = String(text).replace(/\s+/g, ' ').trim();
+  if (s.length > 240) s = s.slice(0, 237) + '...';
+  var lines = [];
+  var cur = '';
+  for (var i = 0; i < s.length; i++) {
+    if (cur.length >= maxChars) { lines.push(cur); cur = ''; }
+    cur += s[i];
+  }
+  if (cur) lines.push(cur);
+  if (lines.length === 0) lines.push('');
+  return lines;
+}
+
+function fluxoLabelSize(lines) {
+  var ctx = fluxoCtx();
+  var w = 0;
+  for (var i = 0; i < lines.length; i++) {
+    var m = ctx.measureText(lines[i]).width;
+    if (m > w) w = m;
+  }
+  return { w: Math.max(w + 28, 120), h: lines.length * 18 + 18 };
+}
+
+function fluxoBox(kind, x, y, w, h, label, lineNo, extra) {
+  var b = {
+    id: FLUXO_LAYOUT.boxes.length,
+    kind: kind, x: x, y: y, w: w, h: h,
+    label: label, lineNo: lineNo,
+    lines: fluxoWrap(label, FLUXO_MAXCHARS)
+  };
+  if (extra) { for (var k in extra) b[k] = extra[k]; }
+  FLUXO_LAYOUT.boxes.push(b);
+  return b;
+}
+
+function fluxoLink(from, to, label, kind) {
+  if (!from || !to) return;
+  FLUXO_LAYOUT.links.push({ from: from.id, to: to.id, label: label || '', kind: kind || '' });
+}
+
+// ===== Layout do fluxograma (medição + posicionamento centrado) =====
+var FLUXO_DX = 34;             // espaçamento vertical entre blocos de uma sequência
+var FLUXO_GAP = 34;            // distância do losango/cabeçalho até o corpo
+var FLUXO_BRANCH_MARGIN = 28;  // folga horizontal entre o losango e os ramos
+var FLUXO_EXIT_PAD = 34;       // corredor lateral para a linha de saída dos laços
+var FLUXO_DIAMOND_W = 178;
+var FLUXO_DIAMOND_H = 92;
+var FLUXO_LOOP_H = 64;
+var FLUXO_FUNC_H = 56;
+
+function fluxoMeasureSeq(nodes) {
+  var w = 0, h = 0;
+  for (var i = 0; i < nodes.length; i++) {
+    var m = fluxoMeasureNode(nodes[i]);
+    if (m.w > w) w = m.w;
+    h += m.h;
+  }
+  if (nodes.length > 1) h += (nodes.length - 1) * FLUXO_DX;
+  return { w: w, h: h };
+}
+
+function fluxoCondSize(label) {
+  var l = fluxoLabelSize(fluxoWrap(label, FLUXO_MAXCHARS));
+  return { w: Math.max(FLUXO_DIAMOND_W, l.w + 56), h: Math.max(FLUXO_DIAMOND_H, l.h + 34) };
+}
+
+function fluxoMeasureNode(node) {
+  if (node.type === 'stmt') {
+    var l = fluxoLabelSize(fluxoWrap(node.text, FLUXO_MAXCHARS));
+    return { w: l.w, h: l.h };
+  }
+  if (node.type === 'if') {
+    var cs = fluxoCondSize(node.cond);
+    var thenM = fluxoMeasureSeq(node.then);
+    var hasElse = node.els.length > 0;
+    var elseM = hasElse ? fluxoMeasureSeq(node.els) : { w: 0, h: 0 };
+    var rightExtent = cs.w / 2 + FLUXO_BRANCH_MARGIN + thenM.w;
+    var leftExtent = hasElse ? (cs.w / 2 + FLUXO_BRANCH_MARGIN + elseM.w) : Math.max(cs.w / 2, FLUXO_EXIT_PAD);
+    var totalW = Math.max(cs.w, 2 * rightExtent, 2 * leftExtent);
+    return { w: totalW, h: cs.h + FLUXO_GAP + Math.max(thenM.h, elseM.h) + 20 };
+  }
+  if (node.type === 'while') {
+    var cs2 = fluxoCondSize('enquanto ' + node.cond);
+    var bm = fluxoMeasureSeq(node.body);
+    return { w: Math.max(cs2.w, bm.w) + 2 * FLUXO_EXIT_PAD, h: cs2.h + FLUXO_GAP + bm.h + 20 };
+  }
+  if (node.type === 'for' || node.type === 'repeat') {
+    var label = node.type === 'for' ? 'para cada ' + node.var + ' em ' + node.expr : 'repita(' + node.count + ')';
+    var l = fluxoLabelSize(fluxoWrap(label, FLUXO_MAXCHARS));
+    var hw = Math.max(l.w + 40, 160);
+    var bm2 = fluxoMeasureSeq(node.body);
+    return { w: Math.max(hw, bm2.w) + 2 * FLUXO_EXIT_PAD, h: FLUXO_LOOP_H + FLUXO_GAP + bm2.h + 20 };
+  }
+  if (node.type === 'func') {
+    var label2 = 'função ' + node.name + '(' + node.params.join(', ') + ')';
+    var l2 = fluxoLabelSize(fluxoWrap(label2, FLUXO_MAXCHARS));
+    var hw2 = Math.max(l2.w, 170);
+    var bm3 = fluxoMeasureSeq(node.body);
+    return { w: Math.max(hw2, bm3.w), h: FLUXO_FUNC_H + FLUXO_GAP + bm3.h + 20 };
+  }
+  var fb = fluxoLabelSize(fluxoWrap(String(node.type || 'desconhecido'), FLUXO_MAXCHARS));
+  return { w: fb.w, h: fb.h };
+}
+
+function fluxoPlaceSeq(nodes, cx, cy) {
+  var first = null, last = null, prev = null;
+  var cyy = cy;
+  var h = 0;
+  for (var i = 0; i < nodes.length; i++) {
+    var res = fluxoPlaceNode(nodes[i], cx, cyy);
+    if (i === 0) first = res.first;
+    last = res.last;
+    if (prev) fluxoLink(prev, res.first, '');
+    prev = res.last;
+    h += res.h;
+    cyy += res.h + FLUXO_DX;
+  }
+  if (nodes.length > 1) h += (nodes.length - 1) * FLUXO_DX;
+  return { first: first, last: last, h: h };
+}
+
+function fluxoPlaceNode(node, cx, cy) {
+  if (node.type === 'stmt') {
+    var l = fluxoLabelSize(fluxoWrap(node.text, FLUXO_MAXCHARS));
+    var b = fluxoBox('rect', cx - l.w / 2, cy, l.w, l.h, node.text, node.lineNo);
+    return { first: b, last: b, h: l.h };
+  }
+  if (node.type === 'if') return fluxoPlaceIf(node, cx, cy);
+  if (node.type === 'while') return fluxoPlaceLoop(node, cx, cy, 'diamond', 'enquanto ' + node.cond);
+  if (node.type === 'for') return fluxoPlaceLoop(node, cx, cy, 'loop', 'para cada ' + node.var + ' em ' + node.expr);
+  if (node.type === 'repeat') return fluxoPlaceLoop(node, cx, cy, 'loop', 'repita(' + node.count + ')');
+  if (node.type === 'func') return fluxoPlaceFunc(node, cx, cy);
+  var fb = fluxoLabelSize(fluxoWrap(String(node.type || 'desconhecido'), FLUXO_MAXCHARS));
+  var bb = fluxoBox('rect', cx - fb.w / 2, cy, fb.w, fb.h, node.type, node.lineNo);
+  return { first: bb, last: bb, h: fb.h };
+}
+
+function fluxoPlaceIf(node, cx, cy) {
+  var cs = fluxoCondSize(node.cond);
+  var diamond = fluxoBox('diamond', cx - cs.w / 2, cy, cs.w, cs.h, node.cond, node.lineNo);
+  var hasElse = node.els.length > 0;
+  var thenM = fluxoMeasureSeq(node.then);
+  var elseM = hasElse ? fluxoMeasureSeq(node.els) : { w: 0, h: 0 };
+  var rightExtent = cs.w / 2 + FLUXO_BRANCH_MARGIN + thenM.w;
+  var leftExtent = hasElse ? (cs.w / 2 + FLUXO_BRANCH_MARGIN + elseM.w) : Math.max(cs.w / 2, FLUXO_EXIT_PAD);
+  var totalW = Math.max(cs.w, 2 * rightExtent, 2 * leftExtent);
+  var yBody = cy + cs.h + FLUXO_GAP;
+  var thenCx = cx + totalW / 2 - thenM.w / 2;
+  var thenB = fluxoPlaceSeq(node.then, thenCx, yBody);
+  var elseB = null;
+  if (hasElse) {
+    var elseCx = cx - totalW / 2 + elseM.w / 2;
+    elseB = fluxoPlaceSeq(node.els, elseCx, yBody);
+  }
+  var maxH = Math.max(thenB.h, elseB ? elseB.h : 0);
+  var rejoinY = yBody + maxH + 12;
+  var rejoin = fluxoBox('rejoin', cx - 4, rejoinY, 8, 8, '', null);
+  fluxoLink(diamond, thenB.first || rejoin, 'sim', 'ifsim');
+  if (hasElse) fluxoLink(diamond, elseB.first || rejoin, 'não', 'ifnao');
+  else fluxoLink(diamond, rejoin, 'não', 'ifnoelse');
+  if (thenB.first) fluxoLink(thenB.last, rejoin, '');
+  if (hasElse && elseB.first) fluxoLink(elseB.last, rejoin, '');
+  return { first: diamond, last: rejoin, h: rejoinY + 8 - cy };
+}
+
+function fluxoPlaceLoop(node, cx, cy, kind, label) {
+  var l = fluxoLabelSize(fluxoWrap(label, FLUXO_MAXCHARS));
+  var headerH = kind === 'diamond' ? Math.max(FLUXO_DIAMOND_H, l.h + 34) : FLUXO_LOOP_H;
+  var headerW = Math.max(l.w + 40, kind === 'diamond' ? FLUXO_DIAMOND_W : 160);
+  var header = fluxoBox(kind, cx - headerW / 2, cy, headerW, headerH, label, node.lineNo, { loop: true });
+  var bodyM = fluxoMeasureSeq(node.body);
+  var totalW = Math.max(headerW, bodyM.w) + 2 * FLUXO_EXIT_PAD;
+  header.loopExitX = cx + totalW / 2 - 6;
+  header.loopBackX = cx - totalW / 2 + 6;
+  var yBody = cy + headerH + FLUXO_GAP;
+  var body = fluxoPlaceSeq(node.body, cx, yBody);
+  var rejoinY = yBody + body.h + 12;
+  var rejoin = fluxoBox('rejoin', cx - 4, rejoinY, 8, 8, '', null);
+  fluxoLink(header, body.first || rejoin, '', 'down');
+  if (body.first) fluxoLink(body.last, header, '', 'back');
+  fluxoLink(header, rejoin, 'não', 'exit');
+  return { first: header, last: rejoin, h: rejoinY + 8 - cy };
+}
+
+function fluxoPlaceFunc(node, cx, cy) {
+  var label = 'função ' + node.name + '(' + node.params.join(', ') + ')';
+  var l = fluxoLabelSize(fluxoWrap(label, FLUXO_MAXCHARS));
+  var headerW = Math.max(l.w, 170);
+  var header = fluxoBox('func', cx - headerW / 2, cy, headerW, FLUXO_FUNC_H, label, node.lineNo);
+  var yBody = cy + FLUXO_FUNC_H + FLUXO_GAP;
+  var body = fluxoPlaceSeq(node.body, cx, yBody);
+  var endY = yBody + body.h + 12;
+  var end = fluxoBox('endmark', cx - 4, endY, 8, 8, '', null);
+  fluxoLink(header, body.first || end, '', 'down');
+  if (body.first) fluxoLink(body.last, end, '');
+  return { first: header, last: end, h: endY + 8 - cy };
+}
+
+function fluxoBuildGraph(nodes) {
+  FLUXO_LAYOUT = { boxes: [], links: [] };
+  var startW = 100, startH = 36, endW = 100, endH = 36;
+  var seqM = fluxoMeasureSeq(nodes);
+  var totalW = Math.max(seqM.w, startW + 60);
+  var cx = totalW / 2;
+  var start = fluxoBox('start', cx - startW / 2, 0, startW, startH, 'Início', null);
+  var yStart = startH + 34;
+  var seqR = fluxoPlaceSeq(nodes, cx, yStart);
+  var endY = yStart + seqR.h + 34;
+  var end = fluxoBox('end', cx - endW / 2, endY, endW, endH, 'Fim', null);
+  fluxoLink(start, seqR.first, '');
+  fluxoLink(seqR.last, end, '');
+  var graph = FLUXO_LAYOUT;
+  FLUXO_LAYOUT = null;
+  graph.w = totalW;
+  graph.h = endY + endH;
+  return graph;
+}
+
+function fluxoAnchor(b, which) {
+  var cx = b.x + b.w / 2;
+  var cy = b.y + b.h / 2;
+  if (which === 'top') return [cx, b.y];
+  if (which === 'bottom') return [cx, b.y + b.h];
+  if (which === 'left') return [b.x, cy];
+  if (which === 'right') return [b.x + b.w, cy];
+  return [cx, cy];
+}
+
+function fluxoDrawArrow(ctx, x1, y1, x2, y2) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  var ang = Math.atan2(y2 - y1, x2 - x1);
+  var al = 7;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - al * Math.cos(ang - 0.4), y2 - al * Math.sin(ang - 0.4));
+  ctx.lineTo(x2 - al * Math.cos(ang + 0.4), y2 - al * Math.sin(ang + 0.4));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function fluxoRoundRect(ctx, x, y, w, h, r) {
+  var rr = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.lineTo(x + w - rr, y);
+  ctx.arcTo(x + w, y, x + w, y + rr, rr);
+  ctx.lineTo(x + w, y + h - rr);
+  ctx.arcTo(x + w, y + h, x + w - rr, y + h, rr);
+  ctx.lineTo(x + rr, y + h);
+  ctx.arcTo(x, y + h, x, y + h - rr, rr);
+  ctx.lineTo(x, y + rr);
+  ctx.arcTo(x, y, x + rr, y, rr);
+  ctx.closePath();
+}
+
+function fluxoArrow(ctx, x1, y1, x2, y2) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  var ang = Math.atan2(y2 - y1, x2 - x1);
+  var al = 6;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - al * Math.cos(ang - 0.42), y2 - al * Math.sin(ang - 0.42));
+  ctx.lineTo(x2 - al * Math.cos(ang + 0.42), y2 - al * Math.sin(ang + 0.42));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function fluxoDrawLink(ctx, link, g, pal) {
+  var from = g.boxes[link.from];
+  var to = g.boxes[link.to];
+  if (!from || !to) return;
+  ctx.strokeStyle = pal.link;
+  ctx.fillStyle = pal.link;
+  ctx.lineWidth = 1.6;
+
+  var fcx = from.x + from.w / 2;
+  var tcx = to.x + to.w / 2;
+
+  if (link.kind === 'back') {
+    var bX = to.loopBackX != null ? to.loopBackX : from.x - 16;
+    var bStartY = from.y + from.h;
+    var bEndY = bStartY + 14;
+    var ty = to.y + to.h / 2;
+    ctx.beginPath();
+    ctx.moveTo(fcx, bStartY);
+    ctx.lineTo(fcx, bEndY);
+    ctx.lineTo(bX, bEndY);
+    ctx.lineTo(bX, ty);
+    ctx.stroke();
+    fluxoArrow(ctx, bX, ty, to.x, ty);
+    return;
+  }
+  if (link.kind === 'exit') {
+    var exitX = from.loopExitX != null ? from.loopExitX : from.x + from.w + 16;
+    var hy = from.y + from.h / 2;
+    var ey = to.y + to.h / 2;
+    ctx.beginPath();
+    ctx.moveTo(from.x + from.w, hy);
+    ctx.lineTo(exitX, hy);
+    ctx.lineTo(exitX, ey);
+    ctx.stroke();
+    fluxoArrow(ctx, exitX, ey, to.x, ey);
+    ctx.font = '12px Consolas, monospace';
+    ctx.fillStyle = pal.lineNo;
+    ctx.fillText(link.label, (from.x + from.w + exitX) / 2 + 6, hy - 6);
+    return;
+  }
+  if (link.kind === 'ifsim' || link.kind === 'ifnao') {
+    var leftGo = link.kind === 'ifnao';
+    var sx = leftGo ? from.x : from.x + from.w;
+    var hy2 = from.y + from.h / 2;
+    if (to.kind === 'rejoin') {
+      fluxoDrawArrow(ctx, fcx, from.y + from.h, tcx, to.y);
+      return;
+    }
+    ctx.beginPath();
+    ctx.moveTo(sx, hy2);
+    ctx.lineTo(tcx, hy2);
+    ctx.lineTo(tcx, to.y);
+    ctx.stroke();
+    fluxoArrow(ctx, tcx, hy2, tcx, to.y);
+    ctx.font = '12px Consolas, monospace';
+    ctx.fillStyle = pal.lineNo;
+    ctx.fillText(link.label, (sx + tcx) / 2 + 6, hy2 - 6);
+    return;
+  }
+  if (link.kind === 'ifnoelse') {
+    var ex = from.x - FLUXO_EXIT_PAD + 6;
+    var hy3 = from.y + from.h / 2;
+    var ey3 = to.y + to.h / 2;
+    ctx.beginPath();
+    ctx.moveTo(from.x, hy3);
+    ctx.lineTo(ex, hy3);
+    ctx.lineTo(ex, ey3);
+    ctx.stroke();
+    fluxoArrow(ctx, ex, ey3, to.x, ey3);
+    ctx.font = '12px Consolas, monospace';
+    ctx.fillStyle = pal.lineNo;
+    ctx.fillText(link.label, (from.x + ex) / 2 - 42, hy3 - 6);
+    return;
+  }
+  if (to.kind === 'rejoin' || to.kind === 'endmark') {
+    var stub = 10;
+    var bot = from.y + from.h;
+    var midY = bot + stub;
+    var dotTop = to.y + 1;
+    if (midY > dotTop - 6) midY = dotTop - 6;
+    ctx.beginPath();
+    ctx.moveTo(fcx, bot);
+    ctx.lineTo(fcx, midY);
+    if (Math.abs(fcx - tcx) > 0.5) ctx.lineTo(tcx, midY);
+    ctx.lineTo(tcx, dotTop);
+    ctx.stroke();
+    return;
+  }
+  fluxoDrawArrow(ctx, fcx, from.y + from.h, tcx, to.y);
+  if (link.label) {
+    ctx.font = '12px Consolas, monospace';
+    ctx.fillStyle = pal.lineNo;
+    ctx.fillText(link.label, (fcx + tcx) / 2 + 6, (from.y + from.h + to.y) / 2 - 4);
+  }
+}
+
+function fluxoDrawBox(ctx, b, pal) {
+  if (b.kind === 'exit') return;
+  if (b.kind === 'rejoin' || b.kind === 'endmark') {
+    ctx.fillStyle = pal.link;
+    ctx.beginPath();
+    ctx.arc(b.x + b.w / 2, b.y + b.h / 2, 4, 0, Math.PI * 2);
+    ctx.fill();
+    return;
+  }
+  var fill = pal.fill;
+  var stroke = pal.rect;
+  var tc = pal.label;
+  if (b.kind === 'start' || b.kind === 'end') {
+    fill = pal.start; stroke = pal.startBorder; tc = pal.startText;
+  } else if (b.kind === 'diamond') {
+    stroke = pal.diamond;
+  } else if (b.kind === 'loop') {
+    stroke = pal.loop;
+  } else if (b.kind === 'func') {
+    stroke = pal.func;
+  }
+  var cx = b.x + b.w / 2;
+  var cy = b.y + b.h / 2;
+  ctx.fillStyle = fill;
+  ctx.strokeStyle = stroke;
+  ctx.lineWidth = 1.6;
+  if (b.kind === 'start' || b.kind === 'end') {
+    fluxoRoundRect(ctx, b.x, b.y, b.w, b.h, b.h / 2);
+  } else if (b.kind === 'diamond') {
+    ctx.beginPath();
+    ctx.moveTo(cx, b.y);
+    ctx.lineTo(b.x + b.w, cy);
+    ctx.lineTo(cx, b.y + b.h);
+    ctx.lineTo(b.x, cy);
+    ctx.closePath();
+  } else if (b.kind === 'loop') {
+    ctx.beginPath();
+    ctx.moveTo(b.x + b.w * 0.22, b.y);
+    ctx.lineTo(b.x + b.w * 0.78, b.y);
+    ctx.lineTo(b.x + b.w, cy);
+    ctx.lineTo(b.x + b.w * 0.78, b.y + b.h);
+    ctx.lineTo(b.x + b.w * 0.22, b.y + b.h);
+    ctx.lineTo(b.x, cy);
+    ctx.closePath();
+  } else if (b.kind === 'func') {
+    fluxoRoundRect(ctx, b.x, b.y, b.w, b.h, 10);
+  } else {
+    fluxoRoundRect(ctx, b.x, b.y, b.w, b.h, 6);
+  }
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = tc;
+  ctx.font = '13px Consolas, monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  var lines = b.lines;
+  var startY = cy - (lines.length - 1) * 9;
+  for (var i = 0; i < lines.length; i++) {
+    ctx.fillText(lines[i], cx, startY + i * 18);
+  }
+  if (b.lineNo) {
+    ctx.font = '10px Consolas, monospace';
+    ctx.fillStyle = pal.lineNo;
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'top';
+    ctx.fillText('L' + b.lineNo, b.x + b.w - 4, b.y + 3);
+  }
+}
+
+function fluxoRender() {
+  if (!fluxoCanvas) return;
+  var rect = fluxoCanvas.getBoundingClientRect();
+  var cw = rect.width;
+  var ch = rect.height;
+  if (cw < 60 || ch < 60) return;
+  var dpr = window.devicePixelRatio || 1;
+  fluxoCanvas.width = Math.round(cw * dpr);
+  fluxoCanvas.height = Math.round(ch * dpr);
+  var ctx = fluxoCanvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  var pal = fluxoPalette();
+  ctx.fillStyle = pal.bg;
+  ctx.fillRect(0, 0, cw, ch);
+  if (!FLUXO_GRAPH) return;
+  var g = FLUXO_GRAPH;
+  ctx.save();
+  ctx.translate(fluxoPanX, fluxoPanY);
+  ctx.scale(fluxoScale, fluxoScale);
+  ctx.translate(FLUXO_PAD, FLUXO_PAD);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  for (var i = 0; i < g.links.length; i++) fluxoDrawLink(ctx, g.links[i], g, pal);
+  for (var j = 0; j < g.boxes.length; j++) fluxoDrawBox(ctx, g.boxes[j], pal);
+  ctx.restore();
+}
+
+function fluxoFit() {
+  if (!FLUXO_GRAPH) return;
+  var rect = fluxoCanvas.getBoundingClientRect();
+  var cw = Math.max(rect.width, 120);
+  var ch = Math.max(rect.height, 120);
+  var g = FLUXO_GRAPH;
+  var s = Math.min((cw - 2 * FLUXO_PAD) / g.w, (ch - 2 * FLUXO_PAD) / g.h);
+  s = Math.max(0.04, Math.min(s, 2.5));
+  fluxoScale = s;
+  fluxoPanX = (cw - g.w * s) / 2;
+  fluxoPanY = (ch - g.h * s) / 2;
+  fluxoZoomLabel.textContent = Math.round(s * 100) + '%';
+}
+
+function fluxoGenerate() {
+  var code = editor.value;
+  if (!code.trim()) {
+    FLUXO_GRAPH = null;
+    fluxoInfo.textContent = 'O editor está vazio. Digite um código Willog para gerar o fluxograma.';
+    fluxoRender();
+    return;
+  }
+  var nodes;
+  try {
+    nodes = parseProgram(code);
+  } catch (e) {
+    FLUXO_GRAPH = null;
+    fluxoInfo.textContent = 'Não foi possível gerar o fluxograma: ' + e.message;
+    fluxoRender();
+    return;
+  }
+  FLUXO_GRAPH = fluxoBuildGraph(nodes);
+  var boxes = 0;
+  for (var i = 0; i < FLUXO_GRAPH.boxes.length; i++) {
+    var k = FLUXO_GRAPH.boxes[i].kind;
+    if (k !== 'rejoin' && k !== 'exit' && k !== 'endmark' && k !== 'start' && k !== 'end') boxes++;
+  }
+  fluxoInfo.textContent = code.split('\n').length + ' linha(s), ' + boxes + ' bloco(s). Arraste para mover e use a roda do mouse para dar zoom.';
+  fluxoFit();
+  fluxoRender();
+}
+
+function fluxoOpen() {
+  fluxoOverlay.classList.add('open');
+  fluxoGenerate();
+  requestAnimationFrame(function () {
+    if (fluxoOverlay.classList.contains('open')) {
+      fluxoFit();
+      fluxoRender();
+    }
+  });
+}
+
+document.getElementById('btnFluxograma').addEventListener('click', fluxoOpen);
+document.getElementById('fluxoClose').addEventListener('click', function () {
+  fluxoOverlay.classList.remove('open');
+});
+fluxoOverlay.addEventListener('click', function (e) {
+  if (e.target === fluxoOverlay) fluxoOverlay.classList.remove('open');
+});
+document.getElementById('fluxoAtualizar').addEventListener('click', function () {
+  fluxoGenerate();
+});
+document.getElementById('fluxoZoomIn').addEventListener('click', function () {
+  fluxoScale = Math.min(8, fluxoScale * 1.25);
+  fluxoZoomLabel.textContent = Math.round(fluxoScale * 100) + '%';
+  fluxoRender();
+});
+document.getElementById('fluxoZoomOut').addEventListener('click', function () {
+  fluxoScale = Math.max(0.04, fluxoScale / 1.25);
+  fluxoZoomLabel.textContent = Math.round(fluxoScale * 100) + '%';
+  fluxoRender();
+});
+document.getElementById('fluxoZoomReset').addEventListener('click', function () {
+  fluxoFit();
+  fluxoRender();
+});
+
+var fluxoDragging = null;
+fluxoCanvas.addEventListener('mousedown', function (e) {
+  fluxoDragging = { sx: e.clientX, sy: e.clientY, px: fluxoPanX, py: fluxoPanY };
+  fluxoCanvas.classList.add('dragging');
+  e.preventDefault();
+});
+window.addEventListener('mousemove', function (e) {
+  if (!fluxoDragging) return;
+  fluxoPanX = fluxoDragging.px + (e.clientX - fluxoDragging.sx);
+  fluxoPanY = fluxoDragging.py + (e.clientY - fluxoDragging.sy);
+  fluxoRender();
+});
+window.addEventListener('mouseup', function () {
+  if (!fluxoDragging) return;
+  fluxoDragging = null;
+  fluxoCanvas.classList.remove('dragging');
+});
+fluxoCanvas.addEventListener('wheel', function (e) {
+  e.preventDefault();
+  if (!FLUXO_GRAPH) return;
+  var rect = fluxoCanvas.getBoundingClientRect();
+  var mx = e.clientX - rect.left;
+  var my = e.clientY - rect.top;
+  var factor = e.deltaY < 0 ? 1.2 : 1 / 1.2;
+  var ns = Math.max(0.04, Math.min(8, fluxoScale * factor));
+  var fx = (mx - fluxoPanX) / fluxoScale - FLUXO_PAD;
+  var fy = (my - fluxoPanY) / fluxoScale - FLUXO_PAD;
+  fluxoScale = ns;
+  fluxoPanX = mx - (fx + FLUXO_PAD) * fluxoScale;
+  fluxoPanY = my - (fy + FLUXO_PAD) * fluxoScale;
+  fluxoZoomLabel.textContent = Math.round(fluxoScale * 100) + '%';
+  fluxoRender();
+}, { passive: false });
 
 window.addEventListener('resize', syncAll);
 
