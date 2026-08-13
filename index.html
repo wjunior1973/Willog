@@ -1611,6 +1611,16 @@ para cada numero em lista:
           <div class="mi-example"><span class="mi-row"><span>m&eacute;dia(1, 2, 3, 4, 5)</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span></div>
         </div>
         <div class="manual-item">
+          <span class="mi-name">MMC(a, b, c, ...)</span>
+          <span class="mi-desc">M&iacute;nimo m&uacute;ltiplo comum dos argumentos (tamb&eacute;m aceito em min&uacute;sculas: <code>mmc</code>). Espera ao menos 2 n&uacute;meros inteiros.</span>
+          <div class="mi-example"><span class="mi-row"><span>MMC(2, 3, 5)</span><span class="mi-arrow">&rarr;</span><span class="ex">30</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">MDC(a, b, c, ...)</span>
+          <span class="mi-desc">M&aacute;ximo divisor comum dos argumentos (tamb&eacute;m aceito em min&uacute;sculas: <code>mdc</code>). Espera ao menos 2 n&uacute;meros inteiros.</span>
+          <div class="mi-example"><span class="mi-row"><span>MDC(6, 18, 24)</span><span class="mi-arrow">&rarr;</span><span class="ex">6</span></span></div>
+        </div>
+        <div class="manual-item">
           <span class="mi-name">estat&iacute;sticas(a, b, c, ...)</span>
           <span class="mi-desc">Calcula e retorna as medidas estat&iacute;sticas dos valores: valor m&iacute;nimo e m&aacute;ximo, m&eacute;dia aritm&eacute;tica, m&eacute;dia geom&eacute;trica, moda, mediana, vari&acirc;ncia, desvio padr&atilde;o e o rol ordenado. Tamb&eacute;m aceita uma lista de n&uacute;meros.</span>
           <div class="mi-example">
@@ -1774,6 +1784,15 @@ para cada numero em lista:
           </div>
         </div>
         <div class="manual-item">
+          <span class="mi-name">simplificar(express&atilde;o)</span>
+          <span class="mi-desc">Simplifica uma express&atilde;o simb&oacute;lica racional, cancelando fatores comuns.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>expr := (x**2 - 1)/(x - 1)</span></span>
+            <span class="mi-row"><span>mostre simplificar(expr)</span><span class="mi-arrow">&rarr;</span><span class="ex">x+1</span></span>
+            <span class="mi-row"><span>mostre simplificar((x**2 - 4)/(x**2 + 4*x + 4))</span><span class="mi-arrow">&rarr;</span><span class="ex">(x-2)/(x+2)</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
           <span class="mi-name">derivada(express&atilde;o, vari&aacute;vel)</span>
           <span class="mi-desc">Derivada simb&oacute;lica em rela&ccedil;&atilde;o &agrave; vari&aacute;vel (polin&ocirc;mios e fun&ccedil;&otilde;es trigonom&eacute;tricas).</span>
           <div class="mi-example">
@@ -1796,6 +1815,48 @@ para cada numero em lista:
           <div class="mi-example">
             <span class="mi-row"><span>mostre integral(x**2, x, 0, 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">2.666666666666667</span></span>
             <span class="mi-row"><span>mostre integral(sen(x), x, 0, pi)</span><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#9200;</span><h4>Data e Hora</h4></div>
+
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">ano()</span>
+          <span class="mi-desc">Ano atual no formato yyyy (ex.: 2026).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre ano()</span><span class="mi-arrow">&rarr;</span><span class="ex">2026</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">m&ecirc;s()</span>
+          <span class="mi-desc">M&ecirc;s atual no formato mm (ex.: 08). Tamb&eacute;m aceito sem acento: <code>mes()</code>.</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre m&ecirc;s()</span><span class="mi-arrow">&rarr;</span><span class="ex">08</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">dia()</span>
+          <span class="mi-desc">Dia atual no formato dd (ex.: 05).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre dia()</span><span class="mi-arrow">&rarr;</span><span class="ex">05</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">hora()</span>
+          <span class="mi-desc">Hora atual (ex.: 20).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre hora()</span><span class="mi-arrow">&rarr;</span><span class="ex">20</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">data()</span>
+          <span class="mi-desc">Data atual no formato dd/MM/yyyy (ex.: 13/08/2026).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre data()</span><span class="mi-arrow">&rarr;</span><span class="ex">13/08/2026</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">agora()</span>
+          <span class="mi-desc">Hora, minutos e segundos atuais no formato HH:mm:ss (ex.: 20:42:03).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre agora()</span><span class="mi-arrow">&rarr;</span><span class="ex">20:42:03</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">tempo("dd/MM/yyyy", "dd/MM/yyyy")</span>
+          <span class="mi-desc">Tempo decorrido em anos, meses e dias entre as duas datas informadas (a ordem das datas n&atilde;o importa).</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre tempo("13/08/2026", "10/02/2027")</span><span class="mi-arrow">&rarr;</span><span class="ex">5 meses e 28 dias</span></span>
           </div>
         </div>
       </div>
@@ -2484,6 +2545,76 @@ function execCarregar(src, env) {
   return 'Carregado "' + fileVal + '": ' + assigned + ' valor(es) atribuído(s)';
 }
 
+function pad2(n) { return (n < 10 ? '0' : '') + n; }
+
+function formatDataAtual() {
+  var d = new Date();
+  return pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + '/' + d.getFullYear();
+}
+
+function formatHoraAtual() {
+  var d = new Date();
+  return pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':' + pad2(d.getSeconds());
+}
+
+function parseDataBrasil(txt) {
+  if (typeof txt !== 'string') throw new Error('tempo: as datas devem ser textos no formato dd/MM/yyyy');
+  var m = txt.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!m) throw new Error('tempo: data inválida "' + txt + '" (use o formato dd/MM/yyyy)');
+  var d = parseInt(m[1], 10);
+  var mo = parseInt(m[2], 10);
+  var y = parseInt(m[3], 10);
+  if (mo < 1 || mo > 12 || d < 1 || d > 31) throw new Error('tempo: data inválida "' + txt + '"');
+  var dt = new Date(y, mo - 1, d);
+  if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) {
+    throw new Error('tempo: data inválida "' + txt + '"');
+  }
+  return { y: y, m: mo, d: d };
+}
+
+function diffDatas(a, b) {
+  var d1 = parseDataBrasil(a);
+  var d2 = parseDataBrasil(b);
+  function cmp(x, y2) {
+    if (x.y !== y2.y) return x.y - y2.y;
+    if (x.m !== y2.m) return x.m - y2.m;
+    return x.d - y2.d;
+  }
+  if (cmp(d1, d2) > 0) { var t = d1; d1 = d2; d2 = t; }
+  var anos = d2.y - d1.y;
+  var meses = d2.m - d1.m;
+  var dias = d2.d - d1.d;
+  if (dias < 0) {
+    meses--;
+    dias += new Date(d2.y, d2.m - 1, 0).getDate();
+  }
+  if (meses < 0) {
+    meses += 12;
+    anos--;
+  }
+  var parts = [];
+  if (anos === 1) parts.push('1 ano');
+  else if (anos > 1) parts.push(anos + ' anos');
+  if (meses === 1) parts.push('1 mês');
+  else if (meses > 1) parts.push(meses + ' meses');
+  if (dias === 1) parts.push('1 dia');
+  else if (dias > 1) parts.push(dias + ' dias');
+  if (parts.length === 0) return '0 dias';
+  if (parts.length === 1) return parts[0];
+  return parts.slice(0, -1).join(', ') + ' e ' + parts[parts.length - 1];
+}
+
+function wpGcd(a, b) {
+  a = Math.abs(a);
+  b = Math.abs(b);
+  while (b !== 0) { var t = a % b; a = b; b = t; }
+  return a;
+}
+function wpLcm(a, b) {
+  if (a === 0 || b === 0) return 0;
+  return Math.abs(a * b) / wpGcd(a, b);
+}
+
 function callFunction(name, args, rawName) {
   function nv(i) { return numVal(args[i]); }
   function elwise(arg, fn) {
@@ -2590,6 +2721,31 @@ function callFunction(name, args, rawName) {
     for (var k = 0; k < args.length; k++) sum += nv(k);
     var avg = sum / args.length;
     return mkNum(avg, avg % 1 !== 0);
+  }
+  if (name === 'MMC' || name === 'mmc') {
+    if (args.length < 2) throw new Error('MMC espera ao menos 2 argumentos');
+    var lcm = 1;
+    for (var k = 0; k < args.length; k++) {
+      var av = nv(k);
+      if (typeof av !== 'number' || !isFinite(av) || Math.floor(av) !== av) {
+        throw new Error('MMC espera apenas números inteiros');
+      }
+      if (av === 0) { lcm = 0; break; }
+      lcm = wpLcm(lcm, Math.abs(av));
+    }
+    return mkNum(lcm, false);
+  }
+  if (name === 'MDC' || name === 'mdc') {
+    if (args.length < 2) throw new Error('MDC espera ao menos 2 argumentos');
+    var gcd = 0;
+    for (var k = 0; k < args.length; k++) {
+      var av = nv(k);
+      if (typeof av !== 'number' || !isFinite(av) || Math.floor(av) !== av) {
+        throw new Error('MDC espera apenas números inteiros');
+      }
+      gcd = gcd === 0 ? Math.abs(av) : wpGcd(gcd, Math.abs(av));
+    }
+    return mkNum(gcd, false);
   }
   if (name === 'estatísticas') {
     if (args.length === 0) throw new Error('estatísticas espera ao menos 1 argumento');
@@ -2933,6 +3089,12 @@ function callFunction(name, args, rawName) {
     if (typeof es !== 'string') throw new Error('expandir espera uma expressão simbólica');
     return expandirPolinomio(es);
   }
+  if (name === 'simplificar') {
+    if (args.length !== 1) throw new Error('simplificar espera 1 argumento');
+    var ss = args[0];
+    if (typeof ss !== 'string') throw new Error('simplificar espera uma expressão simbólica');
+    return simplificarPolinomio(ss);
+  }
   if (name === 'derivada') {
     if (args.length !== 2) throw new Error('derivada espera 2 argumentos: derivada(expressão, variável)');
     var ds = args[0];
@@ -2965,6 +3127,34 @@ function callFunction(name, args, rawName) {
       return integralDefinida(it2, iv2, ix0, ix1);
     }
     throw new Error('integral espera 2 argumentos (integral(expressão, variável)) ou 4 (integral(expressão, variável, início, fim))');
+  }
+  if (name === 'ano') {
+    if (args.length !== 0) throw new Error('ano espera nenhum argumento');
+    return mkNum(new Date().getFullYear(), false);
+  }
+  if (name === 'mês' || name === 'mes') {
+    if (args.length !== 0) throw new Error('mês espera nenhum argumento');
+    return pad2(new Date().getMonth() + 1);
+  }
+  if (name === 'dia') {
+    if (args.length !== 0) throw new Error('dia espera nenhum argumento');
+    return pad2(new Date().getDate());
+  }
+  if (name === 'hora') {
+    if (args.length !== 0) throw new Error('hora espera nenhum argumento');
+    return mkNum(new Date().getHours(), false);
+  }
+  if (name === 'data') {
+    if (args.length !== 0) throw new Error('data espera nenhum argumento');
+    return formatDataAtual();
+  }
+  if (name === 'agora') {
+    if (args.length !== 0) throw new Error('agora espera nenhum argumento');
+    return formatHoraAtual();
+  }
+  if (name === 'tempo') {
+    if (args.length !== 2) throw new Error('tempo espera 2 argumentos: tempo("dd/MM/yyyy", "dd/MM/yyyy")');
+    return diffDatas(args[0], args[1]);
   }
   throw new Error('Função desconhecida: ' + name);
 }
@@ -3207,6 +3397,265 @@ function formatSimbolica(r, varName) {
 function expandirPolinomio(src) {
   var p = parseSimbolica(src);
   return formatSimbolica(p.rat, p.varName || 'x');
+}
+
+function gcdInt(a, b) {
+  a = Math.round(Math.abs(a));
+  b = Math.round(Math.abs(b));
+  while (b !== 0) { var t = a % b; a = b; b = t; }
+  return a;
+}
+
+function divisorsInt(n) {
+  n = Math.round(Math.abs(n));
+  if (n === 0) return [1];
+  var out = [];
+  for (var i = 1; i * i <= n; i++) {
+    if (n % i === 0) {
+      out.push(i);
+      if (i !== n / i) out.push(n / i);
+    }
+  }
+  return out;
+}
+
+function polyMaxDegree(p) {
+  var m = -1;
+  Object.keys(p).forEach(function (k) {
+    if (numVal(p[k]) !== 0) {
+      var e = Number(k);
+      if (e > m) m = e;
+    }
+  });
+  return m;
+}
+
+function polyContentInt(p) {
+  var g = 0;
+  Object.keys(p).forEach(function (k) {
+    var av = Math.abs(numVal(p[k]));
+    if (av === 0) return;
+    if (g === 0) g = av;
+    else g = gcdInt(g, av);
+  });
+  return g;
+}
+
+function polyDivideInt(p, c) {
+  var out = {};
+  Object.keys(p).forEach(function (k) {
+    if (numVal(p[k]) !== 0) out[k] = mkNum(numVal(p[k]) / c, false);
+  });
+  return out;
+}
+
+function rationalRootsCandidates(p) {
+  var d = polyMaxDegree(p);
+  if (d < 1) return [];
+  var a0 = numVal(p['0'] || 0);
+  var an = numVal(p[String(d)] || 0);
+  if (a0 === 0 || an === 0) return [];
+  var pdivs = divisorsInt(Math.abs(a0));
+  var qdivs = divisorsInt(Math.abs(an));
+  var roots = [];
+  var seen = {};
+  for (var i = 0; i < pdivs.length; i++) {
+    for (var j = 0; j < qdivs.length; j++) {
+      var r = pdivs[i] / qdivs[j];
+      if (!seen[r]) { seen[r] = true; roots.push(r); }
+      var nr = -r;
+      if (!seen[nr]) { seen[nr] = true; roots.push(nr); }
+    }
+  }
+  return roots;
+}
+
+function polyDivByLinear(p, r) {
+  var d = polyMaxDegree(p);
+  if (d < 1) return {};
+  var coeffs = [];
+  for (var e = 0; e <= d; e++) coeffs.push(numVal(p[String(e)] || 0));
+  var qc = [];
+  var carry = 0;
+  for (var i = d; i >= 0; i--) {
+    var v = coeffs[i] + carry;
+    qc.push(v);
+    carry = v * r;
+  }
+  var q = {};
+  for (var j = 0; j < d; j++) {
+    var v2 = qc[j];
+    if (v2 !== 0) q[String(d - 1 - j)] = mkNum(v2, v2 % 1 !== 0);
+  }
+  return q;
+}
+
+function toLinearFactor(r) {
+  var f = approxFraction(r, 1e-12, 1000000);
+  var p = f[0], q = f[1];
+  if (q < 0) { p = -p; q = -q; }
+  var pol = {};
+  pol['1'] = mkNum(q, false);
+  pol['0'] = mkNum(-p, false);
+  return { pol: pol, q: q };
+}
+
+function factorPolyNoContent(poly) {
+  var factors = [];
+  var cur = poly;
+  var mult = 1;
+  var guard = 0;
+  while (polyMaxDegree(cur) >= 1) {
+    if (guard++ > 500) break;
+    var d = polyMaxDegree(cur);
+    if (d === 1) {
+      factors.push({ pol: cur, mult: 1 });
+      return { factors: factors, mult: mult };
+    }
+    var roots = rationalRootsCandidates(cur);
+    var found = false;
+    for (var i = 0; i < roots.length; i++) {
+      var r = roots[i];
+      if (polyEvalNum(cur, r) === 0) {
+        var cnt = 0;
+        while (polyEvalNum(cur, r) === 0) {
+          cur = polyDivByLinear(cur, r);
+          cnt++;
+          if (polyMaxDegree(cur) < 1) break;
+        }
+        var lf = toLinearFactor(r);
+        factors.push({ pol: lf.pol, mult: cnt });
+        mult = mult / Math.pow(lf.q, cnt);
+        if (polyMaxDegree(cur) >= 1) {
+          var gc = polyContentInt(cur);
+          if (gc > 1) {
+            cur = polyDivideInt(cur, gc);
+            mult = mult * gc;
+          }
+        }
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      factors.push({ pol: cur, mult: 1 });
+      return { factors: factors, mult: mult };
+    }
+  }
+  return { factors: factors, mult: mult };
+}
+
+function polyFactor2(poly) {
+  var ks = Object.keys(poly).filter(function (k) { return numVal(poly[k]) !== 0; });
+  if (ks.length === 0) return { content: 0, xPower: 0, factors: [] };
+  var lcm = 1;
+  for (var i = 0; i < ks.length; i++) {
+    var v = numVal(poly[ks[i]]);
+    var den = 1;
+    if (v % 1 !== 0) {
+      var fr = approxFraction(Math.abs(v), 1e-10, 1000000);
+      den = fr[1];
+    }
+    lcm = lcm * den / gcdInt(lcm, den);
+  }
+  var scale = lcm;
+  var ip = {};
+  for (var i = 0; i < ks.length; i++) {
+    ip[ks[i]] = mkNum(Math.round(numVal(poly[ks[i]]) * scale), false);
+  }
+  var content = polyContentInt(ip);
+  var maxE = -1;
+  for (var i = 0; i < ks.length; i++) {
+    var e = Number(ks[i]);
+    if (e > maxE) maxE = e;
+  }
+  if (numVal(ip[String(maxE)]) < 0) content = -content;
+  var rest = {};
+  for (var i = 0; i < ks.length; i++) {
+    var k = ks[i];
+    rest[k] = mkNum(numVal(ip[k]) / content, false);
+  }
+  var minE = null;
+  for (var i = 0; i < ks.length; i++) {
+    var e = Number(ks[i]);
+    if (minE === null || e < minE) minE = e;
+  }
+  var xPower = minE > 0 ? minE : 0;
+  var rest2 = {};
+  for (var i = 0; i < ks.length; i++) {
+    var k = ks[i];
+    var cv = numVal(rest[k]);
+    if (cv !== 0) rest2[String(Number(k) - xPower)] = mkNum(cv, false);
+  }
+  var rf = factorPolyNoContent(rest2);
+  return { content: content / scale * rf.mult, xPower: xPower, factors: rf.factors };
+}
+
+function polyFactorKey(f) {
+  var d = polyMaxDegree(f);
+  if (d < 0) return 'c0';
+  var lead = numVal(f[String(d)]);
+  var parts = [];
+  for (var e = 0; e <= d; e++) {
+    var v = numVal(f[String(e)]) / lead;
+    parts.push(formatNumber(v, v % 1 !== 0));
+  }
+  return parts.join('|');
+}
+
+function formatFactorList(content, xPower, factors, vn) {
+  var parts = [];
+  var sign = 1;
+  if (content < 0) sign = -1;
+  var mag = Math.abs(content);
+  if (mag !== 1) parts.push(formatNumber(mag, mag % 1 !== 0));
+  if (xPower > 0) parts.push(xPower === 1 ? vn : vn + '**' + xPower);
+  for (var i = 0; i < factors.length; i++) {
+    var f = factors[i].pol;
+    var m = factors[i].mult;
+    var ftxt = '(' + formatPolinomio(f, vn) + ')';
+    if (m > 1) ftxt += '**' + m;
+    parts.push(ftxt);
+  }
+  if (parts.length === 0) return sign < 0 ? '-1' : '1';
+  var s = parts.join('*');
+  return sign < 0 ? '-' + s : s;
+}
+
+function simplificarPolinomio(src) {
+  var p = parseSimbolica(src);
+  var vn = p.varName || 'x';
+  var rat = p.rat;
+  var nf = polyFactor2(rat.rn);
+  var df = polyFactor2(rat.rd);
+  var content = nf.content / df.content;
+  var xPower = nf.xPower - df.xPower;
+  var numFactors = nf.factors.slice();
+  var denFactors = df.factors.slice();
+  for (var a = 0; a < numFactors.length; a++) {
+    var nk = polyFactorKey(numFactors[a].pol);
+    for (var b = 0; b < denFactors.length; b++) {
+      if (polyFactorKey(denFactors[b].pol) === nk) {
+        var m = Math.min(numFactors[a].mult, denFactors[b].mult);
+        numFactors[a].mult -= m;
+        denFactors[b].mult -= m;
+        break;
+      }
+    }
+  }
+  numFactors = numFactors.filter(function (f) { return f.mult > 0; });
+  denFactors = denFactors.filter(function (f) { return f.mult > 0; });
+  if (denFactors.length === 0 && xPower >= 0) {
+    var lone = numFactors.length === 1 && numFactors[0].mult === 1 && Math.abs(content) === 1 && xPower === 0;
+    if (lone) {
+      var txt = formatPolinomio(numFactors[0].pol, vn);
+      return content < 0 ? '-' + txt : txt;
+    }
+    return formatFactorList(content, xPower, numFactors, vn);
+  }
+  var numTxt = formatFactorList(content, xPower > 0 ? xPower : 0, numFactors, vn);
+  var denTxt = formatFactorList(1, xPower < 0 ? -xPower : 0, denFactors, vn);
+  return numTxt + '/' + denTxt;
 }
 
 function derivadaPolinomio(src, varName) {
@@ -4054,6 +4503,27 @@ function parse(input, env) {
           srcStr = resolveExpSource(srcStr, env, 0);
           return callFunction('expandir', [srcStr]);
         }
+        if (t.name === 'simplificar') {
+          var smparts = [];
+          var smdepth = 0;
+          while (true) {
+            var smpt = peek();
+            if (!smpt) throw new Error('Parêntese não fechado em simplificar');
+            if (isOp(smpt) && smpt.text === '(') smdepth++;
+            if (isOp(smpt) && smpt.text === ')') {
+              if (smdepth === 0) break;
+              smdepth--;
+            }
+            smparts.push(smpt.src);
+            next();
+          }
+          expectOp(')');
+          var smsrc = smparts.join('');
+          var smidm = smsrc.match(/^[A-Za-z_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF][A-Za-z0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]*$/);
+          if (smidm && smsrc in env && typeof env[smsrc] === 'string') smsrc = env[smsrc];
+          smsrc = resolveExpSource(smsrc, env, 0);
+          return callFunction('simplificar', [smsrc]);
+        }
         if (t.name === 'derivada') {
           var dparts = [];
           var ddepth = 0;
@@ -4176,7 +4646,7 @@ function parse(input, env) {
           }
         }
         expectOp(')');
-        if (t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi' || t.name === 'média' || t.name === 'primos' || t.name === 'fibonacci' || t.name === 'fibo' || t.name === 'inteiro' || t.name === 'decimal' || t.name === 'fração' || t.name === 'união' || t.name === 'intersecção' || t.name === 'menos' || t.name === 'paraLista' || t.name === 'paraTexto' || t.name === 'paraNúmero' || t.name === 'paraNumero' || t.name === 'inversa' || t.name === 'transposta' || t.name === 'determinante' || t.name === 'plotar' || t.name === 'tabela' || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'aleatorio' || t.name === 'estatísticas' || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo' || t.name === 'texto' || t.name === 'intervalo' || t.name === 'log' || t.name === 'logn' || t.name === 'ln' || t.name === 'arredondar' || t.name === 'arred') {
+        if (t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi' || t.name === 'média' || t.name === 'primos' || t.name === 'fibonacci' || t.name === 'fibo' || t.name === 'inteiro' || t.name === 'decimal' || t.name === 'fração' || t.name === 'união' || t.name === 'intersecção' || t.name === 'menos' || t.name === 'paraLista' || t.name === 'paraTexto' || t.name === 'paraNúmero' || t.name === 'paraNumero' || t.name === 'inversa' || t.name === 'transposta' || t.name === 'determinante' || t.name === 'plotar' || t.name === 'tabela' || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'aleatorio' || t.name === 'estatísticas' || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo' || t.name === 'texto' || t.name === 'intervalo' || t.name === 'log' || t.name === 'logn' || t.name === 'ln' || t.name === 'arredondar' || t.name === 'arred' || t.name === 'ano' || t.name === 'mês' || t.name === 'mes' || t.name === 'dia' || t.name === 'hora' || t.name === 'data' || t.name === 'agora' || t.name === 'tempo' || t.name === 'MMC' || t.name === 'mmc' || t.name === 'MDC' || t.name === 'mdc') {
           return callFunction(t.name, args);
         }
         var base = (t.name in env) ? env[t.name] : undefined;
@@ -5275,7 +5745,7 @@ function tokenizeHighlight(code) {
           word === 'definir' || word === 'função' || word === 'funcao' || word === 'retorne' || word === 'retornar' ||
           word === 'e' || word === 'ou' || word === 'não' || word === 'nao' ||
           word === 'verdadeiro' || word === 'falso') tokens.push({ type: 'keyword', text: word });
-      else if ((word === 'raizq' || word === 'raizc' || word === 'média' || word === 'pi' || word === 'primos' || word === 'fibonacci' || word === 'fibo' || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'expandir' || word === 'união' || word === 'intersecção' || word === 'menos' || word === 'subconjuntos' || word === 'paraLista' || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero' || word === 'inversa' || word === 'transposta' || word === 'determinante' || word === 'plotar' || word === 'tabela' || word === 'derivada' || word === 'integral' || word === 'graus' || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio' || word === 'estatísticas' || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo' || word === 'texto' || word === 'intervalo' || word === 'log' || word === 'logn' || word === 'ln' || word === 'arredondar' || word === 'arred' || word === 'salvar' || word === 'carregar') && code[j4] === '(') tokens.push({ type: 'function', text: word });
+      else if ((word === 'raizq' || word === 'raizc' || word === 'média' || word === 'pi' || word === 'primos' || word === 'fibonacci' || word === 'fibo' || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'expandir' || word === 'simplificar' || word === 'união' || word === 'intersecção' || word === 'menos' || word === 'subconjuntos' || word === 'paraLista' || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero' || word === 'inversa' || word === 'transposta' || word === 'determinante' || word === 'plotar' || word === 'tabela' || word === 'derivada' || word === 'integral' || word === 'graus' || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio' || word === 'estatísticas' || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo' || word === 'texto' || word === 'intervalo' || word === 'log' || word === 'logn' || word === 'ln' || word === 'arredondar' || word === 'arred' || word === 'salvar' || word === 'carregar'   || word === 'ano' || word === 'mês' || word === 'mes' || word === 'dia' || word === 'hora' || word === 'data' || word === 'agora' || word === 'tempo' || word === 'MMC' || word === 'mmc' || word === 'MDC' || word === 'mdc') && code[j4] === '(') tokens.push({ type: 'function', text: word });
       else tokens.push({ type: 'identifier', text: word });
       i = j4;
     } else {
@@ -5738,6 +6208,10 @@ var AC_ALL = (function () {
     ['arred', 'Matemática', 'Arredonda x com um número de casas decimais'],
     ['pi', 'Matemática', 'Valor de pi (2 casas decimais)'],
     ['média', 'Matemática', 'Média aritmética dos argumentos'],
+    ['MMC', 'Matemática', 'Mínimo múltiplo comum dos números'],
+    ['mmc', 'Matemática', 'Mínimo múltiplo comum dos números'],
+    ['MDC', 'Matemática', 'Máximo divisor comum dos números'],
+    ['mdc', 'Matemática', 'Máximo divisor comum dos números'],
     ['inteiro', 'Matemática', 'Parte inteira do número'],
     ['decimal', 'Matemática', 'Parte decimal do número'],
     ['fração', 'Matemática', 'Converte decimal em fração'],
@@ -5765,6 +6239,7 @@ var AC_ALL = (function () {
     ['transposta', 'Matrizes', 'Transpõe linhas e colunas de A'],
     ['determinante', 'Matrizes', 'Determinante de A (escalar)'],
     ['expandir', 'Álgebra', 'Expande uma expressão simbólica'],
+    ['simplificar', 'Álgebra', 'Simplifica uma expressão simbólica racional'],
     ['derivada', 'Álgebra', 'Derivada simbólica'],
     ['integral', 'Álgebra', 'Integral indefinida ou definida'],
     ['graus', 'Álgebra', 'Calcula expressão com trigonométricas em graus'],
@@ -5775,7 +6250,15 @@ var AC_ALL = (function () {
     ['linha', 'Gráficos', 'Traça uma linha na janela'],
     ['círculo', 'Gráficos', 'Desenha um círculo na janela'],
     ['texto', 'Gráficos', 'Escreve um texto na janela'],
-    ['estatísticas', 'Estatística', 'Medidas estatísticas dos valores']
+    ['estatísticas', 'Estatística', 'Medidas estatísticas dos valores'],
+    ['ano', 'Data e Hora', 'Ano atual (yyyy)'],
+    ['mês', 'Data e Hora', 'Mês atual (mm)'],
+    ['mes', 'Data e Hora', 'Mês atual (mm) (sem acento)'],
+    ['dia', 'Data e Hora', 'Dia atual (dd)'],
+    ['hora', 'Data e Hora', 'Hora atual'],
+    ['data', 'Data e Hora', 'Data atual (dd/MM/yyyy)'],
+    ['agora', 'Data e Hora', 'Hora, minuto e segundo atuais (HH:mm:ss)'],
+    ['tempo', 'Data e Hora', 'Tempo decorrido (anos, meses e dias) entre duas datas dd/MM/yyyy']
   ];
   for (var i = 0; i < fns.length; i++) {
     add(fns[i][0], fns[i][0] + '()', true, fns[i][1], fns[i][2]);
@@ -5830,6 +6313,10 @@ var QUICK_REF = (function () {
   qr('arred', 'Função', 'Arredonda x com um número de casas decimais (sinônimo de arredondar)', 'numero = 1.333333333\nmostre arred(numero, 6)');
   qr('pi', 'Função', 'Valor de pi (2 casas decimais)', 'raio = 5\narea = pi() * raio * raio\nmostre area');
   qr('média', 'Função', 'Média aritmética dos argumentos', 'mostre média(8, 9, 10)');
+  qr('MMC', 'Função', 'Mínimo múltiplo comum dos argumentos', 'mostre MMC(2, 3, 5)');
+  qr('mmc', 'Função', 'Mínimo múltiplo comum dos argumentos (em minúsculas)', 'mostre mmc(2, 3, 5)');
+  qr('MDC', 'Função', 'Máximo divisor comum dos argumentos', 'mostre MDC(6, 18, 24)');
+  qr('mdc', 'Função', 'Máximo divisor comum dos argumentos (em minúsculas)', 'mostre mdc(6, 18, 24)');
   qr('inteiro', 'Função', 'Parte inteira do número', 'mostre inteiro(9.99)');
   qr('decimal', 'Função', 'Parte decimal do número', 'mostre decimal(9.75)');
   qr('fração', 'Função', 'Converte decimal em fração', 'mostre fração(0.75)');
@@ -5857,6 +6344,7 @@ var QUICK_REF = (function () {
   qr('transposta', 'Função', 'Transpõe linhas e colunas de A', 'mostre transposta([[1, 0, 1], [0, 1, 0]])');
   qr('determinante', 'Função', 'Determinante de A (escalar)', 'mostre determinante([[2, 3], [1, 4]])');
   qr('expandir', 'Função', 'Expande uma expressão simbólica', 'mostre expandir((x - 2) ** 2)');
+  qr('simplificar', 'Função', 'Simplifica uma expressão simbólica racional', 'mostre simplificar((x**2 - 1)/(x - 1))');
   qr('derivada', 'Função', 'Derivada simbólica', 'mostre derivada(x ** 3 - x, x)');
   qr('integral', 'Função', 'Integral indefinida ou definida', 'mostre integral(2 * x, x)');
   qr('graus', 'Função', 'Calcula expressão com trigonométricas em graus', 'mostre graus(sen(90))');
@@ -5868,6 +6356,14 @@ var QUICK_REF = (function () {
   qr('círculo', 'Função', 'Desenha um círculo na janela', 'janela(400, 300)\ncírculo(200, 150, 80, verde, branco)');
   qr('texto', 'Função', 'Escreve um texto na janela (cor e tamanho da fonte opcionais)', 'janela(400, 300)\ntexto(50, 50, "Olá, mundo!", branco, 28)');
   qr('estatísticas', 'Função', 'Medidas estatísticas dos valores', 'mostre estatísticas(10, 20, 20, 30)');
+  qr('ano', 'Função', 'Ano atual (yyyy)', 'mostre ano()');
+  qr('mês', 'Função', 'Mês atual (mm)', 'mostre mês()');
+  qr('mes', 'Função', 'Mês atual (mm) (sem acento)', 'mostre mes()');
+  qr('dia', 'Função', 'Dia atual (dd)', 'mostre dia()');
+  qr('hora', 'Função', 'Hora atual', 'mostre hora()');
+  qr('data', 'Função', 'Data atual (dd/MM/yyyy)', 'mostre data()');
+  qr('agora', 'Função', 'Hora, minutos e segundos atuais (HH:mm:ss)', 'mostre agora()');
+  qr('tempo', 'Função', 'Tempo decorrido em anos, meses e dias entre duas datas', 'mostre tempo("13/08/2026", "10/02/2027")');
   qr('ordenada', 'Propriedade', 'Retorna a lista em ordem crescente', 'notas = [7, 3, 9, 5]\nmostre notas.ordenada');
   qr('adicionar', 'Propriedade', 'Adiciona valores ao final da lista', 'times = ["Fla", "Cor"]\ntimes.adicionar("Pal", "Cru")\nmostre times');
   qr('aleatório', 'Propriedade', 'Sorteia um item aleatório da lista', 'lista = [1, 2, 3, 4, 5]\nmostre lista.aleatório');
@@ -6282,7 +6778,7 @@ var sugestoesList = document.getElementById('sugestoesList');
 var sugestoesSummary = document.getElementById('sugestoesSummary');
 
 var SUG_KEYWORDS = ['mostre', 'mostrar', 'limpe', 'leia', 'se', 'senão', 'senao', 'repita', 'enquanto', 'para', 'cada', 'em', 'definir', 'função', 'funcao', 'retorne', 'retornar', 'e', 'ou', 'não', 'nao', 'verdadeiro', 'falso', 'true', 'false'];
-var SUG_FUNCS = ['raizq', 'raizc', 'pi', 'média', 'primos', 'fibonacci', 'fibo', 'intervalo', 'inteiro', 'decimal', 'fração', 'expandir', 'união', 'intersecção', 'menos', 'subconjuntos', 'paraLista', 'paraTexto', 'paraNúmero', 'paraNumero', 'inversa', 'transposta', 'determinante', 'plotar', 'tabela', 'derivada', 'integral', 'graus', 'cos', 'sen', 'tan', 'arcocos', 'arcosen', 'arcotan', 'aleatório', 'aleatorio', 'estatísticas', 'janela', 'ponto', 'linha', 'círculo', 'texto', 'log', 'logn', 'ln', 'arredondar', 'arred', 'salvar', 'carregar'];
+var SUG_FUNCS = ['raizq', 'raizc', 'pi', 'média', 'primos', 'fibonacci', 'fibo', 'intervalo', 'inteiro', 'decimal', 'fração', 'expandir', 'simplificar', 'união', 'intersecção', 'menos', 'subconjuntos', 'paraLista', 'paraTexto', 'paraNúmero', 'paraNumero', 'inversa', 'transposta', 'determinante', 'plotar', 'tabela', 'derivada', 'integral', 'graus', 'cos', 'sen', 'tan', 'arcocos', 'arcosen', 'arcotan', 'aleatório', 'aleatorio', 'estatísticas', 'janela', 'ponto', 'linha', 'círculo', 'texto', 'log', 'logn', 'ln', 'arredondar', 'arred', 'salvar', 'carregar', 'mês', 'mes', 'dia', 'ano', 'hora', 'data', 'agora', 'tempo', 'MMC', 'mmc', 'MDC', 'mdc'];
 
 function sugestoesMaskStrings(line) {
   var out = '';
