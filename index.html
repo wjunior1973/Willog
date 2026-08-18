@@ -883,8 +883,10 @@
   .colpick-overlay.open { display: flex; }
   .colpick-box {
     background: #2c2c2c; border: 1px solid #4a4a4a; border-radius: 8px;
-    padding: 16px 20px; min-width: 300px; max-width: 400px; box-shadow: 0 12px 40px rgba(0,0,0,.7);
+    padding: 16px 20px; min-width: 300px; max-width: 400px; max-height: 80vh;
+    box-shadow: 0 12px 40px rgba(0,0,0,.7); display: flex; flex-direction: column;
   }
+  #colpickCols { overflow-y: auto; flex: 1 1 auto; min-height: 0; }
   .colpick-box h3 { margin: 0 0 10px; font-size: 14px; color: #c8c8c8; }
   .colpick-box .colpick-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
   .colpick-box .colpick-row label { flex: 1; font-size: 13px; color: #aaa; cursor: pointer; }
@@ -902,6 +904,7 @@
   body.light .colpick-box { background: #fff; border-color: #ccc; }
   body.light .colpick-box h3 { color: #333; }
   body.light .colpick-box .colpick-row label { color: #444; }
+  body.light .colpick-box input[type=text], body.light .colpick-box input:not([type]) { background: #fff; color: #222; border-color: #ccc; }
   body.light .colpick-btns .colpick-cancel { background: #e0e0e0; color: #333; }
 
   /* ===== Calculadora (calculadora) ===== */
@@ -12139,6 +12142,22 @@ function processPlanilha(rows, cols) {
           } else if (e.key === 'Enter') {
             e.preventDefault(); this.blur();
             if (ri + 1 < rows) inputs[ri + 1][ci].focus();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault(); this.blur();
+            if (ri > 0) inputs[ri - 1][ci].focus();
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault(); this.blur();
+            if (ri + 1 < rows) inputs[ri + 1][ci].focus();
+          } else if (e.key === 'ArrowLeft') {
+            if (this.selectionStart === 0 && this.selectionEnd === 0) {
+              e.preventDefault(); this.blur();
+              if (ci > 0) inputs[ri][ci - 1].focus();
+            }
+          } else if (e.key === 'ArrowRight') {
+            if (this.selectionStart >= this.value.length && this.selectionEnd >= this.value.length) {
+              e.preventDefault(); this.blur();
+              if (ci + 1 < cols) inputs[ri][ci + 1].focus();
+            }
           }
         });
       })(r, c);
@@ -12205,18 +12224,63 @@ var colpickOverlay = document.getElementById('colpickOverlay');
 var colpickCols = document.getElementById('colpickCols');
 var colpickTitle = document.getElementById('colpickTitle');
 
+function colpickParseRanges(str, maxVal) {
+  str = str.replace(/\s/g, '').toUpperCase();
+  if (!str) return [];
+  var parts = str.split(',');
+  var result = [];
+  for (var p = 0; p < parts.length; p++) {
+    var part = parts[p];
+    if (!part) continue;
+    var rangeMatch = part.match(/^([A-Z]+)(?:-([A-Z]+))?$/);
+    if (rangeMatch) {
+      var letterToNum = function (s) {
+        var n = 0;
+        for (var i = 0; i < s.length; i++) n = n * 26 + (s.charCodeAt(i) - 64);
+        return n - 1;
+      };
+      var startIdx = letterToNum(rangeMatch[1]);
+      var endIdx = rangeMatch[2] ? letterToNum(rangeMatch[2]) : startIdx;
+      for (var j = Math.min(startIdx, endIdx); j <= Math.max(startIdx, endIdx); j++) {
+        if (j >= 0 && j < maxVal && result.indexOf(j) === -1) result.push(j);
+      }
+    } else {
+      var numMatch = part.match(/^(\d+)(?:-(\d+))?$/);
+      if (numMatch) {
+        var startN = parseInt(numMatch[1], 10);
+        var endN = numMatch[2] ? parseInt(numMatch[2], 10) : startN;
+        for (var j = Math.min(startN, endN); j <= Math.max(startN, endN); j++) {
+          if (j >= 1 && j <= maxVal && result.indexOf(j) === -1) result.push(j);
+        }
+      }
+    }
+  }
+  result.sort(function (a, b) { return a - b; });
+  return result;
+}
+
 function openColpick(title, onConfirm) {
   colpickTitle.textContent = title;
   colpickCols.innerHTML = '';
   var st = planilhaState;
   if (!st.cellsData || !st.rows) { alert('Abra uma planilha primeiro.'); return; }
-  var label = document.createElement('label');
-  label.style.cssText = 'display:block; margin-bottom:6px; font-size:12px; color:#999;';
-  label.textContent = 'Eixo X:';
-  colpickCols.appendChild(label);
+
+  var sep1 = document.createElement('div');
+  sep1.style.cssText = 'border-top:1px solid #3c3c3c; margin:8px 0 12px;';
+  var sep2 = document.createElement('div');
+  sep2.style.cssText = 'border-top:1px solid #3c3c3c; margin:10px 0 8px;';
+
+  var styleInput = 'width:100%; padding:5px 8px; background:#1e1e1e; color:#c8c8c8; border:1px solid #4a4a4a; border-radius:4px; font-size:12px; font-family:Consolas,monospace; outline:none;';
+  var styleHint = 'font-size:11px; color:#777; margin-top:3px;';
+
+  var lblX = document.createElement('label');
+  lblX.style.cssText = 'display:block; margin-bottom:6px; font-size:12px; color:#999;';
+  lblX.textContent = 'Eixo X — Selecionar:';
+  colpickCols.appendChild(lblX);
+
   var selX = document.createElement('select');
   selX.id = 'colpickX';
-  selX.style.cssText = 'width:100%; margin-bottom:10px; padding:4px; background:#1e1e1e; color:#c8c8c8; border:1px solid #4a4a4a; border-radius:4px; font-size:12px;';
+  selX.style.cssText = 'width:100%; padding:4px; background:#1e1e1e; color:#c8c8c8; border:1px solid #4a4a4a; border-radius:4px; font-size:12px;';
   var optLinhas = document.createElement('option');
   optLinhas.value = '__rownum__'; optLinhas.textContent = 'Números das linhas (1, 2, 3...)';
   selX.appendChild(optLinhas);
@@ -12226,10 +12290,29 @@ function openColpick(title, onConfirm) {
     selX.appendChild(o);
   }
   colpickCols.appendChild(selX);
-  var lbl2 = document.createElement('label');
-  lbl2.style.cssText = 'display:block; margin-bottom:6px; font-size:12px; color:#999;';
-  lbl2.textContent = 'Colunas para Y:';
-  colpickCols.appendChild(lbl2);
+
+  var lblXTyped = document.createElement('label');
+  lblXTyped.style.cssText = 'display:block; margin:8px 0 4px; font-size:12px; color:#999;';
+  lblXTyped.textContent = 'Ou digite o intervalo de linhas:';
+  colpickCols.appendChild(lblXTyped);
+  var inputXTyped = document.createElement('input');
+  inputXTyped.id = 'colpickXTyped';
+  inputXTyped.placeholder = 'Ex: 1-10  ou  1,3,5,7-12';
+  inputXTyped.style.cssText = styleInput;
+  colpickCols.appendChild(inputXTyped);
+  var hintX = document.createElement('div');
+  hintX.style.cssText = styleHint;
+  hintX.textContent = 'Use A-Z para colunas, ou números para linhas. Separar com vírgula.';
+  colpickCols.appendChild(hintX);
+
+  colpickCols.appendChild(sep1);
+
+  var lblY = document.createElement('label');
+  lblY.style.cssText = 'display:block; margin-bottom:6px; font-size:12px; color:#999;';
+  lblY.textContent = 'Colunas para Y — Marque:';
+  colpickCols.appendChild(lblY);
+
+  var yCheckboxes = [];
   for (var ci = 0; ci < st.cols; ci++) {
     var row = document.createElement('div');
     row.className = 'colpick-row';
@@ -12246,28 +12329,137 @@ function openColpick(title, onConfirm) {
     row.appendChild(lbl);
     row.appendChild(dot);
     colpickCols.appendChild(row);
+    yCheckboxes.push(chk);
   }
+
+  var lblYTyped = document.createElement('label');
+  lblYTyped.style.cssText = 'display:block; margin:8px 0 4px; font-size:12px; color:#999;';
+  lblYTyped.textContent = 'Ou digite as colunas para Y:';
+  colpickCols.appendChild(lblYTyped);
+  var inputYTyped = document.createElement('input');
+  inputYTyped.id = 'colpickYTyped';
+  inputYTyped.placeholder = 'Ex: B  ou  B-D  ou  B,C,E';
+  inputYTyped.style.cssText = styleInput;
+  colpickCols.appendChild(inputYTyped);
+  var hintY = document.createElement('div');
+  hintY.style.cssText = styleHint;
+  hintY.textContent = 'Use letras de coluna (A, B, C...). Aceita intervalo (A-C) ou lista (A,B,D).';
+  colpickCols.appendChild(hintY);
+
+  inputXTyped.addEventListener('input', function () {
+    var val = inputXTyped.value.trim();
+    if (val) {
+      selX.value = '__rownum__';
+    }
+  });
+
+  inputYTyped.addEventListener('input', function () {
+    var colIndices = colpickParseRanges(inputYTyped.value, st.cols);
+    for (var ci = 0; ci < st.cols; ci++) {
+      yCheckboxes[ci].checked = colIndices.indexOf(ci) !== -1;
+    }
+  });
+
+  for (var ci = 0; ci < st.cols; ci++) {
+    (function (idx) {
+      yCheckboxes[idx].addEventListener('change', function () {
+        var selected = [];
+        for (var j = 0; j < st.cols; j++) {
+          if (yCheckboxes[j].checked) selected.push(planilhaColLetter(j));
+        }
+        inputYTyped.value = selected.join(',');
+      });
+    })(ci);
+  }
+
   colpickOverlay.classList.add('open');
+
   document.getElementById('colpickOk').onclick = function () {
     colpickOverlay.classList.remove('open');
-    var xVal = selX.value;
-    var yCols = [];
-    for (var ci = 0; ci < st.cols; ci++) {
-      if (document.getElementById('colpickY' + ci).checked) yCols.push(ci);
+
+    var typedX = inputXTyped.value.trim();
+    var xVal;
+    var isTypedX = false;
+    var xRowIndices = [];
+
+    if (typedX) {
+      var nums = colpickParseRanges(typedX, st.rows);
+      if (nums.length > 0) {
+        isTypedX = true;
+        xRowIndices = nums;
+        xVal = '__rownum__';
+      } else {
+        var colNums = colpickParseRanges(typedX, st.cols);
+        if (colNums.length === 1) {
+          xVal = String(colNums[0]);
+          isTypedX = false;
+        } else {
+          alert('Intervalo X inválido. Use números de linha (ex: 1-10) ou uma letra de coluna.');
+          return;
+        }
+      }
+    } else {
+      xVal = selX.value;
     }
+
+    var typedY = inputYTyped.value.trim();
+    var yCols = [];
+    if (typedY) {
+      yCols = colpickParseRanges(typedY, st.cols);
+    } else {
+      for (var ci = 0; ci < st.cols; ci++) {
+        if (yCheckboxes[ci].checked) yCols.push(ci);
+      }
+    }
+
     if (yCols.length === 0) { alert('Selecione pelo menos uma coluna Y.'); return; }
-    if (typeof onConfirm === 'function') onConfirm(xVal, yCols);
+    if (typeof onConfirm === 'function') onConfirm(xVal, yCols, isTypedX ? xRowIndices : null);
   };
   document.getElementById('colpickCancel').onclick = function () { colpickOverlay.classList.remove('open'); };
 }
 
-function getColData(colIdx) {
+function getColCellVal(rowIdx, colIdx) {
+  var st = planilhaState;
+  var raw = '';
+  if (st.inputs[rowIdx] && st.inputs[rowIdx][colIdx]) {
+    raw = st.inputs[rowIdx][colIdx].value;
+  } else if (st.cellsData[rowIdx]) {
+    raw = st.cellsData[rowIdx][colIdx] || '';
+  }
+  return raw;
+}
+
+function colHasData(rowIdx, colIdx) {
+  var raw = getColCellVal(rowIdx, colIdx);
+  return raw !== '' && raw !== null && raw !== undefined;
+}
+
+function getColData(colIdx, rowFilter) {
   var st = planilhaState, vals = [];
-  for (var r = 0; r < st.rows; r++) {
-    var v = parseFloat(String((st.cellsData[r] && st.cellsData[r][colIdx]) || '').replace(',', '.'));
-    vals.push(isNaN(v) ? 0 : v);
+  var rows = rowFilter || null;
+  if (rows) {
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      var v = parseFloat(String(getColCellVal(r, colIdx)).replace(',', '.'));
+      vals.push(isNaN(v) ? 0 : v);
+    }
+  } else {
+    for (var r = 0; r < st.rows; r++) {
+      var v = parseFloat(String(getColCellVal(r, colIdx)).replace(',', '.'));
+      vals.push(isNaN(v) ? 0 : v);
+    }
   }
   return vals;
+}
+
+function getUsedRows(allColIdxs) {
+  var st = planilhaState, used = [];
+  for (var r = 0; r < st.rows; r++) {
+    for (var c = 0; c < allColIdxs.length; c++) {
+      if (colHasData(r, allColIdxs[c])) { used.push(r); break; }
+    }
+  }
+  return used;
 }
 
 function openChartWin(title, type, xVals, yColsData, yLabels) {
@@ -12487,18 +12679,51 @@ function planilhaGerarGrafico(type) {
   var st = planilhaState;
   if (!st.cellsData || !st.rows || !st.cols) { alert('Abra uma planilha primeiro.'); return; }
   var typeNames = { line: 'Gráfico de linhas', bar: 'Gráfico de barras', scatter: 'Gráfico de pontos' };
-  openColpick(typeNames[type] + ' — Selecionar colunas', function (xCol, yCols) {
-    var xVals = [];
-    if (xCol === '__rownum__') {
-      for (var r = 0; r < st.rows; r++) xVals.push(r + 1);
+  openColpick(typeNames[type] + ' — Selecionar colunas', function (xCol, yCols, xRowIndices) {
+    var isColX = xCol !== '__rownum__';
+    var xColIdx = isColX ? parseInt(xCol) : -1;
+
+    var involvedCols = yCols.slice();
+    if (isColX) involvedCols.push(xColIdx);
+
+    var usedRows0 = getUsedRows(involvedCols);
+
+    var activeRows = [];
+    if (xRowIndices && xRowIndices.length > 0) {
+      var typedSet = {};
+      for (var t = 0; t < xRowIndices.length; t++) typedSet[xRowIndices[t] - 1] = true;
+      for (var u = 0; u < usedRows0.length; u++) {
+        if (typedSet[usedRows0[u]]) activeRows.push(usedRows0[u]);
+      }
     } else {
-      xVals = getColData(parseInt(xCol));
+      activeRows = usedRows0;
     }
+
+    if (activeRows.length === 0) { alert('Nenhum dado encontrado nas colunas selecionadas.'); return; }
+
+    var xVals = [];
+    if (!isColX) {
+      for (var i = 0; i < activeRows.length; i++) xVals.push(activeRows[i] + 1);
+    } else {
+      for (var i = 0; i < activeRows.length; i++) {
+        var raw = getColCellVal(activeRows[i], xColIdx);
+        var v = parseFloat(String(raw).replace(',', '.'));
+        xVals.push(isNaN(v) ? 0 : v);
+      }
+    }
+
     var yColsData = [], yLabels = [];
-    for (var i = 0; i < yCols.length; i++) {
-      yColsData.push(getColData(yCols[i]));
-      yLabels.push('Coluna ' + planilhaColLetter(yCols[i]));
+    for (var c = 0; c < yCols.length; c++) {
+      var data = [];
+      for (var i = 0; i < activeRows.length; i++) {
+        var raw = getColCellVal(activeRows[i], yCols[c]);
+        var v = parseFloat(String(raw).replace(',', '.'));
+        data.push(isNaN(v) ? 0 : v);
+      }
+      yColsData.push(data);
+      yLabels.push('Coluna ' + planilhaColLetter(yCols[c]));
     }
+
     var title = typeNames[type] + ' — ' + yLabels.join(', ');
     openChartWin(title, type, xVals, yColsData, yLabels);
   });
