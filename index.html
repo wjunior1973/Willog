@@ -30,6 +30,23 @@
     gap: 12px;
     flex: 0 0 auto;
   }
+  .header-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .header-close:hover { background: #e81123; color: #fff; }
+  body.light .header-close { color: #666; }
+  body.light .header-close:hover { background: #e81123; color: #fff; }
   .logo {
     width: 34px; height: 34px;
     background: #4fc3f7; color: #08202b;
@@ -527,6 +544,25 @@
   body.light .plot-zoom-btn { background: #f3f3f3; border-color: #c8c8c8; color: #333; }
   body.light .plot-zoom-btn:hover { background: #0078d4; color: #fff; border-color: #0078d4; }
   body.light .plot-zoom-label { color: #555; }
+  #modalOverlay .modal.modal-maximized {
+    width: 100vw; max-width: none; max-height: none; height: 100vh;
+    border-radius: 0; border: none;
+  }
+  #modalOverlay .modal.modal-mini { height: auto; }
+  #modalOverlay .modal.modal-mini .modal-tabs,
+  #modalOverlay .modal.modal-mini .modal-body { display: none; }
+  #manualMinimize:hover { color: #ffb74d; }
+  #manualMaximize:hover { color: #81c784; }
+
+  #quickRefOverlay .modal.qr-maximized {
+    width: 100vw; max-width: none; max-height: none; height: 100vh;
+    border-radius: 0; border: none;
+  }
+  #quickRefOverlay .modal.qr-mini { height: auto; }
+  #quickRefOverlay .modal.qr-mini .modal-body { display: none; }
+  #quickRefMinimize:hover { color: #ffb74d; }
+  #quickRefMaximize:hover { color: #81c784; }
+
   #plotOverlay .modal { width: 864px; height: 86vh; }
   .plot-controls { display: flex; align-items: center; gap: 4px; }
   .plot-win-btn {
@@ -629,6 +665,46 @@
   }
   .emjanela-body { flex: 1; display: flex; flex-direction: column; min-height: 0; padding: 0; overflow: hidden; }
   .emjanela-output { flex: 1; min-height: 0; }
+
+  /* ===== Janela (janela) – max/min ===== */
+  #janelaOverlay .modal.janela-maximized {
+    width: 100vw; max-width: none; max-height: none; height: 100vh;
+    border-radius: 0; border: none;
+  }
+  #janelaMinimize:hover { color: #ffb74d; }
+  #janelaMaximize:hover { color: #81c784; }
+
+  /* ===== Polígonos – max/min ===== */
+  #poligonosMinimize:hover { color: #ffb74d; }
+  #poligonosMaximize:hover { color: #81c784; }
+
+  /* ===== Tartaruga – max/min ===== */
+  #tartarugaMinimize:hover { color: #ffb74d; }
+  #tartarugaMaximize:hover { color: #81c784; }
+
+  /* ===== Console em janela (grafico) – max/min ===== */
+  #graficoMinimize:hover { color: #ffb74d; }
+  #graficoMaximize:hover { color: #81c784; }
+
+  /* ===== Fluxograma – max/min ===== */
+  #fluxoMinimize:hover { color: #ffb74d; }
+  #fluxoMaximize:hover { color: #81c784; }
+
+  /* ===== Sugestões – max/min ===== */
+  #sugestoesOverlay .modal.sugestoes-maximized {
+    width: 100vw; max-width: none; max-height: none; height: 100vh;
+    border-radius: 0; border: none;
+  }
+  #sugestoesMinimize:hover { color: #ffb74d; }
+  #sugestoesMaximize:hover { color: #81c784; }
+
+  /* ===== Código Comentado – max/min ===== */
+  #comentadoOverlay .modal.comentado-maximized {
+    width: 100vw; max-width: none; max-height: none; height: 100vh;
+    border-radius: 0; border: none;
+  }
+  #comentadoMinimize:hover { color: #ffb74d; }
+  #comentadoMaximize:hover { color: #81c784; }
 
   /* ===== Interpretador ===== */
   #interpretadorOverlay .modal { width: 700px; max-width: 94vw; height: 65vh; min-height: 300px; }
@@ -1746,6 +1822,7 @@
     <h1>Willog IDE</h1>
     <span class="subtitle">Linguagem de programação e ferramentas matemáticas</span>
   </div>
+  <button class="header-close" id="headerClose" title="Fechar Willog">&times;</button>
 </header>
 
 <nav class="menubar">
@@ -1832,7 +1909,15 @@
   <div class="modal">
     <div class="modal-head">
       <h2>Manual de Refer&ecirc;ncia &mdash; Willog</h2>
-      <button class="modal-close" id="modalClose" title="Fechar">&times;</button>
+      <div class="plot-controls">
+        <button class="plot-win-btn" id="manualMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="manualMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="manualMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="modalClose" title="Fechar">&times;</button>
+      </div>
     </div>
     <div class="modal-tabs">
       <button class="modal-tab active" data-panel="panel-comandos">Comandos</button>
@@ -3172,7 +3257,15 @@ para cada item em A:
   <div class="modal">
     <div class="modal-head">
       <h2 id="janelaTitle">Janela</h2>
-      <button class="modal-close" id="janelaClose" title="Fechar">&times;</button>
+      <div class="plot-controls">
+        <button class="plot-win-btn" id="janelaMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="janelaMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="janelaMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="janelaClose" title="Fechar">&times;</button>
+      </div>
     </div>
     <div class="modal-body janela-body" id="janelaBody">
       <canvas id="janelaCanvas"></canvas>
@@ -3340,6 +3433,12 @@ para cada item em A:
       <h2>Pol&iacute;gonos</h2>
       <div class="plot-controls">
         <button id="poligonosCopy" title="Copiar o desenho para a área de transferência">Copiar</button>
+        <button class="plot-win-btn" id="poligonosMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="poligonosMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="poligonosMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
         <button class="modal-close" id="poligonosClose" title="Fechar">&times;</button>
       </div>
     </div>
@@ -3390,6 +3489,12 @@ para cada item em A:
       <h2>Tartaruga (Logo pt-BR)</h2>
       <div class="plot-controls">
         <button id="tartarugaCopy" title="Copiar o desenho para a &aacute;rea de transfer&ecirc;ncia">Copiar</button>
+        <button class="plot-win-btn" id="tartarugaMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="tartarugaMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="tartarugaMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
         <button class="modal-close" id="tartarugaClose" title="Fechar">&times;</button>
       </div>
     </div>
@@ -3488,6 +3593,12 @@ para cada item em A:
       <h2>Console</h2>
       <div class="plot-controls">
         <button id="graficoCopy" title="Copiar conteúdo para a área de transferência">Copiar</button>
+        <button class="plot-win-btn" id="graficoMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="graficoMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="graficoMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
         <button class="modal-close" id="graficoClose" title="Fechar">&times;</button>
       </div>
     </div>
@@ -3508,6 +3619,12 @@ para cada item em A:
         <button class="plot-zoom-btn" id="fluxoZoomReset" title="Ajustar &agrave; janela" aria-label="Ajustar &agrave; janela">&#8635;</button>
         <button id="fluxoAtualizar" title="Reanalisar o c&oacute;digo do editor">Atualizar</button>
         <button id="fluxoCopy" title="Copiar o fluxograma como imagem">Copiar</button>
+        <button class="plot-win-btn" id="fluxoMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="fluxoMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="fluxoMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
         <button class="modal-close" id="fluxoClose" title="Fechar">&times;</button>
       </div>
     </div>
@@ -3537,7 +3654,15 @@ para cada item em A:
   <div class="modal quickref-modal">
     <div class="modal-head">
       <h2>Refer&ecirc;ncia r&aacute;pida &mdash; Willog</h2>
-      <button class="modal-close" id="quickRefClose" title="Fechar">&times;</button>
+      <div class="plot-controls">
+        <button class="plot-win-btn" id="quickRefMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="quickRefMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="quickRefMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="quickRefClose" title="Fechar">&times;</button>
+      </div>
     </div>
     <div class="modal-body quickref-body">
       <input type="text" id="quickRefSearch" class="quickref-search" placeholder="Filtrar comandos e fun&ccedil;&otilde;es..." />
@@ -3553,6 +3678,12 @@ para cada item em A:
       <h2>Sugest&otilde;es de melhorias</h2>
       <div class="plot-controls">
         <button id="sugestoesReanalisar" title="Reanalisar o c&oacute;digo do editor">Reanalisar</button>
+        <button class="plot-win-btn" id="sugestoesMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="sugestoesMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="sugestoesMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
         <button class="modal-close" id="sugestoesClose" title="Fechar">&times;</button>
       </div>
     </div>
@@ -3569,6 +3700,12 @@ para cada item em A:
       <h2>C&oacute;digo Comentado &mdash; Willog</h2>
       <div class="plot-controls">
         <button id="comentadoAtualizar" title="Reanalisar o c&oacute;digo do editor">Atualizar</button>
+        <button class="plot-win-btn" id="comentadoMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="comentadoMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="comentadoMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
         <button class="modal-close" id="comentadoClose" title="Fechar">&times;</button>
       </div>
     </div>
@@ -9035,6 +9172,9 @@ var runStatus = document.getElementById('runStatus');
 var statusbar = document.getElementById('statusbar');
 var chkAssign = document.getElementById('chkAssign');
 var consolePanel = document.getElementById('consolePanel');
+document.getElementById('headerClose').addEventListener('click', function () {
+  window.close();
+});
 var splitter = document.getElementById('splitter');
 var mainEl = document.querySelector('main');
 var modalOverlay = document.getElementById('modalOverlay');
@@ -10131,7 +10271,7 @@ document.getElementById('btnManual').addEventListener('click', function () {
   var saved = null;
   try { saved = localStorage.getItem('willprogManualTab'); } catch (e) {}
   if (saved && document.getElementById(saved)) activateManualTab(saved);
-  modalOverlay.classList.add('open');
+  wmOpen('modalOverlay');
 });
 var quickRefOverlay = document.getElementById('quickRefOverlay');
 var quickRefList = document.getElementById('quickRefList');
@@ -10167,7 +10307,7 @@ function renderQuickRef(filter) {
       btn.addEventListener('click', function (ev) {
         ev.stopPropagation();
         insertAtCursor(r.example);
-        quickRefOverlay.classList.remove('open');
+        wmClose('quickRefOverlay');
       });
       actions.appendChild(btn);
       ex.appendChild(actions);
@@ -10184,14 +10324,28 @@ function renderQuickRef(filter) {
 }
 document.getElementById('btnQuickRef').addEventListener('click', function () {
   renderQuickRef(quickRefSearch.value);
-  quickRefOverlay.classList.add('open');
+  wmOpen('quickRefOverlay');
   quickRefSearch.focus();
 });
 document.getElementById('quickRefClose').addEventListener('click', function () {
-  quickRefOverlay.classList.remove('open');
+  wmClose('quickRefOverlay');
 });
 quickRefOverlay.addEventListener('click', function (e) {
-  if (e.target === quickRefOverlay) quickRefOverlay.classList.remove('open');
+  if (e.target === quickRefOverlay) wmClose('quickRefOverlay');
+});
+var quickRefModal = document.querySelector('#quickRefOverlay .modal');
+var quickRefMaxIcon = document.getElementById('quickRefMaxIcon');
+document.getElementById('quickRefMinimize').addEventListener('click', function () {
+  wmMinimize('quickRefOverlay');
+});
+document.getElementById('quickRefMaximize').addEventListener('click', function () {
+  var isMax = quickRefModal.classList.toggle('qr-maximized');
+  if (isMax) {
+    quickRefMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
+                            '<rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
+  } else {
+    quickRefMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
+  }
 });
 quickRefSearch.addEventListener('input', function () {
   renderQuickRef(this.value);
@@ -10459,21 +10613,33 @@ function renderSugestoes() {
 }
 document.getElementById('btnSugestoes').addEventListener('click', function () {
   renderSugestoes();
-  sugestoesOverlay.classList.add('open');
+  wmOpen('sugestoesOverlay');
 });
 document.getElementById('sugestoesClose').addEventListener('click', function () {
-  sugestoesOverlay.classList.remove('open');
+  wmClose('sugestoesOverlay');
 });
 document.getElementById('sugestoesReanalisar').addEventListener('click', renderSugestoes);
 sugestoesOverlay.addEventListener('click', function (e) {
-  if (e.target === sugestoesOverlay) sugestoesOverlay.classList.remove('open');
+  if (e.target === sugestoesOverlay) wmClose('sugestoesOverlay');
 });
 sugestoesList.addEventListener('click', function (e) {
   var item = e.target.closest ? e.target.closest('.sugestao-item') : null;
   if (!item) return;
   var ln = Number(item.getAttribute('data-line'));
   if (ln > 0) jumpToLine(ln);
-  sugestoesOverlay.classList.remove('open');
+  wmClose('sugestoesOverlay');
+});
+var sugestoesMaxIcon = document.getElementById('sugestoesMaxIcon');
+document.getElementById('sugestoesMinimize').addEventListener('click', function () {
+  wmMinimize('sugestoesOverlay');
+});
+document.getElementById('sugestoesMaximize').addEventListener('click', function () {
+  var isMax = document.querySelector('#sugestoesOverlay .modal').classList.toggle('sugestoes-maximized');
+  if (isMax) {
+    sugestoesMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
+  } else {
+    sugestoesMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
+  }
 });
 var comentadoOverlay = document.getElementById('comentadoOverlay');
 
@@ -10756,14 +10922,26 @@ function renderComentado() {
 }
 document.getElementById('btnComentado').addEventListener('click', function () {
   renderComentado();
-  comentadoOverlay.classList.add('open');
+  wmOpen('comentadoOverlay');
 });
 document.getElementById('comentadoClose').addEventListener('click', function () {
-  comentadoOverlay.classList.remove('open');
+  wmClose('comentadoOverlay');
 });
 document.getElementById('comentadoAtualizar').addEventListener('click', renderComentado);
 comentadoOverlay.addEventListener('click', function (e) {
-  if (e.target === comentadoOverlay) comentadoOverlay.classList.remove('open');
+  if (e.target === comentadoOverlay) wmClose('comentadoOverlay');
+});
+var comentadoMaxIcon = document.getElementById('comentadoMaxIcon');
+document.getElementById('comentadoMinimize').addEventListener('click', function () {
+  wmMinimize('comentadoOverlay');
+});
+document.getElementById('comentadoMaximize').addEventListener('click', function () {
+  var isMax = document.querySelector('#comentadoOverlay .modal').classList.toggle('comentado-maximized');
+  if (isMax) {
+    comentadoMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
+  } else {
+    comentadoMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
+  }
 });
 var btnTheme = document.getElementById('btnTheme');
 function applyTheme(light) {
@@ -10823,10 +11001,24 @@ btnZoomIn.addEventListener('click', zoomIn);
 btnZoomOut.addEventListener('click', zoomOut);
 
 modalClose.addEventListener('click', function () {
-  modalOverlay.classList.remove('open');
+  wmClose('modalOverlay');
 });
 modalOverlay.addEventListener('click', function (e) {
-  if (e.target === modalOverlay) modalOverlay.classList.remove('open');
+  if (e.target === modalOverlay) wmClose('modalOverlay');
+});
+var manualModal = document.querySelector('#modalOverlay .modal');
+var manualMaxIcon = document.getElementById('manualMaxIcon');
+document.getElementById('manualMinimize').addEventListener('click', function () {
+  wmMinimize('modalOverlay');
+});
+document.getElementById('manualMaximize').addEventListener('click', function () {
+  var isMax = manualModal.classList.toggle('modal-maximized');
+  if (isMax) {
+    manualMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
+                            '<rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
+  } else {
+    manualMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
+  }
 });
 var plotOverlay = document.getElementById('plotOverlay');
 var plotModal = document.getElementById('plotModal');
@@ -10977,7 +11169,7 @@ plotOverlay.addEventListener('click', function (e) {
   if (e.target === plotOverlay) wmClose('plotOverlay');
 });
 document.getElementById('plotMinimize').addEventListener('click', function () {
-  plotModal.classList.toggle('plot-mini');
+  wmMinimize('plotOverlay');
 });
 document.getElementById('plotMaximize').addEventListener('click', function () {
   var isMax = plotModal.classList.toggle('plot-maximized');
@@ -10998,6 +11190,18 @@ document.getElementById('janelaClose').addEventListener('click', function () {
 });
 janelaOverlay.addEventListener('click', function (e) {
   if (e.target === janelaOverlay) wmClose('janelaOverlay');
+});
+var janelaMaxIcon = document.getElementById('janelaMaxIcon');
+document.getElementById('janelaMinimize').addEventListener('click', function () {
+  wmMinimize('janelaOverlay');
+});
+document.getElementById('janelaMaximize').addEventListener('click', function () {
+  var isMax = document.querySelector('#janelaOverlay .modal').classList.toggle('janela-maximized');
+  if (isMax) {
+    janelaMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
+  } else {
+    janelaMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
+  }
 });
 var mensagemOverlay = document.getElementById('mensagemOverlay');
 var mensagemResolve = null;
@@ -11218,7 +11422,6 @@ function emJanelaAdd(rec, isFinal) {
 }
 function openEmJanela(title) {
   document.getElementById('emJanelaTitle').textContent = title;
-  emJanelaModal.classList.remove('emjanela-mini');
   wmOpen('emJanelaOverlay');
   emJanelaClearOutput();
 }
@@ -11275,7 +11478,7 @@ emJanelaOverlay.addEventListener('click', function (e) {
   if (e.target === emJanelaOverlay) closeEmJanela();
 });
 document.getElementById('emJanelaMinimize').addEventListener('click', function () {
-  emJanelaModal.classList.toggle('emjanela-mini');
+  wmMinimize('emJanelaOverlay');
 });
 document.getElementById('emJanelaMaximize').addEventListener('click', function () {
   var isMax = emJanelaModal.classList.toggle('emjanela-maximized');
@@ -11325,7 +11528,6 @@ function interpAddOutput(rec) {
 function openInterpretador() {
   interpClearOutput();
   wmOpen('interpretadorOverlay');
-  interpModal.classList.remove('interp-mini');
   interpModal.classList.add('interp-maximized');
   interpMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
                             '<rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
@@ -11460,7 +11662,7 @@ interpOverlay.addEventListener('click', function (e) {
   if (e.target === interpOverlay) closeInterpretador();
 });
 document.getElementById('interpMinimize').addEventListener('click', function () {
-  interpModal.classList.toggle('interp-mini');
+  wmMinimize('interpretadorOverlay');
 });
 document.getElementById('interpMaximize').addEventListener('click', function () {
   var isMax = interpModal.classList.toggle('interp-maximized');
@@ -11642,7 +11844,7 @@ function processPlanilha(rows, cols) {
 
 document.getElementById('planilhaClose').addEventListener('click', closePlanilha);
 planilhaOverlay.addEventListener('click', function (e) { if (e.target === planilhaOverlay) closePlanilha(); });
-document.getElementById('planilhaMinimize').addEventListener('click', function () { planilhaModal.classList.toggle('planilha-mini'); });
+document.getElementById('planilhaMinimize').addEventListener('click', function () { wmMinimize('planilhaOverlay'); });
 document.getElementById('planilhaMaximize').addEventListener('click', function () {
   var isMax = planilhaModal.classList.toggle('planilha-maximized');
   if (isMax) {
@@ -12650,6 +12852,18 @@ document.querySelector('#poligonosOverlay .poly-toolbar').addEventListener('clic
 document.getElementById('poligonosCopy').addEventListener('click', poligonosCopyImage);
 document.getElementById('poligonosClose').addEventListener('click', closePoligonos);
 document.getElementById('poligonosPlotBtn').addEventListener('click', polyPlotFunction);
+var poligonosMaxIcon = document.getElementById('poligonosMaxIcon');
+document.getElementById('poligonosMinimize').addEventListener('click', function () {
+  wmMinimize('poligonosOverlay');
+});
+document.getElementById('poligonosMaximize').addEventListener('click', function () {
+  var isMax = document.querySelector('#poligonosOverlay .modal').classList.toggle('poligonos-maximized');
+  if (isMax) {
+    poligonosMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
+  } else {
+    poligonosMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
+  }
+});
 poligonosFnInput.addEventListener('keydown', function (e) {
   if (e.key === 'Enter') { e.preventDefault(); polyPlotFunction(); }
 });
@@ -12948,6 +13162,18 @@ document.getElementById('graficoClose').addEventListener('click', function () {
 graficoOverlay.addEventListener('click', function (e) {
   if (e.target === graficoOverlay) wmClose('graficoOverlay');
 });
+var graficoMaxIcon = document.getElementById('graficoMaxIcon');
+document.getElementById('graficoMinimize').addEventListener('click', function () {
+  wmMinimize('graficoOverlay');
+});
+document.getElementById('graficoMaximize').addEventListener('click', function () {
+  var isMax = document.querySelector('#graficoOverlay .modal').classList.toggle('grafico-maximized');
+  if (isMax) {
+    graficoMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
+  } else {
+    graficoMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
+  }
+});
 window.addEventListener('resize', function () {
   if (plotOverlay.classList.contains('open')) plotRender();
   if (calculadoraWin.classList.contains('open')) calcKeepOnScreen();
@@ -12967,15 +13193,15 @@ document.addEventListener('keydown', function (e) {
   }
   if (e.key === 'Escape') {
     closeAllMenus();
-    modalOverlay.classList.remove('open');
+    wmClose('modalOverlay', true);
     wmClose('plotOverlay', true);
     wmClose('janelaOverlay', true);
     wmClose('graficoOverlay', true);
-    fluxoOverlay.classList.remove('open');
+    wmClose('fluxoOverlay', true);
+    wmClose('quickRefOverlay', true);
+    wmClose('sugestoesOverlay', true);
+    wmClose('comentadoOverlay', true);
     sobreOverlay.classList.remove('open');
-    quickRefOverlay.classList.remove('open');
-    sugestoesOverlay.classList.remove('open');
-    comentadoOverlay.classList.remove('open');
     closeSelecionar();
     closeCalculadora();
     wmClose('emJanelaOverlay', true);
@@ -13696,7 +13922,7 @@ function fluxoCopyImage() {
 }
 
 function fluxoOpen() {
-  fluxoOverlay.classList.add('open');
+  wmOpen('fluxoOverlay');
   fluxoGenerate();
   requestAnimationFrame(function () {
     if (fluxoOverlay.classList.contains('open')) {
@@ -13708,10 +13934,22 @@ function fluxoOpen() {
 
 document.getElementById('btnFluxograma').addEventListener('click', fluxoOpen);
 document.getElementById('fluxoClose').addEventListener('click', function () {
-  fluxoOverlay.classList.remove('open');
+  wmClose('fluxoOverlay');
 });
 fluxoOverlay.addEventListener('click', function (e) {
-  if (e.target === fluxoOverlay) fluxoOverlay.classList.remove('open');
+  if (e.target === fluxoOverlay) wmClose('fluxoOverlay');
+});
+var fluxoMaxIcon = document.getElementById('fluxoMaxIcon');
+document.getElementById('fluxoMinimize').addEventListener('click', function () {
+  wmMinimize('fluxoOverlay');
+});
+document.getElementById('fluxoMaximize').addEventListener('click', function () {
+  var isMax = document.querySelector('#fluxoOverlay .modal').classList.toggle('fluxo-maximized');
+  if (isMax) {
+    fluxoMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
+  } else {
+    fluxoMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
+  }
 });
 document.getElementById('fluxoAtualizar').addEventListener('click', function () {
   fluxoGenerate();
@@ -14156,6 +14394,18 @@ document.getElementById('tartarugaClose').addEventListener('click', closeTartaru
 tartarugaOverlay.addEventListener('click', function (e) {
   if (e.target === tartarugaOverlay) closeTartaruga();
 });
+var tartarugaMaxIcon = document.getElementById('tartarugaMaxIcon');
+document.getElementById('tartarugaMinimize').addEventListener('click', function () {
+  wmMinimize('tartarugaOverlay');
+});
+document.getElementById('tartarugaMaximize').addEventListener('click', function () {
+  var isMax = document.querySelector('#tartarugaOverlay .modal').classList.toggle('tartaruga-maximized');
+  if (isMax) {
+    tartarugaMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
+  } else {
+    tartarugaMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
+  }
+});
 
 document.getElementById('turtleExec').addEventListener('click', function () {
   TURTLE.x = 0; TURTLE.y = 0;
@@ -14367,7 +14617,12 @@ var wmLabels = {
   planilhaOverlay:   'Planilha',
   graficoOverlay:    'Gráfico de Funções',
   poligonosOverlay:  'Polígonos',
-  tartarugaOverlay:  'Tartaruga'
+  tartarugaOverlay:  'Tartaruga',
+  modalOverlay:      'Manual',
+  quickRefOverlay:   'Ref. Rápida',
+  fluxoOverlay:      'Fluxograma',
+  sugestoesOverlay:  'Sugestões',
+  comentadoOverlay:  'Cód. Comentado'
 };
 function wmFindCurrent() {
   var ids = Object.keys(wmLabels);
@@ -14397,6 +14652,20 @@ function wmClose(overlayId, noRestore) {
   if (!noRestore && wmStack.length > 0) {
     var prev = wmStack.pop();
     document.getElementById(prev).classList.add('open');
+  }
+  wmRenderBar();
+}
+function wmMinimize(overlayId) {
+  var el = document.getElementById(overlayId);
+  if (!el) return;
+  el.classList.remove('open');
+  if (wmStack.indexOf(overlayId) === -1) wmStack.push(overlayId);
+  for (var i = wmStack.length - 1; i >= 0; i--) {
+    if (wmStack[i] !== overlayId) {
+      var prev = wmStack.splice(i, 1)[0];
+      document.getElementById(prev).classList.add('open');
+      break;
+    }
   }
   wmRenderBar();
 }
