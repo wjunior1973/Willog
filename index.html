@@ -913,7 +913,7 @@
     background: #252526; border: 1px solid #4a4a4a; border-radius: 7px;
     box-shadow: 0 8px 28px rgba(0,0,0,.6);
     min-width: 220px; max-width: 340px; max-height: 70vh;
-    flex-direction: column; overflow: hidden;
+    flex-direction: column; overflow: visible;
   }
   .ctx-menu.open { display: flex; }
   .ctx-search {
@@ -929,13 +929,28 @@
   .ctx-search input::placeholder { color: #666; }
   .ctx-list {
     flex: 1 1 auto; overflow-y: auto; padding: 4px 0; min-height: 0;
+    max-height: calc(70vh - 40px);
   }
   .ctx-list::-webkit-scrollbar { width: 6px; }
   .ctx-list::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 3px; }
   .ctx-cat {
-    padding: 4px 12px; font-size: 10px; color: #4fc3f7; text-transform: uppercase;
-    letter-spacing: .6px; font-weight: 600; user-select: none; margin-top: 4px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 12px; font-size: 12px; color: #c8c8c8; font-weight: 600;
+    user-select: none; cursor: pointer; position: relative;
   }
+  .ctx-cat:hover { background: #0e639c; color: #fff; }
+  .ctx-cat::after { content: '\203A'; font-size: 16px; margin-left: 8px; opacity: .6; }
+  .ctx-cat:hover::after { opacity: 1; }
+  .ctx-submenu {
+    display: none; position: fixed;
+    background: #252526; border: 1px solid #4a4a4a; border-radius: 7px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.6);
+    min-width: 260px; max-width: 360px; max-height: 70vh;
+    overflow-y: auto; z-index: 10003;
+  }
+  .ctx-submenu.open { display: flex; flex-direction: column; }
+  .ctx-submenu::-webkit-scrollbar { width: 6px; }
+  .ctx-submenu::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 3px; }
   .ctx-item {
     display: flex; align-items: center; gap: 8px; padding: 5px 12px;
     cursor: pointer; font-size: 12px; color: #c8c8c8; user-select: none;
@@ -948,7 +963,9 @@
   body.light .ctx-search { background: #f5f5f5; border-color: #e0e0e0; }
   body.light .ctx-search input { background: #fff; color: #333; border-color: #ddd; }
   body.light .ctx-list { background: #fff; }
-  body.light .ctx-cat { color: #00639e; }
+  body.light .ctx-cat { color: #333; }
+  body.light .ctx-cat:hover { background: #0078d4; color: #fff; }
+  body.light .ctx-submenu { background: #fff; border-color: #ccc; box-shadow: 0 8px 28px rgba(0,0,0,.2); }
   body.light .ctx-item { color: #333; }
   body.light .ctx-item:hover { background: #0078d4; color: #fff; }
   body.light .ctx-item .ctx-desc { color: #888; }
@@ -11080,179 +11097,156 @@ btnTheme.addEventListener('click', function () {
 // ============================================================
 
 var PALETTES = [
-  // ══════════════════════════════════════════════
-  //  EDITOR / IDE
-  // ══════════════════════════════════════════════
-  { id: 'default-dark', name: 'VS Code Dark+', mode: 'dark',
-    vars: { '--bg':'#1e1e1e','--bg2':'#252526','--bg3':'#2d2d2d','--fg':'#d4d4d4','--fg2':'#8a8a8a','--border':'#3c3c3c','--hover':'#3a3a3a','--accent':'#0e639c','--accent-hover':'#1177bb','--accent-fg':'#fff','--hl-keyword':'#569cd6','--hl-func':'#dcdcaa','--hl-str':'#ce9178','--hl-num':'#b5cea8','--hl-comment':'#6a9955','--hl-id':'#d4d4d4','--statusbar-bg':'#0e639c','--err':'#f44747','--info':'#4fc3f7','--ok':'#81c784' },
-    swatches: ['#1e1e1e','#252526','#0e639c','#569cd6','#dcdcaa','#ce9178','#6a9955'] },
-  { id: 'default-light', name: 'VS Code Light+', mode: 'light',
-    vars: { '--bg':'#ffffff','--bg2':'#f3f3f3','--bg3':'#e8e8e8','--fg':'#1f1f1f','--fg2':'#888888','--border':'#d8d8d8','--hover':'#e0e0e0','--accent':'#0078d4','--accent-hover':'#005a9e','--accent-fg':'#fff','--hl-keyword':'#0033b3','--hl-func':'#795e26','--hl-str':'#a31515','--hl-num':'#098658','--hl-comment':'#008000','--hl-id':'#1f1f1f','--statusbar-bg':'#0078d4','--err':'#d32f2f','--info':'#0078d4','--ok':'#2e7d32' },
-    swatches: ['#ffffff','#f3f3f3','#0078d4','#0033b3','#795e26','#a31515','#008000'] },
-  { id: 'monokai', name: 'Monokai Pro', mode: 'dark',
-    vars: { '--bg':'#222222','--bg2':'#2d2d2d','--bg3':'#363636','--fg':'#fcfcfa','--fg2':'#90908a','--border':'#424242','--hover':'#3a3a3a','--accent':'#fd7575','--accent-hover':'#ee6060','--accent-fg':'#fff','--hl-keyword':'#f07178','--hl-func':'#a9dc76','--hl-str':'#ffd866','--hl-num':'#ab9df2','--hl-comment':'#727072','--hl-id':'#fcfcfa','--statusbar-bg':'#fd7575','--err':'#fc6a6a','--info':'#78dce8','--ok':'#a9dc76' },
-    swatches: ['#222222','#2d2d2d','#fd7575','#f07178','#a9dc76','#ffd866','#ab9df2'] },
-  { id: 'dracula', name: 'Dracula', mode: 'dark',
-    vars: { '--bg':'#282a36','--bg2':'#2e313e','--bg3':'#343746','--fg':'#f8f8f2','--fg2':'#6272a4','--border':'#44475a','--hover':'#44475a','--accent':'#bd93f9','--accent-hover':'#a07cf0','--accent-fg':'#fff','--hl-keyword':'#ff79c6','--hl-func':'#50fa7b','--hl-str':'#f1fa8c','--hl-num':'#bd93f9','--hl-comment':'#6272a4','--hl-id':'#f8f8f2','--statusbar-bg':'#6272a4','--err':'#ff5555','--info':'#8be9fd','--ok':'#50fa7b' },
-    swatches: ['#282a36','#2e313e','#bd93f9','#ff79c6','#50fa7b','#f1fa8c','#6272a4'] },
-  { id: 'onedark', name: 'One Dark Pro', mode: 'dark',
-    vars: { '--bg':'#282c34','--bg2':'#2c313a','--bg3':'#353b45','--fg':'#abb2bf','--fg2':'#636d83','--border':'#3e4451','--hover':'#3e4451','--accent':'#61afef','--accent-hover':'#4da0e8','--accent-fg':'#fff','--hl-keyword':'#c678dd','--hl-func':'#61afef','--hl-str':'#98c379','--hl-num':'#d19a66','--hl-comment':'#5c6370','--hl-id':'#abb2bf','--statusbar-bg':'#4078f2','--err':'#e06c75','--info':'#56b6c2','--ok':'#98c379' },
-    swatches: ['#282c34','#2c313a','#61afef','#c678dd','#98c379','#d19a66','#5c6370'] },
-  { id: 'github-dark', name: 'GitHub Dark', mode: 'dark',
-    vars: { '--bg':'#0d1117','--bg2':'#161b22','--bg3':'#1c2128','--fg':'#c9d1d9','--fg2':'#8b949e','--border':'#30363d','--hover':'#21262d','--accent':'#58a6ff','--accent-hover':'#79c0ff','--accent-fg':'#fff','--hl-keyword':'#ff7b72','--hl-func':'#d2a8ff','--hl-str':'#a5d6ff','--hl-num':'#79c0ff','--hl-comment':'#8b949e','--hl-id':'#c9d1d9','--statusbar-bg':'#1f6feb','--err':'#f85149','--info':'#58a6ff','--ok':'#3fb950' },
-    swatches: ['#0d1117','#161b22','#58a6ff','#ff7b72','#d2a8ff','#a5d6ff','#3fb950'] },
-  { id: 'github-light', name: 'GitHub Light', mode: 'light',
-    vars: { '--bg':'#ffffff','--bg2':'#f6f8fa','--bg3':'#eaeef2','--fg':'#24292f','--fg2':'#656d76','--border':'#d0d7de','--hover':'#eaeef2','--accent':'#0969da','--accent-hover':'#0550ae','--accent-fg':'#fff','--hl-keyword':'#cf222e','--hl-func':'#8250df','--hl-str':'#0a3069','--hl-num':'#0550ae','--hl-comment':'#6e7781','--hl-id':'#24292f','--statusbar-bg':'#0969da','--err':'#cf222f','--info':'#0969da','--ok':'#1a7f37' },
-    swatches: ['#ffffff','#f6f8fa','#0969da','#cf222e','#8250df','#0a3069','#1a7f37'] },
-  { id: 'catppuccin', name: 'Catppuccin Mocha', mode: 'dark',
-    vars: { '--bg':'#1e1e2e','--bg2':'#313244','--bg3':'#45475a','--fg':'#cdd6f4','--fg2':'#6c7086','--border':'#585b70','--hover':'#45475a','--accent':'#89b4fa','--accent-hover':'#74c7ec','--accent-fg':'#1e1e2e','--hl-keyword':'#cba6f7','--hl-func':'#89b4fa','--hl-str':'#a6e3a1','--hl-num':'#fab387','--hl-comment':'#6c7086','--hl-id':'#cdd6f4','--statusbar-bg':'#89b4fa','--err':'#f38ba8','--info':'#89dceb','--ok':'#a6e3a1' },
-    swatches: ['#1e1e2e','#313244','#89b4fa','#cba6f7','#a6e3a1','#fab387','#f38ba8'] },
-  { id: 'catppuccin-latte', name: 'Catppuccin Latte', mode: 'light',
-    vars: { '--bg':'#eff1f5','--bg2':'#e6e9ef','--bg3':'#ccd0da','--fg':'#4c4f69','--fg2':'#7c7f93','--border':'#bcc0cc','--hover':'#ccd0da','--accent':'#1e66f5','--accent-hover':'#1b54c4','--accent-fg':'#fff','--hl-keyword':'#8839ef','--hl-func':'#1e66f5','--hl-str':'#40a02b','--hl-num':'#fe640b','--hl-comment':'#9ca0b0','--hl-id':'#4c4f69','--statusbar-bg':'#1e66f5','--err':'#d20f39','--info':'#209fb5','--ok':'#40a02b' },
-    swatches: ['#eff1f5','#e6e9ef','#1e66f5','#8839ef','#40a02b','#fe640b','#d20f39'] },
-  { id: 'gruvbox', name: 'Gruvbox Dark', mode: 'dark',
-    vars: { '--bg':'#282828','--bg2':'#3c3836','--bg3':'#504945','--fg':'#ebdbb2','--fg2':'#928374','--border':'#504945','--hover':'#3c3836','--accent':'#fe8019','--accent-hover':'#d65d0e','--accent-fg':'#282828','--hl-keyword':'#fb4934','--hl-func':'#83a598','--hl-str':'#b8bb26','--hl-num':'#d3869b','--hl-comment':'#928374','--hl-id':'#ebdbb2','--statusbar-bg':'#fe8019','--err':'#fb4934','--info':'#83a598','--ok':'#b8bb26' },
-    swatches: ['#282828','#3c3836','#fe8019','#fb4934','#83a598','#b8bb26','#d3869b'] },
-  { id: 'gruvbox-light', name: 'Gruvbox Light', mode: 'light',
-    vars: { '--bg':'#fbf1c7','--bg2':'#ebdbb2','--bg3':'#d5c4a1','--fg':'#3c3836','--fg2':'#665c54','--border':'#d5c4a1','--hover':'#ebdbb2','--accent':'#458588','--accent-hover':'#357070','--accent-fg':'#fbf1c7','--hl-keyword':'#b16286','--hl-func':'#458588','--hl-str':'#98971a','--hl-num':'#d65d0e','--hl-comment':'#928374','--hl-id':'#3c3836','--statusbar-bg':'#458588','--err':'#cc241d','--info':'#458588','--ok':'#98971a' },
-    swatches: ['#fbf1c7','#ebdbb2','#458588','#b16286','#98971a','#d65d0e','#cc241d'] },
-
-  // ══════════════════════════════════════════════
-  //  TERMINAIS POPULARES
-  // ══════════════════════════════════════════════
-  { id: 'nord', name: 'Nord', mode: 'dark',
-    vars: { '--bg':'#2e3440','--bg2':'#3b4252','--bg3':'#434c5e','--fg':'#d8dee9','--fg2':'#616e88','--border':'#4c566a','--hover':'#434c5e','--accent':'#88c0d0','--accent-hover':'#81a1c1','--accent-fg':'#2e3440','--hl-keyword':'#81a1c1','--hl-func':'#a3be8c','--hl-str':'#b48ead','--hl-num':'#b48ead','--hl-comment':'#616e88','--hl-id':'#d8dee9','--statusbar-bg':'#5e81ac','--err':'#bf616a','--info':'#88c0d0','--ok':'#a3be8c' },
-    swatches: ['#2e3440','#3b4252','#88c0d0','#81a1c1','#a3be8c','#b48ead','#5e81ac'] },
-  { id: 'solarized-dark', name: 'Solarized Dark', mode: 'dark',
-    vars: { '--bg':'#002b36','--bg2':'#073642','--bg3':'#094959','--fg':'#839496','--fg2':'#586e75','--border':'#094959','--hover':'#073642','--accent':'#268bd2','--accent-hover':'#1a6da8','--accent-fg':'#fff','--hl-keyword':'#859900','--hl-func':'#268bd2','--hl-str':'#2aa198','--hl-num':'#d33682','--hl-comment':'#586e75','--hl-id':'#839496','--statusbar-bg':'#268bd2','--err':'#dc322f','--info':'#2aa198','--ok':'#859900' },
-    swatches: ['#002b36','#073642','#268bd2','#859900','#2aa198','#d33682','#586e75'] },
-  { id: 'solarized-light', name: 'Solarized Light', mode: 'light',
-    vars: { '--bg':'#fdf6e3','--bg2':'#eee8d5','--bg3':'#e8e1cc','--fg':'#657b83','--fg2':'#93a1a1','--border':'#d3cdb7','--hover':'#e8e1cc','--accent':'#268bd2','--accent-hover':'#1a6da8','--accent-fg':'#fff','--hl-keyword':'#859900','--hl-func':'#268bd2','--hl-str':'#2aa198','--hl-num':'#d33682','--hl-comment':'#93a1a1','--hl-id':'#657b83','--statusbar-bg':'#268bd2','--err':'#dc322f','--info':'#2aa198','--ok':'#859900' },
-    swatches: ['#fdf6e3','#eee8d5','#268bd2','#859900','#2aa198','#d33682','#93a1a1'] },
-  { id: 'tokyonight', name: 'Tokyo Night', mode: 'dark',
-    vars: { '--bg':'#1a1b26','--bg2':'#24283b','--bg3':'#414868','--fg':'#c0caf5','--fg2':'#565f89','--border':'#414868','--hover':'#33384a','--accent':'#7aa2f7','--accent-hover':'#5d87e0','--accent-fg':'#fff','--hl-keyword':'#bb9af7','--hl-func':'#7aa2f7','--hl-str':'#9ece6a','--hl-num':'#ff9e64','--hl-comment':'#565f89','--hl-id':'#c0caf5','--statusbar-bg':'#7aa2f7','--err':'#f7768e','--info':'#7dcfff','--ok':'#9ece6a' },
-    swatches: ['#1a1b26','#24283b','#7aa2f7','#bb9af7','#9ece6a','#ff9e64','#f7768e'] },
-  { id: 'tokyonight-light', name: 'Tokyo Night Light', mode: 'light',
-    vars: { '--bg':'#e9ebee','--bg2':'#d5d6db','--bg3':'#bec0cc','--fg':'#3760bf','--fg2':'#848cb5','--border':'#c4c8da','--hover':'#d5d6db','--accent':'#2e7de9','--accent-hover':'#1d6cd0','--accent-fg':'#fff','--hl-keyword':'#8968c4','--hl-func':'#2e7de9','--hl-str':'#587539','--hl-num':'#8c6c3e','--hl-comment':'#848cb5','--hl-id':'#3760bf','--statusbar-bg':'#2e7de9','--err':'#f52a65','--info':'#0f4b8e','--ok':'#587539' },
-    swatches: ['#e9ebee','#d5d6db','#2e7de9','#8968c4','#587539','#8c6c3e','#f52a65'] },
-  { id: 'rosepine', name: 'Rosé Pine', mode: 'dark',
-    vars: { '--bg':'#191724','--bg2':'#1f1d2e','--bg3':'#26233a','--fg':'#e0def4','--fg2':'#6e6a86','--border':'#393552','--hover':'#26233a','--accent':'#ebbcba','--accent-hover':'#d4a0a0','--accent-fg':'#191724','--hl-keyword':'#c4a7e7','--hl-func':'#9ccfd8','--hl-str':'#f6c177','--hl-num':'#ebbcba','--hl-comment':'#6e6a86','--hl-id':'#e0def4','--statusbar-bg':'#c4a7e7','--err':'#eb6f92','--info':'#9ccfd8','--ok':'#31748f' },
-    swatches: ['#191724','#1f1d2e','#c4a7e7','#eb6f92','#9ccfd8','#f6c177','#31748f'] },
-  { id: 'rosepine-dawn', name: 'Rosé Pine Dawn', mode: 'light',
-    vars: { '--bg':'#faf4ed','--bg2':'#fffaf3','--bg3':'#f2e9e1','--fg':'#575279','--fg2':'#797593','--border':'#dfdad9','--hover':'#f2e9e1','--accent':'#d7827e','--accent-hover':'#c47070','--accent-fg':'#faf4ed','--hl-keyword':'#907aa9','--hl-func':'#31748f','--hl-str':'#ea9d34','--hl-num':'#d7827e','--hl-comment':'#9893a5','--hl-id':'#575279','--statusbar-bg':'#907aa9','--err':'#b4637a','--info':'#31748f','--ok':'#286983' },
-    swatches: ['#faf4ed','#fffaf3','#907aa9','#b4637a','#31748f','#ea9d34','#d7827e'] },
-  { id: 'ayu-dark', name: 'Ayu Dark', mode: 'dark',
-    vars: { '--bg':'#0f1419','--bg2':'#151a21','--bg3':'#1f2430','--fg':'#bfbab0','--fg2':'#5c6773','--border':'#1f2430','--hover':'#1a2030','--accent':'#36a3d9','--accent-hover':'#2888c0','--accent-fg':'#fff','--hl-keyword':'#ff8f40','--hl-func':'#36a3d9','--hl-str':'#bae67e','--hl-num':'#ff8f40','--hl-comment':'#5c6773','--hl-id':'#e6b450','--statusbar-bg':'#36a3d9','--err':'#ff3333','--info':'#36a3d9','--ok':'#aad94c' },
-    swatches: ['#0f1419','#151a21','#36a3d9','#ff8f40','#bae67e','#e6b450','#ff3333'] },
-  { id: 'ayu-mirage', name: 'Ayu Mirage', mode: 'dark',
-    vars: { '--bg':'#1f2430','--bg2':'#232834','--bg3':'#272d38','--fg':'#cbccc6','--fg2':'#5c6773','--border':'#272d38','--hover':'#2a303c','--accent':'#36b8c7','--accent-hover':'#2a9da8','--accent-fg':'#fff','--hl-keyword':'#ff8f40','--hl-func':'#36b8c7','--hl-str':'#bae67e','--hl-num':'#ff8f40','--hl-comment':'#5c6773','--hl-id':'#e6b450','--statusbar-bg':'#36b8c7','--err':'#ed9366','--info':'#36b8c7','--ok':'#aad94c' },
-    swatches: ['#1f2430','#232834','#36b8c7','#ff8f40','#bae67e','#e6b450','#ed9366'] },
-  { id: 'kanagawa', name: 'Kanagawa', mode: 'dark',
-    vars: { '--bg':'#1f1f28','--bg2':'#292937','--bg3':'#363646','--fg':'#dcd7ba','--fg2':'#706c62','--border':'#363646','--hover':'#2d2d3d','--accent':'#7fb4ca','--accent-hover':'#68a0c0','--accent-fg':'#1f1f28','--hl-keyword':'#c8a0e8','--hl-func':'#7fb4ca','--hl-str':'#98bb6c','--hl-num':'#dca561','--hl-comment':'#706c62','--hl-id':'#dcd7ba','--statusbar-bg':'#7fb4ca','--err':'#c34043','--info':'#7fb4ca','--ok':'#76946a' },
-    swatches: ['#1f1f28','#292937','#7fb4ca','#c8a0e8','#98bb6c','#dca561','#c34043'] },
-  { id: 'everforest', name: 'Everforest', mode: 'dark',
-    vars: { '--bg':'#2d353b','--bg2':'#343f44','--bg3':'#425047','--fg':'#d3c6aa','--fg2':'#7a8478','--border':'#425047','--hover':'#3a4a44','--accent':'#7fbbb3','--accent-hover':'#68a8a0','--accent-fg':'#2d353b','--hl-keyword':'#d699b6','--hl-func':'#7fbbb3','--hl-str':'#dbbc7f','--hl-num':'#d699b6','--hl-comment':'#7a8478','--hl-id':'#d3c6aa','--statusbar-bg':'#7fbbb3','--err':'#e67e80','--info':'#7fbbb3','--ok':'#a7c080' },
-    swatches: ['#2d353b','#343f44','#7fbbb3','#d699b6','#a7c080','#dbbc7f','#e67e80'] },
-  { id: 'palenight', name: 'Material Palenight', mode: 'dark',
-    vars: { '--bg':'#292d3e','--bg2':'#2e3444','--bg3':'#3b4257','--fg':'#d8dee9','--fg2':'#737d8e','--border':'#3b4257','--hover':'#343a4e','--accent':'#82aaff','--accent-hover':'#6a95f0','--accent-fg':'#fff','--hl-keyword':'#c792ea','--hl-func':'#82aaff','--hl-str':'#c3e88d','--hl-num':'#f78c6c','--hl-comment':'#676e95','--hl-id':'#d8dee9','--statusbar-bg':'#82aaff','--err':'#ff5370','--info':'#89ddff','--ok':'#c3e88d' },
-    swatches: ['#292d3e','#2e3444','#82aaff','#c792ea','#c3e88d','#f78c6c','#ff5370'] },
-  { id: 'oceanic-next', name: 'Oceanic Next', mode: 'dark',
-    vars: { '--bg':'#1b2b34','--bg2':'#243039','--bg3':'#2c3e4a','--fg':'#c0c5ce','--fg2':'#65737e','--border':'#2c3e4a','--hover':'#263340','--accent':'#6699cc','--accent-hover':'#5080b0','--accent-fg':'#fff','--hl-keyword':'#c594c5','--hl-func':'#6699cc','--hl-str':'#99c794','--hl-num':'#f99157','--hl-comment':'#65737e','--hl-id':'#c0c5ce','--statusbar-bg':'#6699cc','--err':'#ec5f67','--info':'#6699cc','--ok':'#99c794' },
-    swatches: ['#1b2b34','#243039','#6699cc','#c594c5','#99c794','#f99157','#ec5f67'] },
-
-  // ══════════════════════════════════════════════
-  //  TERMINAIS / TERMINAL CLÁSSICOS
-  // ══════════════════════════════════════════════
-  { id: 'tomorrow-night', name: 'Tomorrow Night', mode: 'dark',
-    vars: { '--bg':'#1d1f21','--bg2':'#282a2e','--bg3':'#373b41','--fg':'#c5c8c6','--fg2':'#969896','--border':'#373b41','--hover':'#2d2f33','--accent':'#81a2be','--accent-hover':'#6a8ab0','--accent-fg':'#fff','--hl-keyword':'#b294bb','--hl-func':'#81a2be','--hl-str':'#b5bd68','--hl-num':'#de935f','--hl-comment':'#969896','--hl-id':'#c5c8c6','--statusbar-bg':'#81a2be','--err':'#cc6666','--info':'#81a2be','--ok':'#b5bd68' },
-    swatches: ['#1d1f21','#282a2e','#81a2be','#b294bb','#b5bd68','#de935f','#cc6666'] },
-  { id: 'material-darker', name: 'Material Darker', mode: 'dark',
-    vars: { '--bg':'#212121','--bg2':'#272727','--bg3':'#333333','--fg':'#eeffff','--fg2':'#636d83','--border':'#333333','--hover':'#2d2d2d','--accent':'#82aaff','--accent-hover':'#6a95f0','--accent-fg':'#212121','--hl-keyword':'#c792ea','--hl-func':'#82aaff','--hl-str':'#c3e88d','--hl-num':'#f78c6c','--hl-comment':'#545454','--hl-id':'#eeffff','--statusbar-bg':'#82aaff','--err':'#ff5370','--info':'#89ddff','--ok':'#c3e88d' },
-    swatches: ['#212121','#272727','#82aaff','#c792ea','#c3e88d','#f78c6c','#ff5370'] },
-  { id: 'night-owl', name: 'Night Owl', mode: 'dark',
-    vars: { '--bg':'#011627','--bg2':'#0b2942','--bg3':'#133a5c','--fg':'#d6deeb','--fg2':'#637777','--border':'#133a5c','--hover':'#0a2540','--accent':'#82aaff','--accent-hover':'#6a95f0','--accent-fg':'#011627','--hl-keyword':'#c792ea','--hl-func':'#82aaff','--hl-str':'#addb67','--hl-num':'#f78c6c','--hl-comment':'#637777','--hl-id':'#d6deeb','--statusbar-bg':'#82aaff','--err':'#ef5350','--info':'#7e57c2','--ok':'#addb67' },
-    swatches: ['#011627','#0b2942','#82aaff','#c792ea','#addb67','#f78c6c','#ef5350'] },
-  { id: 'mellow-purple', name: 'Mellow Purple', mode: 'dark',
-    vars: { '--bg':'#1a1a2e','--bg2':'#22223a','--bg3':'#2c2c44','--fg':'#e0e0e0','--fg2':'#707090','--border':'#2c2c44','--hover':'#262640','--accent':'#b083ea','--accent-hover':'#9a6ad4','--accent-fg':'#fff','--hl-keyword':'#e27ee6','--hl-func':'#82aaff','--hl-str':'#63f2c9','--hl-num':'#f9a63e','--hl-comment':'#707090','--hl-id':'#e0e0e0','--statusbar-bg':'#b083ea','--err':'#f24e4e','--info':'#82aaff','--ok':'#63f2c9' },
-    swatches: ['#1a1a2e','#22223a','#b083ea','#e27ee6','#63f2c9','#f9a63e','#f24e4e'] },
-  { id: 'cyberpunk', name: 'Cyberpunk Neon', mode: 'dark',
-    vars: { '--bg':'#0a0a14','--bg2':'#101020','--bg3':'#181830','--fg':'#e0e0ff','--fg2':'#6060a0','--border':'#1a1a40','--hover':'#141430','--accent':'#ff2a6d','--accent-hover':'#e02060','--accent-fg':'#fff','--hl-keyword':'#05d9e8','--hl-func':'#d300c5','--hl-str':'#01c964','--hl-num':'#f6019d','--hl-comment':'#505080','--hl-id':'#e0e0ff','--statusbar-bg':'#ff2a6d','--err':'#ff2a6d','--info':'#05d9e8','--ok':'#01c964' },
-    swatches: ['#0a0a14','#101020','#ff2a6d','#05d9e8','#01c964','#f6019d','#d300c5'] },
-  { id: 'matrix', name: 'Matrix', mode: 'dark',
-    vars: { '--bg':'#0a0a0a','--bg2':'#0f0f0f','--bg3':'#1a1a1a','--fg':'#00ff41','--fg2':'#008f11','--border':'#003b00','--hover':'#0a1a0a','--accent':'#00ff41','--accent-hover':'#00cc33','--accent-fg':'#0a0a0a','--hl-keyword':'#00ff41','--hl-func':'#00cc33','--hl-str':'#00ff41','--hl-num':'#00ff41','--hl-comment':'#006b00','--hl-id':'#00ff41','--statusbar-bg':'#003b00','--err':'#ff0000','--info':'#00ff41','--ok':'#00ff41' },
-    swatches: ['#0a0a0a','#0f0f0f','#00ff41','#00ff41','#00cc33','#00ff41','#006b00'] },
-  { id: 'retro-crt', name: 'Retro CRT', mode: 'dark',
-    vars: { '--bg':'#1a1008','--bg2':'#22160a','--bg3':'#2e1e0e','--fg':'#ffb000','--fg2':'#8a6000','--border':'#3a2810','--hover':'#2a1a0c','--accent':'#ff8c00','--accent-hover':'#e07800','--accent-fg':'#1a1008','--hl-keyword':'#ff6600','--hl-func':'#ffcc00','--hl-str':'#ff9933','--hl-num':'#ffb000','--hl-comment':'#6a4800','--hl-id':'#ffb000','--statusbar-bg':'#8b4513','--err':'#ff4444','--info':'#ffcc00','--ok':'#88cc00' },
-    swatches: ['#1a1008','#22160a','#ff8c00','#ff6600','#88cc00','#ff9933','#ff4444'] },
-  { id: 'halloween', name: 'Halloween', mode: 'dark',
-    vars: { '--bg':'#1b1115','--bg2':'#241520','--bg3':'#301c2a','--fg':'#f8d8b0','--fg2':'#8a7060','--border':'#3a2030','--hover':'#2a1825','--accent':'#ff8c00','--accent-hover':'#e07800','--accent-fg':'#1b1115','--hl-keyword':'#ff4444','--hl-func':'#ff8c00','--hl-str':'#ffcc00','--hl-num':'#ff8c00','--hl-comment':'#6a5040','--hl-id':'#f8d8b0','--statusbar-bg':'#ff4444','--err':'#ff0000','--info':'#ff8c00','--ok':'#44aa44' },
-    swatches: ['#1b1115','#241520','#ff4444','#ff8c00','#44aa44','#ffcc00','#ff0000'] },
-
-  // ══════════════════════════════════════════════
-  //  ACESSIBILIDADE / ALTO CONTRASTE
-  // ══════════════════════════════════════════════
-  { id: 'high-contrast-dark', name: 'Alto Contraste (Escuro)', mode: 'dark',
-    vars: { '--bg':'#000000','--bg2':'#0a0a0a','--bg3':'#1a1a1a','--fg':'#ffffff','--fg2':'#b0b0b0','--border':'#505050','--hover':'#1a1a1a','--accent':'#1a9fff','--accent-hover':'#0080e0','--accent-fg':'#000000','--hl-keyword':'#56b6f2','--hl-func':'#dcdcaa','--hl-str':'#ce9178','--hl-num':'#b5cea8','--hl-comment':'#6a9955','--hl-id':'#ffffff','--statusbar-bg':'#1a9fff','--err':'#f44747','--info':'#1a9fff','--ok':'#6fcf6f' },
-    swatches: ['#000000','#0a0a0a','#1a9fff','#56b6f2','#6fcf6f','#ce9178','#f44747'] },
   { id: 'high-contrast-light', name: 'Alto Contraste (Claro)', mode: 'light',
     vars: { '--bg':'#ffffff','--bg2':'#f0f0f0','--bg3':'#e0e0e0','--fg':'#000000','--fg2':'#404040','--border':'#808080','--hover':'#e0e0e0','--accent':'#0055cc','--accent-hover':'#0044aa','--accent-fg':'#ffffff','--hl-keyword':'#0000cc','--hl-func':'#0055cc','--hl-str':'#aa0000','--hl-num':'#006600','--hl-comment':'#666666','--hl-id':'#000000','--statusbar-bg':'#0055cc','--err':'#cc0000','--info':'#0055cc','--ok':'#006600' },
     swatches: ['#ffffff','#f0f0f0','#0055cc','#0000cc','#006600','#aa0000','#cc0000'] },
-  { id: 'zenburn', name: 'Zenburn', mode: 'dark',
-    vars: { '--bg':'#3f3f3f','--bg2':'#464646','--bg3':'#505050','--fg':'#dcdccc','--fg2':'#888888','--border':'#5a5a5a','--hover':'#4a4a4a','--accent':'#8faf8f','--accent-hover':'#78a878','--accent-fg':'#3f3f3f','--hl-keyword':'#dfdfbf','--hl-func':'#8faf8f','--hl-str':'#cc9393','--hl-num':'#dca3a3','--hl-comment':'#7f9f7f','--hl-id':'#dcdccc','--statusbar-bg':'#7f9f7f','--err':'#cc9393','--info':'#8faf8f','--ok':'#7f9f7f' },
-    swatches: ['#3f3f3f','#464646','#8faf8f','#dfdfbf','#cc9393','#dca3a3','#7f9f7f'] },
-
-  // ══════════════════════════════════════════════
-  //  WARM / COOL / NATUREZA
-  // ══════════════════════════════════════════════
+  { id: 'high-contrast-dark', name: 'Alto Contraste (Escuro)', mode: 'dark',
+    vars: { '--bg':'#000000','--bg2':'#0a0a0a','--bg3':'#1a1a1a','--fg':'#ffffff','--fg2':'#b0b0b0','--border':'#505050','--hover':'#1a1a1a','--accent':'#1a9fff','--accent-hover':'#0080e0','--accent-fg':'#000000','--hl-keyword':'#56b6f2','--hl-func':'#dcdcaa','--hl-str':'#ce9178','--hl-num':'#b5cea8','--hl-comment':'#6a9955','--hl-id':'#ffffff','--statusbar-bg':'#1a9fff','--err':'#f44747','--info':'#1a9fff','--ok':'#6fcf6f' },
+    swatches: ['#000000','#0a0a0a','#1a9fff','#56b6f2','#6fcf6f','#ce9178','#f44747'] },
   { id: 'warm-amber', name: 'Amber Quente', mode: 'dark',
     vars: { '--bg':'#1c1710','--bg2':'#261f15','--bg3':'#302818','--fg':'#e8dcc8','--fg2':'#9a8a70','--border':'#3a3020','--hover':'#2a2218','--accent':'#f0a030','--accent-hover':'#d89028','--accent-fg':'#1c1710','--hl-keyword':'#f0a030','--hl-func':'#c0a060','--hl-str':'#d4a06a','--hl-num':'#e0b878','--hl-comment':'#706040','--hl-id':'#e8dcc8','--statusbar-bg':'#c08020','--err':'#e05040','--info':'#f0a030','--ok':'#88aa50' },
     swatches: ['#1c1710','#261f15','#f0a030','#c0a060','#88aa50','#d4a06a','#e05040'] },
-  { id: 'ocean-blue', name: 'Oceano Profundo', mode: 'dark',
-    vars: { '--bg':'#0a1628','--bg2':'#0e1e34','--bg3':'#142840','--fg':'#c8dae8','--fg2':'#5a7090','--border':'#1a3050','--hover':'#102038','--accent':'#4fc3f7','--accent-hover':'#38b0e0','--accent-fg':'#0a1628','--hl-keyword':'#82b1ff','--hl-func':'#4fc3f7','--hl-str':'#c3e88d','--hl-num':'#f78c6c','--hl-comment':'#546e7a','--hl-id':'#c8dae8','--statusbar-bg':'#1565c0','--err':'#ef5350','--info':'#4fc3f7','--ok':'#66bb6a' },
-    swatches: ['#0a1628','#0e1e34','#4fc3f7','#82b1ff','#c3e88d','#f78c6c','#ef5350'] },
-  { id: 'forest', name: 'Floresta', mode: 'dark',
-    vars: { '--bg':'#101810','--bg2':'#162016','--bg3':'#1e2e1e','--fg':'#d4e8d0','--fg2':'#6a8a60','--border':'#263826','--hover':'#1a281a','--accent':'#68b868','--accent-hover':'#58a058','--accent-fg':'#101810','--hl-keyword':'#88cc88','--hl-func':'#68b868','--hl-str':'#b8cc78','--hl-num':'#c8a868','--hl-comment':'#4a6a40','--hl-id':'#d4e8d0','--statusbar-bg':'#2e7d32','--err':'#e06050','--info':'#68b868','--ok':'#88cc88' },
-    swatches: ['#101810','#162016','#68b868','#88cc88','#b8cc78','#c8a868','#e06050'] },
-  { id: 'lavender', name: 'Lavanda', mode: 'dark',
-    vars: { '--bg':'#1a162a','--bg2':'#201c30','--bg3':'#2a263c','--fg':'#e0daf0','--fg2':'#7870a0','--border':'#322e48','--hover':'#241e36','--accent':'#a088e0','--accent-hover':'#8870c8','--accent-fg':'#1a162a','--hl-keyword':'#c8a0f0','--hl-func':'#a088e0','--hl-str':'#e0a8c8','--hl-num':'#e0b8a0','--hl-comment':'#606088','--hl-id':'#e0daf0','--statusbar-bg':'#7c4dff','--err':'#f06080','--info':'#a088e0','--ok':'#80c8a0' },
-    swatches: ['#1a162a','#201c30','#a088e0','#c8a0f0','#80c8a0','#e0a8c8','#f06080'] },
-  { id: 'cherry-blossom', name: 'Cherry Blossom', mode: 'dark',
-    vars: { '--bg':'#1e1420','--bg2':'#281a28','--bg3':'#342234','--fg':'#f0e0e8','--fg2':'#907080','--border':'#3e2a3e','--hover':'#2c1e2c','--accent':'#e88098','--accent-hover':'#d06880','--accent-fg':'#1e1420','--hl-keyword':'#e870a0','--hl-func':'#d088d0','--hl-str':'#a8c898','--hl-num':'#f0b888','--hl-comment':'#705060','--hl-id':'#f0e0e8','--statusbar-bg':'#e88098','--err':'#f06070','--info':'#d088d0','--ok':'#a8c898' },
-    swatches: ['#1e1420','#281a28','#e88098','#e870a0','#a8c898','#f0b888','#d088d0'] },
-
-  // ══════════════════════════════════════════════
-  //  IDEs POPULARES (OUTRAS LINGUAGENS)
-  // ══════════════════════════════════════════════
-  { id: 'jetbrains-darcula', name: 'JetBrains Darcula', mode: 'dark',
-    vars: { '--bg':'#2b2b2b','--bg2':'#3c3f41','--bg3':'#4e5254','--fg':'#a9b7c6','--fg2':'#808080','--border':'#515151','--hover':'#43484a','--accent':'#4a88c7','--accent-hover':'#3a70b0','--accent-fg':'#fff','--hl-keyword':'#cc7832','--hl-func':'#ffc66d','--hl-str':'#6a8759','--hl-num':'#6897bb','--hl-comment':'#808080','--hl-id':'#a9b7c6','--statusbar-bg':'#3c3f41','--err':'#ff6b68','--info':'#6897bb','--ok':'#6a8759' },
-    swatches: ['#2b2b2b','#3c3f41','#4a88c7','#cc7832','#ffc66d','#6a8759','#6897bb'] },
-  { id: 'intellij-light', name: 'IntelliJ Light', mode: 'light',
-    vars: { '--bg':'#ffffff','--bg2':'#f7f7f7','--bg3':'#e5e5e5','--fg':'#000000','--fg2':'#808080','--border':'#d4d4d4','--hover':'#e5e5e5','--accent':'#4a88c7','--accent-hover':'#3a70b0','--accent-fg':'#fff','--hl-keyword':'#00008b','--hl-func':'#3b6ea0','--hl-str':'#008000','--hl-num':'#000000','--hl-comment':'#808080','--hl-id':'#000000','--statusbar-bg':'#4a88c7','--err':'#c00000','--info':'#4a88c7','--ok':'#008000' },
-    swatches: ['#ffffff','#f7f7f7','#4a88c7','#00008b','#3b6ea0','#008000','#c00000'] },
-  { id: 'sublime-mariana', name: 'Sublime Mariana', mode: 'dark',
-    vars: { '--bg':'#303841','--bg2':'#3b4252','--bg3':'#445361','--fg':'#d8dee9','--fg2':'#7b8da0','--border':'#5e717e','--hover':'#445361','--accent':'#5e81ac','--accent-hover':'#4c6e91','--accent-fg':'#fff','--hl-keyword':'#b48ead','--hl-func':'#88c0d0','--hl-str':'#a3be8c','--hl-num':'#d08770','--hl-comment':'#7b8da0','--hl-id':'#d8dee9','--statusbar-bg':'#5e81ac','--err':'#bf616a','--info':'#88c0d0','--ok':'#a3be8c' },
-    swatches: ['#303841','#3b4252','#5e81ac','#b48ead','#88c0d0','#a3be8c','#bf616a'] },
-  { id: 'eclipse-light', name: 'Eclipse', mode: 'light',
-    vars: { '--bg':'#ffffff','--bg2':'#f0f0f0','--bg3':'#e0e0e0','--fg':'#000000','--fg2':'#7f7f7f','--border':'#d0d0d0','--hover':'#e8e8f0','--accent':'#2852a4','--accent-hover':'#1e4090','--accent-fg':'#fff','--hl-keyword':'#7f0055','--hl-func':'#000000','--hl-str':'#2a00ff','--hl-num':'#2a00ff','--hl-comment':'#3f7f5f','--hl-id':'#000000','--statusbar-bg':'#2852a4','--err':'#d32f2f','--info':'#2852a4','--ok':'#3f7f5f' },
-    swatches: ['#ffffff','#f0f0f0','#2852a4','#7f0055','#000000','#2a00ff','#3f7f5f'] },
-  { id: 'netbeans', name: 'NetBeans', mode: 'light',
-    vars: { '--bg':'#ffffff','--bg2':'#f5f5f5','--bg3':'#e8e8e8','--fg':'#000000','--fg2':'#808080','--border':'#c0c0c0','--hover':'#e0e8f0','--accent':'#0070c0','--accent-hover':'#005aa0','--accent-fg':'#fff','--hl-keyword':'#003399','--hl-func':'#000000','--hl-str':'#008000','--hl-num':'#000000','--hl-comment':'#808080','--hl-id':'#000000','--statusbar-bg':'#0070c0','--err':'#d32f2f','--info':'#0070c0','--ok':'#008000' },
-    swatches: ['#ffffff','#f5f5f5','#0070c0','#003399','#000000','#008000','#d32f2f'] },
   { id: 'atom-one-dark', name: 'Atom One Dark', mode: 'dark',
     vars: { '--bg':'#282c34','--bg2':'#2c313a','--bg3':'#353b45','--fg':'#abb2bf','--fg2':'#636d83','--border':'#3e4451','--hover':'#3e4451','--accent':'#61afef','--accent-hover':'#4da0e8','--accent-fg':'#fff','--hl-keyword':'#c678dd','--hl-func':'#61afef','--hl-str':'#98c379','--hl-num':'#d19a66','--hl-comment':'#5c6370','--hl-id':'#abb2bf','--statusbar-bg':'#21252b','--err':'#e06c75','--info':'#56b6c2','--ok':'#98c379' },
     swatches: ['#282c34','#2c313a','#61afef','#c678dd','#98c379','#d19a66','#e06c75'] },
   { id: 'atom-one-light', name: 'Atom One Light', mode: 'light',
     vars: { '--bg':'#fafafa','--bg2':'#f0f0f0','--bg3':'#e8e8e8','--fg':'#383a42','--fg2':'#a0a1a7','--border':'#d4d4d4','--hover':'#e8e8e8','--accent':'#4078f2','--accent-hover':'#3060c0','--accent-fg':'#fff','--hl-keyword':'#a626a4','--hl-func':'#4078f2','--hl-str':'#50a14f','--hl-num':'#986801','--hl-comment':'#a0a1a7','--hl-id':'#383a42','--statusbar-bg':'#e45649','--err':'#e45649','--info':'#4078f2','--ok':'#50a14f' },
     swatches: ['#fafafa','#f0f0f0','#4078f2','#a626a4','#50a14f','#986801','#e45649'] },
+  { id: 'ayu-dark', name: 'Ayu Dark', mode: 'dark',
+    vars: { '--bg':'#0f1419','--bg2':'#151a21','--bg3':'#1f2430','--fg':'#bfbab0','--fg2':'#5c6773','--border':'#1f2430','--hover':'#1a2030','--accent':'#36a3d9','--accent-hover':'#2888c0','--accent-fg':'#fff','--hl-keyword':'#ff8f40','--hl-func':'#36a3d9','--hl-str':'#bae67e','--hl-num':'#ff8f40','--hl-comment':'#5c6773','--hl-id':'#e6b450','--statusbar-bg':'#36a3d9','--err':'#ff3333','--info':'#36a3d9','--ok':'#aad94c' },
+    swatches: ['#0f1419','#151a21','#36a3d9','#ff8f40','#bae67e','#e6b450','#ff3333'] },
+  { id: 'ayu-mirage', name: 'Ayu Mirage', mode: 'dark',
+    vars: { '--bg':'#1f2430','--bg2':'#232834','--bg3':'#272d38','--fg':'#cbccc6','--fg2':'#5c6773','--border':'#272d38','--hover':'#2a303c','--accent':'#36b8c7','--accent-hover':'#2a9da8','--accent-fg':'#fff','--hl-keyword':'#ff8f40','--hl-func':'#36b8c7','--hl-str':'#bae67e','--hl-num':'#ff8f40','--hl-comment':'#5c6773','--hl-id':'#e6b450','--statusbar-bg':'#36b8c7','--err':'#ed9366','--info':'#36b8c7','--ok':'#aad94c' },
+    swatches: ['#1f2430','#232834','#36b8c7','#ff8f40','#bae67e','#e6b450','#ed9366'] },
+  { id: 'catppuccin-latte', name: 'Catppuccin Latte', mode: 'light',
+    vars: { '--bg':'#eff1f5','--bg2':'#e6e9ef','--bg3':'#ccd0da','--fg':'#4c4f69','--fg2':'#7c7f93','--border':'#bcc0cc','--hover':'#ccd0da','--accent':'#1e66f5','--accent-hover':'#1b54c4','--accent-fg':'#fff','--hl-keyword':'#8839ef','--hl-func':'#1e66f5','--hl-str':'#40a02b','--hl-num':'#fe640b','--hl-comment':'#9ca0b0','--hl-id':'#4c4f69','--statusbar-bg':'#1e66f5','--err':'#d20f39','--info':'#209fb5','--ok':'#40a02b' },
+    swatches: ['#eff1f5','#e6e9ef','#1e66f5','#8839ef','#40a02b','#fe640b','#d20f39'] },
+  { id: 'catppuccin', name: 'Catppuccin Mocha', mode: 'dark',
+    vars: { '--bg':'#1e1e2e','--bg2':'#313244','--bg3':'#45475a','--fg':'#cdd6f4','--fg2':'#6c7086','--border':'#585b70','--hover':'#45475a','--accent':'#89b4fa','--accent-hover':'#74c7ec','--accent-fg':'#1e1e2e','--hl-keyword':'#cba6f7','--hl-func':'#89b4fa','--hl-str':'#a6e3a1','--hl-num':'#fab387','--hl-comment':'#6c7086','--hl-id':'#cdd6f4','--statusbar-bg':'#89b4fa','--err':'#f38ba8','--info':'#89dceb','--ok':'#a6e3a1' },
+    swatches: ['#1e1e2e','#313244','#89b4fa','#cba6f7','#a6e3a1','#fab387','#f38ba8'] },
+  { id: 'cherry-blossom', name: 'Cherry Blossom', mode: 'dark',
+    vars: { '--bg':'#1e1420','--bg2':'#281a28','--bg3':'#342234','--fg':'#f0e0e8','--fg2':'#907080','--border':'#3e2a3e','--hover':'#2c1e2c','--accent':'#e88098','--accent-hover':'#d06880','--accent-fg':'#1e1420','--hl-keyword':'#e870a0','--hl-func':'#d088d0','--hl-str':'#a8c898','--hl-num':'#f0b888','--hl-comment':'#705060','--hl-id':'#f0e0e8','--statusbar-bg':'#e88098','--err':'#f06070','--info':'#d088d0','--ok':'#a8c898' },
+    swatches: ['#1e1420','#281a28','#e88098','#e870a0','#a8c898','#f0b888','#d088d0'] },
+  { id: 'cyberpunk', name: 'Cyberpunk Neon', mode: 'dark',
+    vars: { '--bg':'#0a0a14','--bg2':'#101020','--bg3':'#181830','--fg':'#e0e0ff','--fg2':'#6060a0','--border':'#1a1a40','--hover':'#141430','--accent':'#ff2a6d','--accent-hover':'#e02060','--accent-fg':'#fff','--hl-keyword':'#05d9e8','--hl-func':'#d300c5','--hl-str':'#01c964','--hl-num':'#f6019d','--hl-comment':'#505080','--hl-id':'#e0e0ff','--statusbar-bg':'#ff2a6d','--err':'#ff2a6d','--info':'#05d9e8','--ok':'#01c964' },
+    swatches: ['#0a0a14','#101020','#ff2a6d','#05d9e8','#01c964','#f6019d','#d300c5'] },
+  { id: 'dracula', name: 'Dracula', mode: 'dark',
+    vars: { '--bg':'#282a36','--bg2':'#2e313e','--bg3':'#343746','--fg':'#f8f8f2','--fg2':'#6272a4','--border':'#44475a','--hover':'#44475a','--accent':'#bd93f9','--accent-hover':'#a07cf0','--accent-fg':'#fff','--hl-keyword':'#ff79c6','--hl-func':'#50fa7b','--hl-str':'#f1fa8c','--hl-num':'#bd93f9','--hl-comment':'#6272a4','--hl-id':'#f8f8f2','--statusbar-bg':'#6272a4','--err':'#ff5555','--info':'#8be9fd','--ok':'#50fa7b' },
+    swatches: ['#282a36','#2e313e','#bd93f9','#ff79c6','#50fa7b','#f1fa8c','#6272a4'] },
+  { id: 'eclipse-light', name: 'Eclipse', mode: 'light',
+    vars: { '--bg':'#ffffff','--bg2':'#f0f0f0','--bg3':'#e0e0e0','--fg':'#000000','--fg2':'#7f7f7f','--border':'#d0d0d0','--hover':'#e8e8f0','--accent':'#2852a4','--accent-hover':'#1e4090','--accent-fg':'#fff','--hl-keyword':'#7f0055','--hl-func':'#000000','--hl-str':'#2a00ff','--hl-num':'#2a00ff','--hl-comment':'#3f7f5f','--hl-id':'#000000','--statusbar-bg':'#2852a4','--err':'#d32f2f','--info':'#2852a4','--ok':'#3f7f5f' },
+    swatches: ['#ffffff','#f0f0f0','#2852a4','#7f0055','#000000','#2a00ff','#3f7f5f'] },
+  { id: 'everforest', name: 'Everforest', mode: 'dark',
+    vars: { '--bg':'#2d353b','--bg2':'#343f44','--bg3':'#425047','--fg':'#d3c6aa','--fg2':'#7a8478','--border':'#425047','--hover':'#3a4a44','--accent':'#7fbbb3','--accent-hover':'#68a8a0','--accent-fg':'#2d353b','--hl-keyword':'#d699b6','--hl-func':'#7fbbb3','--hl-str':'#dbbc7f','--hl-num':'#d699b6','--hl-comment':'#7a8478','--hl-id':'#d3c6aa','--statusbar-bg':'#7fbbb3','--err':'#e67e80','--info':'#7fbbb3','--ok':'#a7c080' },
+    swatches: ['#2d353b','#343f44','#7fbbb3','#d699b6','#a7c080','#dbbc7f','#e67e80'] },
+  { id: 'forest', name: 'Floresta', mode: 'dark',
+    vars: { '--bg':'#101810','--bg2':'#162016','--bg3':'#1e2e1e','--fg':'#d4e8d0','--fg2':'#6a8a60','--border':'#263826','--hover':'#1a281a','--accent':'#68b868','--accent-hover':'#58a058','--accent-fg':'#101810','--hl-keyword':'#88cc88','--hl-func':'#68b868','--hl-str':'#b8cc78','--hl-num':'#c8a868','--hl-comment':'#4a6a40','--hl-id':'#d4e8d0','--statusbar-bg':'#2e7d32','--err':'#e06050','--info':'#68b868','--ok':'#88cc88' },
+    swatches: ['#101810','#162016','#68b868','#88cc88','#b8cc78','#c8a868','#e06050'] },
+  { id: 'github-dark', name: 'GitHub Dark', mode: 'dark',
+    vars: { '--bg':'#0d1117','--bg2':'#161b22','--bg3':'#1c2128','--fg':'#c9d1d9','--fg2':'#8b949e','--border':'#30363d','--hover':'#21262d','--accent':'#58a6ff','--accent-hover':'#79c0ff','--accent-fg':'#fff','--hl-keyword':'#ff7b72','--hl-func':'#d2a8ff','--hl-str':'#a5d6ff','--hl-num':'#79c0ff','--hl-comment':'#8b949e','--hl-id':'#c9d1d9','--statusbar-bg':'#1f6feb','--err':'#f85149','--info':'#58a6ff','--ok':'#3fb950' },
+    swatches: ['#0d1117','#161b22','#58a6ff','#ff7b72','#d2a8ff','#a5d6ff','#3fb950'] },
+  { id: 'github-light', name: 'GitHub Light', mode: 'light',
+    vars: { '--bg':'#ffffff','--bg2':'#f6f8fa','--bg3':'#eaeef2','--fg':'#24292f','--fg2':'#656d76','--border':'#d0d7de','--hover':'#eaeef2','--accent':'#0969da','--accent-hover':'#0550ae','--accent-fg':'#fff','--hl-keyword':'#cf222e','--hl-func':'#8250df','--hl-str':'#0a3069','--hl-num':'#0550ae','--hl-comment':'#6e7781','--hl-id':'#24292f','--statusbar-bg':'#0969da','--err':'#cf222f','--info':'#0969da','--ok':'#1a7f37' },
+    swatches: ['#ffffff','#f6f8fa','#0969da','#cf222e','#8250df','#0a3069','#1a7f37'] },
+  { id: 'gruvbox', name: 'Gruvbox Dark', mode: 'dark',
+    vars: { '--bg':'#282828','--bg2':'#3c3836','--bg3':'#504945','--fg':'#ebdbb2','--fg2':'#928374','--border':'#504945','--hover':'#3c3836','--accent':'#fe8019','--accent-hover':'#d65d0e','--accent-fg':'#282828','--hl-keyword':'#fb4934','--hl-func':'#83a598','--hl-str':'#b8bb26','--hl-num':'#d3869b','--hl-comment':'#928374','--hl-id':'#ebdbb2','--statusbar-bg':'#fe8019','--err':'#fb4934','--info':'#83a598','--ok':'#b8bb26' },
+    swatches: ['#282828','#3c3836','#fe8019','#fb4934','#83a598','#b8bb26','#d3869b'] },
+  { id: 'gruvbox-light', name: 'Gruvbox Light', mode: 'light',
+    vars: { '--bg':'#fbf1c7','--bg2':'#ebdbb2','--bg3':'#d5c4a1','--fg':'#3c3836','--fg2':'#665c54','--border':'#d5c4a1','--hover':'#ebdbb2','--accent':'#458588','--accent-hover':'#357070','--accent-fg':'#fbf1c7','--hl-keyword':'#b16286','--hl-func':'#458588','--hl-str':'#98971a','--hl-num':'#d65d0e','--hl-comment':'#928374','--hl-id':'#3c3836','--statusbar-bg':'#458588','--err':'#cc241d','--info':'#458588','--ok':'#98971a' },
+    swatches: ['#fbf1c7','#ebdbb2','#458588','#b16286','#98971a','#d65d0e','#cc241d'] },
+  { id: 'halloween', name: 'Halloween', mode: 'dark',
+    vars: { '--bg':'#1b1115','--bg2':'#241520','--bg3':'#301c2a','--fg':'#f8d8b0','--fg2':'#8a7060','--border':'#3a2030','--hover':'#2a1825','--accent':'#ff8c00','--accent-hover':'#e07800','--accent-fg':'#1b1115','--hl-keyword':'#ff4444','--hl-func':'#ff8c00','--hl-str':'#ffcc00','--hl-num':'#ff8c00','--hl-comment':'#6a5040','--hl-id':'#f8d8b0','--statusbar-bg':'#ff4444','--err':'#ff0000','--info':'#ff8c00','--ok':'#44aa44' },
+    swatches: ['#1b1115','#241520','#ff4444','#ff8c00','#44aa44','#ffcc00','#ff0000'] },
+  { id: 'intellij-light', name: 'IntelliJ Light', mode: 'light',
+    vars: { '--bg':'#ffffff','--bg2':'#f7f7f7','--bg3':'#e5e5e5','--fg':'#000000','--fg2':'#808080','--border':'#d4d4d4','--hover':'#e5e5e5','--accent':'#4a88c7','--accent-hover':'#3a70b0','--accent-fg':'#fff','--hl-keyword':'#00008b','--hl-func':'#3b6ea0','--hl-str':'#008000','--hl-num':'#000000','--hl-comment':'#808080','--hl-id':'#000000','--statusbar-bg':'#4a88c7','--err':'#c00000','--info':'#4a88c7','--ok':'#008000' },
+    swatches: ['#ffffff','#f7f7f7','#4a88c7','#00008b','#3b6ea0','#008000','#c00000'] },
+  { id: 'jetbrains-darcula', name: 'JetBrains Darcula', mode: 'dark',
+    vars: { '--bg':'#2b2b2b','--bg2':'#3c3f41','--bg3':'#4e5254','--fg':'#a9b7c6','--fg2':'#808080','--border':'#515151','--hover':'#43484a','--accent':'#4a88c7','--accent-hover':'#3a70b0','--accent-fg':'#fff','--hl-keyword':'#cc7832','--hl-func':'#ffc66d','--hl-str':'#6a8759','--hl-num':'#6897bb','--hl-comment':'#808080','--hl-id':'#a9b7c6','--statusbar-bg':'#3c3f41','--err':'#ff6b68','--info':'#6897bb','--ok':'#6a8759' },
+    swatches: ['#2b2b2b','#3c3f41','#4a88c7','#cc7832','#ffc66d','#6a8759','#6897bb'] },
+  { id: 'kanagawa', name: 'Kanagawa', mode: 'dark',
+    vars: { '--bg':'#1f1f28','--bg2':'#292937','--bg3':'#363646','--fg':'#dcd7ba','--fg2':'#706c62','--border':'#363646','--hover':'#2d2d3d','--accent':'#7fb4ca','--accent-hover':'#68a0c0','--accent-fg':'#1f1f28','--hl-keyword':'#c8a0e8','--hl-func':'#7fb4ca','--hl-str':'#98bb6c','--hl-num':'#dca561','--hl-comment':'#706c62','--hl-id':'#dcd7ba','--statusbar-bg':'#7fb4ca','--err':'#c34043','--info':'#7fb4ca','--ok':'#76946a' },
+    swatches: ['#1f1f28','#292937','#7fb4ca','#c8a0e8','#98bb6c','#dca561','#c34043'] },
+  { id: 'lavender', name: 'Lavanda', mode: 'dark',
+    vars: { '--bg':'#1a162a','--bg2':'#201c30','--bg3':'#2a263c','--fg':'#e0daf0','--fg2':'#7870a0','--border':'#322e48','--hover':'#241e36','--accent':'#a088e0','--accent-hover':'#8870c8','--accent-fg':'#1a162a','--hl-keyword':'#c8a0f0','--hl-func':'#a088e0','--hl-str':'#e0a8c8','--hl-num':'#e0b8a0','--hl-comment':'#606088','--hl-id':'#e0daf0','--statusbar-bg':'#7c4dff','--err':'#f06080','--info':'#a088e0','--ok':'#80c8a0' },
+    swatches: ['#1a162a','#201c30','#a088e0','#c8a0f0','#80c8a0','#e0a8c8','#f06080'] },
+  { id: 'material-darker', name: 'Material Darker', mode: 'dark',
+    vars: { '--bg':'#212121','--bg2':'#272727','--bg3':'#333333','--fg':'#eeffff','--fg2':'#636d83','--border':'#333333','--hover':'#2d2d2d','--accent':'#82aaff','--accent-hover':'#6a95f0','--accent-fg':'#212121','--hl-keyword':'#c792ea','--hl-func':'#82aaff','--hl-str':'#c3e88d','--hl-num':'#f78c6c','--hl-comment':'#545454','--hl-id':'#eeffff','--statusbar-bg':'#82aaff','--err':'#ff5370','--info':'#89ddff','--ok':'#c3e88d' },
+    swatches: ['#212121','#272727','#82aaff','#c792ea','#c3e88d','#f78c6c','#ff5370'] },
+  { id: 'palenight', name: 'Material Palenight', mode: 'dark',
+    vars: { '--bg':'#292d3e','--bg2':'#2e3444','--bg3':'#3b4257','--fg':'#d8dee9','--fg2':'#737d8e','--border':'#3b4257','--hover':'#343a4e','--accent':'#82aaff','--accent-hover':'#6a95f0','--accent-fg':'#fff','--hl-keyword':'#c792ea','--hl-func':'#82aaff','--hl-str':'#c3e88d','--hl-num':'#f78c6c','--hl-comment':'#676e95','--hl-id':'#d8dee9','--statusbar-bg':'#82aaff','--err':'#ff5370','--info':'#89ddff','--ok':'#c3e88d' },
+    swatches: ['#292d3e','#2e3444','#82aaff','#c792ea','#c3e88d','#f78c6c','#ff5370'] },
+  { id: 'matrix', name: 'Matrix', mode: 'dark',
+    vars: { '--bg':'#0a0a0a','--bg2':'#0f0f0f','--bg3':'#1a1a1a','--fg':'#00ff41','--fg2':'#008f11','--border':'#003b00','--hover':'#0a1a0a','--accent':'#00ff41','--accent-hover':'#00cc33','--accent-fg':'#0a0a0a','--hl-keyword':'#00ff41','--hl-func':'#00cc33','--hl-str':'#00ff41','--hl-num':'#00ff41','--hl-comment':'#006b00','--hl-id':'#00ff41','--statusbar-bg':'#003b00','--err':'#ff0000','--info':'#00ff41','--ok':'#00ff41' },
+    swatches: ['#0a0a0a','#0f0f0f','#00ff41','#00ff41','#00cc33','#00ff41','#006b00'] },
+  { id: 'mellow-purple', name: 'Mellow Purple', mode: 'dark',
+    vars: { '--bg':'#1a1a2e','--bg2':'#22223a','--bg3':'#2c2c44','--fg':'#e0e0e0','--fg2':'#707090','--border':'#2c2c44','--hover':'#262640','--accent':'#b083ea','--accent-hover':'#9a6ad4','--accent-fg':'#fff','--hl-keyword':'#e27ee6','--hl-func':'#82aaff','--hl-str':'#63f2c9','--hl-num':'#f9a63e','--hl-comment':'#707090','--hl-id':'#e0e0e0','--statusbar-bg':'#b083ea','--err':'#f24e4e','--info':'#82aaff','--ok':'#63f2c9' },
+    swatches: ['#1a1a2e','#22223a','#b083ea','#e27ee6','#63f2c9','#f9a63e','#f24e4e'] },
+  { id: 'monokai', name: 'Monokai Pro', mode: 'dark',
+    vars: { '--bg':'#222222','--bg2':'#2d2d2d','--bg3':'#363636','--fg':'#fcfcfa','--fg2':'#90908a','--border':'#424242','--hover':'#3a3a3a','--accent':'#fd7575','--accent-hover':'#ee6060','--accent-fg':'#fff','--hl-keyword':'#f07178','--hl-func':'#a9dc76','--hl-str':'#ffd866','--hl-num':'#ab9df2','--hl-comment':'#727072','--hl-id':'#fcfcfa','--statusbar-bg':'#fd7575','--err':'#fc6a6a','--info':'#78dce8','--ok':'#a9dc76' },
+    swatches: ['#222222','#2d2d2d','#fd7575','#f07178','#a9dc76','#ffd866','#ab9df2'] },
+  { id: 'netbeans', name: 'NetBeans', mode: 'light',
+    vars: { '--bg':'#ffffff','--bg2':'#f5f5f5','--bg3':'#e8e8e8','--fg':'#000000','--fg2':'#808080','--border':'#c0c0c0','--hover':'#e0e8f0','--accent':'#0070c0','--accent-hover':'#005aa0','--accent-fg':'#fff','--hl-keyword':'#003399','--hl-func':'#000000','--hl-str':'#008000','--hl-num':'#000000','--hl-comment':'#808080','--hl-id':'#000000','--statusbar-bg':'#0070c0','--err':'#d32f2f','--info':'#0070c0','--ok':'#008000' },
+    swatches: ['#ffffff','#f5f5f5','#0070c0','#003399','#000000','#008000','#d32f2f'] },
+  { id: 'night-owl', name: 'Night Owl', mode: 'dark',
+    vars: { '--bg':'#011627','--bg2':'#0b2942','--bg3':'#133a5c','--fg':'#d6deeb','--fg2':'#637777','--border':'#133a5c','--hover':'#0a2540','--accent':'#82aaff','--accent-hover':'#6a95f0','--accent-fg':'#011627','--hl-keyword':'#c792ea','--hl-func':'#82aaff','--hl-str':'#addb67','--hl-num':'#f78c6c','--hl-comment':'#637777','--hl-id':'#d6deeb','--statusbar-bg':'#82aaff','--err':'#ef5350','--info':'#7e57c2','--ok':'#addb67' },
+    swatches: ['#011627','#0b2942','#82aaff','#c792ea','#addb67','#f78c6c','#ef5350'] },
+  { id: 'nord', name: 'Nord', mode: 'dark',
+    vars: { '--bg':'#2e3440','--bg2':'#3b4252','--bg3':'#434c5e','--fg':'#d8dee9','--fg2':'#616e88','--border':'#4c566a','--hover':'#434c5e','--accent':'#88c0d0','--accent-hover':'#81a1c1','--accent-fg':'#2e3440','--hl-keyword':'#81a1c1','--hl-func':'#a3be8c','--hl-str':'#b48ead','--hl-num':'#b48ead','--hl-comment':'#616e88','--hl-id':'#d8dee9','--statusbar-bg':'#5e81ac','--err':'#bf616a','--info':'#88c0d0','--ok':'#a3be8c' },
+    swatches: ['#2e3440','#3b4252','#88c0d0','#81a1c1','#a3be8c','#b48ead','#5e81ac'] },
   { id: 'notepadpp', name: 'Notepad++ Default', mode: 'light',
     vars: { '--bg':'#ffffff','--bg2':'#f5f5f5','--bg3':'#e8e8e8','--fg':'#000000','--fg2':'#808080','--border':'#d4d4d4','--hover':'#e8e8e8','--accent':'#0070c0','--accent-hover':'#005aa0','--accent-fg':'#fff','--hl-keyword':'#0000ff','--hl-func':'#000000','--hl-str':'#808000','--hl-num':'#008080','--hl-comment':'#008000','--hl-id':'#000000','--statusbar-bg':'#0070c0','--err':'#c00000','--info':'#0070c0','--ok':'#008000' },
     swatches: ['#ffffff','#f5f5f5','#0070c0','#0000ff','#808000','#008080','#008000'] },
+  { id: 'ocean-blue', name: 'Oceano Profundo', mode: 'dark',
+    vars: { '--bg':'#0a1628','--bg2':'#0e1e34','--bg3':'#142840','--fg':'#c8dae8','--fg2':'#5a7090','--border':'#1a3050','--hover':'#102038','--accent':'#4fc3f7','--accent-hover':'#38b0e0','--accent-fg':'#0a1628','--hl-keyword':'#82b1ff','--hl-func':'#4fc3f7','--hl-str':'#c3e88d','--hl-num':'#f78c6c','--hl-comment':'#546e7a','--hl-id':'#c8dae8','--statusbar-bg':'#1565c0','--err':'#ef5350','--info':'#4fc3f7','--ok':'#66bb6a' },
+    swatches: ['#0a1628','#0e1e34','#4fc3f7','#82b1ff','#c3e88d','#f78c6c','#ef5350'] },
+  { id: 'oceanic-next', name: 'Oceanic Next', mode: 'dark',
+    vars: { '--bg':'#1b2b34','--bg2':'#243039','--bg3':'#2c3e4a','--fg':'#c0c5ce','--fg2':'#65737e','--border':'#2c3e4a','--hover':'#263340','--accent':'#6699cc','--accent-hover':'#5080b0','--accent-fg':'#fff','--hl-keyword':'#c594c5','--hl-func':'#6699cc','--hl-str':'#99c794','--hl-num':'#f99157','--hl-comment':'#65737e','--hl-id':'#c0c5ce','--statusbar-bg':'#6699cc','--err':'#ec5f67','--info':'#6699cc','--ok':'#99c794' },
+    swatches: ['#1b2b34','#243039','#6699cc','#c594c5','#99c794','#f99157','#ec5f67'] },
+  { id: 'onedark', name: 'One Dark Pro', mode: 'dark',
+    vars: { '--bg':'#282c34','--bg2':'#2c313a','--bg3':'#353b45','--fg':'#abb2bf','--fg2':'#636d83','--border':'#3e4451','--hover':'#3e4451','--accent':'#61afef','--accent-hover':'#4da0e8','--accent-fg':'#fff','--hl-keyword':'#c678dd','--hl-func':'#61afef','--hl-str':'#98c379','--hl-num':'#d19a66','--hl-comment':'#5c6370','--hl-id':'#abb2bf','--statusbar-bg':'#4078f2','--err':'#e06c75','--info':'#56b6c2','--ok':'#98c379' },
+    swatches: ['#282c34','#2c313a','#61afef','#c678dd','#98c379','#d19a66','#5c6370'] },
+  { id: 'retro-crt', name: 'Retro CRT', mode: 'dark',
+    vars: { '--bg':'#1a1008','--bg2':'#22160a','--bg3':'#2e1e0e','--fg':'#ffb000','--fg2':'#8a6000','--border':'#3a2810','--hover':'#2a1a0c','--accent':'#ff8c00','--accent-hover':'#e07800','--accent-fg':'#1a1008','--hl-keyword':'#ff6600','--hl-func':'#ffcc00','--hl-str':'#ff9933','--hl-num':'#ffb000','--hl-comment':'#6a4800','--hl-id':'#ffb000','--statusbar-bg':'#8b4513','--err':'#ff4444','--info':'#ffcc00','--ok':'#88cc00' },
+    swatches: ['#1a1008','#22160a','#ff8c00','#ff6600','#88cc00','#ff9933','#ff4444'] },
+  { id: 'rosepine', name: 'Rosé Pine', mode: 'dark',
+    vars: { '--bg':'#191724','--bg2':'#1f1d2e','--bg3':'#26233a','--fg':'#e0def4','--fg2':'#6e6a86','--border':'#393552','--hover':'#26233a','--accent':'#ebbcba','--accent-hover':'#d4a0a0','--accent-fg':'#191724','--hl-keyword':'#c4a7e7','--hl-func':'#9ccfd8','--hl-str':'#f6c177','--hl-num':'#ebbcba','--hl-comment':'#6e6a86','--hl-id':'#e0def4','--statusbar-bg':'#c4a7e7','--err':'#eb6f92','--info':'#9ccfd8','--ok':'#31748f' },
+    swatches: ['#191724','#1f1d2e','#c4a7e7','#eb6f92','#9ccfd8','#f6c177','#31748f'] },
+  { id: 'rosepine-dawn', name: 'Rosé Pine Dawn', mode: 'light',
+    vars: { '--bg':'#faf4ed','--bg2':'#fffaf3','--bg3':'#f2e9e1','--fg':'#575279','--fg2':'#797593','--border':'#dfdad9','--hover':'#f2e9e1','--accent':'#d7827e','--accent-hover':'#c47070','--accent-fg':'#faf4ed','--hl-keyword':'#907aa9','--hl-func':'#31748f','--hl-str':'#ea9d34','--hl-num':'#d7827e','--hl-comment':'#9893a5','--hl-id':'#575279','--statusbar-bg':'#907aa9','--err':'#b4637a','--info':'#31748f','--ok':'#286983' },
+    swatches: ['#faf4ed','#fffaf3','#907aa9','#b4637a','#31748f','#ea9d34','#d7827e'] },
+  { id: 'solarized-dark', name: 'Solarized Dark', mode: 'dark',
+    vars: { '--bg':'#002b36','--bg2':'#073642','--bg3':'#094959','--fg':'#839496','--fg2':'#586e75','--border':'#094959','--hover':'#073642','--accent':'#268bd2','--accent-hover':'#1a6da8','--accent-fg':'#fff','--hl-keyword':'#859900','--hl-func':'#268bd2','--hl-str':'#2aa198','--hl-num':'#d33682','--hl-comment':'#586e75','--hl-id':'#839496','--statusbar-bg':'#268bd2','--err':'#dc322f','--info':'#2aa198','--ok':'#859900' },
+    swatches: ['#002b36','#073642','#268bd2','#859900','#2aa198','#d33682','#586e75'] },
+  { id: 'solarized-light', name: 'Solarized Light', mode: 'light',
+    vars: { '--bg':'#fdf6e3','--bg2':'#eee8d5','--bg3':'#e8e1cc','--fg':'#657b83','--fg2':'#93a1a1','--border':'#d3cdb7','--hover':'#e8e1cc','--accent':'#268bd2','--accent-hover':'#1a6da8','--accent-fg':'#fff','--hl-keyword':'#859900','--hl-func':'#268bd2','--hl-str':'#2aa198','--hl-num':'#d33682','--hl-comment':'#93a1a1','--hl-id':'#657b83','--statusbar-bg':'#268bd2','--err':'#dc322f','--info':'#2aa198','--ok':'#859900' },
+    swatches: ['#fdf6e3','#eee8d5','#268bd2','#859900','#2aa198','#d33682','#93a1a1'] },
+  { id: 'sublime-mariana', name: 'Sublime Mariana', mode: 'dark',
+    vars: { '--bg':'#303841','--bg2':'#3b4252','--bg3':'#445361','--fg':'#d8dee9','--fg2':'#7b8da0','--border':'#5e717e','--hover':'#445361','--accent':'#5e81ac','--accent-hover':'#4c6e91','--accent-fg':'#fff','--hl-keyword':'#b48ead','--hl-func':'#88c0d0','--hl-str':'#a3be8c','--hl-num':'#d08770','--hl-comment':'#7b8da0','--hl-id':'#d8dee9','--statusbar-bg':'#5e81ac','--err':'#bf616a','--info':'#88c0d0','--ok':'#a3be8c' },
+    swatches: ['#303841','#3b4252','#5e81ac','#b48ead','#88c0d0','#a3be8c','#bf616a'] },
+  { id: 'tokyonight', name: 'Tokyo Night', mode: 'dark',
+    vars: { '--bg':'#1a1b26','--bg2':'#24283b','--bg3':'#414868','--fg':'#c0caf5','--fg2':'#565f89','--border':'#414868','--hover':'#33384a','--accent':'#7aa2f7','--accent-hover':'#5d87e0','--accent-fg':'#fff','--hl-keyword':'#bb9af7','--hl-func':'#7aa2f7','--hl-str':'#9ece6a','--hl-num':'#ff9e64','--hl-comment':'#565f89','--hl-id':'#c0caf5','--statusbar-bg':'#7aa2f7','--err':'#f7768e','--info':'#7dcfff','--ok':'#9ece6a' },
+    swatches: ['#1a1b26','#24283b','#7aa2f7','#bb9af7','#9ece6a','#ff9e64','#f7768e'] },
+  { id: 'tokyonight-light', name: 'Tokyo Night Light', mode: 'light',
+    vars: { '--bg':'#e9ebee','--bg2':'#d5d6db','--bg3':'#bec0cc','--fg':'#3760bf','--fg2':'#848cb5','--border':'#c4c8da','--hover':'#d5d6db','--accent':'#2e7de9','--accent-hover':'#1d6cd0','--accent-fg':'#fff','--hl-keyword':'#8968c4','--hl-func':'#2e7de9','--hl-str':'#587539','--hl-num':'#8c6c3e','--hl-comment':'#848cb5','--hl-id':'#3760bf','--statusbar-bg':'#2e7de9','--err':'#f52a65','--info':'#0f4b8e','--ok':'#587539' },
+    swatches: ['#e9ebee','#d5d6db','#2e7de9','#8968c4','#587539','#8c6c3e','#f52a65'] },
+  { id: 'tomorrow-night', name: 'Tomorrow Night', mode: 'dark',
+    vars: { '--bg':'#1d1f21','--bg2':'#282a2e','--bg3':'#373b41','--fg':'#c5c8c6','--fg2':'#969896','--border':'#373b41','--hover':'#2d2f33','--accent':'#81a2be','--accent-hover':'#6a8ab0','--accent-fg':'#fff','--hl-keyword':'#b294bb','--hl-func':'#81a2be','--hl-str':'#b5bd68','--hl-num':'#de935f','--hl-comment':'#969896','--hl-id':'#c5c8c6','--statusbar-bg':'#81a2be','--err':'#cc6666','--info':'#81a2be','--ok':'#b5bd68' },
+    swatches: ['#1d1f21','#282a2e','#81a2be','#b294bb','#b5bd68','#de935f','#cc6666'] },
+  { id: 'default-dark', name: 'VS Code Dark+', mode: 'dark',
+    vars: { '--bg':'#1e1e1e','--bg2':'#252526','--bg3':'#2d2d2d','--fg':'#d4d4d4','--fg2':'#8a8a8a','--border':'#3c3c3c','--hover':'#3a3a3a','--accent':'#0e639c','--accent-hover':'#1177bb','--accent-fg':'#fff','--hl-keyword':'#569cd6','--hl-func':'#dcdcaa','--hl-str':'#ce9178','--hl-num':'#b5cea8','--hl-comment':'#6a9955','--hl-id':'#d4d4d4','--statusbar-bg':'#0e639c','--err':'#f44747','--info':'#4fc3f7','--ok':'#81c784' },
+    swatches: ['#1e1e1e','#252526','#0e639c','#569cd6','#dcdcaa','#ce9178','#6a9955'] },
+  { id: 'default-light', name: 'VS Code Light+', mode: 'light',
+    vars: { '--bg':'#ffffff','--bg2':'#f3f3f3','--bg3':'#e8e8e8','--fg':'#1f1f1f','--fg2':'#888888','--border':'#d8d8d8','--hover':'#e0e0e0','--accent':'#0078d4','--accent-hover':'#005a9e','--accent-fg':'#fff','--hl-keyword':'#0033b3','--hl-func':'#795e26','--hl-str':'#a31515','--hl-num':'#098658','--hl-comment':'#008000','--hl-id':'#1f1f1f','--statusbar-bg':'#0078d4','--err':'#d32f2f','--info':'#0078d4','--ok':'#2e7d32' },
+    swatches: ['#ffffff','#f3f3f3','#0078d4','#0033b3','#795e26','#a31515','#008000'] },
+  { id: 'vim-dark', name: 'Vim Dark', mode: 'dark',
+    vars: { '--bg':'#000000','--bg2':'#1a1a1a','--bg3':'#2a2a2a','--fg':'#aaaaaa','--fg2':'#808080','--border':'#444444','--hover':'#2a2a2a','--accent':'#00afff','--accent-hover':'#0090d0','--accent-fg':'#000000','--hl-keyword':'#00afff','--hl-func':'#ffffff','--hl-str':'#00ff00','--hl-num':'#ffff00','--hl-comment':'#808080','--hl-id':'#ffffff','--statusbar-bg':'#0000c6','--err':'#ff0000','--info':'#00ffff','--ok':'#00ff00' },
+    swatches: ['#000000','#1a1a1a','#00afff','#ffffff','#00ff00','#ffff00','#ff0000'] },
   { id: 'xcode-dark', name: 'Xcode Dark', mode: 'dark',
     vars: { '--bg':'#1e1e1e','--bg2':'#262626','--bg3':'#333333','--fg':'#ffffff','--fg2':'#808080','--border':'#404040','--hover':'#333333','--accent':'#0a84ff','--accent-hover':'#0070e0','--accent-fg':'#fff','--hl-keyword':'#ff7ab2','--hl-func':'#67b7a4','--hl-str':'#fc6a5d','--hl-num':'#d0bf69','--hl-comment':'#6c7986','--hl-id':'#ffffff','--statusbar-bg':'#3b3b3d','--err':'#ff453a','--info':'#0a84ff','--ok':'#30d158' },
     swatches: ['#1e1e1e','#262626','#0a84ff','#ff7ab2','#67b7a4','#fc6a5d','#30d158'] },
-  { id: 'vim-dark', name: 'Vim Dark', mode: 'dark',
-    vars: { '--bg':'#000000','--bg2':'#1a1a1a','--bg3':'#2a2a2a','--fg':'#aaaaaa','--fg2':'#808080','--border':'#444444','--hover':'#2a2a2a','--accent':'#00afff','--accent-hover':'#0090d0','--accent-fg':'#000000','--hl-keyword':'#00afff','--hl-func':'#ffffff','--hl-str':'#00ff00','--hl-num':'#ffff00','--hl-comment':'#808080','--hl-id':'#ffffff','--statusbar-bg':'#0000c6','--err':'#ff0000','--info':'#00ffff','--ok':'#00ff00' },
-    swatches: ['#000000','#1a1a1a','#00afff','#ffffff','#00ff00','#ffff00','#ff0000'] }
+  { id: 'zenburn', name: 'Zenburn', mode: 'dark',
+    vars: { '--bg':'#3f3f3f','--bg2':'#464646','--bg3':'#505050','--fg':'#dcdccc','--fg2':'#888888','--border':'#5a5a5a','--hover':'#4a4a4a','--accent':'#8faf8f','--accent-hover':'#78a878','--accent-fg':'#3f3f3f','--hl-keyword':'#dfdfbf','--hl-func':'#8faf8f','--hl-str':'#cc9393','--hl-num':'#dca3a3','--hl-comment':'#7f9f7f','--hl-id':'#dcdccc','--statusbar-bg':'#7f9f7f','--err':'#cc9393','--info':'#8faf8f','--ok':'#7f9f7f' },
+    swatches: ['#3f3f3f','#464646','#8faf8f','#dfdfbf','#cc9393','#dca3a3','#7f9f7f'] }
 ];
 
 var lastPalette = localStorage.getItem('willprogPalette') || 'default-dark';
@@ -13914,59 +13908,127 @@ editor.addEventListener('blur', acClose);
   var ctxList = document.getElementById('ctxList');
   var ctxSearch = document.getElementById('ctxSearch');
   var codeWrap = document.querySelector('.code-wrap');
+  var openSub = null;
+  var hideTimer = null;
+
+  function sortItems(items) {
+    items.sort(function (a, b) { return a.name.localeCompare(b.name, 'pt-BR'); });
+  }
+
+  function buildItemRow(it) {
+    var row = document.createElement('div');
+    row.className = 'ctx-item';
+    var nm = document.createElement('span');
+    nm.className = 'ctx-name';
+    nm.textContent = it.insert;
+    row.appendChild(nm);
+    if (it.desc) {
+      var ds = document.createElement('span');
+      ds.className = 'ctx-desc';
+      ds.textContent = it.desc;
+      row.appendChild(ds);
+    }
+    row.addEventListener('mousedown', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      ctxClose();
+      insertAtCursor(it.insert, it.paren);
+    });
+    return row;
+  }
+
+  function showSubmenu(catEl, sub) {
+    clearTimeout(hideTimer);
+    if (openSub && openSub !== sub) { openSub.classList.remove('open'); openSub.remove(); }
+    sub.style.left = '';
+    sub.style.top = '';
+    document.body.appendChild(sub);
+    sub.classList.add('open');
+    var catRect = catEl.getBoundingClientRect();
+    var subRect = sub.getBoundingClientRect();
+    var x = catRect.right - 4;
+    var y = catRect.top - 4;
+    if (x + subRect.width > window.innerWidth - 8) {
+      x = catRect.left - subRect.width + 4;
+    }
+    if (x < 8) x = 8;
+    if (y + subRect.height > window.innerHeight - 8) {
+      y = window.innerHeight - subRect.height - 8;
+    }
+    if (y < 8) y = 8;
+    sub.style.left = x + 'px';
+    sub.style.top = y + 'px';
+    openSub = sub;
+  }
+
+  function hideSubmenu() {
+    hideTimer = setTimeout(function () {
+      if (openSub) { openSub.classList.remove('open'); openSub.remove(); openSub = null; }
+    }, 150);
+  }
 
   function buildCtxMenu(filter) {
     ctxList.innerHTML = '';
     var wl = (filter || '').toLowerCase();
+    if (wl) {
+      var matched = [];
+      for (var i = 0; i < AC_ALL.length; i++) {
+        if (AC_ALL[i].name.toLowerCase().indexOf(wl) !== -1) matched.push(AC_ALL[i]);
+      }
+      sortItems(matched);
+      if (matched.length === 0) {
+        var empty = document.createElement('div');
+        empty.style.cssText = 'padding:10px 12px;color:#888;font-size:12px;font-style:italic;';
+        empty.textContent = 'Nenhuma função encontrada.';
+        ctxList.appendChild(empty);
+        return;
+      }
+      for (var m = 0; m < matched.length; m++) {
+        ctxList.appendChild(buildItemRow(matched[m]));
+      }
+      return;
+    }
     var cats = {};
     for (var i = 0; i < AC_ALL.length; i++) {
       var item = AC_ALL[i];
-      if (wl && item.name.toLowerCase().indexOf(wl) === -1) continue;
       if (!cats[item.cat]) cats[item.cat] = [];
       cats[item.cat].push(item);
     }
     var catNames = Object.keys(cats).sort(function (a, b) { return a.localeCompare(b, 'pt-BR'); });
-    if (catNames.length === 0) {
-      var empty = document.createElement('div');
-      empty.style.cssText = 'padding:10px 12px;color:#888;font-size:12px;font-style:italic;';
-      empty.textContent = 'Nenhuma função encontrada.';
-      ctxList.appendChild(empty);
-      return;
-    }
     for (var c = 0; c < catNames.length; c++) {
-      var catLabel = document.createElement('div');
-      catLabel.className = 'ctx-cat';
-      catLabel.textContent = catNames[c];
-      ctxList.appendChild(catLabel);
-      var items = cats[catNames[c]];
-      for (var j = 0; j < items.length; j++) {
-        (function (it) {
-          var row = document.createElement('div');
-          row.className = 'ctx-item';
-          var nm = document.createElement('span');
-          nm.className = 'ctx-name';
-          nm.textContent = it.insert;
-          row.appendChild(nm);
-          if (it.desc) {
-            var ds = document.createElement('span');
-            ds.className = 'ctx-desc';
-            ds.textContent = it.desc;
-            row.appendChild(ds);
-          }
-          row.addEventListener('mousedown', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            ctxClose();
-            insertAtCursor(it.insert, it.paren);
-          });
-          ctxList.appendChild(row);
-        })(items[j]);
-      }
+      (function (catName) {
+        var catEl = document.createElement('div');
+        catEl.className = 'ctx-cat';
+        catEl.textContent = catName;
+        var items = cats[catName];
+        sortItems(items);
+        var sub = document.createElement('div');
+        sub.className = 'ctx-submenu';
+        for (var j = 0; j < items.length; j++) {
+          sub.appendChild(buildItemRow(items[j]));
+        }
+        catEl.addEventListener('mouseenter', function () {
+          showSubmenu(catEl, sub);
+        });
+        catEl.addEventListener('mouseleave', function () {
+          hideSubmenu();
+        });
+        sub.addEventListener('mouseenter', function () {
+          clearTimeout(hideTimer);
+        });
+        sub.addEventListener('mouseleave', function () {
+          hideSubmenu();
+        });
+        ctxList.appendChild(catEl);
+      })(catNames[c]);
     }
   }
 
   function ctxOpen(x, y) {
     ctxSearch.value = '';
+    var old = document.querySelectorAll('.ctx-submenu');
+    for (var i = 0; i < old.length; i++) old[i].remove();
+    openSub = null;
     buildCtxMenu('');
     ctxMenu.classList.add('open');
     var mw = ctxMenu.offsetWidth || 280;
@@ -13983,9 +14045,15 @@ editor.addEventListener('blur', acClose);
 
   function ctxClose() {
     ctxMenu.classList.remove('open');
+    var old = document.querySelectorAll('.ctx-submenu');
+    for (var i = 0; i < old.length; i++) old[i].remove();
+    openSub = null;
   }
 
   ctxSearch.addEventListener('input', function () {
+    var old = document.querySelectorAll('.ctx-submenu');
+    for (var i = 0; i < old.length; i++) old[i].remove();
+    openSub = null;
     buildCtxMenu(ctxSearch.value);
   });
 
@@ -13993,11 +14061,11 @@ editor.addEventListener('blur', acClose);
     if (e.key === 'Escape') { ctxClose(); editor.focus(); return; }
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      var first = ctxList.querySelector('.ctx-item');
+      var first = ctxList.querySelector('.ctx-item') || ctxList.querySelector('.ctx-cat');
       if (first) first.focus();
       return;
     }
-    var items = ctxList.querySelectorAll('.ctx-item');
+    var items = ctxList.querySelectorAll('.ctx-item, .ctx-cat');
     var idx = -1;
     for (var i = 0; i < items.length; i++) {
       if (items[i] === document.activeElement) { idx = i; break; }
@@ -14010,12 +14078,22 @@ editor.addEventListener('blur', acClose);
       if (idx <= 0) { ctxSearch.focus(); } else { items[idx - 1].focus(); }
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (idx >= 0 && items[idx]) items[idx].dispatchEvent(new Event('mousedown'));
+      if (idx >= 0 && items[idx]) {
+        if (items[idx].classList.contains('ctx-cat')) {
+          items[idx].dispatchEvent(new Event('mouseenter'));
+          setTimeout(function () {
+            var subItem = document.querySelector('.ctx-submenu.open .ctx-item');
+            if (subItem) subItem.focus();
+          }, 0);
+        } else {
+          items[idx].dispatchEvent(new Event('mousedown'));
+        }
+      }
     }
   });
 
   ctxList.addEventListener('keydown', function (e) {
-    var items = ctxList.querySelectorAll('.ctx-item');
+    var items = ctxList.querySelectorAll('.ctx-item, .ctx-cat');
     var idx = -1;
     for (var i = 0; i < items.length; i++) {
       if (items[i] === document.activeElement) { idx = i; break; }
@@ -14028,9 +14106,28 @@ editor.addEventListener('blur', acClose);
       if (idx <= 0) { ctxSearch.focus(); } else { items[idx - 1].focus(); }
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (idx >= 0 && items[idx]) items[idx].dispatchEvent(new Event('mousedown'));
+      if (idx >= 0 && items[idx]) {
+        if (items[idx].classList.contains('ctx-cat')) {
+          items[idx].dispatchEvent(new Event('mouseenter'));
+          setTimeout(function () {
+            var subItem = document.querySelector('.ctx-submenu.open .ctx-item');
+            if (subItem) subItem.focus();
+          }, 0);
+        } else {
+          items[idx].dispatchEvent(new Event('mousedown'));
+        }
+      }
     } else if (e.key === 'Escape') {
       ctxClose(); editor.focus();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      if (idx >= 0 && items[idx] && items[idx].classList.contains('ctx-cat')) {
+        items[idx].dispatchEvent(new Event('mouseenter'));
+        setTimeout(function () {
+          var subItem = document.querySelector('.ctx-submenu.open .ctx-item');
+          if (subItem) subItem.focus();
+        }, 0);
+      }
     }
   });
 
@@ -14042,7 +14139,7 @@ editor.addEventListener('blur', acClose);
   });
 
   document.addEventListener('mousedown', function (e) {
-    if (!ctxMenu.contains(e.target)) ctxClose();
+    if (!ctxMenu.contains(e.target) && !(openSub && openSub.contains(e.target))) ctxClose();
   });
 
   document.addEventListener('keydown', function (e) {
