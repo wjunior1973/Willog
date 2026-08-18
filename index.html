@@ -2296,6 +2296,17 @@ para cada numero em lista:
       </div>
 
       <div class="manual-item">
+        <span class="mi-name">// \</span>
+        <span class="mi-desc">Divis&atilde;o inteira (parte inteira do quociente) e divis&atilde;o decimal (parte fracion&aacute;ria do quociente).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>3 // 2</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span>
+          <span class="mi-row"><span>3 \ 2</span><span class="mi-arrow">&rarr;</span><span class="ex">0.5</span></span>
+          <span class="mi-row"><span>10 // 3</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
+          <span class="mi-row"><span>10 \ 3</span><span class="mi-arrow">&rarr;</span><span class="ex">0.3333333333333333</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
         <span class="mi-name">** e ( )</span>
         <span class="mi-desc">Potencia&ccedil;&atilde;o e agrupamento por par&ecirc;nteses.</span>
         <div class="mi-example">
@@ -3825,6 +3836,8 @@ function evalTokenize(s) {
     if (c === '=' && s[i+1] === '=') { toks.push({ type: 'OP', text: '==', src: '==' }); i += 2; continue; }
     if (c === '!' && s[i+1] === '=') { toks.push({ type: 'OP', text: '!=', src: '!=' }); i += 2; continue; }
     if (c === ':' && s[i+1] === '=') { toks.push({ type: 'OP', text: ':=', src: ':=' }); i += 2; continue; }
+    if (c === '/' && s[i+1] === '/') { toks.push({ type: 'OP', text: '//', src: '//' }); i += 2; continue; }
+    if (c === '\\') { toks.push({ type: 'OP', text: '\\', src: '\\' }); i++; continue; }
     if ('+-*/()=,[]<>!.{}'.indexOf(c) !== -1) { toks.push({ type: 'OP', text: c, src: c }); i++; continue; }
     throw new Error('Caractere inválido: "' + c + '"');
   }
@@ -7577,15 +7590,18 @@ function parse(input, env) {
   }
   function parseTerm() {
     var left = parsePower();
-    while (isOp(peek()) && (peek().text === '*' || peek().text === '/')) {
+    while (isOp(peek()) && (peek().text === '*' || peek().text === '/' || peek().text === '//' || peek().text === '\\')) {
       var op = next().text;
       var right = parsePower();
       if (op === '*' && isMatrix(left) && isMatrix(right)) {
         left = matMul(left, right);
       } else {
         left = binOp(left, right, function (a, b) {
-          return mkNum(op === '*' ? numVal(a) * numVal(b) : numVal(a) / numVal(b),
-                       numFloat(a) || numFloat(b));
+          var lv = numVal(a), rv = numVal(b);
+          if (op === '*') return mkNum(lv * rv, numFloat(a) || numFloat(b));
+          if (op === '/') return mkNum(lv / rv, true);
+          if (op === '//') return mkNum(Math.floor(lv / rv), false);
+          if (op === '\\') return mkNum(lv / rv - Math.floor(lv / rv), true);
         });
       }
     }
@@ -9182,6 +9198,7 @@ function tokenizeHighlight(code) {
       i = j4;
     } else {
       if (c === '*' && code[i+1] === '*') { tokens.push({ type: 'op', text: '**' }); i += 2; }
+      else if (c === '/' && code[i+1] === '/') { tokens.push({ type: 'op', text: '//' }); i += 2; }
       else { tokens.push({ type: 'op', text: c }); i += 1; }
     }
   }
@@ -9899,6 +9916,8 @@ var QUICK_REF = (function () {
   qr('mdc', 'Função', 'Máximo divisor comum dos argumentos (em minúsculas)', 'mostre mdc(6, 18, 24)');
   qr('inteiro', 'Função', 'Parte inteira do número', 'mostre inteiro(9.99)');
   qr('decimal', 'Função', 'Parte decimal do número', 'mostre decimal(9.75)');
+  qr('//', 'Operador', 'Divisão inteira — parte inteira do quociente', 'mostre 3 // 2\nmostre 10 // 3');
+  qr('\\', 'Operador', 'Divisão decimal — parte fracionária do quociente', 'mostre 3 \\ 2\nmostre 10 \\ 3');
   qr('fração', 'Função', 'Converte decimal em fração', 'mostre fração(0.75)');
   qr('primos', 'Função', 'Os primeiros n números primos', 'mostre primos(6)');
   qr('fibonacci', 'Função', 'Os primeiros n números de Fibonacci', 'mostre fibonacci(7)');
