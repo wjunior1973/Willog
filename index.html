@@ -2401,6 +2401,16 @@ para cada numero em lista:
       </div>
 
       <div class="manual-item">
+        <span class="mi-name">%(a, b)</span>
+        <span class="mi-desc">Porcentagem &mdash; calcula a% de b (a &times; b &divide; 100).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>%(10, 4)</span><span class="mi-arrow">&rarr;</span><span class="ex">0.4</span></span>
+          <span class="mi-row"><span>%(5, 100)</span><span class="mi-arrow">&rarr;</span><span class="ex">5</span></span>
+          <span class="mi-row"><span>%(12, 50)</span><span class="mi-arrow">&rarr;</span><span class="ex">6</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
         <span class="mi-name">** e ( )</span>
         <span class="mi-desc">Potencia&ccedil;&atilde;o e agrupamento por par&ecirc;nteses.</span>
         <div class="mi-example">
@@ -3929,7 +3939,7 @@ function evalTokenize(s) {
     if (c === ':' && s[i+1] === '=') { toks.push({ type: 'OP', text: ':=', src: ':=' }); i += 2; continue; }
     if (c === '/' && s[i+1] === '/') { toks.push({ type: 'OP', text: '//', src: '//' }); i += 2; continue; }
     if (c === '\\') { toks.push({ type: 'OP', text: '\\', src: '\\' }); i++; continue; }
-    if ('+-*/()=,[]<>!.{}'.indexOf(c) !== -1) { toks.push({ type: 'OP', text: c, src: c }); i++; continue; }
+    if ('+-*/()=,[]<>!.{}%'.indexOf(c) !== -1) { toks.push({ type: 'OP', text: c, src: c }); i++; continue; }
     throw new Error('Caractere inválido: "' + c + '"');
   }
   return toks;
@@ -8016,6 +8026,19 @@ function parse(input, env) {
       expectOp(')');
       return first;
     }
+    if (isOp(t) && t.text === '%') {
+      next();
+      if (!(isOp(peek()) && peek().text === '(')) throw new Error('Sintaxe: %(valor, porcentagem)');
+      next();
+      var pctA = parseExpr();
+      if (!(isOp(peek()) && peek().text === ',')) throw new Error('Sintaxe: %(valor, porcentagem)');
+      next();
+      var pctB = parseExpr();
+      expectOp(')');
+      return binOp(pctA, pctB, function (a, b) {
+        return mkNum(numVal(a) * numVal(b) / 100, true);
+      });
+    }
     if (isOp(t) && t.text === '[') {
       next();
       var arr = [];
@@ -10001,6 +10024,7 @@ var QUICK_REF = (function () {
   qr('decimal', 'Função', 'Parte decimal do número', 'mostre decimal(9.75)');
   qr('//', 'Operador', 'Divisão inteira — parte inteira do quociente', 'mostre 3 // 2\nmostre 10 // 3');
   qr('\\', 'Operador', 'Divisão decimal — parte fracionária do quociente', 'mostre 3 \\ 2\nmostre 10 \\ 3');
+  qr('%', 'Operador', 'Porcentagem — %(a, b) calcula a% de b (a × b ÷ 100)', 'mostre %(10, 4)\nmostre %(5, 100)\nmostre %(12, 50)');
   qr('fração', 'Função', 'Converte decimal em fração', 'mostre fração(0.75)');
   qr('primos', 'Função', 'Os primeiros n números primos', 'mostre primos(6)');
   qr('fibonacci', 'Função', 'Os primeiros n números de Fibonacci', 'mostre fibonacci(7)');
