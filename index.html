@@ -907,6 +907,53 @@
   body.light .colpick-box input[type=text], body.light .colpick-box input:not([type]) { background: #fff; color: #222; border-color: #ccc; }
   body.light .colpick-btns .colpick-cancel { background: #e0e0e0; color: #333; }
 
+  /* ===== Menu de contexto do editor ===== */
+  .ctx-menu {
+    display: none; position: fixed; z-index: 10002;
+    background: #252526; border: 1px solid #4a4a4a; border-radius: 7px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.6);
+    min-width: 220px; max-width: 340px; max-height: 70vh;
+    flex-direction: column; overflow: hidden;
+  }
+  .ctx-menu.open { display: flex; }
+  .ctx-search {
+    flex: 0 0 auto; padding: 6px 8px; border-bottom: 1px solid #3c3c3c;
+    background: #2d2d2d; border-radius: 7px 7px 0 0;
+  }
+  .ctx-search input {
+    width: 100%; padding: 5px 8px; background: #1e1e1e; color: #c8c8c8;
+    border: 1px solid #4a4a4a; border-radius: 4px; font-size: 12px;
+    font-family: inherit; outline: none;
+  }
+  .ctx-search input:focus { border-color: #0e639c; }
+  .ctx-search input::placeholder { color: #666; }
+  .ctx-list {
+    flex: 1 1 auto; overflow-y: auto; padding: 4px 0; min-height: 0;
+  }
+  .ctx-list::-webkit-scrollbar { width: 6px; }
+  .ctx-list::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 3px; }
+  .ctx-cat {
+    padding: 4px 12px; font-size: 10px; color: #4fc3f7; text-transform: uppercase;
+    letter-spacing: .6px; font-weight: 600; user-select: none; margin-top: 4px;
+  }
+  .ctx-item {
+    display: flex; align-items: center; gap: 8px; padding: 5px 12px;
+    cursor: pointer; font-size: 12px; color: #c8c8c8; user-select: none;
+  }
+  .ctx-item:hover { background: #0e639c; color: #fff; }
+  .ctx-item .ctx-name { font-family: Consolas,monospace; font-weight: 600; white-space: nowrap; }
+  .ctx-item .ctx-desc { color: #888; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .ctx-item:hover .ctx-desc { color: #cfe6f5; }
+  body.light .ctx-menu { background: #fff; border-color: #ccc; box-shadow: 0 8px 28px rgba(0,0,0,.2); }
+  body.light .ctx-search { background: #f5f5f5; border-color: #e0e0e0; }
+  body.light .ctx-search input { background: #fff; color: #333; border-color: #ddd; }
+  body.light .ctx-list { background: #fff; }
+  body.light .ctx-cat { color: #00639e; }
+  body.light .ctx-item { color: #333; }
+  body.light .ctx-item:hover { background: #0078d4; color: #fff; }
+  body.light .ctx-item .ctx-desc { color: #888; }
+  body.light .ctx-item:hover .ctx-desc { color: #cfe6f5; }
+
   /* ===== Calculadora (calculadora) ===== */
   #calculadoraWin {
     position: fixed;
@@ -3444,6 +3491,11 @@ para cada item em A:
       <button class="colpick-ok" id="colpickOk">Gerar gráfico</button>
     </div>
   </div>
+</div>
+
+<div class="ctx-menu" id="ctxMenu">
+  <div class="ctx-search"><input type="text" id="ctxSearch" placeholder="Buscar função..."></div>
+  <div class="ctx-list" id="ctxList"></div>
 </div>
 
 <div class="calc-win" id="calculadoraWin">
@@ -13818,6 +13870,149 @@ editor.addEventListener('scroll', function () {
   if (acIsOpen()) acPosition();
 });
 editor.addEventListener('blur', acClose);
+
+// ============================================================
+//  MENU DE CONTEXTO DO EDITOR (clique direito)
+// ============================================================
+
+(function () {
+  var ctxMenu = document.getElementById('ctxMenu');
+  var ctxList = document.getElementById('ctxList');
+  var ctxSearch = document.getElementById('ctxSearch');
+  var codeWrap = document.querySelector('.code-wrap');
+
+  function buildCtxMenu(filter) {
+    ctxList.innerHTML = '';
+    var wl = (filter || '').toLowerCase();
+    var cats = {};
+    for (var i = 0; i < AC_ALL.length; i++) {
+      var item = AC_ALL[i];
+      if (wl && item.name.toLowerCase().indexOf(wl) === -1) continue;
+      if (!cats[item.cat]) cats[item.cat] = [];
+      cats[item.cat].push(item);
+    }
+    var catNames = Object.keys(cats).sort(function (a, b) { return a.localeCompare(b, 'pt-BR'); });
+    if (catNames.length === 0) {
+      var empty = document.createElement('div');
+      empty.style.cssText = 'padding:10px 12px;color:#888;font-size:12px;font-style:italic;';
+      empty.textContent = 'Nenhuma função encontrada.';
+      ctxList.appendChild(empty);
+      return;
+    }
+    for (var c = 0; c < catNames.length; c++) {
+      var catLabel = document.createElement('div');
+      catLabel.className = 'ctx-cat';
+      catLabel.textContent = catNames[c];
+      ctxList.appendChild(catLabel);
+      var items = cats[catNames[c]];
+      for (var j = 0; j < items.length; j++) {
+        (function (it) {
+          var row = document.createElement('div');
+          row.className = 'ctx-item';
+          var nm = document.createElement('span');
+          nm.className = 'ctx-name';
+          nm.textContent = it.insert;
+          row.appendChild(nm);
+          if (it.desc) {
+            var ds = document.createElement('span');
+            ds.className = 'ctx-desc';
+            ds.textContent = it.desc;
+            row.appendChild(ds);
+          }
+          row.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            ctxClose();
+            insertAtCursor(it.insert, it.paren);
+          });
+          ctxList.appendChild(row);
+        })(items[j]);
+      }
+    }
+  }
+
+  function ctxOpen(x, y) {
+    ctxSearch.value = '';
+    buildCtxMenu('');
+    ctxMenu.classList.add('open');
+    var mw = ctxMenu.offsetWidth || 280;
+    var mh = ctxMenu.offsetHeight || 400;
+    var ww = window.innerWidth, wh = window.innerHeight;
+    if (x + mw > ww - 8) x = ww - mw - 8;
+    if (y + mh > wh - 8) y = wh - mh - 8;
+    if (x < 8) x = 8;
+    if (y < 8) y = 8;
+    ctxMenu.style.left = x + 'px';
+    ctxMenu.style.top = y + 'px';
+    setTimeout(function () { ctxSearch.focus(); }, 0);
+  }
+
+  function ctxClose() {
+    ctxMenu.classList.remove('open');
+  }
+
+  ctxSearch.addEventListener('input', function () {
+    buildCtxMenu(ctxSearch.value);
+  });
+
+  ctxSearch.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { ctxClose(); editor.focus(); return; }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      var first = ctxList.querySelector('.ctx-item');
+      if (first) first.focus();
+      return;
+    }
+    var items = ctxList.querySelectorAll('.ctx-item');
+    var idx = -1;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i] === document.activeElement) { idx = i; break; }
+    }
+    if (e.key === 'ArrowDown' && idx < items.length - 1) {
+      e.preventDefault();
+      items[idx + 1].focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (idx <= 0) { ctxSearch.focus(); } else { items[idx - 1].focus(); }
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (idx >= 0 && items[idx]) items[idx].dispatchEvent(new Event('mousedown'));
+    }
+  });
+
+  ctxList.addEventListener('keydown', function (e) {
+    var items = ctxList.querySelectorAll('.ctx-item');
+    var idx = -1;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i] === document.activeElement) { idx = i; break; }
+    }
+    if (e.key === 'ArrowDown' && idx < items.length - 1) {
+      e.preventDefault();
+      items[idx + 1].focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (idx <= 0) { ctxSearch.focus(); } else { items[idx - 1].focus(); }
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (idx >= 0 && items[idx]) items[idx].dispatchEvent(new Event('mousedown'));
+    } else if (e.key === 'Escape') {
+      ctxClose(); editor.focus();
+    }
+  });
+
+  codeWrap.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    ctxOpen(e.clientX, e.clientY);
+  });
+
+  document.addEventListener('mousedown', function (e) {
+    if (!ctxMenu.contains(e.target)) ctxClose();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && ctxMenu.classList.contains('open')) ctxClose();
+  });
+})();
 
 // ============================================================
 //  FLUXOGRAMA (Exibir > Fluxograma)
