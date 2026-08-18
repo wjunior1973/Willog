@@ -1970,7 +1970,7 @@
 
   <div class="console-panel" id="consolePanel">
     <div class="console-head">
-      <span>Console</span>
+      <span><strong>Console</strong></span>
       <span class="head-right">
         <span class="dot" id="runStatus"></span>
       </span>
@@ -14035,6 +14035,8 @@ editor.addEventListener('blur', acClose);
   });
 
   codeWrap.addEventListener('contextmenu', function (e) {
+    var hasSel = editor.selectionStart !== editor.selectionEnd;
+    if (hasSel) return;
     e.preventDefault();
     ctxOpen(e.clientX, e.clientY);
   });
