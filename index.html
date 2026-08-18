@@ -359,7 +359,7 @@
     font-size: 20px; line-height: 1; cursor: pointer; padding: 2px 8px;
   }
   .modal-close:hover { color: #fff; background: #4a4a4a; border-radius: 4px; }
-  .modal-body { padding: 16px 18px; overflow-y: auto; font-size: 13px; color: #c8c8c8; }
+  .modal-body { padding: 16px 18px; overflow-y: auto; font-size: var(--w-font); color: #c8c8c8; }
   .modal-body h4 {
     color: #4fc3f7;
     margin: 16px 0 8px;
@@ -565,6 +565,8 @@
 
   #plotOverlay .modal { width: 864px; height: 86vh; }
   .plot-controls { display: flex; align-items: center; gap: 4px; }
+  .zoom-controls { display: inline-flex; align-items: center; gap: 2px; margin-right: 6px; }
+  .zoom-controls .plot-zoom-btn { width: 22px; height: 22px; font-size: 14px; }
   .plot-win-btn {
     background: none; border: none; color: #a0a0a0;
     font-size: 20px; line-height: 1; cursor: pointer;
@@ -664,7 +666,7 @@
     border-radius: 0; border: none;
   }
   .emjanela-body { flex: 1; display: flex; flex-direction: column; min-height: 0; padding: 0; overflow: hidden; }
-  .emjanela-output { flex: 1; min-height: 0; }
+  .emjanela-output { flex: 1; min-height: 0; font-size: var(--w-font); line-height: var(--w-lh); }
 
   /* ===== Janela (janela) – max/min ===== */
   #janelaOverlay .modal.janela-maximized {
@@ -715,7 +717,7 @@
     border-radius: 0; border: none;
   }
   .interp-body { flex: 1; display: flex; flex-direction: column; min-height: 0; padding: 0; overflow: hidden; }
-  .interp-output { flex: 1; min-height: 0; overflow-y: auto; background: #1e1e1e; padding: 8px 12px; font-family: Consolas, 'Courier New', monospace; font-size: var(--interp-font, 14px); line-height: 1.5; }
+  .interp-output { flex: 1; min-height: 0; overflow-y: auto; background: #1e1e1e; padding: 8px 12px; font-family: Consolas, 'Courier New', monospace; font-size: var(--w-font); line-height: 1.5; }
   .interp-output .placeholder { color: #6a6a6a; font-style: italic; }
   .interp-output .log { padding: 0; white-space: pre-wrap; overflow-wrap: break-word; word-wrap: break-word; font-weight: bold; }
   .interp-output .log.assign { color: #8a8a8a; }
@@ -730,14 +732,14 @@
     background: #252526;
     padding: 0 12px;
   }
-  .interp-prompt { color: #4fc3f7; font-family: Consolas, 'Courier New', monospace; font-size: var(--interp-font, 14px); font-weight: bold; user-select: none; padding-right: 8px; }
+  .interp-prompt { color: #4fc3f7; font-family: Consolas, 'Courier New', monospace; font-size: var(--w-font); font-weight: bold; user-select: none; padding-right: 8px; }
   #interpInput {
     flex: 1;
     background: transparent;
     border: none;
     color: #d4d4d4;
     font-family: Consolas, 'Courier New', monospace;
-    font-size: var(--interp-font, 14px);
+    font-size: var(--w-font);
     line-height: 36px;
     padding: 4px 0;
     outline: none;
@@ -1503,7 +1505,7 @@
 
   /* ===== Referência rápida ===== */
   #quickRefOverlay .modal { width: 620px; }
-  .quickref-body { padding: 12px 14px; }
+  .quickref-body { padding: 12px 14px; font-size: var(--w-font); }
   .quickref-search {
     width: 100%;
     box-sizing: border-box;
@@ -1579,7 +1581,7 @@
 
   /* ===== Sugestões ===== */
   #sugestoesOverlay .modal { width: 680px; }
-  .sugestoes-body { padding: 14px 16px; }
+  .sugestoes-body { padding: 14px 16px; font-size: var(--w-font); }
   .sugestoes-summary {
     font-size: 12.5px;
     color: #8a8a8a;
@@ -1631,7 +1633,7 @@
 
   /* ===== Código comentado ===== */
   #comentadoOverlay .modal { width: 880px; }
-  .comentado-body { padding: 12px 14px; }
+  .comentado-body { padding: 12px 14px; font-size: var(--w-font); }
   .comentado-summary {
     font-size: 12.5px;
     color: #8a8a8a;
@@ -1909,6 +1911,10 @@
   <div class="modal">
     <div class="modal-head">
       <h2>Manual de Refer&ecirc;ncia &mdash; Willog</h2>
+      <div class="zoom-controls">
+        <button class="plot-zoom-btn" data-win-zoom="out" title="Diminuir fonte" aria-label="Diminuir fonte">&minus;</button>
+        <button class="plot-zoom-btn" data-win-zoom="in" title="Aumentar fonte" aria-label="Aumentar fonte">+</button>
+      </div>
       <div class="plot-controls">
         <button class="plot-win-btn" id="manualMinimize" title="Minimizar" aria-label="Minimizar">
           <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
@@ -3306,6 +3312,10 @@ para cada item em A:
   <div class="modal" id="emJanelaModal">
     <div class="modal-head">
       <h2 id="emJanelaTitle">Janela</h2>
+      <div class="zoom-controls">
+        <button class="plot-zoom-btn" data-win-zoom="out" title="Diminuir fonte" aria-label="Diminuir fonte">&minus;</button>
+        <button class="plot-zoom-btn" data-win-zoom="in" title="Aumentar fonte" aria-label="Aumentar fonte">+</button>
+      </div>
       <div class="plot-controls">
         <button class="plot-win-btn" id="emJanelaMinimize" title="Minimizar" aria-label="Minimizar">
           <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
@@ -3328,6 +3338,10 @@ para cada item em A:
   <div class="modal" id="interpretadorModal">
     <div class="modal-head">
       <h2>Interpretador</h2>
+      <div class="zoom-controls">
+        <button class="plot-zoom-btn" data-win-zoom="out" title="Diminuir fonte" aria-label="Diminuir fonte">&minus;</button>
+        <button class="plot-zoom-btn" data-win-zoom="in" title="Aumentar fonte" aria-label="Aumentar fonte">+</button>
+      </div>
       <div class="plot-controls">
         <button class="plot-win-btn" id="interpMinimize" title="Minimizar" aria-label="Minimizar">
           <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
@@ -3354,6 +3368,10 @@ para cada item em A:
   <div class="modal" id="planilhaModal">
     <div class="modal-head">
       <h2 id="planilhaTitle">Planilha</h2>
+      <div class="zoom-controls">
+        <button class="plot-zoom-btn" data-win-zoom="out" title="Diminuir fonte" aria-label="Diminuir fonte">&minus;</button>
+        <button class="plot-zoom-btn" data-win-zoom="in" title="Aumentar fonte" aria-label="Aumentar fonte">+</button>
+      </div>
       <div class="planilha-fn-wrap">
         <button class="planilha-fn-btn" id="planilhaFnBtn" type="button">Funções</button>
         <div class="planilha-fn-list" id="planilhaFnList">
@@ -3654,6 +3672,10 @@ para cada item em A:
   <div class="modal quickref-modal">
     <div class="modal-head">
       <h2>Refer&ecirc;ncia r&aacute;pida &mdash; Willog</h2>
+      <div class="zoom-controls">
+        <button class="plot-zoom-btn" data-win-zoom="out" title="Diminuir fonte" aria-label="Diminuir fonte">&minus;</button>
+        <button class="plot-zoom-btn" data-win-zoom="in" title="Aumentar fonte" aria-label="Aumentar fonte">+</button>
+      </div>
       <div class="plot-controls">
         <button class="plot-win-btn" id="quickRefMinimize" title="Minimizar" aria-label="Minimizar">
           <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
@@ -3676,6 +3698,10 @@ para cada item em A:
   <div class="modal">
     <div class="modal-head">
       <h2>Sugest&otilde;es de melhorias</h2>
+      <div class="zoom-controls">
+        <button class="plot-zoom-btn" data-win-zoom="out" title="Diminuir fonte" aria-label="Diminuir fonte">&minus;</button>
+        <button class="plot-zoom-btn" data-win-zoom="in" title="Aumentar fonte" aria-label="Aumentar fonte">+</button>
+      </div>
       <div class="plot-controls">
         <button id="sugestoesReanalisar" title="Reanalisar o c&oacute;digo do editor">Reanalisar</button>
         <button class="plot-win-btn" id="sugestoesMinimize" title="Minimizar" aria-label="Minimizar">
@@ -3698,6 +3724,10 @@ para cada item em A:
   <div class="modal">
     <div class="modal-head">
       <h2>C&oacute;digo Comentado &mdash; Willog</h2>
+      <div class="zoom-controls">
+        <button class="plot-zoom-btn" data-win-zoom="out" title="Diminuir fonte" aria-label="Diminuir fonte">&minus;</button>
+        <button class="plot-zoom-btn" data-win-zoom="in" title="Aumentar fonte" aria-label="Aumentar fonte">+</button>
+      </div>
       <div class="plot-controls">
         <button id="comentadoAtualizar" title="Reanalisar o c&oacute;digo do editor">Atualizar</button>
         <button class="plot-win-btn" id="comentadoMinimize" title="Minimizar" aria-label="Minimizar">
@@ -10999,6 +11029,11 @@ function applyZoom() {
 }
 btnZoomIn.addEventListener('click', zoomIn);
 btnZoomOut.addEventListener('click', zoomOut);
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest ? e.target.closest('[data-win-zoom]') : null;
+  if (!btn) return;
+  if (btn.getAttribute('data-win-zoom') === 'in') zoomIn(); else zoomOut();
+});
 
 modalClose.addEventListener('click', function () {
   wmClose('modalOverlay');
@@ -11539,22 +11574,12 @@ function closeInterpretador() {
   wmClose('interpretadorOverlay');
 }
 
-var interpFontSize = 14;
-var INTERP_FONT_MIN = 8;
-var INTERP_FONT_MAX = 40;
-
 function interpZoomIn() {
-  if (interpFontSize < INTERP_FONT_MAX) {
-    interpFontSize += 1;
-    document.documentElement.style.setProperty('--interp-font', interpFontSize + 'px');
-  }
+  zoomIn();
 }
 
 function interpZoomOut() {
-  if (interpFontSize > INTERP_FONT_MIN) {
-    interpFontSize -= 1;
-    document.documentElement.style.setProperty('--interp-font', interpFontSize + 'px');
-  }
+  zoomOut();
 }
 
 interpOutput.addEventListener('wheel', function (e) {
