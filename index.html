@@ -5311,6 +5311,129 @@ function callFunction(name, args, rawName) {
     if (typeof rq !== 'string') throw new Error('resolver espera uma equação simbólica (ex.: resolver(2*x+4=0, x))');
     return resolverEquacao(rq, rv);
   }
+  if (name === 'limites') {
+    if (args.length !== 3) throw new Error('limites espera 3 argumentos: limites(expressão, variável, alvo)');
+    var lExpr = args[0];
+    var lVar = String(args[1]).trim();
+    var lTargetStr = String(args[2]).trim();
+    if (typeof lExpr !== 'string') throw new Error('limites espera uma expressão simbólica');
+    if (!/^[A-Za-z_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF][A-Za-z0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]*$/.test(lVar)) {
+      throw new Error('limites: variável inválida');
+    }
+    var lTarget;
+    var lApproachDir;
+    if (lTargetStr === 'oo' || lTargetStr === '+oo' || lTargetStr === '+∞' || lTargetStr === '∞') {
+      lTarget = Infinity;
+      lApproachDir = 'left';
+    } else if (lTargetStr === '-oo' || lTargetStr === '-∞') {
+      lTarget = -Infinity;
+      lApproachDir = 'right';
+    } else {
+      lTarget = parseFloat(lTargetStr);
+      if (isNaN(lTarget)) throw new Error('limites: alvo inválido (' + lTargetStr + ')');
+      lApproachDir = 'both';
+    }
+    function evalLimExpr(exprStr, varName, val) {
+      var env = {};
+      env[varName] = mkNum(val, true);
+      return numVal(parse(exprStr, env));
+    }
+    function evalLimSafe(exprStr, varName, val) {
+      try {
+        var r = evalLimExpr(exprStr, varName, val);
+        if (typeof r !== 'number' || isNaN(r)) return null;
+        return r;
+      } catch (e) { return null; }
+    }
+    var eps = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10, 1e-11, 1e-12];
+    var magVals = [10, 100, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12];
+    var leftVals = [], rightVals = [];
+    if (lApproachDir === 'both' || lApproachDir === 'left') {
+      if (lTarget === Infinity) {
+        for (var i = 0; i < magVals.length; i++) {
+          var rv = evalLimSafe(lExpr, lVar, magVals[i]);
+          if (rv !== null) leftVals.push(rv);
+        }
+      } else {
+        for (var i = 0; i < eps.length; i++) {
+          var rv = evalLimSafe(lExpr, lVar, lTarget - eps[i]);
+          if (rv !== null) leftVals.push(rv);
+        }
+      }
+    }
+    if (lApproachDir === 'both' || lApproachDir === 'right') {
+      if (lTarget === -Infinity) {
+        for (var j = 0; j < magVals.length; j++) {
+          var rv2 = evalLimSafe(lExpr, lVar, -magVals[j]);
+          if (rv2 !== null) rightVals.push(rv2);
+        }
+      } else {
+        for (var j = 0; j < eps.length; j++) {
+          var rv2 = evalLimSafe(lExpr, lVar, lTarget + eps[j]);
+          if (rv2 !== null) rightVals.push(rv2);
+        }
+      }
+    }
+    function limResult(vals) {
+      if (vals.length < 2) return null;
+      var last = vals[vals.length - 1];
+      var prev = vals[vals.length - 2];
+      if (!isFinite(last)) return last;
+      if (last === prev) return last;
+      var absDiff = Math.abs(last - prev);
+      var mag = Math.max(Math.abs(last), Math.abs(prev));
+      if (mag < 1e-4) return 0;
+      if (absDiff < 1e-9) return last;
+      if (vals.length >= 3) {
+        var v1 = vals[vals.length - 3];
+        var growPos = last > 0 && prev > 0 && v1 > 0 && last > prev && prev > v1;
+        var growNeg = last < 0 && prev < 0 && v1 < 0 && last < prev && prev < v1;
+        if (growPos) return Infinity;
+        if (growNeg) return -Infinity;
+      }
+      return null;
+    }
+    if (lApproachDir === 'left') {
+      var lr = limResult(leftVals);
+      if (lr !== null) {
+        if (!isFinite(lr)) return lr > 0 ? '+oo' : '-oo';
+        return mkNum(lr, lr % 1 !== 0);
+      }
+      throw new Error('limites: não foi possível calcular o limite');
+    }
+    if (lApproachDir === 'right') {
+      var rr = limResult(rightVals);
+      if (rr !== null) {
+        if (!isFinite(rr)) return rr > 0 ? '+oo' : '-oo';
+        return mkNum(rr, rr % 1 !== 0);
+      }
+      throw new Error('limites: não foi possível calcular o limite');
+    }
+    var leftLim = limResult(leftVals);
+    var rightLim = limResult(rightVals);
+    if (leftLim !== null && rightLim !== null) {
+      if (!isFinite(leftLim) && !isFinite(rightLim)) {
+        if (leftLim === rightLim) return leftLim > 0 ? '+oo' : '-oo';
+        throw new Error('limites: o limite não existe (infinitos opostos)');
+      }
+      if (!isFinite(leftLim)) return leftLim > 0 ? '+oo' : '-oo';
+      if (!isFinite(rightLim)) return rightLim > 0 ? '+oo' : '-oo';
+      if (Math.abs(leftLim - rightLim) < 1e-9 || (Math.abs(leftLim) < 1e-6 && Math.abs(rightLim) < 1e-6)) {
+        var lrVal = (Math.abs(leftLim) < 1e-6 && Math.abs(rightLim) < 1e-6) ? 0 : leftLim;
+        return mkNum(lrVal, lrVal % 1 !== 0);
+      }
+      throw new Error('limites: o limite não existe (lado esquerdo ≠ lado direito)');
+    }
+    if (leftLim !== null && rightLim === null) {
+      if (!isFinite(leftLim)) return leftLim > 0 ? '+oo' : '-oo';
+      return mkNum(leftLim, leftLim % 1 !== 0);
+    }
+    if (leftLim === null && rightLim !== null) {
+      if (!isFinite(rightLim)) return rightLim > 0 ? '+oo' : '-oo';
+      return mkNum(rightLim, rightLim % 1 !== 0);
+    }
+    throw new Error('limites: não foi possível calcular o limite');
+  }
   if (name === 'integral') {
     if (args.length === 2) {
       var it1 = args[0];
@@ -7986,6 +8109,38 @@ function parse(input, env) {
           req = resolveExpSource(req, env, 0, [rvarm[0]]);
           return callFunction('resolver', [req, rvarm[0]]);
         }
+        if (t.name === 'limites') {
+          var lparts = [];
+          var ldepth = 0;
+          while (true) {
+            var lpt = peek();
+            if (!lpt) throw new Error('Parêntese não fechado em limites');
+            if (isOp(lpt) && lpt.text === '(') ldepth++;
+            if (isOp(lpt) && lpt.text === ')') {
+              if (ldepth === 0) break;
+              ldepth--;
+            }
+            lparts.push(lpt.src);
+            next();
+          }
+          expectOp(')');
+          var lsrc = lparts.join('');
+          var lcm = findTopLevelComma(lsrc);
+          if (lcm < 0) throw new Error('limites espera 2 argumentos: limites(expressão, variável->valor)');
+          var lexp = lsrc.slice(0, lcm).trim();
+          var larrow = lsrc.slice(lcm + 1).trim();
+          var larm = larrow.match(/^([A-Za-z_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF][A-Za-z0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]*)\s*->\s*(.+)$/);
+          if (!larm) throw new Error('limites: segundo argumento deve ser variável->valor (ex.: x->0, x->oo)');
+          var lvar = larm[1].trim();
+          var ltarget = larm[2].trim();
+          if (!/^[A-Za-z_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF][A-Za-z0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]*$/.test(lvar)) {
+            throw new Error('limites: variável inválida');
+          }
+          var lidm = lexp.match(/^[A-Za-z_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF][A-Za-z0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]*$/);
+          if (lidm && lexp in env && typeof env[lexp] === 'string') lexp = env[lexp];
+          lexp = resolveExpSource(lexp, env, 0, [lvar]);
+          return callFunction('limites', [lexp, lvar, ltarget]);
+        }
         if (t.name === 'subconjuntos') {
           var sparts = [];
           var sdepth = 0;
@@ -9339,7 +9494,7 @@ function tokenizeHighlight(code) {
           word === 'emJanela' ||
           (word === 'e' && code[j4] !== '(') || word === 'ou' || word === 'não' || word === 'nao' ||
           word === 'verdadeiro' || word === 'falso') tokens.push({ type: 'keyword', text: word });
-      else if ((word === 'selecionar' || word === 'comprimento' || word === 'absoluto' || word === 'abs' || word === 'fatorial' || word === 'romanos' || word === 'hex->dec' || word === 'dec->hex' || word === 'bin->dec' || word === 'dec->bin' || word === 'hex->bin' || word === 'bin->hex' || word === 'variáveis' || word === 'variaveis' || word === 'planilha' || word === 'raizq' || word === 'raizc' || word === 'média' || word === 'pi' || word === 'euler' || word === 'e' || word === 'areaPoligono' || word === 'áreaPoligono' || word === 'areaPolígono' || word === 'áreaPolígono' || word === 'primos' || word === 'divisores' || word === 'fibonacci' || word === 'fibo' || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'expandir' || word === 'simplificar' || word === 'união' || word === 'intersecção' || word === 'menos' || word === 'subconjuntos' || word === 'paraLista' || word === 'paraConjunto' || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero' || word === 'inversa' || word === 'transposta' || word === 'determinante' || word === 'plotar' || word === 'tabela' || word === 'curva' || word === 'derivada' || word === 'resolver' || word === 'integral' || word === 'graus' || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio' || word === 'estatísticas' || word === 'estatisticas' || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo' || word === 'circulo' || word === 'texto' || word === 'intervalo' || word === 'log' || word === 'logn' || word === 'ln' || word === 'arredondar' || word === 'arred' || word === 'salvar' || word === 'carregar'   || word === 'ano' || word === 'mês' || word === 'mes' || word === 'dia' || word === 'hora' || word === 'data' || word === 'agora' || word === 'tempo' || word === 'MMC' || word === 'mmc' || word === 'MDC' || word === 'mdc' || word === 'bipe' || word === 'pausa' || word === 'som' || word === 'toca' || word === 'mensagem' || word === 'aguardeTecla' || word === 'captureTecla' || word === 'calculadora' || word === 'poligonos' || word === 'pegar' || word === 'colocar' || word === 'tartaruga' || word === 'anagramas' || word === 'palíndromo' || word === 'palindromo') && code[j4] === '(') tokens.push({ type: 'function', text: word });
+      else if ((word === 'selecionar' || word === 'comprimento' || word === 'absoluto' || word === 'abs' || word === 'fatorial' || word === 'romanos' || word === 'hex->dec' || word === 'dec->hex' || word === 'bin->dec' || word === 'dec->bin' || word === 'hex->bin' || word === 'bin->hex' || word === 'variáveis' || word === 'variaveis' || word === 'planilha' || word === 'raizq' || word === 'raizc' || word === 'média' || word === 'pi' || word === 'euler' || word === 'e' || word === 'areaPoligono' || word === 'áreaPoligono' || word === 'areaPolígono' || word === 'áreaPolígono' || word === 'primos' || word === 'divisores' || word === 'fibonacci' || word === 'fibo' || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'expandir' || word === 'simplificar' || word === 'união' || word === 'intersecção' || word === 'menos' || word === 'subconjuntos' || word === 'paraLista' || word === 'paraConjunto' || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero' || word === 'inversa' || word === 'transposta' || word === 'determinante' || word === 'plotar' || word === 'tabela' || word === 'curva' || word === 'derivada' || word === 'resolver' || word === 'integral' || word === 'limites' || word === 'graus' || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio' || word === 'estatísticas' || word === 'estatisticas' || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo' || word === 'circulo' || word === 'texto' || word === 'intervalo' || word === 'log' || word === 'logn' || word === 'ln' || word === 'arredondar' || word === 'arred' || word === 'salvar' || word === 'carregar'   || word === 'ano' || word === 'mês' || word === 'mes' || word === 'dia' || word === 'hora' || word === 'data' || word === 'agora' || word === 'tempo' || word === 'MMC' || word === 'mmc' || word === 'MDC' || word === 'mdc' || word === 'bipe' || word === 'pausa' || word === 'som' || word === 'toca' || word === 'mensagem' || word === 'aguardeTecla' || word === 'captureTecla' || word === 'calculadora' || word === 'poligonos' || word === 'pegar' || word === 'colocar' || word === 'tartaruga' || word === 'anagramas' || word === 'palíndromo' || word === 'palindromo') && code[j4] === '(') tokens.push({ type: 'function', text: word });
       else tokens.push({ type: 'identifier', text: word });
       i = j4;
     } else {
@@ -9952,6 +10107,7 @@ var AC_ALL = (function () {
     ['simplificar', 'Álgebra', 'Simplifica uma expressão simbólica racional'],
     ['derivada', 'Álgebra', 'Derivada simbólica'],
     ['integral', 'Álgebra', 'Integral indefinida ou definida'],
+    ['limites', 'Álgebra', 'Limite de uma expressão quando a variável tende a um valor'],
     ['graus', 'Álgebra', 'Calcula expressão com trigonométricas em graus'],
     ['resolver', 'Álgebra', 'Resolve uma equação para a variável indicada'],
     ['plotar', 'Visualização', 'Abre o gráfico cartesiano de y em função de x'],
@@ -10092,6 +10248,7 @@ var QUICK_REF = (function () {
   qr('simplificar', 'Função', 'Simplifica uma expressão simbólica racional', 'mostre simplificar((x**2 - 1)/(x - 1))');
   qr('derivada', 'Função', 'Derivada simbólica', 'mostre derivada(x ** 3 - x, x)');
   qr('integral', 'Função', 'Integral indefinida ou definida', 'mostre integral(2 * x, x)');
+  qr('limites', 'Função', 'Limite de uma expressão quando a variável tende a um valor', 'mostre limites(x, x->0)\nmostre limites(1/(x**2), x->0)\nmostre limites(x, x->oo)');
   qr('graus', 'Função', 'Calcula expressão com trigonométricas em graus', 'mostre graus(sen(90))');
   qr('resolver', 'Função', 'Resolve uma equação para a variável indicada', 'mostre resolver(2*x+4=0, x)');
   qr('plotar', 'Função', 'Abre o gráfico cartesiano de y em função de x', 'x := intervalo(0, 4)\ny := x ** 2\nplotar(y, x)');
@@ -10559,7 +10716,7 @@ var sugestoesList = document.getElementById('sugestoesList');
 var sugestoesSummary = document.getElementById('sugestoesSummary');
 
 var SUG_KEYWORDS = ['mostre', 'mostrar', 'limpe', 'leia', 'aguardeTecla', 'se', 'senão', 'senao', 'repita', 'enquanto', 'emJanela', 'para', 'cada', 'em', 'definir', 'função', 'funcao', 'retorne', 'retornar', 'e', 'ou', 'não', 'nao', 'verdadeiro', 'falso', 'true', 'false'];
-var SUG_FUNCS = ['selecionar', 'comprimento', 'captureTecla', 'absoluto', 'abs', 'fatorial', 'romanos', 'hex->dec', 'dec->hex', 'bin->dec', 'dec->bin', 'hex->bin', 'bin->hex', 'variáveis', 'variaveis', 'planilha', 'raizq', 'raizc', 'pi', 'média', 'primos', 'divisores', 'fibonacci', 'fibo', 'intervalo', 'inteiro', 'decimal', 'fração', 'expandir', 'simplificar', 'união', 'intersecção', 'menos', 'subconjuntos', 'paraLista', 'paraConjunto', 'paraTexto', 'paraNúmero', 'paraNumero', 'inversa', 'transposta', 'determinante', 'plotar', 'tabela', 'curva', 'derivada', 'resolver', 'integral', 'graus', 'cos', 'sen', 'tan', 'arcocos', 'arcosen', 'arcotan', 'aleatório', 'aleatorio', 'estatísticas', 'estatisticas', 'janela', 'ponto', 'linha', 'círculo', 'circulo', 'texto', 'log', 'logn', 'ln', 'arredondar', 'arred', 'salvar', 'carregar', 'mês', 'mes', 'dia', 'ano', 'hora', 'data', 'agora', 'tempo', 'MMC', 'mmc', 'MDC', 'mdc', 'bipe', 'pausa', 'som', 'toca', 'mensagem', 'calculadora', 'poligonos', 'tartaruga', 'pegar', 'colocar', 'anagramas', 'palíndromo', 'palindromo', 'euler', 'e', 'areaPoligono', 'áreaPoligono', 'areaPolígono', 'áreaPolígono'];
+var SUG_FUNCS = ['selecionar', 'comprimento', 'captureTecla', 'absoluto', 'abs', 'fatorial', 'romanos', 'hex->dec', 'dec->hex', 'bin->dec', 'dec->bin', 'hex->bin', 'bin->hex', 'variáveis', 'variaveis', 'planilha', 'raizq', 'raizc', 'pi', 'média', 'primos', 'divisores', 'fibonacci', 'fibo', 'intervalo', 'inteiro', 'decimal', 'fração', 'expandir', 'simplificar', 'união', 'intersecção', 'menos', 'subconjuntos', 'paraLista', 'paraConjunto', 'paraTexto', 'paraNúmero', 'paraNumero', 'inversa', 'transposta', 'determinante', 'plotar', 'tabela', 'curva', 'derivada', 'resolver', 'integral', 'limites', 'graus', 'cos', 'sen', 'tan', 'arcocos', 'arcosen', 'arcotan', 'aleatório', 'aleatorio', 'estatísticas', 'estatisticas', 'janela', 'ponto', 'linha', 'círculo', 'circulo', 'texto', 'log', 'logn', 'ln', 'arredondar', 'arred', 'salvar', 'carregar', 'mês', 'mes', 'dia', 'ano', 'hora', 'data', 'agora', 'tempo', 'MMC', 'mmc', 'MDC', 'mdc', 'bipe', 'pausa', 'som', 'toca', 'mensagem', 'calculadora', 'poligonos', 'tartaruga', 'pegar', 'colocar', 'anagramas', 'palíndromo', 'palindromo', 'euler', 'e', 'areaPoligono', 'áreaPoligono', 'areaPolígono', 'áreaPolígono'];
 
 function sugestoesMaskStrings(line) {
   var out = '';
