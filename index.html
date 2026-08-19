@@ -1269,7 +1269,12 @@
     height: 100%;
     display: block;
     background: #1a1a2e;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
   }
+  #tartarugaCanvas.turtle-grab { cursor: grab; }
+  #tartarugaCanvas.turtle-grab.dragging { cursor: grabbing; }
   .turtle-resizer {
     flex: 0 0 6px;
     cursor: col-resize;
@@ -3650,6 +3655,10 @@ para cada item em A:
         <span class="turtle-tool-label" id="turtleZoomLabel">100%</span>
         <button class="turtle-tool-btn" id="turtleZoomIn" title="Aumentar zoom">+</button>
         <button class="turtle-tool-btn" id="turtleZoomReset" title="Ajustar visualiza&ccedil;&atilde;o">&#8635;</button>
+        <span class="turtle-sep"></span>
+        <span class="turtle-tool-label">Ferramenta:</span>
+        <button class="turtle-tool-btn active" data-tool="desenho">Desenho</button>
+        <button class="turtle-tool-btn" data-tool="mao">M&atilde;o</button>
         <span class="turtle-sep"></span>
         <button class="turtle-tool-btn" id="turtleShowHide" title="Mostrar ou esconder a tartaruga">Ocultar</button>
         <button class="turtle-tool-btn" id="turtleReset" title="Resetar a tartaruga para o centro">Resetar</button>
@@ -14963,7 +14972,8 @@ var TURTLE = {
   path: [],
   running: false,
   zoom: 1,
-  panX: 0, panY: 0
+  panX: 0, panY: 0,
+  tool: 'desenho'
 };
 
 function turtleResetState() {
@@ -14976,6 +14986,8 @@ function turtleResetState() {
   TURTLE.path = [];
   TURTLE.zoom = 1;
   TURTLE.panX = 0; TURTLE.panY = 0;
+  TURTLE.tool = 'desenho';
+  turtleSetTool('desenho');
   turtleUpdateStatus();
   var hideBtn = document.getElementById('turtleShowHide');
   if (hideBtn) hideBtn.textContent = 'Ocultar';
@@ -15439,8 +15451,18 @@ document.getElementById('tartarugaCopy').addEventListener('click', function () {
   }
 });
 
-// Speed toolbar
+// Speed toolbar & tool buttons
+function turtleSetTool(tool) {
+  TURTLE.tool = tool;
+  var btns = document.querySelectorAll('#tartarugaOverlay .turtle-toolbar [data-tool]');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('active', btns[i].getAttribute('data-tool') === tool);
+  }
+  tartarugaCanvas.className = (tool === 'mao') ? 'turtle-grab' : '';
+}
 document.querySelector('.turtle-toolbar').addEventListener('click', function (e) {
+  var toolBtn = e.target.closest('[data-tool]');
+  if (toolBtn) { turtleSetTool(toolBtn.getAttribute('data-tool')); return; }
   var btn = e.target.closest('[data-speed]');
   if (btn) {
     var siblings = btn.parentElement.querySelectorAll('[data-speed]');
@@ -15472,10 +15494,14 @@ tartarugaCanvas.addEventListener('wheel', function (e) {
   turtleSetZoom(TURTLE.zoom * factor, mx, my);
 }, { passive: false });
 
-// Pan with middle mouse or Ctrl+drag on canvas
+// Pan with middle mouse, Ctrl+drag, or hand tool on canvas
 var turtlePanDrag = null;
 tartarugaCanvas.addEventListener('mousedown', function (e) {
-  if (e.button === 1 || (e.button === 0 && e.ctrlKey)) {
+  if (TURTLE.tool === 'mao' && e.button === 0) {
+    e.preventDefault();
+    turtlePanDrag = { sx: e.clientX, sy: e.clientY, px: TURTLE.panX, py: TURTLE.panY };
+    tartarugaCanvas.classList.add('dragging');
+  } else if (e.button === 1 || (e.button === 0 && e.ctrlKey)) {
     e.preventDefault();
     turtlePanDrag = { sx: e.clientX, sy: e.clientY, px: TURTLE.panX, py: TURTLE.panY };
     tartarugaCanvas.style.cursor = 'grabbing';
@@ -15483,7 +15509,6 @@ tartarugaCanvas.addEventListener('mousedown', function (e) {
 });
 window.addEventListener('mousemove', function (e) {
   if (!turtlePanDrag) return;
-  var rect = tartarugaCanvas.getBoundingClientRect();
   var dx = (e.clientX - turtlePanDrag.sx) / TURTLE.zoom;
   var dy = (e.clientY - turtlePanDrag.sy) / TURTLE.zoom;
   TURTLE.panX = turtlePanDrag.px + dx;
@@ -15493,7 +15518,8 @@ window.addEventListener('mousemove', function (e) {
 window.addEventListener('mouseup', function () {
   if (!turtlePanDrag) return;
   turtlePanDrag = null;
-  tartarugaCanvas.style.cursor = '';
+  tartarugaCanvas.classList.remove('dragging');
+  if (TURTLE.tool !== 'mao') tartarugaCanvas.style.cursor = '';
 });
 
 // Comandos panel
