@@ -12962,6 +12962,20 @@ calcGrid.addEventListener('click', function (e) {
   else if (k === 'pm') calcToggleSign();
   else if (k === '%') calcPercent();
 });
+document.addEventListener('keydown', function (e) {
+  if (!calculadoraWin.classList.contains('open')) return;
+  var key = e.key;
+  if (key >= '0' && key <= '9') { calcDigit(key); e.preventDefault(); }
+  else if (key === '.') { calcDigit('.'); e.preventDefault(); }
+  else if (key === '+') { calcOperator('+'); e.preventDefault(); }
+  else if (key === '-') { calcOperator('-'); e.preventDefault(); }
+  else if (key === '*') { calcOperator('*'); e.preventDefault(); }
+  else if (key === '/') { calcOperator('/'); e.preventDefault(); }
+  else if (key === 'Enter' || key === '=') { calcEquals(); e.preventDefault(); }
+  else if (key === 'Backspace') { calcBackspace(); e.preventDefault(); }
+  else if (key === 'Escape' || key === 'Delete') { calcReset(); e.preventDefault(); }
+  else if (key === '%') { calcPercent(); e.preventDefault(); }
+});
 var calcDrag = null;
 document.getElementById('calcHead').addEventListener('mousedown', function (e) {
   if (e.target.closest('.calc-close')) return;
