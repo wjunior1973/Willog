@@ -13058,6 +13058,7 @@ function calcApply(a, op, b) {
   return b;
 }
 function calcDigit(d) {
+  if (d === ',') d = '.';
   if (calcState.cur === 'Erro') calcReset();
   if (calcState.fresh) { calcState.cur = d; calcState.fresh = false; }
   else if (d === '.') {
@@ -13132,7 +13133,7 @@ document.addEventListener('keydown', function (e) {
   if (!calculadoraWin.classList.contains('open')) return;
   var key = e.key;
   if (key >= '0' && key <= '9') { calcDigit(key); e.preventDefault(); }
-  else if (key === '.') { calcDigit('.'); e.preventDefault(); }
+  else if (key === '.' || key === ',') { calcDigit(key); e.preventDefault(); }
   else if (key === '+') { calcOperator('+'); e.preventDefault(); }
   else if (key === '-') { calcOperator('-'); e.preventDefault(); }
   else if (key === '*') { calcOperator('*'); e.preventDefault(); }
