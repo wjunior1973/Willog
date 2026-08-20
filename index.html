@@ -3506,6 +3506,7 @@ para cada item em A:
         <button class="planilha-chart-btn" id="planilhaLineBtn" type="button" title="Gráfico de linhas">&#9654; Linhas</button>
         <button class="planilha-chart-btn" id="planilhaBarBtn" type="button" title="Gráfico de barras">&#9612; Barras</button>
         <button class="planilha-chart-btn" id="planilhaDotBtn" type="button" title="Gráfico de pontos">&#9679; Pontos</button>
+        <button class="planilha-chart-btn" id="planilhaPieBtn" type="button" title="Gráfico de pizza">&#9673; Pizza</button>
       </div>
       <div class="plot-controls">
         <button class="plot-win-btn" id="planilhaMinimize" title="Minimizar" aria-label="Minimizar">
@@ -12717,6 +12718,105 @@ function openColpick(title, onConfirm) {
   document.getElementById('colpickCancel').onclick = function () { colpickOverlay.classList.remove('open'); };
 }
 
+function openColpickPie(title, onConfirm) {
+  colpickTitle.textContent = title;
+  colpickCols.innerHTML = '';
+  var st = planilhaState;
+  if (!st.cellsData || !st.rows) { alert('Abra uma planilha primeiro.'); return; }
+
+  var styleInput = 'width:100%; padding:5px 8px; background:#1e1e1e; color:#c8c8c8; border:1px solid #4a4a4a; border-radius:4px; font-size:12px; font-family:Consolas,monospace; outline:none;';
+  var styleHint = 'font-size:11px; color:#777; margin-top:3px;';
+
+  var lblLabels = document.createElement('label');
+  lblLabels.style.cssText = 'display:block; margin-bottom:6px; font-size:12px; color:#999;';
+  lblLabels.textContent = 'Coluna de rótulos:';
+  colpickCols.appendChild(lblLabels);
+
+  var selLabels = document.createElement('select');
+  selLabels.id = 'colpickPieLabels';
+  selLabels.style.cssText = 'width:100%; padding:4px; background:#1e1e1e; color:#c8c8c8; border:1px solid #4a4a4a; border-radius:4px; font-size:12px;';
+  var optAuto = document.createElement('option');
+  optAuto.value = '__auto__'; optAuto.textContent = 'Auto (1, 2, 3...)';
+  selLabels.appendChild(optAuto);
+  for (var ci = 0; ci < st.cols; ci++) {
+    var o = document.createElement('option');
+    o.value = ci; o.textContent = 'Coluna ' + planilhaColLetter(ci);
+    selLabels.appendChild(o);
+  }
+  colpickCols.appendChild(selLabels);
+
+  var hintLabels = document.createElement('div');
+  hintLabels.style.cssText = styleHint;
+  hintLabels.textContent = 'Coluna cujos valores serão usados como rótulos das fatias.';
+  colpickCols.appendChild(hintLabels);
+
+  var sep1 = document.createElement('div');
+  sep1.style.cssText = 'border-top:1px solid #3c3c3c; margin:10px 0 12px;';
+  colpickCols.appendChild(sep1);
+
+  var lblValues = document.createElement('label');
+  lblValues.style.cssText = 'display:block; margin-bottom:6px; font-size:12px; color:#999;';
+  lblValues.textContent = 'Coluna de valores (uma única coluna):';
+  colpickCols.appendChild(lblValues);
+
+  var valRadios = [];
+  for (var ci = 0; ci < st.cols; ci++) {
+    var row = document.createElement('div');
+    row.className = 'colpick-row';
+    var rdo = document.createElement('input');
+    rdo.type = 'radio'; rdo.name = 'colpickPieVal'; rdo.checked = (ci === 0);
+    rdo.id = 'colpickPieVal' + ci;
+    rdo.value = ci;
+    var lbl = document.createElement('label');
+    lbl.htmlFor = rdo.id;
+    lbl.textContent = 'Coluna ' + planilhaColLetter(ci);
+    var dot = document.createElement('span');
+    dot.className = 'colpick-preview';
+    dot.style.background = chartPalette[ci % chartPalette.length];
+    row.appendChild(rdo);
+    row.appendChild(lbl);
+    row.appendChild(dot);
+    colpickCols.appendChild(row);
+    valRadios.push(rdo);
+  }
+
+  var sep2 = document.createElement('div');
+  sep2.style.cssText = 'border-top:1px solid #3c3c3c; margin:10px 0 8px;';
+  colpickCols.appendChild(sep2);
+
+  var lblRows = document.createElement('label');
+  lblRows.style.cssText = 'display:block; margin-bottom:6px; font-size:12px; color:#999;';
+  lblRows.textContent = 'Intervalo de linhas (opcional):';
+  colpickCols.appendChild(lblRows);
+  var inputRows = document.createElement('input');
+  inputRows.id = 'colpickPieRows';
+  inputRows.placeholder = 'Ex: 1-10  ou  1,3,5,7-12';
+  inputRows.style.cssText = styleInput;
+  colpickCols.appendChild(inputRows);
+
+  colpickOverlay.classList.add('open');
+
+  document.getElementById('colpickOk').onclick = function () {
+    colpickOverlay.classList.remove('open');
+
+    var labelCol = selLabels.value;
+    var valueCol = -1;
+    for (var ci = 0; ci < valRadios.length; ci++) {
+      if (valRadios[ci].checked) { valueCol = ci; break; }
+    }
+    if (valueCol === -1) { alert('Selecione uma coluna de valores.'); return; }
+
+    var rowFilter = null;
+    var typedRows = inputRows.value.trim();
+    if (typedRows) {
+      rowFilter = colpickParseRanges(typedRows, st.rows);
+    }
+
+    if (typeof onConfirm === 'function') onConfirm(labelCol, valueCol, rowFilter);
+  };
+  document.getElementById('colpickCancel').onclick = function () { colpickOverlay.classList.remove('open'); };
+}
+
 function getColCellVal(rowIdx, colIdx) {
   var st = planilhaState;
   var raw = '';
@@ -12799,6 +12899,68 @@ function openChartWin(title, type, xVals, yColsData, yLabels) {
     ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
 
     var pad = { top: 20, right: 20, bottom: 40, left: 56 };
+
+    if (type === 'pie') {
+      var data = yColsData[0];
+      var total = 0;
+      for (var i = 0; i < data.length; i++) total += data[i];
+      if (total === 0) return;
+
+      var cx = W / 2, cy = H / 2 + 10;
+      var radius = Math.min(W, H) * 0.35;
+      if (radius < 10) return;
+
+      ctx.font = '11px system-ui, sans-serif';
+      var startAngle = -Math.PI / 2;
+
+      for (var i = 0; i < data.length; i++) {
+        var sliceAngle = (data[i] / total) * Math.PI * 2;
+        var endAngle = startAngle + sliceAngle;
+        var col = chartPalette[i % chartPalette.length];
+
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = bg; ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.stroke();
+
+        if (sliceAngle > 0.12) {
+          var midAngle = startAngle + sliceAngle / 2;
+          var pct = (data[i] / total * 100);
+          var pctText = pct >= 10 ? pct.toFixed(0) + '%' : pct.toFixed(1) + '%';
+          var lx = cx + Math.cos(midAngle) * radius * 0.65;
+          var ly = cy + Math.sin(midAngle) * radius * 0.65;
+          ctx.fillStyle = '#fff';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(pctText, lx, ly);
+        }
+
+        startAngle = endAngle;
+      }
+
+      var legY = 12;
+      var legX = pad.left + 4;
+      for (var i = 0; i < Math.min(data.length, 20); i++) {
+        var col = chartPalette[i % chartPalette.length];
+        ctx.fillStyle = col;
+        ctx.fillRect(legX, legY + i * 16, 8, 8);
+        ctx.fillStyle = fg; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        var pctVal = (data[i] / total * 100).toFixed(1) + '%';
+        var legText = xVals[i] + ' — ' + pctVal;
+        if (legText.length > 30) legText = legText.substring(0, 28) + '…';
+        ctx.fillText(legText, legX + 12, legY + i * 16 + 4);
+      }
+      return;
+    }
+
     var cw = W - pad.left - pad.right;
     var ch = H - pad.top - pad.bottom;
 
@@ -12974,9 +13136,44 @@ function openChartWin(title, type, xVals, yColsData, yLabels) {
   });
 }
 
+function planilhaGerarPizza() {
+  var st = planilhaState;
+  openColpickPie('Gráfico de pizza — Selecionar colunas', function (labelCol, valueCol, rowFilter) {
+    var usedRows = rowFilter || getUsedRows([valueCol]);
+    if (usedRows.length === 0) { alert('Nenhum dado encontrado na coluna selecionada.'); return; }
+
+    var labels = [];
+    var values = [];
+    for (var i = 0; i < usedRows.length; i++) {
+      var raw = getColCellVal(usedRows[i], valueCol);
+      var v = parseFloat(String(raw).replace(',', '.'));
+      if (isNaN(v) || v <= 0) continue;
+      var lbl;
+      if (labelCol === '__auto__') {
+        lbl = String(i + 1);
+      } else {
+        lbl = getColCellVal(usedRows[i], parseInt(labelCol));
+        if (lbl === '' || lbl === null || lbl === undefined) lbl = String(i + 1);
+      }
+      labels.push(lbl);
+      values.push(v);
+    }
+
+    if (values.length === 0) { alert('Nenhum dado numérico positivo encontrado.'); return; }
+
+    var yColsData = [values];
+    var yLabels = ['Coluna ' + planilhaColLetter(valueCol)];
+    var xVals = [];
+    for (var i = 0; i < labels.length; i++) xVals.push(labels[i]);
+    var title = 'Gráfico de pizza — ' + yLabels.join(', ');
+    openChartWin(title, 'pie', xVals, yColsData, yLabels);
+  });
+}
+
 function planilhaGerarGrafico(type) {
   var st = planilhaState;
   if (!st.cellsData || !st.rows || !st.cols) { alert('Abra uma planilha primeiro.'); return; }
+  if (type === 'pie') { planilhaGerarPizza(); return; }
   var typeNames = { line: 'Gráfico de linhas', bar: 'Gráfico de barras', scatter: 'Gráfico de pontos' };
   openColpick(typeNames[type] + ' — Selecionar colunas', function (xCol, yCols, xRowIndices) {
     var isColX = xCol !== '__rownum__';
@@ -13031,6 +13228,7 @@ function planilhaGerarGrafico(type) {
 document.getElementById('planilhaLineBtn').addEventListener('click', function () { planilhaGerarGrafico('line'); });
 document.getElementById('planilhaBarBtn').addEventListener('click', function () { planilhaGerarGrafico('bar'); });
 document.getElementById('planilhaDotBtn').addEventListener('click', function () { planilhaGerarGrafico('scatter'); });
+document.getElementById('planilhaPieBtn').addEventListener('click', function () { planilhaGerarGrafico('pie'); });
 
 var calculadoraWin = document.getElementById('calculadoraWin');
 var calcDisplay = document.getElementById('calcDisplay');
