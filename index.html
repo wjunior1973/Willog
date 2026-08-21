@@ -1486,7 +1486,7 @@
 
       <div class="manual-item">
         <span class="mi-name">emJanela:</span>
-        <span class="mi-desc">Executa o bloco indentado a seguir em uma janela ao inv&eacute;s do console. Toda a sa&iacute;da (mostre, vari&aacute;veis, erros) vai para a janela. A janela pode ser <b>minimizada</b> (s&oacute; a barra de t&iacute;tulo) ou <b>maximizada</b> (tela inteira) com os bot&otilde;es da barra de t&iacute;tulo, e permanece aberta ap&oacute;s o fim do programa at&eacute; ser fechada.</span>
+        <span class="mi-desc">Executa o bloco indentado a seguir em uma janela ao inv&eacute;s do console. Toda a sa&iacute;da (mostre, vari&aacute;veis, erros) vai para a janela. A janela abre sempre <b>maximizada</b> (tela inteira) e pode ser <b>minimizada</b> (s&oacute; a barra de t&iacute;tulo) ou <b>restaurada</b> com os bot&otilde;es da barra de t&iacute;tulo, permanecendo aberta ap&oacute;s o fim do programa at&eacute; ser fechada.</span>
         <div class="mi-example">
           <pre class="manual-pre">emJanela:
   mostre "Olá do janela!"
@@ -5741,7 +5741,7 @@ var AC_ALL = (function () {
   add('senão', 'senão:', false, 'Controle', 'Executa um bloco quando a condição do se é falsa');
   add('enquanto', 'enquanto ', false, 'Controle', 'Repete enquanto a condição for verdadeira');
   add('selecionar opção', 'selecionar opção:', false, 'Controle', 'Abre uma janela com um menu de opções executáveis pelo teclado');
-  add('emJanela', 'emJanela:', false, 'Janela', 'Executa o bloco indentado em uma janela ao invés do console');
+  add('emJanela', 'emJanela:', false, 'Janela', 'Executa o bloco indentado em uma janela maximizada ao invés do console');
   add('emJanela()', 'emJanela():', false, 'Janela', 'Como emJanela:, mas abre a janela maximizada e com as saídas centralizadas');
   add('repita', 'repita()', true, 'Controle', 'Repete o bloco um número fixo de vezes');
   add('para cada', 'para cada ', false, 'Controle', 'Percorre os itens de uma coleção');
@@ -5848,7 +5848,7 @@ var QUICK_REF = (function () {
   qr('enquanto', 'Comando', 'Repete enquanto a condição for verdadeira', 'n = 5\nenquanto n > 0:\n  mostre n\n  n = n - 1');
   qr('repita', 'Comando', 'Repete o bloco um número fixo de vezes', 'repita(4):\n  mostre "batida"');
   qr('selecionar opção', 'Comando', 'Abre uma janela com um menu de opções executáveis pelo teclado', 'selecionar opção:\n  <1> "Mostrar mensagem":\n    mostre "Opção 1"\n  <2> "Calcular quadrado":\n    mostre 5**2\n  <3> "Contar até 3":\n    para x em (1,3):\n      mostre x');
-  qr('emJanela', 'Comando', 'Executa o bloco indentado em uma janela ao invés do console', 'emJanela:\n  mostre "Olá do janela!"\n  x = 5\n  mostre x + 1');
+  qr('emJanela', 'Comando', 'Executa o bloco indentado em uma janela maximizada ao invés do console', 'emJanela:\n  mostre "Olá do janela!"\n  x = 5\n  mostre x + 1');
   qr('emJanela()', 'Comando', 'Igual ao emJanela:, mas abre a janela maximizada e com as saídas centralizadas', 'emJanela():\n  mostre "Olá centralizado!"\n  x = 5\n  mostre x + 1');
   qr('para cada', 'Comando', 'Percorre os itens de uma coleção', 'frutas = ["maçã", "banana", "uva"]\npara cada fruta em frutas:\n  mostre fruta');
   qr('pare', 'Comando', 'Interrompe imediatamente o laço atual', 'n = 1\nenquanto verdadeiro:\n  mostre n\n  n = n + 1\n  se n > 3:\n    pare');
@@ -6721,7 +6721,7 @@ function comentarComando(text) {
     return 'Comando "emJanela()": igual ao comando "emJanela", mas a janela abre sempre maximizada (tela inteira) e exibe todas as saídas centralizadas.';
   }
   if (isEmJanela(t)) {
-    return 'Comando "emJanela": executa o bloco indentado a seguir em uma janela ao invés do console. A janela pode ser minimizada ou maximizada pelos botões da barra de título.';
+    return 'Comando "emJanela": executa o bloco indentado a seguir em uma janela ao invés do console. A janela abre sempre maximizada (tela inteira) e pode ser minimizada ou restaurada pelos botões da barra de título.';
   }
   if (/^aguarde\s*tecla\s*\(/i.test(t)) {
     return 'Comando "aguardeTecla": pausa o programa, mostra "Aguardando tecla!" e continua quando o usuário pressionar a tecla indicada entre aspas (ex.: aguardeTecla("Z"), sem diferenciar maiúscula/minúscula). Sem argumentos, aguarda qualquer tecla.';
@@ -7578,15 +7578,6 @@ function emJanelaAdd(rec, isFinal) {
 function openEmJanela(title, centered) {
   document.getElementById('emJanelaTitle').textContent = title;
   emJanelaOutput.classList.toggle('centered', !!centered);
-  if (emJanelaModal) {
-    emJanelaModal.classList.toggle('emjanela-maximized', !!centered);
-    if (emJanelaMaxIcon) {
-      emJanelaMaxIcon.innerHTML = centered
-        ? '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
-          '<rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>'
-        : '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
-    }
-  }
   wmOpen('emJanelaOverlay');
   emJanelaClearOutput();
 }
@@ -9117,7 +9108,8 @@ var _wmMaxMap = {
   interpretadorOverlay:'interp-maximized',
   sugestoesOverlay:'sugestoes-maximized', comentadoOverlay:'comentado-maximized',
   graficoOverlay:'grafico-maximized',
-  fluxoOverlay:'fluxo-maximized', janelaOverlay:'janela-maximized'
+  fluxoOverlay:'fluxo-maximized', janelaOverlay:'janela-maximized',
+  emJanelaOverlay:'emjanela-maximized'
 };
 function wmOpen(overlayId) {
   var el = document.getElementById(overlayId);
@@ -9132,7 +9124,7 @@ function wmOpen(overlayId) {
     var md = el.querySelector('.modal');
     if (md && !md.classList.contains(_wmMaxMap[overlayId])) {
       md.classList.add(_wmMaxMap[overlayId]);
-      var svg = md.querySelector('.plot-win-btn svg');
+      var svg = md.querySelector('svg[id$="MaxIcon"]');
       if (svg) svg.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
     }
   }
