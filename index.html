@@ -498,62 +498,6 @@
   .manual-table tr:nth-child(even) td { background: #262626; }
   .manual-table tr:hover td { background: #2c2c2c; }
 
-  /* ===== Janela de gráfico (plotar) ===== */
-  .plot-body { padding: 14px 16px; display: flex; flex-direction: column; align-items: stretch; gap: 10px; overflow: auto; min-height: 0; flex: 1 1 auto; }
-  .plot-canvas {
-    background: #fff;
-    border: 1px solid #3c3c3c;
-    border-radius: 6px;
-    width: 100%;
-    flex: 1 1 auto;
-    min-height: 0;
-    display: block;
-    cursor: grab;
-    touch-action: none;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  .plot-canvas.dragging { cursor: grabbing; }
-  .plot-info { font-size: 12.5px; color: #c8c8c8; flex: 0 0 auto; text-align: center; }
-  .plot-area { position: relative; flex: 1 1 auto; min-height: 0; min-width: 0; }
-  .plot-area .plot-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-  .plot-table-wrap {
-    position: absolute; left: 60px; top: 26px;
-    max-width: 250px; max-height: calc(100% - 16px); overflow: auto;
-    border: 1px solid #3c3c3c; border-radius: 6px;
-    background: rgba(30, 30, 30, 0.92);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
-    cursor: grab; user-select: none; -webkit-user-select: none;
-  }
-  .plot-table-wrap.dragging { cursor: grabbing; }
-  .plot-tooltip {
-    position: absolute;
-    display: none;
-    padding: 4px 9px;
-    border: 1px solid #3c3c3c;
-    border-radius: 5px;
-    background: rgba(45, 45, 45, 0.95);
-    color: #ffffff;
-    font-family: Consolas, monospace;
-    font-size: 12px;
-    white-space: nowrap;
-    pointer-events: none;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-  }
-  body.light .plot-tooltip { background: rgba(255, 255, 255, 0.96); border-color: #c8c8c8; color: #111; }
-  .plot-table { border-collapse: collapse; width: 100%; font-family: Consolas, monospace; font-size: 12px; color: #d8d8d8; }
-  .plot-table th, .plot-table td { padding: 3px 14px; text-align: center; white-space: nowrap; border-bottom: 1px solid #333; }
-  .plot-table th { position: sticky; top: 0; background: #2d2d2d; color: #ffffff; font-weight: 600; z-index: 1; }
-  .plot-table tr:last-child td { border-bottom: none; }
-  body.light .plot-table-wrap { background: rgba(255, 255, 255, 0.95); border-color: #d8d8d8; }
-  body.light .plot-table { color: #333; }
-  body.light .plot-table th { background: #f0f0f0; color: #111; }
-  body.light .plot-table th, body.light .plot-table td { border-bottom-color: #e0e0e0; }
-  .plot-zoombar {
-    display: flex; align-items: center; gap: 6px; flex: 0 0 auto;
-    justify-content: center; padding: 4px 0 2px;
-  }
   .plot-zoom-btn {
     background: #2d2d2d; border: 1px solid #4a4a4a; color: #e0e0e0;
     width: 26px; height: 24px; line-height: 1; font-size: 16px; cursor: pointer;
@@ -583,7 +527,6 @@
   #quickRefMinimize:hover { color: #ffb74d; }
   #quickRefMaximize:hover { color: #81c784; }
 
-  #plotOverlay .modal { width: 864px; height: 86vh; }
   .plot-controls { display: flex; align-items: center; gap: 4px; }
   .zoom-controls { display: inline-flex; align-items: center; gap: 2px; margin-right: 6px; }
   .zoom-controls .plot-zoom-btn { width: 22px; height: 22px; font-size: 14px; }
@@ -594,15 +537,6 @@
   }
   .plot-win-btn svg { width: 13px; height: 13px; fill: currentColor; display: block; }
   .plot-win-btn:hover { color: #4fc3f7; background: #333; border-radius: 4px; }
-  #plotMinimize:hover { color: #ffb74d; }
-  #plotMaximize:hover { color: #81c784; }
-  #plotOverlay .modal.plot-maximized {
-    width: 100vw; max-width: none; max-height: none; height: 100vh;
-    border-radius: 0; border: none;
-  }
-  #plotOverlay .modal.plot-mini { height: auto; }
-  #plotOverlay .modal.plot-mini .plot-body { display: none; }
-  body.light .plot-canvas { border-color: #d8d8d8; }
   body.light .plot-win-btn { color: #666; }
   body.light .plot-win-btn:hover { background: #e6e6e6; }
 
@@ -687,6 +621,7 @@
   }
   .emjanela-body { flex: 1; display: flex; flex-direction: column; min-height: 0; padding: 0; overflow: hidden; }
   .emjanela-output { flex: 1; min-height: 0; font-size: var(--w-font); line-height: var(--w-lh); }
+  #emJanelaOutput.centered { text-align: center; }
 
   /* ===== Janela (janela) – max/min ===== */
   #janelaOverlay .modal.janela-maximized {
@@ -1525,7 +1460,7 @@
       <div class="mi-section"><span class="ms-icon">&#187;</span><h4>Sa&iacute;da e Console</h4></div>
 
       <div class="manual-item">
-        <span class="mi-name">mostre | mostrar &lt;express&atilde;o&gt;</span>
+        <span class="mi-name">mostre &lt;express&atilde;o&gt;</span>
         <span class="mi-desc">Exibe o valor de uma express&atilde;o (n&uacute;meros, textos, listas, vari&aacute;veis e c&aacute;lculos).</span>
         <div class="mi-example">
           <span class="mi-row"><span>mostre 2 + 3</span><span class="mi-arrow">&rarr;</span><span class="ex">5</span></span>
@@ -1558,6 +1493,18 @@
   x = 5
   mostre x + 1</pre>
           <span class="mi-row"><span>Executar</span><span class="mi-arrow">&rarr;</span><span class="ex">abre a janela com "Olá do janela!" e "6"; o console principal permanece vazio</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">emJanela():</span>
+        <span class="mi-desc">O mesmo que <b>emJanela:</b>, por&eacute;m a janela abre sempre <b>maximizada</b> (tela inteira) e todas as sa&iacute;das s&atilde;o exibidas <b>centralizadas</b>.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">emJanela():
+  mostre "Olá centralizado!"
+  x = 5
+  mostre x + 1</pre>
+          <span class="mi-row"><span>Executar</span><span class="mi-arrow">&rarr;</span><span class="ex">abre a janela com as linhas "Ol&aacute; centralizado!" e "6" centralizadas horizontalmente</span></span>
         </div>
       </div>
 
@@ -1722,6 +1669,17 @@ mostre mensagem</pre>
       </div>
 
       <div class="manual-item">
+        <span class="mi-name">definir fun&ccedil;&atilde;o &lt;nome&gt;(&lt;par&acirc;metros&gt;):</span>
+        <span class="mi-desc">Define uma nova fun&ccedil;&atilde;o. O bloco indentado &eacute; o corpo da fun&ccedil;&atilde;o; <code>retorne</code> (ou <code>retornar</code>) devolve um ou mais valores, separados por v&iacute;rgula.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">definir função quadrado(n):
+  retorne n * n
+mostre quadrado(7)</pre>
+          <span class="mi-row"><span>mostre quadrado(7)</span><span class="mi-arrow">&rarr;</span><span class="ex">49</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
         <span class="mi-name">selecionar op&ccedil;&atilde;o:</span>
         <span class="mi-desc">Abre uma janela com um menu de op&ccedil;&otilde;es. O programa pausa at&eacute; a janela ser fechada; pressione a tecla da op&ccedil;&atilde;o (n&uacute;mero ou letra) para executar o bloco correspondente na janela. Cada op&ccedil;&atilde;o &eacute; escrita como <code>&lt;chave&gt; "t&iacute;tulo":</code> seguida do bloco indentado.</span>
         <div class="mi-example">
@@ -1742,6 +1700,20 @@ mostre mensagem</pre>
 pausa(2)
 mostre "já se passaram 2 segundos"</pre>
           <span class="mi-row"><span>pausa(0.5)</span><span class="mi-arrow">&rarr;</span><span class="ex">pausa de meio segundo</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">regressiva(s)</span>
+        <span class="mi-desc">Inicia uma contagem regressiva de <b>s</b> segundos sem parar o programa: a execu&ccedil;&atilde;o segue imediatamente em paralelo &agrave; contagem. O bloco indentado ap&oacute;s os dois-pontos &eacute; executado quando a contagem termina (&uacute;til para cronometragem em jogos). Diferente do comando <b>pausa</b>, que congela o programa. O valor pode ser inteiro ou fracionado.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">mostre "o jogo começou!"
+regressiva(30):
+  mostre "tempo esgotado!"
+mostre "seguindo o jogo enquanto o tempo corre..."
+pausa(2)
+mostre "passaram 2 segundos"</pre>
+          <span class="mi-row"><span>regressiva(10):</span><span class="mi-arrow">&rarr;</span><span class="ex">mostra a mensagem quando os 10 s terminam, mas o programa n&atilde;o para de rodar durante a contagem</span></span>
         </div>
       </div>
 
@@ -1783,6 +1755,17 @@ senão:
         <span class="mi-desc"><code>e</code> (e), <code>ou</code> (ou), <code>n&atilde;o</code> (n&atilde;o) e os valores <code>verdadeiro</code> / <code>falso</code>.</span>
         <div class="mi-example">
           <span class="mi-row"><span>mostre verdadeiro e falso</span><span class="mi-arrow">&rarr;</span><span class="ex">falso</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">existe &lt;valor&gt; em &lt;texto ou lista&gt;</span>
+        <span class="mi-desc">Devolve <code>verdadeiro</code> se o valor existir dentro do texto ou da lista; caso contr&aacute;rio, <code>falso</code>. Em textos, busca o trecho inteiro.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre existe "ba" em "banana"</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          <span class="mi-row"><span>mostre existe "ca" em "escola"</span><span class="mi-arrow">&rarr;</span><span class="ex">falso</span></span>
+          <span class="mi-row"><span>mostre existe 2 em [1,2,3,4,5]</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          <span class="mi-row"><span>mostre existe "Bruna" em ["Ana","Bruna","Carla"]</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
         </div>
       </div>
 
@@ -1855,6 +1838,32 @@ para cada numero em lista:
         </div>
       </div>
 
+      <div class="manual-item">
+        <span class="mi-name">pare</span>
+        <span class="mi-desc">Interrompe imediatamente o la&ccedil;o atual (enquanto, repita ou para). O programa continua na primeira linha ap&oacute;s o la&ccedil;o.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">n = 1
+enquanto verdadeiro:
+    mostre n
+    n = n + 1
+    se n &gt; 3:
+        pare</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">continue</span>
+        <span class="mi-desc">Abandona a itera&ccedil;&atilde;o atual do la&ccedil;o e pula direto para a pr&oacute;xima repeti&ccedil;&atilde;o.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">para n em intervalo(1, 6):
+    se n == 3:
+        continue
+    mostre n</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,4,5,6</span></span>
+        </div>
+      </div>
+
     </div>
     <div class="manual-panel" id="panel-operadores">
 
@@ -1879,6 +1888,16 @@ para cada numero em lista:
           <span class="mi-row"><span>3 \ 2</span><span class="mi-arrow">&rarr;</span><span class="ex">0.5</span></span>
           <span class="mi-row"><span>10 // 3</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
           <span class="mi-row"><span>10 \ 3</span><span class="mi-arrow">&rarr;</span><span class="ex">0.3333333333333333</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">texto * n</span>
+        <span class="mi-desc">Repete um texto n vezes (n inteiro). Funciona com o texto de qualquer lado do asterisco.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>"abc" * 2</span><span class="mi-arrow">&rarr;</span><span class="ex">abcabc</span></span>
+          <span class="mi-row"><span>"123" * 3</span><span class="mi-arrow">&rarr;</span><span class="ex">123123123</span></span>
+          <span class="mi-row"><span>3 * "ab"</span><span class="mi-arrow">&rarr;</span><span class="ex">ababab</span></span>
         </div>
       </div>
 
@@ -2001,6 +2020,50 @@ para cada numero em lista:
       </div>
 
       <div class="manual-item">
+        <span class="mi-name">lista.m&iacute;nimo / lista.m&aacute;ximo</span>
+        <span class="mi-desc">Retorna o menor (m&iacute;nimo) ou o maior (m&aacute;ximo) valor num&eacute;rico da lista.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">lista = [-2, -1, 0, 1, 2]
+mostre lista.m&iacute;nimo
+mostre lista.m&aacute;ximo</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">-2</span></span>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">t.invertida</span>
+        <span class="mi-desc">Retorna a lista ou o texto com a ordem dos itens invertida. N&atilde;o se aplica a n&uacute;meros puros.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre [1,2,3,4].invertida</span><span class="mi-arrow">&rarr;</span><span class="ex">4,3,2,1</span></span>
+          <span class="mi-row"><span>mostre "banana".invertida</span><span class="mi-arrow">&rarr;</span><span class="ex">ananab</span></span>
+          <span class="mi-row"><span>mostre "6789".invertida</span><span class="mi-arrow">&rarr;</span><span class="ex">9876</span></span>
+          <span class="mi-row"><span>a = "10987"</span></span>
+          <span class="mi-row"><span>mostre a.invertida</span><span class="mi-arrow">&rarr;</span><span class="ex">78901</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">t.contar</span>
+        <span class="mi-desc">Retorna a quantidade de itens de uma lista ou de caracteres de um texto. N&atilde;o se aplica a n&uacute;meros puros (para isso, use comprimento(n)).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "escola".contar</span><span class="mi-arrow">&rarr;</span><span class="ex">6</span></span>
+          <span class="mi-row"><span>mostre [1,2,3,4,5,6,7,8].contar</span><span class="mi-arrow">&rarr;</span><span class="ex">8</span></span>
+          <span class="mi-row"><span>mostre ["Ana","Ben&iacute;cio","Carlos"].contar</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">t.contarItem(valor)</span>
+        <span class="mi-desc">Retorna quantas vezes o valor aparece na lista ou no texto. N&atilde;o se aplica a n&uacute;meros puros.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "banana".contarItem("a")</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
+          <span class="mi-row"><span>mostre [1,2,1,2,3,1,2,3,4,1,2,3,4,5].contarItem(2)</span><span class="mi-arrow">&rarr;</span><span class="ex">4</span></span>
+          <span class="mi-row"><span>mostre ["a","b","c","a","a","a","b","a"].contarItem("b")</span><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
         <span class="mi-name">lista.adicionar(valor1, valor2, ...)</span>
         <span class="mi-desc">Adiciona um ou mais valores ao final da lista (modifica a pr&oacute;pria lista).</span>
         <div class="mi-example">
@@ -2012,7 +2075,7 @@ para cada numero em lista:
 
       <div class="manual-item">
         <span class="mi-name">lista.aleat&oacute;rio</span>
-        <span class="mi-desc">Sorteia um item qualquer da lista (tamb&eacute;m aceito sem acento: <code>lista.aleatorio</code>).</span>
+        <span class="mi-desc">Sorteia um item qualquer da lista.</span>
         <div class="mi-example">
           <span class="mi-row"><span>lista = [1,2,3,4,5]</span></span>
           <span class="mi-row"><span>mostre lista.aleat&oacute;rio</span><span class="mi-arrow">&rarr;</span><span class="ex">um dos itens da lista, sorteado</span></span>
@@ -2117,6 +2180,16 @@ para cada numero em lista:
           <span class="mi-desc">N&uacute;mero aleat&oacute;rio inteiro entre min e max (inclusive).</span>
           <div class="mi-example"><span class="mi-row"><span>aleat&oacute;rio(1, 10)</span><span class="mi-arrow">&rarr;</span><span class="ex">um n&uacute;mero entre 1 e 10</span></span></div>
         </div>
+        <div class="manual-item">
+          <span class="mi-name">dado()</span>
+          <span class="mi-desc">Sorteia um n&uacute;mero aleat&oacute;rio inteiro de 1 a 6 (inclusive), como um dado de seis faces.</span>
+          <div class="mi-example"><span class="mi-row"><span>dado()</span><span class="mi-arrow">&rarr;</span><span class="ex">um n&uacute;mero entre 1 e 6</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">moeda()</span>
+          <span class="mi-desc">Sorteia aleatoriamente o texto <code>cara</code> ou <code>coroa</code>, como o lan&ccedil;amento de uma moeda.</span>
+          <div class="mi-example"><span class="mi-row"><span>moeda()</span><span class="mi-arrow">&rarr;</span><span class="ex">cara ou coroa</span></span></div>
+        </div>
       </div>
 
       <div class="mi-section"><span class="ms-icon">&#8736;</span><h4>Trigonometria</h4></div>
@@ -2182,65 +2255,102 @@ para cada numero em lista:
         </div>
       </div>
 
+      <div class="mi-section"><span class="ms-icon">&#8646;</span><h4>Texto</h4></div>
+
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">mai&uacute;sculo(t)</span>
+          <span class="mi-desc">Converte o texto para MAI&Uacute;SCULAS.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre mai&uacute;sculo("batata")</span><span class="mi-arrow">&rarr;</span><span class="ex">BATATA</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">min&uacute;sculo(t)</span>
+          <span class="mi-desc">Converte o texto para min&uacute;sculas.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre min&uacute;sculo("ESCOLA")</span><span class="mi-arrow">&rarr;</span><span class="ex">escola</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">substitua(t, busca, troca)</span>
+          <span class="mi-desc">Troca todas as ocorr&ecirc;ncias do trecho buscado pelo texto de troca.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre substitua("Ol&aacute;, mundo!", "Ol&aacute;", "Tchau")</span><span class="mi-arrow">&rarr;</span><span class="ex">Tchau, mundo!</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">divida(t, separador)</span>
+          <span class="mi-desc">Divide um texto em uma lista de partes, cortando em cada ocorr&ecirc;ncia do separador. Se receber um n&uacute;mero, devolve a lista dos seus algarismos.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre divida("a,b,c", ",")</span><span class="mi-arrow">&rarr;</span><span class="ex">a,b,c</span></span>
+            <span class="mi-row"><span>mostre divida(12345, ",")</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,5</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">junte(lista[, separador])</span>
+          <span class="mi-desc">Junta os elementos da lista em um &uacute;nico texto. Com separador, insere-o entre os elementos. &Eacute; o inverso de divida.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre junte([1,2,3,4,5])</span><span class="mi-arrow">&rarr;</span><span class="ex">12345</span></span>
+            <span class="mi-row"><span>mostre junte(["a","b","c"])</span><span class="mi-arrow">&rarr;</span><span class="ex">abc</span></span>
+            <span class="mi-row"><span>mostre junte([1,2,3], "-")</span><span class="mi-arrow">&rarr;</span><span class="ex">1-2-3</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">cont&eacute;m(t, valor)</span>
+          <span class="mi-desc">Verifica se um texto cont&eacute;m um trecho ou se uma lista cont&eacute;m um valor. Devolve verdadeiro ou falso.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre cont&eacute;m("escola", "esc")</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+            <span class="mi-row"><span>mostre cont&eacute;m("cidade", "cido")</span><span class="mi-arrow">&rarr;</span><span class="ex">falso</span></span>
+            <span class="mi-row"><span>mostre cont&eacute;m([1,2,3], 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">posi&ccedil;&atilde;o(t, valor)</span>
+          <span class="mi-desc">Devolve a posi&ccedil;&atilde;o (a partir de 0) da primeira ocorr&ecirc;ncia do valor em um texto, n&uacute;mero ou lista. Se n&atilde;o encontrar, devolve -1.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;o("escola", "o")</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;o("banana", "a")</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span>
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;o(12345654, 5)</span><span class="mi-arrow">&rarr;</span><span class="ex">4</span></span>
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;o([10,20,30], 20)</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">insira(t, posi&ccedil;&atilde;o, valor)</span>
+          <span class="mi-desc">Insere o valor depois do caractere (ou elemento) na posi&ccedil;&atilde;o informada, devolvendo um novo texto, n&uacute;mero ou lista.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre insira("banana", 3, "olo")</span><span class="mi-arrow">&rarr;</span><span class="ex">banaolona</span></span>
+            <span class="mi-row"><span>mostre insira("olho", 2, "ata")</span><span class="mi-arrow">&rarr;</span><span class="ex">olhatao</span></span>
+            <span class="mi-row"><span>mostre insira(1234567, 4, 9)</span><span class="mi-arrow">&rarr;</span><span class="ex">12345967</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">remova(t, posi&ccedil;&atilde;o)</span>
+          <span class="mi-desc">Remove o caractere (ou elemento) na posi&ccedil;&atilde;o informada, devolvendo um novo texto, n&uacute;mero ou lista.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre remova(12345, 3)</span><span class="mi-arrow">&rarr;</span><span class="ex">1235</span></span>
+            <span class="mi-row"><span>mostre remova("banana", 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">baana</span></span>
+            <span class="mi-row"><span>mostre remova([5,6,7,8,9], 4)</span><span class="mi-arrow">&rarr;</span><span class="ex">5,6,7,8</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">posi&ccedil;&atilde;oEm(t, posi&ccedil;&atilde;o)</span>
+          <span class="mi-desc">Devolve o caractere ou elemento que est&aacute; na posi&ccedil;&atilde;o informada (a contagem come&ccedil;a em 0). Em n&uacute;meros, devolve o algarismo como n&uacute;mero.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;oEm("banana", 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">n</span></span>
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;oEm(12444, 3)</span><span class="mi-arrow">&rarr;</span><span class="ex">4</span></span>
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;oEm([1,2,3,4,5,6,7], 4)</span><span class="mi-arrow">&rarr;</span><span class="ex">5</span></span>
+          </div>
+        </div>
+        </div>
+      </div>
+
       <div class="manual-item">
         <span class="mi-name">fatorial(n)</span>
         <span class="mi-desc">Calcula o fatorial de um n&uacute;mero inteiro n&atilde;o negativo (o operador p&oacute;s-fixo "!" tamb&eacute;m funciona).</span>
         <div class="mi-example">
           <span class="mi-row"><span>mostre fatorial(4)</span><span class="mi-arrow">&rarr;</span><span class="ex">24</span></span>
           <span class="mi-row"><span>mostre 4!</span><span class="mi-arrow">&rarr;</span><span class="ex">24</span></span>
-        </div>
-      </div>
-
-      <div class="mi-section"><span class="ms-icon">&#8682;</span><h4>Convers&atilde;o de Bases</h4></div>
-
-      <div class="fn-grid">
-        <div class="manual-item">
-          <span class="mi-name">hex-&gt;dec(texto)</span>
-          <span class="mi-desc">Converte um n&uacute;mero hexadecimal (texto, ex.: "FF") em decimal.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>mostre hex-&gt;dec("FF")</span><span class="mi-arrow">&rarr;</span><span class="ex">255</span></span>
-            <span class="mi-row"><span>mostre hex-&gt;dec("2A")</span><span class="mi-arrow">&rarr;</span><span class="ex">42</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">dec-&gt;hex(n)</span>
-          <span class="mi-desc">Converte um n&uacute;mero decimal em hexadecimal.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>mostre dec-&gt;hex(255)</span><span class="mi-arrow">&rarr;</span><span class="ex">FF</span></span>
-            <span class="mi-row"><span>mostre dec-&gt;hex(10)</span><span class="mi-arrow">&rarr;</span><span class="ex">A</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">bin-&gt;dec(texto)</span>
-          <span class="mi-desc">Converte um n&uacute;mero bin&aacute;rio (texto, ex.: "1010") em decimal.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>mostre bin-&gt;dec("1010")</span><span class="mi-arrow">&rarr;</span><span class="ex">10</span></span>
-            <span class="mi-row"><span>mostre bin-&gt;dec(1010)</span><span class="mi-arrow">&rarr;</span><span class="ex">10</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">dec-&gt;bin(n)</span>
-          <span class="mi-desc">Converte um n&uacute;mero decimal em bin&aacute;rio.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>mostre dec-&gt;bin(10)</span><span class="mi-arrow">&rarr;</span><span class="ex">1010</span></span>
-            <span class="mi-row"><span>mostre dec-&gt;bin(255)</span><span class="mi-arrow">&rarr;</span><span class="ex">11111111</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">hex-&gt;bin(texto)</span>
-          <span class="mi-desc">Converte um n&uacute;mero hexadecimal (texto, ex.: "FF") em bin&aacute;rio.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>mostre hex-&gt;bin("F")</span><span class="mi-arrow">&rarr;</span><span class="ex">1111</span></span>
-            <span class="mi-row"><span>mostre hex-&gt;bin("2A")</span><span class="mi-arrow">&rarr;</span><span class="ex">101010</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">bin-&gt;hex(texto)</span>
-          <span class="mi-desc">Converte um n&uacute;mero bin&aacute;rio (texto, ex.: "1010") em hexadecimal.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>mostre bin-&gt;hex("1111")</span><span class="mi-arrow">&rarr;</span><span class="ex">F</span></span>
-            <span class="mi-row"><span>mostre bin-&gt;hex("1010")</span><span class="mi-arrow">&rarr;</span><span class="ex">A</span></span>
-          </div>
         </div>
       </div>
 
@@ -2254,7 +2364,7 @@ para cada numero em lista:
         </div>
         <div class="manual-item">
           <span class="mi-name">m&ecirc;s()</span>
-          <span class="mi-desc">M&ecirc;s atual no formato mm (ex.: 08). Tamb&eacute;m aceito sem acento: <code>mes()</code>.</span>
+          <span class="mi-desc">M&ecirc;s atual no formato mm (ex.: 08).</span>
           <div class="mi-example"><span class="mi-row"><span>mostre m&ecirc;s()</span><span class="mi-arrow">&rarr;</span><span class="ex">08</span></span></div>
         </div>
         <div class="manual-item">
@@ -2312,10 +2422,18 @@ para cada numero em lista:
         </div>
         <div class="manual-item">
           <span class="mi-name">c&iacute;rculo(x, y, raio, cor da borda, cor de preenchimento)</span>
-          <span class="mi-desc">Desenha um c&iacute;rculo na janela aberta com o comando <b>janela</b>, sendo (x, y) as coordenadas do centro e <b>raio</b> a medida do raio em pixels. A cor da borda &eacute; a cor da linha da circunfer&ecirc;ncia (padr&atilde;o branco) e a cor de preenchimento pinta o interior (se omitida, o c&iacute;rculo n&atilde;o tem preenchimento). Tamb&eacute;m pode ser escrito como <b>circulo</b> (sem acento). Execute <b>janela</b> antes de <b>c&iacute;rculo</b>.</span>
+          <span class="mi-desc">Desenha um c&iacute;rculo na janela aberta com o comando <b>janela</b>, sendo (x, y) as coordenadas do centro e <b>raio</b> a medida do raio em pixels. A cor da borda &eacute; a cor da linha da circunfer&ecirc;ncia (padr&atilde;o branco) e a cor de preenchimento pinta o interior (se omitida, o c&iacute;rculo n&atilde;o tem preenchimento). Execute <b>janela</b> antes de <b>c&iacute;rculo</b>.</span>
           <div class="mi-example">
             <span class="mi-row"><span>janela(500, 300); c&iacute;rculo(250, 150, 60, azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e desenha um c&iacute;rculo azul de raio 60 no centro, sem preenchimento</span></span>
             <span class="mi-row"><span>janela(500, 300); c&iacute;rculo(250, 150, 60, azul, amarelo)</span><span class="mi-arrow">&rarr;</span><span class="ex">o mesmo c&iacute;rculo, agora com interior amarelo</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">ret&acirc;ngulo(x, y, largura, altura, cor da borda, cor de preenchimento)</span>
+          <span class="mi-desc">Desenha um ret&acirc;ngulo na janela aberta com o comando <b>janela</b>, sendo (x, y) as coordenadas do canto superior esquerdo, <b>largura</b> a medida horizontal e <b>altura</b> a medida vertical, em pixels. A cor da borda &eacute; a cor do contorno (padr&atilde;o branco) e a cor de preenchimento pinta o interior (se omitida, o ret&acirc;ngulo n&atilde;o tem preenchimento). Execute <b>janela</b> antes de <b>ret&acirc;ngulo</b>.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500, 300); ret&acirc;ngulo(50, 50, 200, 100, azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e desenha um ret&acirc;ngulo azul de 200 x 100 pixels a partir do ponto (50, 50), sem preenchimento</span></span>
+            <span class="mi-row"><span>janela(500, 300); ret&acirc;ngulo(50, 50, 200, 100, azul, amarelo)</span><span class="mi-arrow">&rarr;</span><span class="ex">o mesmo ret&acirc;ngulo, agora com interior amarelo</span></span>
           </div>
         </div>
         <div class="manual-item">
@@ -2400,43 +2518,6 @@ para cada numero em lista:
       </div>
 
     </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="plotOverlay">
-  <div class="modal" id="plotModal">
-    <div class="modal-head">
-      <h2>Gr&aacute;fico cartesiano</h2>
-      <div class="plot-controls">
-        <button class="plot-win-btn" id="plotMinimize" title="Minimizar" aria-label="Minimizar">
-          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
-        </button>
-        <button class="plot-win-btn" id="plotMaximize" title="Maximizar" aria-label="Maximizar">
-          <svg viewBox="0 0 14 14" id="plotMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
-        </button>
-        <button class="modal-close" id="plotClose" title="Fechar">&times;</button>
-      </div>
-    </div>
-    <div class="modal-body plot-body">
-      <div class="plot-zoombar">
-        <button class="plot-zoom-btn" id="plotZoomOut" title="Diminuir zoom (Zoom-)" aria-label="Diminuir zoom">&minus;</button>
-        <span class="plot-zoom-label" id="plotZoomLabel">100%</span>
-        <button class="plot-zoom-btn" id="plotZoomIn" title="Aumentar zoom (Zoom+)" aria-label="Aumentar zoom">+</button>
-        <button class="plot-zoom-btn" id="plotZoomReset" title="Redefinir zoom" aria-label="Redefinir zoom">&#8635;</button>
-        <button class="plot-zoom-btn" id="plotStretchXOut" title="Comprimir na horizontal (H-)" aria-label="Comprimir na horizontal">H&minus;</button>
-        <button class="plot-zoom-btn" id="plotStretchXIn" title="Esticar na horizontal (H+)" aria-label="Esticar na horizontal">H+</button>
-        <button class="plot-zoom-btn" id="plotStretchYOut" title="Comprimir na vertical (V-)" aria-label="Comprimir na vertical">V&minus;</button>
-        <button class="plot-zoom-btn" id="plotStretchYIn" title="Esticar na vertical (V+)" aria-label="Esticar na vertical">V+</button>
-      </div>
-      <div class="plot-area">
-        <canvas id="plotCanvas" class="plot-canvas"></canvas>
-        <div class="plot-table-wrap" id="plotTableWrap">
-          <table id="plotTable" class="plot-table"></table>
-        </div>
-        <div id="plotTooltip" class="plot-tooltip"></div>
-      </div>
-      <div class="plot-info" id="plotInfo"></div>
     </div>
   </div>
 </div>
@@ -2746,7 +2827,8 @@ function evalTokenize(s) {
     }
     if (/[0-9]/.test(c) || (c === '.' && /[0-9]/.test(s[i+1] || ''))) {
       var j2 = i;
-      while (j2 < n && /[0-9.]/.test(s[j2])) j2++;
+      while (j2 < n && /[0-9]/.test(s[j2])) j2++;
+      if (s[j2] === '.' && /[0-9]/.test(s[j2 + 1] || '')) { j2++; while (j2 < n && /[0-9]/.test(s[j2])) j2++; }
       var lit = s.slice(i, j2);
       toks.push({ type: 'NUM', value: parseFloat(lit), float: lit.indexOf('.') >= 0, src: lit });
       i = j2;
@@ -2755,10 +2837,6 @@ function evalTokenize(s) {
     if (isIdStart(c)) {
       var j3 = i;
       while (j3 < n && isIdPart(s[j3])) j3++;
-      while (s[j3] === '-' && s[j3 + 1] === '>' && isIdPart(s[j3 + 2] || '')) {
-        j3 += 2;
-        while (j3 < n && isIdPart(s[j3])) j3++;
-      }
       toks.push({ type: 'ID', name: s.slice(i, j3), src: s.slice(i, j3) });
       i = j3;
       continue;
@@ -3274,62 +3352,6 @@ function callFunction(name, args, rawName) {
       return mkNum(r, false);
     });
   }
-  if (name === 'hex->dec') {
-    if (args.length !== 1) throw new Error('hex->dec espera 1 argumento');
-    return elwise(args[0], function (v) {
-      var s = typeof v === 'string' ? v.trim() : String(v);
-      s = s.replace(/^0[xX]/, '');
-      if (!/^[0-9a-fA-F]+$/.test(s)) throw new Error('hex->dec espera um texto hexadecimal (ex.: "FF")');
-      return mkNum(parseInt(s, 16), false);
-    });
-  }
-  if (name === 'dec->hex') {
-    if (args.length !== 1) throw new Error('dec->hex espera 1 argumento');
-    return elwise(args[0], function (v) {
-      if (typeof v === 'string') v = parseFloat(v);
-      if (typeof v !== 'number' || !isFinite(v) || Math.floor(v) !== v || v < 0) {
-        throw new Error('dec->hex espera um número inteiro não negativo');
-      }
-      return v.toString(16).toUpperCase();
-    });
-  }
-  if (name === 'bin->dec') {
-    if (args.length !== 1) throw new Error('bin->dec espera 1 argumento');
-    return elwise(args[0], function (v) {
-      var s = typeof v === 'string' ? v.trim() : String(v);
-      s = s.replace(/^0[bB]/, '');
-      if (!/^[01]+$/.test(s)) throw new Error('bin->dec espera um texto binário (ex.: "1010")');
-      return mkNum(parseInt(s, 2), false);
-    });
-  }
-  if (name === 'dec->bin') {
-    if (args.length !== 1) throw new Error('dec->bin espera 1 argumento');
-    return elwise(args[0], function (v) {
-      if (typeof v === 'string') v = parseFloat(v);
-      if (typeof v !== 'number' || !isFinite(v) || Math.floor(v) !== v || v < 0) {
-        throw new Error('dec->bin espera um número inteiro não negativo');
-      }
-      return v.toString(2);
-    });
-  }
-  if (name === 'hex->bin') {
-    if (args.length !== 1) throw new Error('hex->bin espera 1 argumento');
-    return elwise(args[0], function (v) {
-      var s = typeof v === 'string' ? v.trim() : String(v);
-      s = s.replace(/^0[xX]/, '');
-      if (!/^[0-9a-fA-F]+$/.test(s)) throw new Error('hex->bin espera um texto hexadecimal (ex.: "FF")');
-      return parseInt(s, 16).toString(2);
-    });
-  }
-  if (name === 'bin->hex') {
-    if (args.length !== 1) throw new Error('bin->hex espera 1 argumento');
-    return elwise(args[0], function (v) {
-      var s = typeof v === 'string' ? v.trim() : String(v);
-      s = s.replace(/^0[bB]/, '');
-      if (!/^[01]+$/.test(s)) throw new Error('bin->hex espera um texto binário (ex.: "1010")');
-      return parseInt(s, 2).toString(16).toUpperCase();
-    });
-  }
   if (name === 'variáveis' || name === 'variaveis') {
     if (args.length !== 0) throw new Error(name + ' não espera argumentos');
     var genv = getGlobalEnv() || {};
@@ -3475,7 +3497,7 @@ function callFunction(name, args, rawName) {
     var x = numVal(args[0]);
     return mkNum(x - Math.trunc(x), numFloat(args[0]));
   }
-  if (name === 'aleatório' || name === 'aleatorio') {
+  if (name === 'aleatório') {
     if (args.length !== 2) throw new Error('aleatório espera 2 argumentos');
     var loV = nv(0);
     var hiV = nv(1);
@@ -3486,6 +3508,14 @@ function callFunction(name, args, rawName) {
     var hi = Math.floor(hiV);
     if (hi < lo) throw new Error('aleatório: o limite inferior não pode ser maior que o superior');
     return mkNum(lo + Math.floor(Math.random() * (hi - lo + 1)), false);
+  }
+  if (name === 'dado') {
+    if (args.length !== 0) throw new Error('dado não recebe argumentos');
+    return mkNum(1 + Math.floor(Math.random() * 6), false);
+  }
+  if (name === 'moeda') {
+    if (args.length !== 0) throw new Error('moeda não recebe argumentos');
+    return Math.random() < 0.5 ? 'cara' : 'coroa';
   }
   if (name === 'paraLista') {
     if (args.length !== 1) throw new Error('paraLista espera 1 argumento');
@@ -3498,6 +3528,161 @@ function callFunction(name, args, rawName) {
   if (name === 'paraTexto') {
     if (args.length !== 1) throw new Error('paraTexto espera 1 argumento');
     return formatValue(args[0]);
+  }
+  if (name === 'maiúsculo' || name === 'minúsculo') {
+    if (args.length !== 1) throw new Error(name + ' espera 1 argumento');
+    if (typeof args[0] !== 'string') throw new Error('"' + name + '" espera um texto');
+    return name === 'maiúsculo' ? args[0].toUpperCase() : args[0].toLowerCase();
+  }
+  if (name === 'substitua') {
+    if (args.length !== 3) throw new Error('substitua espera 3 argumentos: substitua(texto, busca, troca)');
+    for (var sbI = 0; sbI < 3; sbI++) {
+      if (typeof args[sbI] !== 'string') throw new Error('"substitua" espera textos como argumentos');
+    }
+    if (!args[1]) throw new Error('"substitua" espera um texto de busca não vazio');
+    return args[0].split(args[1]).join(args[2]);
+  }
+  if (name === 'divida') {
+    if (args.length !== 2) throw new Error('divida espera 2 argumentos: divida(texto, separador)');
+    var dvVal = args[0];
+    var dvSep = args[1];
+    if (typeof dvSep !== 'string') throw new Error('"divida" espera um texto como separador');
+    if (typeof dvVal === 'number' || (dvVal && typeof dvVal === 'object' && dvVal.wpn)) {
+      var dvStr = String(numVal(dvVal));
+      var dvOut = [];
+      for (var dvI = 0; dvI < dvStr.length; dvI++) {
+        var dvCh = dvStr.charAt(dvI);
+        var dvNum = Number(dvCh);
+        if (!isNaN(dvNum)) dvOut.push(mkNum(dvNum, dvCh.indexOf('.') >= 0));
+        else dvOut.push(dvCh);
+      }
+      return dvOut;
+    }
+    if (typeof dvVal !== 'string') throw new Error('"divida" espera um texto ou número');
+    if (!dvSep) {
+      var dvChars = [];
+      for (var dvJ = 0; dvJ < dvVal.length; dvJ++) dvChars.push(dvVal.charAt(dvJ));
+      return dvChars;
+    }
+    return dvVal.split(dvSep);
+  }
+  if (name === 'junte') {
+    if (args.length < 1 || args.length > 2) throw new Error('junte espera 1 ou 2 argumentos: junte(lista, separador)');
+    var jtArr = args[0];
+    if (!Array.isArray(jtArr)) throw new Error('"junte" espera uma lista');
+    var jtSep = '';
+    if (args.length === 2) {
+      if (typeof args[1] !== 'string') throw new Error('"junte" espera um texto como separador');
+      jtSep = args[1];
+    }
+    var jtOut = '';
+    for (var jtI = 0; jtI < jtArr.length; jtI++) {
+      if (jtI > 0) jtOut += jtSep;
+      jtOut += formatValue(jtArr[jtI]);
+    }
+    return jtOut;
+  }
+  if (name === 'contém') {
+    if (args.length !== 2) throw new Error('contém espera 2 argumentos: contém(textoOuLista, valor)');
+    var ctHay = args[0];
+    if (typeof ctHay === 'string') {
+      if (typeof args[1] !== 'string') throw new Error('"contém" espera um texto para buscar dentro de um texto');
+      return ctHay.indexOf(args[1]) >= 0;
+    }
+    if (Array.isArray(ctHay)) {
+      var ctNeedle = numVal(args[1]);
+      for (var ctI = 0; ctI < ctHay.length; ctI++) {
+        if (numVal(ctHay[ctI]) == ctNeedle) return true;
+      }
+      return false;
+    }
+    throw new Error('"contém" espera um texto ou uma lista como primeiro argumento');
+  }
+  if (name === 'posição') {
+    if (args.length !== 2) throw new Error('posição espera 2 argumentos: posição(textoOuLista, valor)');
+    var psHay = args[0];
+    var psNeedle = args[1];
+    if (Array.isArray(psHay)) {
+      var psN = numVal(psNeedle);
+      for (var psI = 0; psI < psHay.length; psI++) {
+        if (numVal(psHay[psI]) == psN) return mkNum(psI, false);
+      }
+      return mkNum(-1, false);
+    }
+    if (typeof psHay === 'string') { }
+    else if (typeof psHay === 'number' || (psHay && typeof psHay === 'object' && psHay.wpn)) psHay = String(numVal(psHay));
+    else throw new Error('"posição" espera um texto, número ou lista como primeiro argumento');
+    if (typeof psNeedle === 'string') { }
+    else if (typeof psNeedle === 'number' || (psNeedle && typeof psNeedle === 'object' && psNeedle.wpn)) psNeedle = String(numVal(psNeedle));
+    else throw new Error('"posição" espera um texto ou número como valor buscado');
+    return mkNum(psHay.indexOf(psNeedle), false);
+  }
+  if (name === 'insira') {
+    if (args.length !== 3) throw new Error('insira espera 3 argumentos: insira(textoOuLista, posição, valor)');
+    var inHay = args[0];
+    var inPos = numVal(args[1]);
+    if (typeof inPos !== 'number' || !isFinite(inPos) || Math.floor(inPos) !== inPos) throw new Error('"insira" espera um número inteiro como posição');
+    if (Array.isArray(inHay)) {
+      var inPL = Math.min(Math.max(inPos, -1), inHay.length - 1);
+      var inArr = inHay.slice();
+      inArr.splice(inPL + 1, 0, args[2]);
+      return inArr;
+    }
+    var inIsNum = typeof inHay === 'number' || (inHay && typeof inHay === 'object' && inHay.wpn);
+    var inStr = typeof inHay === 'string' ? inHay : (inIsNum ? String(numVal(inHay)) : null);
+    if (inStr === null) throw new Error('"insira" espera um texto, número ou lista');
+    var inVal = args[2];
+    if (typeof inVal !== 'string' && typeof inVal !== 'number' && !(inVal && typeof inVal === 'object' && inVal.wpn)) throw new Error('"insira" espera um texto ou número como valor');
+    var inIns = formatValue(inVal);
+    var inEff = Math.min(Math.max(inPos, -1), inStr.length - 1);
+    var inOut = inStr.slice(0, inEff + 1) + inIns + inStr.slice(inEff + 1);
+    if (inIsNum) {
+      var inN = Number(inOut);
+      return isNaN(inN) ? inOut : mkNum(inN, inOut.indexOf('.') >= 0);
+    }
+    return inOut;
+  }
+  if (name === 'remova') {
+    if (args.length !== 2) throw new Error('remova espera 2 argumentos: remova(textoOuLista, posição)');
+    var rmHay = args[0];
+    var rmPos = numVal(args[1]);
+    if (typeof rmPos !== 'number' || !isFinite(rmPos) || Math.floor(rmPos) !== rmPos) throw new Error('"remova" espera um número inteiro como posição');
+    var rmIsNum = typeof rmHay === 'number' || (rmHay && typeof rmHay === 'object' && rmHay.wpn);
+    var rmStr = Array.isArray(rmHay) ? null : (typeof rmHay === 'string' ? rmHay : (rmIsNum ? String(numVal(rmHay)) : null));
+    if (rmStr === null && !Array.isArray(rmHay)) throw new Error('"remova" espera um texto, número ou lista');
+    if (Array.isArray(rmHay)) {
+      if (rmPos < 0 || rmPos >= rmHay.length) throw new Error('"remova" recebeu a posição ' + formatValue(args[1]) + ', mas a lista só tem ' + rmHay.length + (rmHay.length === 1 ? ' elemento' : ' elementos'));
+      var rmArr = rmHay.slice();
+      rmArr.splice(rmPos, 1);
+      return rmArr;
+    }
+    if (rmPos < 0 || rmPos >= rmStr.length) throw new Error('"remova" recebeu a posição ' + formatValue(args[1]) + ', mas "' + rmStr + '" só tem ' + rmStr.length + (rmStr.length === 1 ? ' caractere' : ' caracteres'));
+    var rmOut = rmStr.slice(0, rmPos) + rmStr.slice(rmPos + 1);
+    if (rmIsNum) {
+      var rmN = Number(rmOut);
+      return isNaN(rmN) ? rmOut : mkNum(rmN, rmOut.indexOf('.') >= 0);
+    }
+    return rmOut;
+  }
+  if (name === 'posiçãoEm') {
+    if (args.length !== 2) throw new Error('posiçãoEm espera 2 argumentos: posiçãoEm(textoOuLista, posição)');
+    var peHay = args[0];
+    var pePos = numVal(args[1]);
+    if (typeof pePos !== 'number' || !isFinite(pePos) || Math.floor(pePos) !== pePos) throw new Error('"posiçãoEm" espera um número inteiro como posição');
+    if (Array.isArray(peHay)) {
+      if (pePos < 0 || pePos >= peHay.length) throw new Error('"posiçãoEm" recebeu a posição ' + formatValue(args[1]) + ', mas a lista só tem ' + peHay.length + (peHay.length === 1 ? ' elemento' : ' elementos'));
+      return peHay[pePos];
+    }
+    var peIsNum = typeof peHay === 'number' || (peHay && typeof peHay === 'object' && peHay.wpn);
+    var peStr = typeof peHay === 'string' ? peHay : (peIsNum ? String(numVal(peHay)) : null);
+    if (peStr === null) throw new Error('"posiçãoEm" espera um texto, número ou lista');
+    if (pePos < 0 || pePos >= peStr.length) throw new Error('"posiçãoEm" recebeu a posição ' + formatValue(args[1]) + ', mas "' + peStr + '" só tem ' + peStr.length + (peStr.length === 1 ? ' caractere' : ' caracteres'));
+    var peCh = peStr.charAt(pePos);
+    if (peIsNum) {
+      var peN = Number(peCh);
+      return isNaN(peN) ? peCh : mkNum(peN, false);
+    }
+    return peCh;
   }
   if (name === 'janela') {
     if (args.length < 2 || args.length > 4) {
@@ -3535,7 +3720,7 @@ function callFunction(name, args, rawName) {
     }
     var pc = janelaCor(args[2], '#ffffff');
     lastJanela.points.push({ x: px, y: py, c: pc });
-    renderJanela();
+    janelaDirty = true;
     return 'ponto desenhado';
   }
   if (name === 'linha') {
@@ -3559,10 +3744,10 @@ function callFunction(name, args, rawName) {
     }
     var lc = janelaCor(args[4], '#ffffff');
     lastJanela.lines.push({ x1: lx1, y1: ly1, x2: lx2, y2: ly2, c: lc });
-    renderJanela();
+    janelaDirty = true;
     return 'linha desenhada';
   }
-  if (name === 'círculo' || name === 'circulo') {
+  if (name === 'círculo') {
     if (args.length < 3 || args.length > 5) {
       throw new Error('círculo espera 3, 4 ou 5 argumentos: círculo(x, y, raio, cor da borda, cor de preenchimento)');
     }
@@ -3585,8 +3770,35 @@ function callFunction(name, args, rawName) {
     var cc = janelaCor(args[3], '#ffffff');
     var cf = janelaCor(args[4], null);
     lastJanela.circles.push({ x: cx, y: cy, r: cr, c: cc, fill: cf });
-    renderJanela();
+    janelaDirty = true;
     return 'círculo desenhado';
+  }
+  if (name === 'retângulo') {
+    if (args.length < 4 || args.length > 6) {
+      throw new Error('retângulo espera 4, 5 ou 6 argumentos: retângulo(x, y, largura, altura, cor da borda, cor de preenchimento)');
+    }
+    var rx = numVal(args[0]);
+    var ry = numVal(args[1]);
+    var rw = numVal(args[2]);
+    var rh = numVal(args[3]);
+    if (typeof rx !== 'number' || !isFinite(rx) || typeof ry !== 'number' || !isFinite(ry) ||
+        typeof rw !== 'number' || !isFinite(rw) || typeof rh !== 'number' || !isFinite(rh)) {
+      throw new Error('retângulo espera números para as coordenadas x, y, a largura e a altura');
+    }
+    if (rw <= 0 || rh <= 0) {
+      throw new Error('retângulo: a largura e a altura devem ser números positivos');
+    }
+    if (!lastJanela) {
+      throw new Error('retângulo: execute janela(largura, altura) antes de usar retângulo');
+    }
+    if (rx < 0 || ry < 0 || rx + rw > lastJanela.w || ry + rh > lastJanela.h) {
+      throw new Error('retângulo: retângulo fora da janela (largura ' + lastJanela.w + ', altura ' + lastJanela.h + ')');
+    }
+    var rc = janelaCor(args[4], '#ffffff');
+    var rf = janelaCor(args[5], null);
+    lastJanela.rects.push({ x: rx, y: ry, w: rw, h: rh, c: rc, fill: rf });
+    janelaDirty = true;
+    return 'retângulo desenhado';
   }
   if (name === 'texto') {
     if (args.length < 3 || args.length > 5) {
@@ -3612,7 +3824,7 @@ function callFunction(name, args, rawName) {
       throw new Error('texto: o tamanho da fonte deve ser um número positivo (em pixels)');
     }
     lastJanela.texts.push({ x: tx, y: ty, t: args[2], c: tc, s: tfs });
-    renderJanela();
+    janelaDirty = true;
     return 'texto desenhado';
   }
   if (name === 'pegar') {
@@ -3663,6 +3875,13 @@ function callFunction(name, args, rawName) {
         pgC.push({ x: pgc.x, y: pgc.y, r: pgc.r, c: pgc.c, fill: pgc.fill });
       }
     }
+    var pgR = [];
+    for (var pgri = 0; pgri < lastJanela.rects.length; pgri++) {
+      var pgr = lastJanela.rects[pgri];
+      if (pgr.x >= pgMinX && pgr.x <= pgMaxX && pgr.y >= pgMinY && pgr.y <= pgMaxY) {
+        pgR.push({ x: pgr.x, y: pgr.y, w: pgr.w, h: pgr.h, c: pgr.c, fill: pgr.fill });
+      }
+    }
     var pgT = [];
     for (var pgti = 0; pgti < lastJanela.texts.length; pgti++) {
       var pgt = lastJanela.texts[pgti];
@@ -3670,7 +3889,7 @@ function callFunction(name, args, rawName) {
         pgT.push({ x: pgt.x, y: pgt.y, t: pgt.t, c: pgt.c, s: pgt.s });
       }
     }
-    lastJanelaCopy = { x0: pgMinX, y0: pgMinY, x1: pgMaxX, y1: pgMaxY, points: pgP, lines: pgL, circles: pgC, texts: pgT };
+    lastJanelaCopy = { x0: pgMinX, y0: pgMinY, x1: pgMaxX, y1: pgMaxY, points: pgP, lines: pgL, circles: pgC, rects: pgR, texts: pgT };
     return 'região copiada';
   }
   if (name === 'colocar') {
@@ -3728,14 +3947,25 @@ function callFunction(name, args, rawName) {
         fill: clc.fill
       });
     }
+    for (var clri = 0; clri < lastJanelaCopy.rects.length; clri++) {
+      var clr = lastJanelaCopy.rects[clri];
+      lastJanela.rects.push({
+        x: clMinX + (clr.x - lastJanelaCopy.x0) * clSX,
+        y: clMinY + (clr.y - lastJanelaCopy.y0) * clSY,
+        w: clr.w * clSX,
+        h: clr.h * clSY,
+        c: clr.c,
+        fill: clr.fill
+      });
+    }
     for (var clti = 0; clti < lastJanelaCopy.texts.length; clti++) {
       var clt = lastJanelaCopy.texts[clti];
       lastJanela.texts.push({ x: clMinX + (clt.x - lastJanelaCopy.x0) * clSX, y: clMinY + (clt.y - lastJanelaCopy.y0) * clSY, t: clt.t, c: clt.c, s: clt.s * clSR });
     }
-    renderJanela();
+    janelaDirty = true;
     return 'região colada';
   }
-  if (name === 'paraNúmero' || name === 'paraNumero') {
+  if (name === 'paraNúmero') {
     if (args.length !== 1) throw new Error('paraNúmero espera 1 argumento');
     var ns = String(numVal(args[0])).trim();
     if (ns.indexOf(',') !== -1 && ns.indexOf('.') === -1) ns = ns.replace(/,/g, '.');
@@ -3747,7 +3977,7 @@ function callFunction(name, args, rawName) {
     if (args.length !== 0) throw new Error('ano espera nenhum argumento');
     return mkNum(new Date().getFullYear(), false);
   }
-  if (name === 'mês' || name === 'mes') {
+  if (name === 'mês') {
     if (args.length !== 0) throw new Error('mês espera nenhum argumento');
     return pad2(new Date().getMonth() + 1);
   }
@@ -3817,20 +4047,6 @@ function callFunction(name, args, rawName) {
     return 'mensagem exibida';
   }
   throw new Error('Função desconhecida: ' + name);
-}
-
-function fmtCurvaNum(v) {
-  var s = String(Number(v.toPrecision(6)));
-  if (s === '-0') s = '0';
-  return s;
-}
-
-function isDataLiteralExpr(s) {
-  var t = s.trim();
-  if (t.charAt(0) === '(' && t.charAt(t.length - 1) === ')') {
-    return findTopLevelComma(t.slice(1, -1)) >= 0;
-  }
-  return t.charAt(0) === '[' || t.charAt(0) === '{';
 }
 
 function interpString(raw, env) {
@@ -3961,7 +4177,22 @@ function parse(input, env) {
       var right = parsePower();
       left = binOp(left, right, function (a, b) {
         var lv = numVal(a), rv = numVal(b);
-        if (op === '*') return mkNum(lv * rv, numFloat(a) || numFloat(b));
+        if (op === '*') {
+          var raStr = typeof a === 'string' ? a : null;
+          var rbStr = typeof b === 'string' ? b : null;
+          if (raStr !== null || rbStr !== null) {
+            var repStr = raStr !== null ? raStr : rbStr;
+            var repCnt = raStr !== null ? rv : lv;
+            if (typeof repCnt !== 'number' || !isFinite(repCnt) || Math.floor(repCnt) !== repCnt) {
+              throw new Error('"*" espera um número inteiro para repetir um texto');
+            }
+            if (repCnt < 0) repCnt = 0;
+            var repOut = '';
+            for (var rpI = 0; rpI < repCnt; rpI++) repOut += repStr;
+            return repOut;
+          }
+          return mkNum(lv * rv, numFloat(a) || numFloat(b));
+        }
         if (op === '/') return mkNum(lv / rv, true);
         if (op === '//') return mkNum(Math.floor(lv / rv), false);
         if (op === '\\') return mkNum(lv / rv - Math.floor(lv / rv), true);
@@ -3987,7 +4218,15 @@ function parse(input, env) {
       if (Array.isArray(u)) return u.map(function (x) { return mkNum(-numVal(x), numFloat(x)); });
       return mkNum(-numVal(u), numFloat(u));
     }
-    if (isWord(peek(), 'não') || isWord(peek(), 'nao')) { next(); return !numVal(parseUnary()); }
+    if (isWord(peek(), 'não')) { next(); return !numVal(parseUnary()); }
+    if (isWord(peek(), 'existe')) {
+      next();
+      var exNeedle = parseComparison();
+      if (!isWord(peek(), 'em')) throw new Error('Sintaxe inválida: use "existe <valor> em <texto ou lista>"');
+      next();
+      var exHay = parseComparison();
+      return callFunction('contém', [exHay, exNeedle]);
+    }
     return parsePrimary();
   }
   function parsePrimary() {
@@ -4062,7 +4301,7 @@ function parse(input, env) {
           }
         }
         expectOp(')');
-        if (t.name === 'selecionar' || t.name === 'comprimento' || t.name === 'captureTecla' || t.name === 'absoluto' || t.name === 'abs' || t.name === 'fatorial'  || t.name === 'hex->dec' || t.name === 'dec->hex' || t.name === 'bin->dec' || t.name === 'dec->bin' || t.name === 'hex->bin' || t.name === 'bin->hex' || t.name === 'variáveis' || t.name === 'variaveis' || t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi'    || t.name === 'inteiro' || t.name === 'decimal'     || t.name === 'paraLista'  || t.name === 'paraTexto' || t.name === 'paraNúmero' || t.name === 'paraNumero'       || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'aleatorio'   || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo' || t.name === 'circulo' || t.name === 'texto' || t.name === 'intervalo' || t.name === 'log' || t.name === 'logn' || t.name === 'ln' || t.name === 'arredondar' || t.name === 'arred' || t.name === 'ano' || t.name === 'mês' || t.name === 'mes' || t.name === 'dia' || t.name === 'hora' || t.name === 'data' || t.name === 'agora' || t.name === 'tempo'     || t.name === 'bipe' || t.name === 'som' || t.name === 'toca' || t.name === 'mensagem' || t.name === 'pegar' || t.name === 'colocar'   ) {
+        if (t.name === 'selecionar' || t.name === 'comprimento' || t.name === 'captureTecla' || t.name === 'absoluto' || t.name === 'abs' || t.name === 'fatorial'  || t.name === 'variáveis' || t.name === 'variaveis' || t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi'    || t.name === 'inteiro' || t.name === 'decimal'     || t.name === 'paraLista'  || t.name === 'paraTexto' || t.name === 'paraNúmero'       || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'dado' || t.name === 'moeda'   || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo' || t.name === 'retângulo' || t.name === 'texto' || t.name === 'intervalo' || t.name === 'log' || t.name === 'logn' || t.name === 'ln' || t.name === 'arredondar' || t.name === 'arred' || t.name === 'ano' || t.name === 'mês' || t.name === 'dia' || t.name === 'hora' || t.name === 'data' || t.name === 'agora' || t.name === 'tempo'     || t.name === 'bipe' || t.name === 'som' || t.name === 'toca' || t.name === 'mensagem' || t.name === 'pegar' || t.name === 'colocar' || t.name === 'maiúsculo' || t.name === 'minúsculo' || t.name === 'substitua' || t.name === 'divida' || t.name === 'junte' || t.name === 'contém' || t.name === 'posição' || t.name === 'insira' || t.name === 'remova' || t.name === 'posiçãoEm'   ) {
           return callFunction(t.name, args);
         }
         var base = (t.name in env) ? env[t.name] : undefined;
@@ -4208,6 +4447,49 @@ function getProperty(v, name, args) {
     }
     return sorted;
   }
+  if (name === 'mínimo' || name === 'máximo') {
+    if (args !== null) throw new Error('"' + name + '" não recebe argumentos');
+    if (!Array.isArray(v)) throw new Error('"' + name + '" só se aplica a listas');
+    if (v.length === 0) throw new Error('"' + name + '": lista vazia');
+    var wantLess = name === 'mínimo';
+    var bestIdx = -1;
+    for (var mnI = 0; mnI < v.length; mnI++) {
+      var mv = numVal(v[mnI]);
+      if (typeof mv !== 'number' || !isFinite(mv)) throw new Error('"' + name + '" espera uma lista de números');
+      if (bestIdx < 0 || (wantLess ? mv < numVal(v[bestIdx]) : mv > numVal(v[bestIdx]))) bestIdx = mnI;
+    }
+    return v[bestIdx];
+  }
+  if (name === 'invertida') {
+    if (args !== null) throw new Error('"invertida" não recebe argumentos');
+    if (Array.isArray(v)) return v.slice().reverse();
+    if (typeof v === 'string') return v.split('').reverse().join('');
+    throw new Error('"invertida" não se aplica a números puros — use um texto ou uma lista');
+  }
+  if (name === 'contar') {
+    if (args !== null) throw new Error('"contar" não recebe argumentos');
+    if (typeof v === 'string') return mkNum(v.length, false);
+    if (Array.isArray(v)) return mkNum(v.length, false);
+    throw new Error('"contar" não se aplica a números puros — use um texto ou uma lista');
+  }
+  if (name === 'contarItem') {
+    if (args === null || args.length !== 1) throw new Error('contarItem espera 1 argumento: contarItem(valor)');
+    if (typeof v === 'string') {
+      var ciNeedle = args[0];
+      if (typeof ciNeedle !== 'string') throw new Error('"contarItem" espera um texto para buscar dentro de um texto');
+      if (ciNeedle.length === 0) throw new Error('"contarItem" espera um trecho não vazio para buscar');
+      return mkNum(v.split(ciNeedle).length - 1, false);
+    }
+    if (Array.isArray(v)) {
+      var ciWant = numVal(args[0]);
+      var ciCount = 0;
+      for (var ciI = 0; ciI < v.length; ciI++) {
+        if (numVal(v[ciI]) == ciWant) ciCount++;
+      }
+      return mkNum(ciCount, false);
+    }
+    throw new Error('"contarItem" não se aplica a números puros — use um texto ou uma lista');
+  }
   if (name === 'adicionar') {
     if (args === null || args.length === 0) throw new Error('adicionar espera ao menos 1 argumento');
     if (Array.isArray(v)) {
@@ -4216,7 +4498,7 @@ function getProperty(v, name, args) {
     }
     throw new Error('"adicionar" só se aplica a listas');
   }
-  if (name === 'aleatório' || name === 'aleatorio') {
+  if (name === 'aleatório') {
     if (args !== null) throw new Error('"aleatório" não recebe argumentos');
     if (!Array.isArray(v)) throw new Error('"aleatório" só se aplica a listas');
     if (v.length === 0) throw new Error('aleatório: lista vazia');
@@ -4405,12 +4687,13 @@ function toStatements(code) {
 }
 
 function isSe(text) { return /^se\b/.test(text); }
-function isSenao(text) { return /^(sen[ãâ]o|senao)\s*:\s*$/.test(text); }
+function isSenao(text) { return /^(sen[ãâ]o)\s*:\s*$/.test(text); }
 function isParaCada(text) { return /^para\b/.test(text); }
 function isRepita(text) { return /^repita\b/.test(text); }
 function isEnquanto(text) { return /^enquanto\b/.test(text); }
 function isSelecionarOpcao(text) { return /^selecionar\s+op[cç](?:ã|a)o\s*:\s*$/i.test(text); }
 function isEmJanela(text) { return /^em\s*janela\s*:\s*$/i.test(text); }
+function isEmJanelaCentro(text) { return /^em\s*janela\s*\(\s*\)\s*:\s*$/i.test(text); }
 
 function extractSeCond(text) {
   var cond = text.replace(/^se\b/, '').trim();
@@ -4515,6 +4798,10 @@ function parseBlock(stmts, index, minIndent, stopAtSenao) {
       var r4 = parseEnquanto(stmts, index);
       nodes.push(r4.node);
       index = r4.index;
+    } else if (isRegressiva(s.text)) {
+      var rRg = parseRegressiva(stmts, index);
+      nodes.push(rRg.node);
+      index = rRg.index;
     } else if (isDefinirFuncao(s.text)) {
       var r5 = parseDefinirFuncao(stmts, index);
       nodes.push(r5.node);
@@ -4523,6 +4810,10 @@ function parseBlock(stmts, index, minIndent, stopAtSenao) {
       var r6 = parseSelecionarOpcao(stmts, index);
       nodes.push(r6.node);
       index = r6.index;
+    } else if (isEmJanelaCentro(s.text)) {
+      var r8 = parseEmJanela(stmts, index, true);
+      nodes.push(r8.node);
+      index = r8.index;
     } else if (isEmJanela(s.text)) {
       var r7 = parseEmJanela(stmts, index);
       nodes.push(r7.node);
@@ -4582,6 +4873,16 @@ function parseEnquanto(stmts, index) {
   return { node: { type: 'while', cond: cond, body: r.nodes, lineNo: s.lineNo }, index: r.index };
 }
 
+function isRegressiva(text) { return /^regressiva\b/.test(text); }
+
+function parseRegressiva(stmts, index) {
+  var s = stmts[index];
+  var m = s.text.match(/^regressiva\s*\(([^)]*)\)\s*(:)\s*$/);
+  if (!m) throw new Error('Sintaxe inválida: use "regressiva(segundos):" seguido do bloco indentado que será executado quando a contagem terminar');
+  var rgR = parseBlock(stmts, index + 1, s.indent, false);
+  return { node: { type: 'regressiva', secs: m[1].trim(), body: rgR.nodes, lineNo: s.lineNo }, index: rgR.index };
+}
+
 function parseSelecionarOpcao(stmts, index) {
   var s = stmts[index];
   var selIndent = s.indent;
@@ -4608,10 +4909,10 @@ function parseSelecionarOpcao(stmts, index) {
   return { node: { type: 'select', options: options, lineNo: s.lineNo }, index: idx };
 }
 
-function parseEmJanela(stmts, index) {
+function parseEmJanela(stmts, index, centered) {
   var s = stmts[index];
   var r = parseBlock(stmts, index + 1, s.indent, false);
-  return { node: { type: 'window', body: r.nodes, lineNo: s.lineNo }, index: r.index };
+  return { node: { type: 'window', body: r.nodes, lineNo: s.lineNo, centered: !!centered }, index: r.index };
 }
 
 function isDefinirFuncao(text) { return /^definir\s+fun[çc](?:ão|ao)\b/.test(text); }
@@ -4652,6 +4953,12 @@ function execStatement(line, lineNo, env, out, noRerun) {
       }
       throw { wpReturn: true, value: retVals.length === 1 ? retVals[0] : retVals };
     }
+    if (/^pare\s*$/.test(line)) {
+      throw { wpPare: true, lineNo: lineNo };
+    }
+    if (/^continue\s*$/.test(line)) {
+      throw { wpContinue: true, lineNo: lineNo };
+    }
     var multiM = parseMultiAssignLHS(line);
     if (multiM) {
       var rhsVal = parse(multiM.expr, env);
@@ -4661,8 +4968,8 @@ function execStatement(line, lineNo, env, out, noRerun) {
       }
       for (var ma = 0; ma < multiM.names.length; ma++) env[multiM.names[ma]] = rhsVal[ma];
       out.push({ kind: 'assign', text: multiM.names.join(', ') + ' = ' + formatValue(rhsVal), lineNo: lineNo });
-    } else if (/^mostre\b/.test(line) || /^mostrar\b/.test(line)) {
-      var rest = line.replace(/^(mostre|mostrar)\b/, '').trim();
+    } else if (/^mostre\b/.test(line)) {
+      var rest = line.replace(/^mostre\b/, '').trim();
       out.push({ kind: 'out', text: formatValue(parse(rest, env)), lineNo: lineNo });
     } else if (/^limpe\b/.test(line)) {
       out.push({ kind: 'clear', lineNo: lineNo });
@@ -4769,7 +5076,7 @@ function execStatement(line, lineNo, env, out, noRerun) {
               var val = parse(m[2], env);
               env[m[1]] = val;
               out.push({ kind: 'assign', text: m[1] + ' = ' + formatValue(val), lineNo: lineNo });
-            } else if (/^(janela|ponto|linha|círculo|circulo|texto|pegar|colocar)\s*\(/.test(line)) {
+            } else if (/^(janela|ponto|linha|círculo|retângulo|texto|pegar|colocar)\s*\(/.test(line)) {
               parse(line, env);
             } else {
               var exprVal = parse(line, env);
@@ -4783,6 +5090,7 @@ function execStatement(line, lineNo, env, out, noRerun) {
     }
   } catch (e) {
     if (e && e.wpReturn) throw e;
+    if (e && (e.wpPare || e.wpContinue)) throw e;
     out.push({ kind: 'error', text: e.message, lineNo: lineNo });
   }
   return false;
@@ -4798,6 +5106,8 @@ function callUserFunc(fn, args) {
     execNodes(fn.body, childEnv, CURRENT_OUT || []);
   } catch (e) {
     if (e && e.wpReturn) return e.value;
+    if (e && e.wpPare) throw new Error("'pare' usado fora de um laço");
+    if (e && e.wpContinue) throw new Error("'continue' usado fora de um laço");
     throw e;
   }
   return undefined;
@@ -4828,7 +5138,12 @@ function execNodes(nodes, env, out) {
       }
       for (var j = 0; j < items.length; j++) {
         env[n.var] = items[j];
-        execNodes(n.body, env, out);
+        try {
+          execNodes(n.body, env, out);
+        } catch (er) {
+          if (er && er.wpPare) break;
+          if (!(er && er.wpContinue)) throw er;
+        }
       }
     } else if (n.type === 'repeat') {
       var cnt;
@@ -4843,7 +5158,12 @@ function execNodes(nodes, env, out) {
         continue;
       }
       for (var rr = 0; rr < cnt; rr++) {
-        execNodes(n.body, env, out);
+        try {
+          execNodes(n.body, env, out);
+        } catch (er) {
+          if (er && er.wpPare) break;
+          if (!(er && er.wpContinue)) throw er;
+        }
       }
     } else if (n.type === 'while') {
       var condVal;
@@ -4855,7 +5175,12 @@ function execNodes(nodes, env, out) {
       }
       var guard = 0;
       while (condVal) {
-        execNodes(n.body, env, out);
+        try {
+          execNodes(n.body, env, out);
+        } catch (er) {
+          if (er && er.wpPare) break;
+          if (!(er && er.wpContinue)) throw er;
+        }
         guard++;
         if (guard > 1000000) {
           out.push({ kind: 'error', text: 'enquanto: limite de 1.000.000 de iterações excedido (possível laço infinito)', lineNo: n.lineNo });
@@ -4868,6 +5193,32 @@ function execNodes(nodes, env, out) {
           break;
         }
       }
+    } else if (n.type === 'regressiva') {
+      var rgSecs;
+      try {
+        rgSecs = n.secs ? numVal(parse(n.secs, env)) : null;
+      } catch (e) {
+        out.push({ kind: 'error', text: e.message, lineNo: n.lineNo });
+        continue;
+      }
+      if (typeof rgSecs !== 'number' || !isFinite(rgSecs) || rgSecs < 0) {
+        out.push({ kind: 'error', text: 'regressiva espera os segundos da contagem, que podem ser fracionados (ex.: regressiva(10) ou regressiva(0.5))', lineNo: n.lineNo });
+        continue;
+      }
+      var rgOut = [];
+      execNodes(n.body, env, rgOut);
+      if (janelaDirty) {
+        janelaDirty = false;
+        rgOut.push({
+          kind: 'render', lineNo: n.lineNo,
+          vp: lastJanela ? lastJanela.points.length : 0,
+          vl: lastJanela ? lastJanela.lines.length : 0,
+          vc: lastJanela ? lastJanela.circles.length : 0,
+          vr: lastJanela ? lastJanela.rects.length : 0,
+          vt: lastJanela ? lastJanela.texts.length : 0
+        });
+      }
+      out.push({ kind: 'timer', secs: rgSecs, inner: rgOut, lineNo: n.lineNo });
     } else if (n.type === 'func') {
       env[n.name] = { wpFunc: true, name: n.name, params: n.params, body: n.body, env: env };
     } else if (n.type === 'select') {
@@ -4875,13 +5226,24 @@ function execNodes(nodes, env, out) {
     } else if (n.type === 'window') {
       var winOut = [];
       execNodes(n.body, env, winOut);
-      out.push({ kind: 'window', inner: winOut, env: env, lineNo: n.lineNo });
+      out.push({ kind: 'window', inner: winOut, env: env, lineNo: n.lineNo, centered: !!n.centered });
     } else if (n.type === 'stmt') {
       if (cascadeDefer) {
         out.push({ kind: 'rerun', line: n.text, lineNo: n.lineNo });
       } else if (execStatement(n.text, n.lineNo, env, out)) {
         cascadeDefer = true;
       }
+    }
+    if (janelaDirty) {
+      janelaDirty = false;
+      out.push({
+        kind: 'render', lineNo: n.lineNo,
+        vp: lastJanela ? lastJanela.points.length : 0,
+        vl: lastJanela ? lastJanela.lines.length : 0,
+        vc: lastJanela ? lastJanela.circles.length : 0,
+        vr: lastJanela ? lastJanela.rects.length : 0,
+        vt: lastJanela ? lastJanela.texts.length : 0
+      });
     }
   }
 }
@@ -4902,6 +5264,10 @@ function executeProgram(code) {
   } catch (e) {
     if (e && e.wpReturn) {
       out.push({ kind: 'error', text: 'retorne usado fora de uma função', lineNo: null });
+    } else if (e && e.wpPare) {
+      out.push({ kind: 'error', text: "'pare' usado fora de um laço", lineNo: e.lineNo || null });
+    } else if (e && e.wpContinue) {
+      out.push({ kind: 'error', text: "'continue' usado fora de um laço", lineNo: e.lineNo || null });
     } else {
       throw e;
     }
@@ -4937,24 +5303,22 @@ function tokenizeHighlight(code) {
       i = end;
     } else if (/[0-9]/.test(c)) {
       var j3 = i;
-      while (j3 < n && /[0-9.]/.test(code[j3])) j3++;
+      while (j3 < n && /[0-9]/.test(code[j3])) j3++;
+      if (code[j3] === '.' && /[0-9]/.test(code[j3 + 1] || '')) { j3++; while (j3 < n && /[0-9]/.test(code[j3])) j3++; }
       tokens.push({ type: 'number', text: code.slice(i, j3) });
       i = j3;
     } else if (isIdStart(c)) {
       var j4 = i;
       while (j4 < n && isIdPart(code[j4])) j4++;
-      while (code[j4] === '-' && code[j4 + 1] === '>' && isIdPart(code[j4 + 2] || '')) {
-        j4 += 2;
-        while (j4 < n && isIdPart(code[j4])) j4++;
-      }
       var word = code.slice(i, j4);
-      if (word === 'mostre' || word === 'mostrar' || word === 'limpe' || word === 'leia' || word === 'se' || word === 'senão' || word === 'senao' || word === 'repita' || word === 'enquanto' ||
+      if (word === 'mostre' || word === 'limpe' || word === 'leia' || word === 'se' || word === 'senão' || word === 'repita' || word === 'enquanto' ||
+          word === 'pare' || word === 'continue' ||
           word === 'para' || word === 'cada' || word === 'em' ||
           word === 'definir' || word === 'função' || word === 'funcao' || word === 'retorne' || word === 'retornar' ||
           word === 'emJanela' ||
-          (word === 'e' && code[j4] !== '(') || word === 'ou' || word === 'não' || word === 'nao' ||
-          word === 'verdadeiro' || word === 'falso') tokens.push({ type: 'keyword', text: word });
-      else if ((word === 'selecionar' || word === 'comprimento' || word === 'absoluto' || word === 'abs' || word === 'fatorial'  || word === 'hex->dec' || word === 'dec->hex' || word === 'bin->dec' || word === 'dec->bin' || word === 'hex->bin' || word === 'bin->hex' || word === 'variáveis' || word === 'variaveis' || word === 'raizq' || word === 'raizc'  || word === 'pi'   || word === 'inteiro' || word === 'decimal'        || word === 'paraLista'  || word === 'paraTexto' || word === 'paraNúmero' || word === 'paraNumero'           || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'aleatorio'   || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo' || word === 'circulo' || word === 'texto' || word === 'intervalo' || word === 'log' || word === 'logn' || word === 'ln' || word === 'arredondar' || word === 'arred' || word === 'salvar' || word === 'carregar'   || word === 'ano' || word === 'mês' || word === 'mes' || word === 'dia' || word === 'hora' || word === 'data' || word === 'agora' || word === 'tempo'     || word === 'bipe' || word === 'pausa' || word === 'som' || word === 'toca' || word === 'mensagem' || word === 'aguardeTecla' || word === 'captureTecla' || word === 'pegar' || word === 'colocar'   ) && code[j4] === '(') tokens.push({ type: 'function', text: word });
+          (word === 'e' && code[j4] !== '(') || word === 'ou' || word === 'não' || word === 'existe' ||
+          word === 'verdadeiro' || word === 'falso' || word === 'true' || word === 'false') tokens.push({ type: 'keyword', text: word });
+      else if ((word === 'selecionar' || word === 'comprimento' || word === 'absoluto' || word === 'abs' || word === 'fatorial'  || word === 'variáveis' || word === 'variaveis' || word === 'raizq' || word === 'raizc'  || word === 'pi'   || word === 'inteiro' || word === 'decimal'        || word === 'paraLista'  || word === 'paraTexto' || word === 'paraNúmero'           || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'dado' || word === 'moeda'   || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo' || word === 'retângulo' || word === 'texto' || word === 'intervalo' || word === 'log' || word === 'logn' || word === 'ln' || word === 'arredondar' || word === 'arred' || word === 'salvar' || word === 'carregar'   || word === 'ano' || word === 'mês' || word === 'dia' || word === 'hora' || word === 'data' || word === 'agora' || word === 'tempo'     || word === 'bipe' || word === 'pausa' || word === 'regressiva' || word === 'som' || word === 'toca' || word === 'mensagem' || word === 'aguardeTecla' || word === 'captureTecla' || word === 'pegar' || word === 'colocar' || word === 'maiúsculo' || word === 'minúsculo' || word === 'substitua' || word === 'divida' || word === 'junte' || word === 'contém' || word === 'posição' || word === 'insira' || word === 'remova' || word === 'posiçãoEm'   ) && code[j4] === '(') tokens.push({ type: 'function', text: word });
       else tokens.push({ type: 'identifier', text: word });
       i = j4;
     } else {
@@ -5081,193 +5445,35 @@ function addConsoleInfo(text, isError) {
   addConsole({ kind: 'info', text: text, lineNo: null, isError: !!isError });
 }
 
-var lastPlot = null;
-var plotZoom = 1;
-var plotPanX = 0;
-var plotPanY = 0;
-var plotScaleX = 1;
-var plotScaleY = 1;
-var plotStretchX = 1;
-var plotStretchY = 1;
-var plotMap = null;
-
-function openPlot(xs, ys) {
-  lastPlot = { xs: xs, ys: ys };
-  plotZoom = 1;
-  plotPanX = 0;
-  plotPanY = 0;
-  plotStretchX = 7;
-  plotStretchY = 1;
-  updatePlotZoomLabel();
-  document.getElementById('plotInfo').textContent = xs.length + ' ponto(s)';
-  plotModal.classList.remove('plot-mini');
-  wmOpen('plotOverlay');
-  if (plotTableWrap) { plotTableWrap.style.left = ''; plotTableWrap.style.top = ''; }
-  renderPlotTable();
-  renderPlot();
-  requestAnimationFrame(function () {
-    if (lastPlot) renderPlot();
-  });
-}
-
-function renderPlot() {
-  if (!lastPlot) return;
-  var xs = lastPlot.xs;
-  var ys = lastPlot.ys;
-  var canvas = document.getElementById('plotCanvas');
-  var rect = canvas.getBoundingClientRect();
-  var cw = rect.width;
-  var ch = rect.height;
-  if (cw < 180) cw = 180;
-  if (ch < 180) ch = 180;
-  var dpr = window.devicePixelRatio || 1;
-  canvas.width = Math.round(cw * dpr);
-  canvas.height = Math.round(ch * dpr);
-  var ctx = canvas.getContext('2d');
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  var W = cw;
-  var H = ch;
-  var padL = 52, padR = 16, padT = 18, padB = 34;
-
-  var xmin = Math.min.apply(null, xs);
-  var xmax = Math.max.apply(null, xs);
-  var ymin = Math.min.apply(null, ys);
-  var ymax = Math.max.apply(null, ys);
-  if (xmin === xmax) { xmin -= 1; xmax += 1; }
-  if (ymin === ymax) { ymin -= 1; ymax += 1; }
-  var xr = xmax - xmin;
-  var yr = ymax - ymin;
-  xmin -= xr * 0.05; xmax += xr * 0.05;
-  ymin -= yr * 0.05; ymax += yr * 0.05;
-  var bcx = (xmin + xmax) / 2;
-  var bcy = (ymin + ymax) / 2;
-  var bhw = (xmax - xmin) / 2;
-  var bhh = (ymax - ymin) / 2;
-  var vcx = bcx + plotPanX;
-  var vcy = bcy + plotPanY;
-  xmin = vcx - bhw / plotZoom;
-  xmax = vcx + bhw / plotZoom;
-  ymin = vcy - bhh / plotZoom;
-  ymax = vcy + bhh / plotZoom;
-  var plotW = W - padL - padR;
-  var plotH = H - padT - padB;
-  var viewW = xmax - xmin;
-  var viewH = ymax - ymin;
-  var pxBase = Math.min(plotW / viewW, plotH / viewH);
-  var pxPerUnitX = pxBase * plotStretchX;
-  var pxPerUnitY = pxBase * plotStretchY;
-  var drawW = viewW * pxPerUnitX;
-  var drawH = viewH * pxPerUnitY;
-  var offX = (plotW - drawW) / 2;
-  var offY = (plotH - drawH) / 2;
-  plotScaleX = 1 / pxPerUnitX;
-  plotScaleY = 1 / pxPerUnitY;
-
-  function niceStep(range, target) {
-    var raw = range / target;
-    var mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10));
-    var norm = raw / mag;
-    var step;
-    if (norm < 1.5) step = 1;
-    else if (norm < 3) step = 2;
-    else if (norm < 7) step = 5;
-    else step = 10;
-    return step * mag;
-  }
-  var stepY = niceStep(viewH, 8);
-  var stepX = 2 * stepY;
-
-  function fmt(v) { return String(Number(v.toPrecision(6))); }
-
-  function X(x) { return padL + offX + (x - xmin) * pxPerUnitX; }
-  function Y(y) { return H - padB - offY - (y - ymin) * pxPerUnitY; }
-
-  var dark = !document.body.classList.contains('light');
-  var cBg = dark ? '#1e1e1e' : '#ffffff';
-  var cGrid = dark ? '#4d4d4d' : '#b0b0b0';
-  var cAxis = dark ? '#d4d4d4' : '#333333';
-  var cText = dark ? '#a8a8a8' : '#555555';
-  ctx.fillStyle = cBg;
-  ctx.fillRect(0, 0, W, H);
-  ctx.font = '11px Consolas, monospace';
-  ctx.textBaseline = 'middle';
-
-  var tx0 = Math.ceil(xmin / stepX) * stepX;
-  var txCount = Math.floor((xmax - tx0) / stepX) + 1;
-  for (var ti = 0; ti < txCount; ti++) {
-    var tx = tx0 + ti * stepX;
-    var gx = Math.round(X(tx));
-    ctx.strokeStyle = cGrid;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(gx, padT);
-    ctx.lineTo(gx, H - padB);
-    ctx.stroke();
-    ctx.fillStyle = cText;
-    ctx.textAlign = 'center';
-    ctx.fillText(fmt(tx), gx, H - padB + 16);
-  }
-  var ty0 = Math.ceil(ymin / stepY) * stepY;
-  var tyCount = Math.floor((ymax - ty0) / stepY) + 1;
-  for (var uj = 0; uj < tyCount; uj++) {
-    var ty = ty0 + uj * stepY;
-    var gy = Math.round(Y(ty));
-    ctx.strokeStyle = cGrid;
-    ctx.beginPath();
-    ctx.moveTo(padL, gy);
-    ctx.lineTo(W - padR, gy);
-    ctx.stroke();
-    ctx.fillStyle = cText;
-    ctx.textAlign = 'right';
-    ctx.fillText(fmt(ty), padL - 6, gy);
-  }
-
-  ctx.strokeStyle = cAxis;
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  if (0 >= xmin && 0 <= xmax) {
-    var zx = Math.round(X(0));
-    ctx.moveTo(zx, padT);
-    ctx.lineTo(zx, H - padB);
-  }
-  if (0 >= ymin && 0 <= ymax) {
-    var zy = Math.round(Y(0));
-    ctx.moveTo(padL, zy);
-    ctx.lineTo(W - padR, zy);
-  }
-  ctx.stroke();
-
-  ctx.strokeStyle = '#1a7fae';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(X(xs[0]), Y(ys[0]));
-  for (var p = 1; p < xs.length; p++) ctx.lineTo(X(xs[p]), Y(ys[p]));
-  ctx.stroke();
-
-  ctx.fillStyle = '#e03e3e';
-  for (var q = 0; q < xs.length; q++) {
-    ctx.beginPath();
-    ctx.arc(X(xs[q]), Y(ys[q]), 3, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  plotMap = { X: X, Y: Y };
-}
-
-function renderPlotTable() {
-  var tb = document.getElementById('plotTable');
-  if (!lastPlot || !tb) return;
-  var xs = lastPlot.xs;
-  var ys = lastPlot.ys;
-  function fv(v) { return String(Number(v.toPrecision(6))); }
-  var h = '<tr><th>x</th><th>y</th></tr>';
-  for (var i = 0; i < xs.length; i++) {
-    h += '<tr><td>' + fv(xs[i]) + '</td><td>' + fv(ys[i]) + '</td></tr>';
-  }
-  tb.innerHTML = h;
-}
-
 var lastJanela = null;
 var lastJanelaCopy = null;
+var janelaDirty = false;
+var janelaVis = null;
+var janelaUsada = false;
+var janelaFechada = false;
+var janelaWaitCancel = null;
+
+function interromperEsperaJanela() {
+  if (janelaWaitCancel) {
+    var f = janelaWaitCancel;
+    janelaWaitCancel = null;
+    f();
+  }
+}
+
+function sleepJanela(ms) {
+  return new Promise(function (resolve) {
+    var done = false;
+    var fim = function () {
+      if (done) return;
+      done = true;
+      if (janelaWaitCancel === fim) janelaWaitCancel = null;
+      resolve();
+    };
+    janelaWaitCancel = fim;
+    setTimeout(fim, ms);
+  });
+}
 
 function janelaBorda(bg) {
   var hex = bg.charAt(0) === '#' ? bg.slice(1) : bg;
@@ -5278,7 +5484,10 @@ function janelaBorda(bg) {
 }
 
 function openJanela(w, h, bg, titulo) {
-  lastJanela = { w: w, h: h, bg: bg || '#000000', points: [], lines: [], circles: [], texts: [] };
+  lastJanela = { w: w, h: h, bg: bg || '#000000', points: [], lines: [], circles: [], rects: [], texts: [] };
+  janelaVis = null;
+  janelaUsada = true;
+  janelaFechada = false;
   document.getElementById('janelaTitle').textContent = titulo || 'Janela';
   wmOpen('janelaOverlay');
   renderJanela();
@@ -5288,6 +5497,18 @@ function renderJanela() {
   if (!lastJanela) return;
   var w = lastJanela.w;
   var h = lastJanela.h;
+  var nP = lastJanela.points.length;
+  var nL = lastJanela.lines.length;
+  var nC = lastJanela.circles.length;
+  var nR = lastJanela.rects.length;
+  var nT = lastJanela.texts.length;
+  if (janelaVis) {
+    nP = Math.min(janelaVis.p, nP);
+    nL = Math.min(janelaVis.l, nL);
+    nC = Math.min(janelaVis.c, nC);
+    nR = Math.min(janelaVis.r, nR);
+    nT = Math.min(janelaVis.t, nT);
+  }
   var canvas = document.getElementById('janelaCanvas');
   var dpr = window.devicePixelRatio || 1;
   canvas.width = Math.round(w * dpr);
@@ -5308,7 +5529,7 @@ function renderJanela() {
   ctx.strokeStyle = janelaBorda(lastJanela.bg);
   ctx.lineWidth = 2;
   ctx.strokeRect(1, 1, w - 2, h - 2);
-  for (var l = 0; l < lastJanela.lines.length; l++) {
+  for (var l = 0; l < nL; l++) {
     var ln = lastJanela.lines[l];
     ctx.strokeStyle = ln.c;
     ctx.lineWidth = 1.5;
@@ -5317,7 +5538,19 @@ function renderJanela() {
     ctx.lineTo(ln.x2, ln.y2);
     ctx.stroke();
   }
-  for (var c = 0; c < lastJanela.circles.length; c++) {
+  for (var rq = 0; rq < nR; rq++) {
+    var rqi = lastJanela.rects[rq];
+    ctx.beginPath();
+    ctx.rect(rqi.x, rqi.y, rqi.w, rqi.h);
+    if (rqi.fill) {
+      ctx.fillStyle = rqi.fill;
+      ctx.fill();
+    }
+    ctx.strokeStyle = rqi.c;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+  for (var c = 0; c < nC; c++) {
     var ci = lastJanela.circles[c];
     ctx.beginPath();
     ctx.arc(ci.x, ci.y, ci.r, 0, Math.PI * 2);
@@ -5329,7 +5562,7 @@ function renderJanela() {
     ctx.lineWidth = 1.5;
     ctx.stroke();
   }
-  for (var p = 0; p < lastJanela.points.length; p++) {
+  for (var p = 0; p < nP; p++) {
     ctx.fillStyle = lastJanela.points[p].c;
     ctx.beginPath();
     ctx.arc(lastJanela.points[p].x, lastJanela.points[p].y, 2.5, 0, Math.PI * 2);
@@ -5338,7 +5571,7 @@ function renderJanela() {
   ctx.font = '14px Consolas, monospace';
   ctx.textBaseline = 'top';
   ctx.textAlign = 'left';
-  for (var t = 0; t < lastJanela.texts.length; t++) {
+  for (var t = 0; t < nT; t++) {
     var txt = lastJanela.texts[t];
     ctx.fillStyle = txt.c;
     ctx.font = txt.s + 'px Consolas, monospace';
@@ -5355,6 +5588,8 @@ async function run() {
   runStatus.textContent = '● executando...';
   clearConsole();
   closeEmJanela();
+  janelaUsada = false;
+  janelaFechada = false;
 
   var records = executeProgram(editor.value);
   var showAssign = chkAssign.checked;
@@ -5369,12 +5604,39 @@ async function run() {
     addConsoleInfo('Nenhum código para executar.');
   }
 
-  for (var i = 0; i < records.length; i++) {
+  var timerCount = 0;
+  var playPos = { i: 0 };
+  for (var i = 0; i < records.length || timerCount > 0; i++) {
+    while (i >= records.length && timerCount > 0) { await sleep(30); }
+    if (i >= records.length) { break; }
     var rec = records[i];
+    playPos.i = i + 1;
     if (rec.kind === 'clear') { clearConsole(); continue; }
     if (rec.kind === 'pause') {
-      addConsole(rec, false);
-      await sleep(Math.max(0, rec.secs) * 1000);
+      if (!(janelaUsada && janelaFechada)) {
+        if (!rec.silent) addConsole(rec, false);
+        await sleepJanela(Math.max(0, rec.secs) * 1000);
+      }
+      continue;
+    }
+    if (rec.kind === 'timer') {
+      timerCount++;
+      (function (tRec) {
+        setTimeout(function () {
+          timerCount--;
+          var at = Math.min(playPos.i, records.length);
+          records.splice.apply(records, [at, 0].concat(tRec.inner));
+          if (i > at) i = at;
+        }, Math.max(0, tRec.secs) * 1000);
+      })(rec);
+      continue;
+    }
+    if (rec.kind === 'render') {
+      var nxR = records[i + 1];
+      if (!(nxR && nxR.kind === 'render') && !(janelaUsada && janelaFechada)) {
+        janelaVis = { p: rec.vp, l: rec.vl, c: rec.vc, r: rec.vr, t: rec.vt };
+        renderJanela();
+      }
       continue;
     }
     if (rec.kind === 'sound') {
@@ -5399,7 +5661,7 @@ async function run() {
       continue;
     }
     if (rec.kind === 'window') {
-      await processEmJanela(rec.inner);
+      await processEmJanela(rec.inner, rec.centered);
       continue;
     }
     if (rec.kind === 'rerun') {
@@ -5408,6 +5670,8 @@ async function run() {
         execStatement(rec.line, rec.lineNo, GLOBAL_ENV, rr, true);
       } catch (e) {
         if (e && e.wpReturn) rr.push({ kind: 'error', text: 'retorne usado fora de uma função', lineNo: rec.lineNo });
+        else if (e && e.wpPare) rr.push({ kind: 'error', text: "'pare' usado fora de um laço", lineNo: rec.lineNo });
+        else if (e && e.wpContinue) rr.push({ kind: 'error', text: "'continue' usado fora de um laço", lineNo: rec.lineNo });
         else throw e;
       }
       records.splice.apply(records, [i + 1, 0].concat(rr));
@@ -5462,11 +5726,11 @@ var AC_ALL = (function () {
     list.push({ name: name, insert: insert, paren: !!paren, cat: cat, desc: desc });
   }
   add('mostre', 'mostre ', false, 'Saída', 'Exibe o valor de uma expressão');
-  add('mostrar', 'mostrar ', false, 'Saída', 'Exibe o valor de uma expressão');
   add('limpe', 'limpe', false, 'Saída', 'Apaga o console');
   add('leia', 'leia ', false, 'Entrada', 'Lê um valor digitado (ex.: nome = leia "Nome: ")');
   add('aguardeTecla', 'aguardeTecla()', true, 'Entrada', 'Aguarda o usuário pressionar uma tecla (ex.: aguardeTecla("Z"))');
   add('pausa', 'pausa()', true, 'Controle', 'Pausa a execução por s segundos (pode ser fracionado)');
+  add('regressiva', 'regressiva():', true, 'Controle', 'Contagem regressiva sem parar o programa; executa o bloco indentado quando a contagem termina');
   add('bipe', 'bipe()', true, 'Som', 'Emite um sinal sonoro por s segundos (pode ser fracionado)');
   add('som', 'som()', true, 'Som', 'Emite um som com frequência f em Hz por s segundos');
   add('toca', 'toca()', true, 'Som', 'Toca uma sequência de notas musicais, cada uma por s segundos');
@@ -5475,20 +5739,21 @@ var AC_ALL = (function () {
   add('colocar', 'colocar()', true, 'Visualização', 'Coloca a parte copiada com pegar no retângulo (x0, y0)-(x1, y1)');
   add('se', 'se ', false, 'Controle', 'Executa um bloco se a condição for verdadeira');
   add('senão', 'senão:', false, 'Controle', 'Executa um bloco quando a condição do se é falsa');
-  add('senao', 'senao:', false, 'Controle', 'Executa um bloco quando a condição do se é falsa');
   add('enquanto', 'enquanto ', false, 'Controle', 'Repete enquanto a condição for verdadeira');
   add('selecionar opção', 'selecionar opção:', false, 'Controle', 'Abre uma janela com um menu de opções executáveis pelo teclado');
   add('emJanela', 'emJanela:', false, 'Janela', 'Executa o bloco indentado em uma janela ao invés do console');
+  add('emJanela()', 'emJanela():', false, 'Janela', 'Como emJanela:, mas abre a janela maximizada e com as saídas centralizadas');
   add('repita', 'repita()', true, 'Controle', 'Repete o bloco um número fixo de vezes');
   add('para cada', 'para cada ', false, 'Controle', 'Percorre os itens de uma coleção');
   add('para x em', 'para x em ', false, 'Controle', 'Percorre os itens de uma coleção (sem "cada")');
+  add('pare', 'pare', false, 'Controle', 'Interrompe imediatamente o laço atual');
+  add('continue', 'continue', false, 'Controle', 'Pula para a próxima iteração do laço');
   add('definir função', 'definir função ', false, 'Controle', 'Define uma nova função');
   add('retorne', 'retorne ', false, 'Controle', 'Retorna um ou mais valores de uma função');
   add('retornar', 'retornar ', false, 'Controle', 'Retorna um ou mais valores de uma função');
   add('e', 'e ', false, 'Lógica', 'E lógico');
   add('ou', 'ou ', false, 'Lógica', 'OU lógico');
   add('não', 'não ', false, 'Lógica', 'Negação lógica');
-  add('nao', 'nao ', false, 'Lógica', 'Negação lógica');
   add('verdadeiro', 'verdadeiro', false, 'Valor', 'Valor booleano verdadeiro');
   add('falso', 'falso', false, 'Valor', 'Valor booleano falso');
   add('salvar', 'salvar()', true, 'Arquivos', 'Salva variáveis, textos e números em um arquivo de texto');
@@ -5499,12 +5764,6 @@ var AC_ALL = (function () {
     ['comprimento', 'Matemática', 'Quantidade de caracteres de um texto, algarismos de um número ou elementos de uma lista'],
     ['captureTecla', 'Entrada', 'Mostra qual tecla o usuário pressionou como resposta ao último aguardeTecla()'],
     ['raizq', 'Matemática', 'Raiz quadrada de x'],
-    ['hex->dec', 'Conversão', 'Converte um texto hexadecimal em número decimal'],
-    ['dec->hex', 'Conversão', 'Converte um número decimal em texto hexadecimal'],
-    ['bin->dec', 'Conversão', 'Converte um texto binário em número decimal'],
-    ['dec->bin', 'Conversão', 'Converte um número decimal em texto binário'],
-    ['hex->bin', 'Conversão', 'Converte um texto hexadecimal em texto binário'],
-    ['bin->hex', 'Conversão', 'Converte um texto binário em texto hexadecimal'],
     ['variáveis', 'Variáveis', 'Mostra todas as variáveis definidas e seus valores'],
     ['variaveis', 'Variáveis', 'Mostra todas as variáveis definidas e seus valores (sem acento)'],
     ['raizc', 'Matemática', 'Raiz cúbica de x'],
@@ -5520,7 +5779,8 @@ var AC_ALL = (function () {
     ['decimal', 'Matemática', 'Parte decimal do número'],
     ['intervalo', 'Intervalo', 'Cria um intervalo numérico do início até o fim (inclusive), com passo opcional'],
     ['aleatório', 'Matemática', 'Número aleatório inteiro entre min e max'],
-    ['aleatorio', 'Matemática', 'Número aleatório inteiro entre min e max'],
+    ['dado', 'Matemática', 'Sorteia um número inteiro de 1 a 6, como um dado de seis faces'],
+    ['moeda', 'Matemática', 'Sorteia "cara" ou "coroa", como o lançamento de uma moeda'],
     ['cos', 'Trigonometria', 'Cosseno de x (em radianos)'],
     ['sen', 'Trigonometria', 'Seno de x (em radianos)'],
     ['tan', 'Trigonometria', 'Tangente de x (em radianos)'],
@@ -5529,17 +5789,25 @@ var AC_ALL = (function () {
     ['arcotan', 'Trigonometria', 'Arcotangente de x (em radianos)'],
     ['paraLista', 'Conversão', 'Converte uma lista em outra lista'],
     ['paraTexto', 'Conversão', 'Converte um valor em texto'],
+    ['maiúsculo', 'Texto', 'Converte o texto para MAIÚSCULAS'],
+    ['minúsculo', 'Texto', 'Converte o texto para minúsculas'],
+    ['substitua', 'Texto', 'Troca todas as ocorrências de um trecho por outro: substitua(texto, busca, troca)'],
+    ['divida', 'Texto', 'Divide um texto em lista de partes, usando o separador informado; um número vira lista de algarismos'],
+    ['junte', 'Texto', 'Junta os elementos de uma lista em um único texto, com separador opcional'],
+    ['contém', 'Texto', 'Verifica se um texto ou lista contém o valor informado (devolve verdadeiro/falso)'],
+    ['posição', 'Texto', 'Devolve a posição (a partir de 0) da primeira ocorrência do valor, ou -1 se não encontrar'],
+    ['insira', 'Texto', 'Insere um valor depois da posição informada em um texto, número ou lista'],
+    ['remova', 'Texto', 'Remove o caractere ou elemento na posição informada de um texto, número ou lista'],
+    ['posiçãoEm', 'Texto', 'Devolve o caractere ou elemento que está na posição informada'],
     ['paraNúmero', 'Conversão', 'Converte texto numérico em valor'],
-    ['paraNumero', 'Conversão', 'Converte texto numérico em valor'],
     ['janela', 'Gráficos', 'Abre uma janela gráfica (janela(larg, alt, cor, título))'],
     ['ponto', 'Gráficos', 'Desenha um ponto na janela'],
     ['linha', 'Gráficos', 'Traça uma linha na janela'],
     ['círculo', 'Gráficos', 'Desenha um círculo na janela'],
-    ['circulo', 'Gráficos', 'Desenha um círculo na janela (sem acento)'],
+    ['retângulo', 'Gráficos', 'Desenha um retângulo na janela'],
     ['texto', 'Gráficos', 'Escreve um texto na janela'],
     ['ano', 'Data e Hora', 'Ano atual (yyyy)'],
     ['mês', 'Data e Hora', 'Mês atual (mm)'],
-    ['mes', 'Data e Hora', 'Mês atual (mm) (sem acento)'],
     ['dia', 'Data e Hora', 'Dia atual (dd)'],
     ['hora', 'Data e Hora', 'Hora atual'],
     ['data', 'Data e Hora', 'Data atual (dd/MM/yyyy)'],
@@ -5554,11 +5822,15 @@ var AC_ALL = (function () {
 
 var AC_PROPS = [
   { name: 'ordenada', insert: 'ordenada', paren: false, cat: 'Lista', desc: 'Retorna a lista em ordem crescente' },
-  { name: 'adicionar', insert: 'adicionar()', paren: true, cat: 'Lista', desc: 'Adiciona valores ao final da lista (também se aplica a conjuntos)' },
+  { name: 'mínimo', insert: 'mínimo', paren: false, cat: 'Lista', desc: 'Retorna o menor valor numérico da lista' },
+  { name: 'máximo', insert: 'máximo', paren: false, cat: 'Lista', desc: 'Retorna o maior valor numérico da lista' },
+  { name: 'adicionar', insert: 'adicionar()', paren: true, cat: 'Lista', desc: 'Adiciona valores ao final da lista' },
   { name: 'aleatório', insert: 'aleatório', paren: false, cat: 'Lista', desc: 'Sorteia um item aleatório da lista' },
-  { name: 'aleatorio', insert: 'aleatorio', paren: false, cat: 'Lista', desc: 'Sorteia um item aleatório da lista (sem acento)' },
   { name: 'embaralhar', insert: 'embaralhar', paren: false, cat: 'Lista', desc: 'Embaralha os itens da lista (modifica a própria lista)' },
-  { name: 'soma', insert: 'soma', paren: false, cat: 'Lista', desc: 'Soma os elementos numéricos ou concatena os textos da lista' }
+  { name: 'soma', insert: 'soma', paren: false, cat: 'Lista', desc: 'Soma os elementos numéricos ou concatena os textos da lista' },
+  { name: 'invertida', insert: 'invertida', paren: false, cat: 'Lista', desc: 'Retorna a lista ou o texto com a ordem dos itens invertida' },
+  { name: 'contar', insert: 'contar', paren: false, cat: 'Lista', desc: 'Retorna a quantidade de itens de uma lista ou de caracteres de um texto' },
+  { name: 'contarItem', insert: 'contarItem()', paren: true, cat: 'Lista', desc: 'Retorna quantas vezes o valor aparece na lista ou no texto' }
 ];
 
 var QUICK_REF = (function () {
@@ -5567,19 +5839,20 @@ var QUICK_REF = (function () {
     list.push({ name: name, tag: tag, desc: desc, example: example });
   }
   qr('mostre', 'Comando', 'Exibe o valor de uma expressão', 'preco = 25\nquantidade = 4\nmostre "Total: R$ " + (preco * quantidade)');
-  qr('mostrar', 'Comando', 'Exibe o valor de uma expressão (sinônimo de mostre)', 'mostrar 2 ** 10');
   qr('limpe', 'Comando', 'Apaga o console', 'mostre "isto desaparecerá"\nlimpe\nmostre "console limpo"');
   qr('leia', 'Comando', 'Lê um valor digitado pelo usuário', 'nome = leia "Qual o seu nome? "\nmostre "Prazer, " + nome + "!"');
   qr('aguardeTecla', 'Comando', 'Aguarda o usuário pressionar uma tecla para continuar', 'mostre "Aperte Z"\naguardeTecla("Z")\nmostre "Você apertou Z!"\naguardeTecla()\nmostre "Apertei qualquer tecla!"');
   qr('captureTecla', 'Função', 'Mostra qual tecla o usuário pressionou como resposta ao último aguardeTecla()', 'aguardeTecla()\nmostre "Você apertou: " + captureTecla()');
   qr('se', 'Comando', 'Executa um bloco se a condição for verdadeira', 'idade = 18\nse idade >= 18:\n  mostre "Pode votar"\nsenão:\n  mostre "Não pode votar"');
   qr('senão', 'Comando', 'Bloco executado quando a condição do se é falsa', 'nota = 6\nse nota >= 6:\n  mostre "Aprovado"\nsenão:\n  mostre "Recuperação"');
-  qr('senao', 'Comando', 'Bloco executado quando a condição do se é falsa (sem acento)', 'a = 5\nse a == 5:\n  mostre "igual"\nsenao:\n  mostre "diferente"');
   qr('enquanto', 'Comando', 'Repete enquanto a condição for verdadeira', 'n = 5\nenquanto n > 0:\n  mostre n\n  n = n - 1');
   qr('repita', 'Comando', 'Repete o bloco um número fixo de vezes', 'repita(4):\n  mostre "batida"');
   qr('selecionar opção', 'Comando', 'Abre uma janela com um menu de opções executáveis pelo teclado', 'selecionar opção:\n  <1> "Mostrar mensagem":\n    mostre "Opção 1"\n  <2> "Calcular quadrado":\n    mostre 5**2\n  <3> "Contar até 3":\n    para x em (1,3):\n      mostre x');
   qr('emJanela', 'Comando', 'Executa o bloco indentado em uma janela ao invés do console', 'emJanela:\n  mostre "Olá do janela!"\n  x = 5\n  mostre x + 1');
+  qr('emJanela()', 'Comando', 'Igual ao emJanela:, mas abre a janela maximizada e com as saídas centralizadas', 'emJanela():\n  mostre "Olá centralizado!"\n  x = 5\n  mostre x + 1');
   qr('para cada', 'Comando', 'Percorre os itens de uma coleção', 'frutas = ["maçã", "banana", "uva"]\npara cada fruta em frutas:\n  mostre fruta');
+  qr('pare', 'Comando', 'Interrompe imediatamente o laço atual', 'n = 1\nenquanto verdadeiro:\n  mostre n\n  n = n + 1\n  se n > 3:\n    pare');
+  qr('continue', 'Comando', 'Pula para a próxima iteração do laço', 'para n em intervalo(1, 6):\n  se n == 3:\n    continue\n  mostre n');
   qr('para x em', 'Comando', 'Percorre os itens de uma coleção (sem "cada")', 'para n em intervalo(2, 6, 2):\n  mostre n');
   qr('definir função', 'Comando', 'Define uma nova função', 'definir função quadrado(n):\n  retorne n * n\nmostre quadrado(7)');
   qr('retorne', 'Comando', 'Retorna um ou mais valores de uma função (separados por vírgula)', 'definir função troca(a, b):\n  retorne b, a\nx, y = troca(1, 2)\nmostre x + " " + y');
@@ -5587,9 +5860,8 @@ var QUICK_REF = (function () {
   qr('e', 'Comando', 'E lógico', 'idade = 25\naltura = 1.75\nse idade >= 18 e altura >= 1.60:\n  mostre "Apto"\nsenão:\n  mostre "Inapto"');
   qr('ou', 'Comando', 'OU lógico', 'dia = 7\nse dia == 6 ou dia == 7:\n  mostre "Fim de semana"\nsenão:\n  mostre "Dia útil"');
   qr('não', 'Comando', 'Negação lógica', 'ativo = falso\nse não ativo:\n  mostre "desativado"');
-  qr('nao', 'Comando', 'Negação lógica (sem acento)', 'ligado = verdadeiro\nse nao ligado:\n  mostre "desligado"\nsenao:\n  mostre "ligado"');
   qr('verdadeiro', 'Valor', 'Valor booleano verdadeiro', 'aprovado = verdadeiro\nse aprovado:\n  mostre "passou"');
-  qr('falso', 'Valor', 'Valor booleano falso', 'erro = falso\nse erro:\n  mostre "falhou"\nsenao:\n  mostre "tudo certo"');
+  qr('falso', 'Valor', 'Valor booleano falso', 'erro = falso\nse erro:\n  mostre "falhou"\nsenão:\n  mostre "tudo certo"');
   qr('salvar', 'Função', 'Salva variáveis, textos e números em um arquivo de texto', 'nome = "Ana"\nidade = 12\nsalvar("dados", "perfil.txt", nome, idade)');
   qr('carregar', 'Função', 'Lê um arquivo de texto e devolve os valores às variáveis', 'nome = ""\nidade = 0\ncarregar("dados", "perfil.txt", nome, idade)\nmostre nome + " tem " + idade + " anos"');
   qr('raizq', 'Função', 'Raiz quadrada de x', 'mostre raizq(169)');
@@ -5597,12 +5869,6 @@ var QUICK_REF = (function () {
   qr('absoluto', 'Função', 'Valor absoluto (parte inteira) de x', 'a = absoluto(-2.666666)\nmostre a');
   qr('abs', 'Função', 'Valor absoluto (parte inteira) de x', 'b = abs(1.45555)\nmostre b');
   qr('fatorial', 'Função', 'Fatorial de um número inteiro não negativo (n! também funciona)', 'mostre fatorial(5)\nmostre 5!');
-  qr('hex->dec', 'Função', 'Converte um texto hexadecimal em número decimal', 'mostre hex->dec("FF")\nmostre hex->dec("2A")');
-  qr('dec->hex', 'Função', 'Converte um número decimal em texto hexadecimal', 'mostre dec->hex(255)\nmostre dec->hex(10)');
-  qr('bin->dec', 'Função', 'Converte um texto binário em número decimal', 'mostre bin->dec("1010")\nmostre bin->dec(1010)');
-  qr('dec->bin', 'Função', 'Converte um número decimal em texto binário', 'mostre dec->bin(10)');
-  qr('hex->bin', 'Função', 'Converte um texto hexadecimal em texto binário', 'mostre hex->bin("F")');
-  qr('bin->hex', 'Função', 'Converte um texto binário em texto hexadecimal', 'mostre bin->hex("1111")');
   qr('variáveis', 'Função', 'Mostra todas as variáveis definidas e seus valores', 'x = 5\nnome = "Ana"\nmostre variáveis()\nvariaveis()');
   qr('log', 'Função', 'Logaritmo de x na base informada', 'mostre log(8, 2)');
   qr('logn', 'Função', 'Logaritmo natural de x', 'mostre logn(10)');
@@ -5617,7 +5883,8 @@ var QUICK_REF = (function () {
   qr('%', 'Operador', 'Porcentagem — %(a, b) calcula a% de b (a × b ÷ 100)', 'mostre %(10, 4)\nmostre %(5, 100)\nmostre %(12, 50)');
   qr('intervalo', 'Função', 'Cria um intervalo numérico do início até o fim (inclusive), com passo opcional', 'para n em intervalo(1, 10, 2):\n  mostre n');
   qr('aleatório', 'Função', 'Número aleatório inteiro entre min e max', 'mostre aleatório(100, 200)');
-  qr('aleatorio', 'Função', 'Número aleatório inteiro entre min e max (sem acento)', 'dado = aleatorio(1, 6)\nmostre "caiu: " + dado');
+  qr('dado', 'Função', 'Sorteia um número inteiro de 1 a 6, como um dado de seis faces', 'mostre dado()\nrepita(3):\n  mostre dado()');
+  qr('moeda', 'Função', 'Sorteia "cara" ou "coroa", como o lançamento de uma moeda', 'mostre moeda()\nrepita(3):\n  mostre moeda()');
   qr('cos', 'Função', 'Cosseno de x (em radianos)', 'mostre cos(3.14159265)');
   qr('sen', 'Função', 'Seno de x (em radianos)', 'mostre sen(1.57079633)');
   qr('tan', 'Função', 'Tangente de x (em radianos)', 'mostre tan(0.785398163)');
@@ -5626,17 +5893,25 @@ var QUICK_REF = (function () {
   qr('arcotan', 'Função', 'Arcotangente de x (em radianos)', 'mostre arcotan(0)');
   qr('paraLista', 'Função', 'Retorna uma cópia da lista', 'a = [1,2,3]\nb = paraLista(a)\nmostre b');
   qr('paraTexto', 'Função', 'Converte um valor em texto', 'mostre paraTexto(3.1415)');
+  qr('maiúsculo', 'Função', 'Converte o texto para MAIÚSCULAS', 'mostre maiúsculo("batata")');
+  qr('minúsculo', 'Função', 'Converte o texto para minúsculas', 'mostre minúsculo("ESCOLA")');
+  qr('substitua', 'Função', 'Troca todas as ocorrências de um trecho por outro', 'mostre substitua("Olá, mundo!", "Olá", "Tchau")');
+  qr('divida', 'Função', 'Divide um texto em lista de partes usando o separador; um número vira lista de algarismos', 'mostre divida("a,b,c", ",")\nmostre divida(12345, ",")');
+  qr('junte', 'Função', 'Junta os elementos de uma lista em um único texto, com separador opcional', 'mostre junte([1,2,3,4,5])\nmostre junte(["a","b","c"], "-")');
+  qr('contém', 'Função', 'Verifica se um texto ou lista contém o valor informado', 'mostre contém("escola", "esc")\nmostre contém("cidade", "cido")\nmostre contém([1,2,3], 2)');
+  qr('posição', 'Função', 'Devolve a posição da primeira ocorrência do valor (a partir de 0), ou -1 se não encontrar', 'mostre posição("banana", "a")\nmostre posição(12345654, 5)\nmostre posição([10,20,30], 20)');
+  qr('insira', 'Função', 'Insere um valor depois da posição informada', 'mostre insira("banana", 3, "olo")\nmostre insira(1234567, 4, 9)');
+  qr('remova', 'Função', 'Remove o caractere ou elemento na posição informada (a partir de 0)', 'mostre remova(12345, 3)\nmostre remova("banana", 2)\nmostre remova([5,6,7,8,9], 4)');
+  qr('posiçãoEm', 'Função', 'Devolve o caractere ou elemento que está na posição informada (a partir de 0)', 'mostre posiçãoEm("banana", 2)\nmostre posiçãoEm(12444, 3)\nmostre posiçãoEm([1,2,3,4,5,6,7], 4)');
   qr('paraNúmero', 'Função', 'Converte texto numérico em valor', 'mostre paraNúmero("3.14") + 1');
-  qr('paraNumero', 'Função', 'Converte texto numérico em valor (sem acento)', 'n = paraNumero("42")\nmostre n + 1');
   qr('janela', 'Função', 'Abre uma janela gráfica', 'janela(400, 300, preto, "Meu desenho")');
   qr('ponto', 'Função', 'Desenha um ponto na janela', 'janela(400, 300)\nponto(200, 150, azul)');
   qr('linha', 'Função', 'Traça uma linha na janela', 'janela(400, 300)\nlinha(100, 100, 300, 200, verde)');
   qr('círculo', 'Função', 'Desenha um círculo na janela', 'janela(400, 300)\ncírculo(200, 150, 80, verde, branco)');
-  qr('circulo', 'Função', 'Desenha um círculo na janela (sem acento)', 'janela(400, 300)\ncirculo(200, 150, 80, verde, branco)');
+  qr('retângulo', 'Função', 'Desenha um retângulo na janela a partir do canto (x, y), com largura e altura em pixels', 'janela(400, 300)\nretângulo(50, 50, 300, 200, verde, branco)');
   qr('texto', 'Função', 'Escreve um texto na janela (cor e tamanho da fonte opcionais)', 'janela(400, 300)\ntexto(50, 50, "Olá, mundo!", branco, 28)');
   qr('ano', 'Função', 'Ano atual (yyyy)', 'mostre ano()');
   qr('mês', 'Função', 'Mês atual (mm)', 'mostre mês()');
-  qr('mes', 'Função', 'Mês atual (mm) (sem acento)', 'mostre mes()');
   qr('dia', 'Função', 'Dia atual (dd)', 'mostre dia()');
   qr('hora', 'Função', 'Hora atual', 'mostre hora()');
   qr('data', 'Função', 'Data atual (dd/MM/yyyy)', 'mostre data()');
@@ -5646,15 +5921,21 @@ var QUICK_REF = (function () {
   qr('tempo', 'Função', 'Tempo decorrido em anos, meses e dias entre duas datas', 'mostre tempo("13/08/2026", "10/02/2027")');
   qr('bipe', 'Função', 'Emite um sinal sonoro por s segundos (pode ser fracionado)', 'bipe(1)\nbipe(0.5)\nbipe(0.25)');
   qr('pausa', 'Comando', 'Pausa a execução por s segundos (pode ser fracionado)', 'mostre "começou"\npausa(2)\nmostre "seguiu depois de 2 s"');
+  qr('regressiva', 'Comando', 'Contagem regressiva sem parar o programa; executa o bloco indentado quando a contagem termina', 'mostre "o jogo começou!"\nregressiva(5):\n  mostre "tempo esgotado!"\nmostre "seguindo enquanto o tempo corre..."');
   qr('som', 'Função', 'Emite um som com frequência f (Hz, entre 37 e 32767) por s segundos', 'som(440, 0.5)\nsom(880, 0.25)');
   qr('toca', 'Função', 'Toca uma sequência de notas musicais, cada uma por s segundos', 'toca("C", "D", "E", "F", "G", "A", "B", 0.25)');
   qr('mensagem', 'Comando', 'Abre uma caixa de mensagem com título e texto', 'mensagem("Olá", "Bem-vindo ao Willog!")');
   qr('pegar', 'Comando', 'Copia a parte do desenho dentro do retângulo (x0, y0)-(x1, y1)', 'janela(500, 300)\nlinha(50, 50, 100, 100, vermelho)\npegar(30, 30, 200, 200)');
   qr('colocar', 'Comando', 'Coloca a parte copiada com pegar no retângulo (x0, y0)-(x1, y1)', 'janela(500, 300)\nlinha(50, 50, 100, 100, vermelho)\npegar(30, 30, 200, 200)\ncolocar(250, 50, 420, 220)');
   qr('ordenada', 'Propriedade', 'Retorna a lista em ordem crescente', 'notas = [7, 3, 9, 5]\nmostre notas.ordenada');
-  qr('adicionar', 'Propriedade', 'Adiciona valores ao final da lista (também se aplica a conjuntos)', 'A := {1,2,3}\nA.adicionar(4, 5, 6)\nmostre A\nA.adicionar(1, 2, 6, 7)\nmostre A');
+  qr('mínimo', 'Propriedade', 'Retorna o menor valor numérico da lista', 'lista = [-2, -1, 0, 1, 2]\nmostre lista.mínimo');
+  qr('invertida', 'Propriedade', 'Retorna a lista ou o texto com a ordem dos itens invertida', 'mostre [1,2,3,4].invertida\nmostre "banana".invertida');
+  qr('contar', 'Propriedade', 'Retorna a quantidade de itens de uma lista ou de caracteres de um texto', 'mostre "escola".contar\nmostre [1,2,3,4,5,6,7,8].contar');
+  qr('contarItem', 'Propriedade', 'Retorna quantas vezes o valor aparece na lista ou no texto', 'mostre "banana".contarItem("a")\nmostre [1,2,1,2,3].contarItem(2)');
+  qr('existe ... em', 'Comando', 'Verifica se um valor existe em um texto ou lista (devolve verdadeiro ou falso)', 'se existe "ba" em "banana":\n  mostre "tem ba"\nmostre existe 2 em [1,2,3,4,5]');
+  qr('máximo', 'Propriedade', 'Retorna o maior valor numérico da lista', 'lista = [-2, -1, 0, 1, 2]\nmostre lista.máximo');
+  qr('adicionar', 'Propriedade', 'Adiciona valores ao final da lista (modifica a própria lista)', 'lista = [1, 2, 3]\nlista.adicionar(4, 5)\nmostre lista');
   qr('aleatório', 'Propriedade', 'Sorteia um item aleatório da lista', 'lista = [1, 2, 3, 4, 5]\nmostre lista.aleatório');
-  qr('aleatorio', 'Propriedade', 'Sorteia um item aleatório da lista (sem acento)', 'lista = [1, 2, 3, 4, 5]\nmostre lista.aleatorio');
   qr('embaralhar', 'Propriedade', 'Embaralha os itens da lista (modifica a própria lista)', 'lista = [1, 2, 3, 4, 5, 6]\nmostre lista.embaralhar');
   qr('soma', 'Propriedade', 'Soma os elementos numéricos ou concatena os textos da lista', 'nums = [1, 2, 3, 4]\nmostre nums.soma\nletras = ["a","b","c"]\nmostre letras.soma');
   return list;
@@ -6081,8 +6362,8 @@ var sugestoesOverlay = document.getElementById('sugestoesOverlay');
 var sugestoesList = document.getElementById('sugestoesList');
 var sugestoesSummary = document.getElementById('sugestoesSummary');
 
-var SUG_KEYWORDS = ['mostre', 'mostrar', 'limpe', 'leia', 'aguardeTecla', 'se', 'senão', 'senao', 'repita', 'enquanto', 'emJanela', 'para', 'cada', 'em', 'definir', 'função', 'funcao', 'retorne', 'retornar', 'e', 'ou', 'não', 'nao', 'verdadeiro', 'falso', 'true', 'false'];
-var SUG_FUNCS = ['selecionar', 'comprimento', 'captureTecla', 'absoluto', 'abs', 'fatorial', 'hex->dec', 'dec->hex', 'bin->dec', 'dec->bin', 'hex->bin', 'bin->hex', 'variáveis', 'variaveis', 'raizq', 'raizc', 'pi', 'intervalo', 'inteiro', 'decimal', 'paraLista', 'paraTexto', 'paraNúmero', 'paraNumero', 'cos', 'sen', 'tan', 'arcocos', 'arcosen', 'arcotan', 'aleatório', 'aleatorio', 'janela', 'ponto', 'linha', 'círculo', 'circulo', 'texto', 'log', 'logn', 'ln', 'arredondar', 'arred', 'salvar', 'carregar', 'mês', 'mes', 'dia', 'ano', 'hora', 'data', 'agora', 'tempo', 'bipe', 'pausa', 'som', 'toca', 'mensagem', 'pegar', 'colocar'];
+var SUG_KEYWORDS = ['mostre', 'limpe', 'leia', 'aguardeTecla', 'se', 'senão', 'repita', 'enquanto', 'pare', 'continue', 'emJanela', 'para', 'cada', 'em', 'existe', 'definir', 'função', 'funcao', 'retorne', 'retornar', 'e', 'ou', 'não', 'verdadeiro', 'falso', 'true', 'false'];
+var SUG_FUNCS = ['selecionar', 'comprimento', 'captureTecla', 'absoluto', 'abs', 'fatorial', 'variáveis', 'variaveis', 'raizq', 'raizc', 'pi', 'intervalo', 'inteiro', 'decimal', 'paraLista', 'paraTexto', 'paraNúmero', 'cos', 'sen', 'tan', 'arcocos', 'arcosen', 'arcotan', 'aleatório', 'dado', 'moeda', 'janela', 'ponto', 'linha', 'círculo', 'retângulo', 'texto', 'log', 'logn', 'ln', 'arredondar', 'arred', 'salvar', 'carregar', 'mês', 'dia', 'ano', 'hora', 'data', 'agora', 'tempo', 'bipe', 'pausa', 'regressiva', 'som', 'toca', 'mensagem', 'pegar', 'colocar', 'maiúsculo', 'minúsculo', 'substitua', 'divida', 'junte', 'contém', 'posição', 'insira', 'remova', 'posiçãoEm'];
 
 function sugestoesMaskStrings(line) {
   var out = '';
@@ -6240,7 +6521,7 @@ function analyzeSuggestions(code) {
     } else if (isEnquanto(t2)) {
       var wc = extractEnquanto(t2).trim();
       if (/^(verdadeiro|true)$/.test(wc)) {
-        items.push({ line: st2.lineNo, sev: 'warn', msg: "'enquanto verdadeiro' cria um laço infinito, pois a linguagem não tem comando de saída do laço." });
+        items.push({ line: st2.lineNo, sev: 'warn', msg: "'enquanto verdadeiro' só termina se o bloco executar 'pare'. Verifique se há uma condição de saída." });
       } else if (/^(falso|false)$/.test(wc)) {
         items.push({ line: st2.lineNo, sev: 'warn', msg: "A condição do 'enquanto' é constante (" + wc + "). O bloco nunca será executado." });
       }
@@ -6250,8 +6531,8 @@ function analyzeSuggestions(code) {
         var rv = parseFloat(rc);
         if (rv <= 0) items.push({ line: st2.lineNo, sev: 'warn', msg: "'repita(" + rc + ")' nunca executa o bloco." });
       }
-    } else if (/^mostre\b|^mostrar\b/.test(t2)) {
-      var rest3 = t2.replace(/^(mostre|mostrar)\b/, '').trim();
+    } else if (/^mostre\b/.test(t2)) {
+      var rest3 = t2.replace(/^mostre\b/, '').trim();
       var cm = rest3.match(/^"([^"]*)"\s*\+\s*(?!["'])(.+?)\s*$/);
       if (cm && cm[1].indexOf('{') < 0) {
         items.push({ line: st2.lineNo, sev: 'info', msg: 'Dica: use interpolação para juntar texto e valores. Ex.: "' + cm[1] + '" + ' + cm[2] + ' pode virar "' + cm[1] + '{' + cm[2] + '}".' });
@@ -6276,7 +6557,7 @@ function analyzeSuggestions(code) {
       var retName = /^(retorne|retornar)\b/.exec(st4.text)[1];
       var k = si4 + 1;
       while (k < stmts.length && stmts[k].indent >= st4.indent) {
-        if (!/^(sen[ãâ]o|senao)\b/.test(stmts[k].text)) {
+        if (!/^(sen[ãâ]o)\b/.test(stmts[k].text)) {
           items.push({ line: stmts[k].lineNo, sev: 'info', msg: "'" + retName + "' seguido de mais comandos: as linhas seguintes nunca serão executadas (código inacessível)." });
         }
         k++;
@@ -6427,8 +6708,17 @@ function comentarComando(text) {
     var wc = extractEnquanto(t);
     return 'Laço "enquanto": enquanto a condição "' + wc + '" for verdadeira, o bloco indentado a seguir é executado (a condição é reavaliada a cada repetição).';
   }
+  if (/^pare\s*$/.test(t)) {
+    return 'Comando "pare": interrompe imediatamente o laço atual (enquanto, repita ou para). O programa continua na primeira linha após o fim do laço.';
+  }
+  if (/^continue\s*$/.test(t)) {
+    return 'Comando "continue": abandona a iteração atual do laço e pula direto para a próxima repetição.';
+  }
   if (isSelecionarOpcao(t)) {
     return 'Comando "selecionar opção": abre uma janela com um menu de opções. O programa pausa até a janela ser fechada; pressione a tecla da opção desejada (número ou letra) para executar o bloco correspondente na janela.';
+  }
+  if (isEmJanelaCentro(t)) {
+    return 'Comando "emJanela()": igual ao comando "emJanela", mas a janela abre sempre maximizada (tela inteira) e exibe todas as saídas centralizadas.';
   }
   if (isEmJanela(t)) {
     return 'Comando "emJanela": executa o bloco indentado a seguir em uma janela ao invés do console. A janela pode ser minimizada ou maximizada pelos botões da barra de título.';
@@ -6438,24 +6728,6 @@ function comentarComando(text) {
   }
   if (/^capture\s*tecla\s*\(/i.test(t)) {
     return 'Função "captureTecla": devolve qual tecla o usuário pressionou como resposta ao último "aguardeTecla()" (ex.: mostre captureTecla()).';
-  }
-  if (/^hex\s*->\s*dec\s*\(/i.test(t)) {
-    return 'Função "hex->dec": converte um número hexadecimal (texto, ex.: "FF") em decimal (ex.: mostre hex->dec("FF") devolve 255).';
-  }
-  if (/^dec\s*->\s*hex\s*\(/i.test(t)) {
-    return 'Função "dec->hex": converte um número decimal em hexadecimal (ex.: mostre dec->hex(255) devolve "FF").';
-  }
-  if (/^bin\s*->\s*dec\s*\(/i.test(t)) {
-    return 'Função "bin->dec": converte um número binário (texto, ex.: "1010") em decimal (ex.: mostre bin->dec("1010") devolve 10).';
-  }
-  if (/^dec\s*->\s*bin\s*\(/i.test(t)) {
-    return 'Função "dec->bin": converte um número decimal em binário (ex.: mostre dec->bin(10) devolve "1010").';
-  }
-  if (/^hex\s*->\s*bin\s*\(/i.test(t)) {
-    return 'Função "hex->bin": converte um número hexadecimal (texto, ex.: "FF") em binário (ex.: mostre hex->bin("F") devolve "1111").';
-  }
-  if (/^bin\s*->\s*hex\s*\(/i.test(t)) {
-    return 'Função "bin->hex": converte um número binário (texto, ex.: "1010") em hexadecimal (ex.: mostre bin->hex("1111") devolve "F").';
   }
   if (/^(vari[áa]veis|variaveis)\s*\(/i.test(t)) {
     return 'Função "variáveis": mostra todas as variáveis definidas e seus valores (ex.: mostre variáveis()).';
@@ -6483,8 +6755,8 @@ function comentarComando(text) {
   if ((m2 = t.match(ASSIGN_RE))) {
     return 'Armazena o resultado da expressão "' + m2[2].trim() + '" na variável "' + m2[1] + '".';
   }
-  if (/^(mostre|mostrar)\b/.test(t)) {
-    var rest = stripQuotes(t.replace(/^(mostre|mostrar)\b/, '').trim());
+  if (/^mostre\b/.test(t)) {
+    var rest = stripQuotes(t.replace(/^mostre\b/, '').trim());
     return 'Comando "mostre": exibe no console o valor de "' + rest + '".';
   }
   if (/^bipe\s*\(/.test(t)) {
@@ -6513,6 +6785,58 @@ function comentarComando(text) {
     var cpl = t.match(/^comprimento\s*\((.+)\)\s*$/);
     return 'Função "comprimento": devolve a quantidade de caracteres de um texto, algarismos de um número ou elementos de uma lista da expressão "' + (cpl && cpl[1] ? cpl[1].trim() : 'x') + '".';
   }
+  if (/^maiúsculo\s*\(/.test(t)) {
+    var mauM = t.match(/^maiúsculo\s*\((.+)\)\s*$/);
+    return 'Função "maiúsculo": devolve o texto "' + (mauM && mauM[1] ? mauM[1].trim() : 'x') + '" convertido para MAIÚSCULAS.';
+  }
+  if (/^minúsculo\s*\(/.test(t)) {
+    var minM = t.match(/^minúsculo\s*\((.+)\)\s*$/);
+    return 'Função "minúsculo": devolve o texto "' + (minM && minM[1] ? minM[1].trim() : 'x') + '" convertido para minúsculas.';
+  }
+  if (/^substitua\s*\(/.test(t)) {
+    var subM = t.match(/^substitua\s*\((.+)\)\s*$/);
+    return 'Função "substitua": devolve o texto com todas as ocorrências do segundo argumento trocadas pelo terceiro (ex.: substitua("Olá", "l", "L") devolve "OLá").';
+  }
+  if (/^divida\s*\(/.test(t)) {
+    var dvM = t.match(/^divida\s*\((.+)\)\s*$/);
+    return 'Função "divida": corta o primeiro argumento em cada ocorrência do separador (segundo argumento) e devolve a lista das partes. Se o primeiro argumento for um número, devolve a lista dos seus algarismos.';
+  }
+  if (/^junte\s*\(/.test(t)) {
+    var jtM = t.match(/^junte\s*\((.+)\)\s*$/);
+    return 'Função "junte": junta os elementos da lista em um único texto; se um separador for informado como segundo argumento, ele é inserido entre os elementos. É o inverso de divida.';
+  }
+  if (/^contém\s*\(/.test(t)) {
+    var ctM = t.match(/^contém\s*\((.+)\)\s*$/);
+    return 'Função "contém": devolve verdadeiro se o primeiro argumento (texto ou lista) contiver o valor buscado do segundo argumento; caso contrário, devolve falso.';
+  }
+  if (/^posição\s*\(/.test(t)) {
+    var psM = t.match(/^posição\s*\((.+)\)\s*$/);
+    return 'Função "posição": devolve a posição (a partir de 0) da primeira ocorrência do valor buscado em um texto, número ou lista; se não encontrar, devolve -1.';
+  }
+  if (/^insira\s*\(/.test(t)) {
+    var inM = t.match(/^insira\s*\((.+)\)\s*$/);
+    return 'Função "insira": devolve o primeiro argumento com o valor do terceiro argumento inserido depois da posição indicada pelo segundo (a partir de 0).';
+  }
+  if (/^regressiva\s*\(/.test(t)) {
+    return 'Comando "regressiva": inicia uma contagem regressiva sem parar o programa (diferente do comando "pausa", que congela a execução). O bloco indentado após os dois-pontos é executado quando a contagem termina (ex.: regressiva(10): seguido de bloco).';
+  }
+  if (/^moeda\s*\(/.test(t)) {
+    return 'Função "moeda": devolve aleatoriamente o texto "cara" ou "coroa", como o lançamento de uma moeda.';
+  }
+  if (/^dado\s*\(/.test(t)) {
+    return 'Função "dado": devolve um número aleatório inteiro de 1 a 6 (inclusive), como o lançamento de um dado de seis faces.';
+  }
+  if (/^existe\b/.test(t)) {
+    return 'Teste "existe ... em": devolve verdadeiro se o primeiro valor existir dentro do texto ou da lista que vem depois de "em" (em textos, busca o trecho inteiro; em listas, procura um elemento igual).';
+  }
+  if (/^remova\s*\(/.test(t)) {
+    var rmM = t.match(/^remova\s*\((.+)\)\s*$/);
+    return 'Função "remova": devolve o primeiro argumento sem o caractere ou elemento da posição indicada pelo segundo (a partir de 0).';
+  }
+  if (/^posiçãoEm\s*\(/.test(t)) {
+    var peM = t.match(/^posiçãoEm\s*\((.+)\)\s*$/);
+    return 'Função "posiçãoEm": devolve o caractere ou elemento da expressão "' + (peM && peM[1] ? peM[1].trim() : 'valor') + '" que está na posição informada (a contagem começa em 0).';
+  }
   if (/^(absoluto|abs)\s*\(/.test(t)) {
     var am = t.match(/^(?:absoluto|abs)\s*\((.+)\)\s*$/);
     return 'Função "' + (t.trim().startsWith('absoluto') ? 'absoluto' : 'abs') + '": devolve o valor absoluto (a parte inteira do módulo) da expressão "' + (am && am[1] ? am[1].trim() : 'x') + '".';
@@ -6520,10 +6844,6 @@ function comentarComando(text) {
   if (/^selecionar\s*\(/.test(t)) {
     var sel = t.match(/^selecionar\s*\((.+)\)\s*$/);
     return 'Função "selecionar": devolve a parte da expressão "' + (sel && sel[1] ? sel[1].trim() : 'valor, início, fim') + '" entre os índices informados (início e fim, ambos inclusive; a contagem começa em 0). Para listas devolve uma lista com os elementos selecionados; para textos, o trecho com as letras selecionadas; para números, o bloco de algarismos selecionado.';
-  }
-  if (/^paraConjunto\s*\(/.test(t)) {
-    var pcm = t.match(/^paraConjunto\s*\((.+)\)\s*$/);
-    return 'Função "paraConjunto": converte a expressão "' + (pcm && pcm[1] ? pcm[1].trim() : 'x') + '" em um conjunto (elementos únicos, em ordem crescente). Aceita lista, matriz (aplainada), número ou conjunto.';
   }
   if (/^limpe\b/.test(t)) {
     return 'Comando "limpe": apaga todo o conteúdo atual do console durante a execução.';
@@ -6650,7 +6970,6 @@ function applyTheme(light) {
   clearPaletteStyles();
   var target = light ? lightPalette : darkPalette;
   applyPalette(target);
-  if (lastPlot) renderPlot();
 }
 btnTheme.addEventListener('click', function () {
   var light = !document.body.classList.contains('light');
@@ -6840,7 +7159,6 @@ function applyPalette(id) {
     localStorage.setItem('willprogPalette', id);
     localStorage.setItem(isLight ? 'willprogLightPalette' : 'willprogDarkPalette', id);
   } catch (e) {}
-  if (lastPlot) renderPlot();
   syncAll();
 }
 
@@ -6995,176 +7313,18 @@ document.getElementById('manualMaximize').addEventListener('click', function () 
     manualMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
   }
 });
-var plotOverlay = document.getElementById('plotOverlay');
-var plotModal = document.getElementById('plotModal');
-var plotMaxIcon = document.getElementById('plotMaxIcon');
-function updatePlotZoomLabel() {
-  var el = document.getElementById('plotZoomLabel');
-  if (el) el.textContent = Math.round(plotZoom * 100) + '%';
-}
-document.getElementById('plotZoomIn').addEventListener('click', function () {
-  plotZoom *= 1.25;
-  if (plotZoom > 50) plotZoom = 50;
-  updatePlotZoomLabel();
-  renderPlot();
-});
-document.getElementById('plotZoomOut').addEventListener('click', function () {
-  plotZoom /= 1.25;
-  if (plotZoom < 0.05) plotZoom = 0.05;
-  updatePlotZoomLabel();
-  renderPlot();
-});
-document.getElementById('plotZoomReset').addEventListener('click', function () {
-  plotZoom = 1;
-  plotPanX = 0;
-  plotPanY = 0;
-  plotStretchX = 1;
-  plotStretchY = 1;
-  updatePlotZoomLabel();
-  renderPlot();
-});
-document.getElementById('plotStretchXIn').addEventListener('click', function () {
-  plotStretchX *= 1.25;
-  if (plotStretchX > 16) plotStretchX = 16;
-  renderPlot();
-});
-document.getElementById('plotStretchXOut').addEventListener('click', function () {
-  plotStretchX /= 1.25;
-  if (plotStretchX < 0.0625) plotStretchX = 0.0625;
-  renderPlot();
-});
-document.getElementById('plotStretchYIn').addEventListener('click', function () {
-  plotStretchY *= 1.25;
-  if (plotStretchY > 16) plotStretchY = 16;
-  renderPlot();
-});
-document.getElementById('plotStretchYOut').addEventListener('click', function () {
-  plotStretchY /= 1.25;
-  if (plotStretchY < 0.0625) plotStretchY = 0.0625;
-  renderPlot();
-});
-var plotCanvasEl = document.getElementById('plotCanvas');
-var plotDragging = null;
-var plotTableWrap = document.getElementById('plotTableWrap');
-var plotTableDrag = null;
-var plotTipEl = document.getElementById('plotTooltip');
-var plotAreaEl = plotTableWrap ? plotTableWrap.parentNode : null;
-function hidePlotTooltip() {
-  if (plotTipEl) {
-    plotTipEl.style.display = 'none';
-    plotCanvasEl.style.cursor = '';
-  }
-}
-function movePlotTooltip(e) {
-  if (!plotTipEl || !plotMap || !lastPlot) { hidePlotTooltip(); return; }
-  var rect = plotCanvasEl.getBoundingClientRect();
-  var mx = e.clientX - rect.left;
-  var my = e.clientY - rect.top;
-  var xs = lastPlot.xs;
-  var ys = lastPlot.ys;
-  var best = -1;
-  var bestD = 49;
-  for (var i = 0; i < xs.length; i++) {
-    var dx = plotMap.X(xs[i]) - mx;
-    var dy = plotMap.Y(ys[i]) - my;
-    var d = dx * dx + dy * dy;
-    if (d < bestD) { bestD = d; best = i; }
-  }
-  if (best < 0) { hidePlotTooltip(); return; }
-  function fv(v) { return String(Number(v.toPrecision(6))); }
-  plotTipEl.textContent = '[' + fv(xs[best]) + ', ' + fv(ys[best]) + ']';
-  plotTipEl.style.display = 'block';
-  plotCanvasEl.style.cursor = 'crosshair';
-  var px = plotMap.X(xs[best]);
-  var py = plotMap.Y(ys[best]);
-  var aw = plotAreaEl ? plotAreaEl.clientWidth : rect.width;
-  var ah = plotAreaEl ? plotAreaEl.clientHeight : rect.height;
-  var tw = plotTipEl.offsetWidth;
-  var th = plotTipEl.offsetHeight;
-  var nx = px + 12;
-  var ny = py - Math.round(th / 2);
-  if (nx + tw > aw - 4) nx = px - tw - 12;
-  if (nx < 4) nx = 4;
-  if (ny < 4) ny = 4;
-  if (ny + th > ah - 4) ny = ah - th - 4;
-  plotTipEl.style.left = nx + 'px';
-  plotTipEl.style.top = ny + 'px';
-}
-plotCanvasEl.addEventListener('mousemove', movePlotTooltip);
-plotCanvasEl.addEventListener('mouseleave', hidePlotTooltip);
-plotCanvasEl.addEventListener('mousedown', function (e) {
-  hidePlotTooltip();
-  plotDragging = { sx: e.clientX, sy: e.clientY, px: plotPanX, py: plotPanY };
-  plotCanvasEl.classList.add('dragging');
-  e.preventDefault();
-});
-plotTableWrap.addEventListener('mousedown', function (e) {
-  plotTableDrag = { sx: e.clientX, sy: e.clientY, lx: plotTableWrap.offsetLeft, ty: plotTableWrap.offsetTop };
-  plotTableWrap.classList.add('dragging');
-  e.preventDefault();
-  e.stopPropagation();
-});
-window.addEventListener('mousemove', function (e) {
-  if (plotTableDrag) {
-    var area = plotTableWrap.parentNode;
-    var nl = plotTableDrag.lx + (e.clientX - plotTableDrag.sx);
-    var nt = plotTableDrag.ty + (e.clientY - plotTableDrag.sy);
-    var tw = plotTableWrap.offsetWidth;
-    var th = plotTableWrap.offsetHeight;
-    var aw = area.clientWidth;
-    var ah = area.clientHeight;
-    if (nl < 4) nl = 4;
-    if (nt < 4) nt = 4;
-    if (nl + tw > aw - 4) nl = aw - tw - 4;
-    if (nt + th > ah - 4) nt = ah - th - 4;
-    plotTableWrap.style.left = nl + 'px';
-    plotTableWrap.style.top = nt + 'px';
-    return;
-  }
-  if (!plotDragging) return;
-  var dx = e.clientX - plotDragging.sx;
-  var dy = e.clientY - plotDragging.sy;
-  plotPanX = plotDragging.px - dx * plotScaleX;
-  plotPanY = plotDragging.py + dy * plotScaleY;
-  renderPlot();
-});
-window.addEventListener('mouseup', function () {
-  if (plotTableDrag) {
-    plotTableDrag = null;
-    plotTableWrap.classList.remove('dragging');
-  }
-  if (!plotDragging) return;
-  plotDragging = null;
-  plotCanvasEl.classList.remove('dragging');
-});
-document.getElementById('plotClose').addEventListener('click', function () {
-  wmClose('plotOverlay');
-});
-plotOverlay.addEventListener('click', function (e) {
-  if (e.target === plotOverlay) wmClose('plotOverlay');
-});
-document.getElementById('plotMinimize').addEventListener('click', function () {
-  wmMinimize('plotOverlay');
-});
-document.getElementById('plotMaximize').addEventListener('click', function () {
-  var isMax = plotModal.classList.toggle('plot-maximized');
-  if (isMax) {
-    plotMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
-                            '<rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>';
-  } else {
-    plotMaxIcon.innerHTML = '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
-  }
-  setTimeout(function () { renderPlot(); }, 0);
-});
-plotOverlay.addEventListener('transitionend', function (e) {
-  if (e.target === plotModal && e.propertyName === 'transform') renderPlot();
-});
 var janelaOverlay = document.getElementById('janelaOverlay');
 document.getElementById('janelaClose').addEventListener('click', function () {
   wmClose('janelaOverlay');
+  janelaFechada = true;
+  interromperEsperaJanela();
 });
 janelaOverlay.addEventListener('click', function (e) {
-  if (e.target === janelaOverlay) wmClose('janelaOverlay');
+  if (e.target === janelaOverlay) {
+    wmClose('janelaOverlay');
+    janelaFechada = true;
+    interromperEsperaJanela();
+  }
 });
 var janelaMaxIcon = document.getElementById('janelaMaxIcon');
 document.getElementById('janelaMinimize').addEventListener('click', function () {
@@ -7287,10 +7447,28 @@ async function selExecuteOption(opt) {
     selAddLine(opt.key + ' "' + opt.title + '":', 'sel-head');
     var optEnv = Object.create(GLOBAL_ENV || {});
     execNodes(opt.body, optEnv, out);
-    for (var i = 0; i < out.length; i++) {
+    var timerCount = 0;
+    var playPos = { i: 0 };
+    for (var i = 0; i < out.length || timerCount > 0; i++) {
+      while (i >= out.length && timerCount > 0) { await sleep(30); }
+      if (i >= out.length) { break; }
       var rec = out[i];
+      playPos.i = i + 1;
       if (rec.kind === 'clear') { selecionarOutput.innerHTML = ''; continue; }
-      if (rec.kind === 'pause') { selAddLine(rec.text, 'sel-info'); await sleep(Math.max(0, rec.secs) * 1000); continue; }
+      if (rec.kind === 'timer') {
+        timerCount++;
+        (function (tRec) {
+          setTimeout(function () {
+            timerCount--;
+            var at = Math.min(playPos.i, out.length);
+            out.splice.apply(out, [at, 0].concat(tRec.inner));
+            if (i > at) i = at;
+          }, Math.max(0, tRec.secs) * 1000);
+        })(rec);
+        continue;
+      }
+      if (rec.kind === 'pause') { if (!(janelaUsada && janelaFechada)) { if (!rec.silent) selAddLine(rec.text, 'sel-info'); await sleepJanela(Math.max(0, rec.secs) * 1000); } continue; }
+      if (rec.kind === 'render') { var nxR = out[i + 1]; if (!(nxR && nxR.kind === 'render') && !(janelaUsada && janelaFechada)) { janelaVis = { p: rec.vp, l: rec.vl, c: rec.vc, r: rec.vr, t: rec.vt }; renderJanela(); } continue; }
       if (rec.kind === 'sound') {
         if (typeof rec.freq === 'number' && isFinite(rec.freq)) emitTone(rec.freq, Math.max(0.001, rec.secs));
         else emitBipe(Math.max(0.001, rec.secs));
@@ -7309,11 +7487,13 @@ async function selExecuteOption(opt) {
       if (rec.kind === 'rerun') {
         var rr2 = [];
         try {
-          execStatement(rec.line, rec.lineNo, optEnv, rr2, true);
-        } catch (e) {
-          if (e && e.wpReturn) rr2.push({ kind: 'error', text: 'retorne usado fora de uma função', lineNo: rec.lineNo });
-          else throw e;
-        }
+        execStatement(rec.line, rec.lineNo, optEnv, rr2, true);
+      } catch (e) {
+        if (e && e.wpReturn) rr2.push({ kind: 'error', text: 'retorne usado fora de uma função', lineNo: rec.lineNo });
+        else if (e && e.wpPare) rr2.push({ kind: 'error', text: "'pare' usado fora de um laço", lineNo: rec.lineNo });
+        else if (e && e.wpContinue) rr2.push({ kind: 'error', text: "'continue' usado fora de um laço", lineNo: rec.lineNo });
+        else throw e;
+      }
         out.splice.apply(out, [i + 1, 0].concat(rr2));
         continue;
       }
@@ -7395,24 +7575,52 @@ function emJanelaAdd(rec, isFinal) {
   emJanelaOutput.appendChild(div);
   emJanelaOutput.scrollTop = emJanelaOutput.scrollHeight;
 }
-function openEmJanela(title) {
+function openEmJanela(title, centered) {
   document.getElementById('emJanelaTitle').textContent = title;
+  emJanelaOutput.classList.toggle('centered', !!centered);
+  if (emJanelaModal) {
+    emJanelaModal.classList.toggle('emjanela-maximized', !!centered);
+    if (emJanelaMaxIcon) {
+      emJanelaMaxIcon.innerHTML = centered
+        ? '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
+          '<rect x="5" y="5" width="6.5" height="6.5" rx="1" fill="currentColor"/>'
+        : '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
+    }
+  }
   wmOpen('emJanelaOverlay');
   emJanelaClearOutput();
 }
 function closeEmJanela() {
   wmClose('emJanelaOverlay');
 }
-async function processEmJanela(records) {
-  openEmJanela('Janela');
+async function processEmJanela(records, centered) {
+  openEmJanela('Janela', centered);
   var lastOut = -1;
   for (var li = 0; li < records.length; li++) {
     if (records[li].kind === 'out' || records[li].kind === 'return') lastOut = li;
   }
-  for (var i = 0; i < records.length; i++) {
+  var timerCount = 0;
+  var playPos = { i: 0 };
+  for (var i = 0; i < records.length || timerCount > 0; i++) {
+    while (i >= records.length && timerCount > 0) { await sleep(30); }
+    if (i >= records.length) { break; }
     var rec = records[i];
+    playPos.i = i + 1;
     if (rec.kind === 'clear') { emJanelaClearOutput(); continue; }
-    if (rec.kind === 'pause') { emJanelaAdd(rec, false); await sleep(Math.max(0, rec.secs) * 1000); continue; }
+    if (rec.kind === 'timer') {
+      timerCount++;
+      (function (tRec) {
+        setTimeout(function () {
+          timerCount--;
+          var at = Math.min(playPos.i, records.length);
+          records.splice.apply(records, [at, 0].concat(tRec.inner));
+          if (i > at) i = at;
+        }, Math.max(0, tRec.secs) * 1000);
+      })(rec);
+      continue;
+    }
+    if (rec.kind === 'pause') { if (!(janelaUsada && janelaFechada)) { if (!rec.silent) emJanelaAdd(rec, false); await sleepJanela(Math.max(0, rec.secs) * 1000); } continue; }
+    if (rec.kind === 'render') { var nxR = records[i + 1]; if (!(nxR && nxR.kind === 'render') && !(janelaUsada && janelaFechada)) { janelaVis = { p: rec.vp, l: rec.vl, c: rec.vc, r: rec.vr, t: rec.vt }; renderJanela(); } continue; }
     if (rec.kind === 'sound') {
       if (typeof rec.freq === 'number' && isFinite(rec.freq)) emitTone(rec.freq, Math.max(0.001, rec.secs));
       else emitBipe(Math.max(0.001, rec.secs));
@@ -7438,13 +7646,16 @@ async function processEmJanela(records) {
         execStatement(rec.line, rec.lineNo, rec.env, rr, true);
       } catch (e) {
         if (e && e.wpReturn) rr.push({ kind: 'error', text: 'retorne usado fora de uma função', lineNo: rec.lineNo });
+        else if (e && e.wpPare) rr.push({ kind: 'error', text: "'pare' usado fora de um laço", lineNo: rec.lineNo });
+        else if (e && e.wpContinue) rr.push({ kind: 'error', text: "'continue' usado fora de um laço", lineNo: rec.lineNo });
         else throw e;
       }
       records.splice.apply(records, [i + 1, 0].concat(rr));
       continue;
     }
     if (rec.kind === 'select') { await showSelecionarOpcao(rec.options); continue; }
-    if (rec.kind === 'window') { await processEmJanela(rec.inner); continue; }
+    if (rec.kind === 'window') { await processEmJanela(rec.inner, rec.centered); continue; }
+    if (rec.kind === 'assign' && !chkAssign.checked) continue;
     emJanelaAdd(rec, i === lastOut);
   }
 }
@@ -7533,6 +7744,7 @@ async function interpExec(line) {
 
   interpAddOutput({ kind: 'cmd', text: '> ' + trimmed });
 
+  janelaFechada = false;
   var records = [];
   try {
     var stmts = toStatements(trimmed);
@@ -7544,22 +7756,45 @@ async function interpExec(line) {
       execNodes(nodes, interpEnv, records);
     }
   } catch (e) {
-    records.push({ kind: 'error', text: e.message || String(e), lineNo: null });
+    if (e && e.wpReturn) records.push({ kind: 'error', text: 'retorne usado fora de uma função', lineNo: null });
+    else if (e && e.wpPare) records.push({ kind: 'error', text: "'pare' usado fora de um laço", lineNo: null });
+    else if (e && e.wpContinue) records.push({ kind: 'error', text: "'continue' usado fora de um laço", lineNo: null });
+    else records.push({ kind: 'error', text: e.message || String(e), lineNo: null });
   }
 
-  for (var ri = 0; ri < records.length; ri++) {
+  var timerCount = 0;
+  var playPos = { i: 0 };
+  for (var ri = 0; ri < records.length || timerCount > 0; ri++) {
+    while (ri >= records.length && timerCount > 0) { await sleep(30); }
+    if (ri >= records.length) { break; }
     var rec = records[ri];
+    playPos.i = ri + 1;
     if (rec.kind === 'clear') { interpClearOutput(); continue; }
-    if (rec.kind === 'pause') { interpAddOutput(rec); await sleep(Math.max(0, rec.secs || 1) * 1000); continue; }
+    if (rec.kind === 'timer') {
+      timerCount++;
+      (function (tRec) {
+        setTimeout(function () {
+          timerCount--;
+          var at = Math.min(playPos.i, records.length);
+          records.splice.apply(records, [at, 0].concat(tRec.inner));
+          if (ri > at) ri = at;
+        }, Math.max(0, tRec.secs) * 1000);
+      })(rec);
+      continue;
+    }
+    if (rec.kind === 'pause') { if (!(janelaUsada && janelaFechada)) { if (!rec.silent) interpAddOutput(rec); await sleepJanela(Math.max(0, rec.secs || 1) * 1000); } continue; }
+    if (rec.kind === 'render') { var nxR = records[ri + 1]; if (!(nxR && nxR.kind === 'render') && !(janelaUsada && janelaFechada)) { janelaVis = { p: rec.vp, l: rec.vl, c: rec.vc, r: rec.vr, t: rec.vt }; renderJanela(); } continue; }
     if (rec.kind === 'message') { await showMessageBox(rec.title, rec.body); continue; }
     if (rec.kind === 'select') { await showSelecionarOpcao(rec.options); continue; }
-    if (rec.kind === 'window') { await processEmJanela(rec.inner); continue; }
+    if (rec.kind === 'window') { await processEmJanela(rec.inner, rec.centered); continue; }
     if (rec.kind === 'rerun') {
       var rr = [];
       try {
         execStatement(rec.line, rec.lineNo || 1, interpEnv, rr, true);
       } catch (e) {
         if (e && e.wpReturn) rr.push({ kind: 'error', text: 'retorne usado fora de uma função', lineNo: null });
+        else if (e && e.wpPare) rr.push({ kind: 'error', text: "'pare' usado fora de um laço", lineNo: null });
+        else if (e && e.wpContinue) rr.push({ kind: 'error', text: "'continue' usado fora de um laço", lineNo: null });
         else rr.push({ kind: 'error', text: e.message || String(e), lineNo: null });
       }
       records.splice.apply(records, [ri + 1, 0].concat(rr));
@@ -7671,7 +7906,6 @@ function renderGrafico() {
   var gutterColor = gs.color || '#6a6a6a';
   var gutterWidth = parseFloat(gs.width) || 44;
   var gutterPadRight = parseFloat(gs.paddingRight) || 6;
-  var gutterPadTop = parseFloat(gs.paddingTop) || 8;
 
   var entries = [];
   var kids = consoleEl.children;
@@ -7789,7 +8023,7 @@ document.getElementById('graficoMaximize').addEventListener('click', function ()
   }
 });
 window.addEventListener('resize', function () {
-  if (plotOverlay.classList.contains('open')) plotRender();
+  
   if (janelaOverlay.classList.contains('open')) renderJanela();
 });
 document.addEventListener('keydown', function (e) {
@@ -7806,7 +8040,10 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
     closeAllMenus();
     wmClose('modalOverlay', true);
-    wmClose('plotOverlay', true);
+    if (janelaUsada) {
+      janelaFechada = true;
+      interromperEsperaJanela();
+    }
     wmClose('janelaOverlay', true);
     wmClose('graficoOverlay', true);
     wmClose('fluxoOverlay', true);
@@ -8288,7 +8525,7 @@ function fluxoMeasureNode(node) {
   }
   if (node.type === 'window') {
     var bmWin = fluxoMeasureSeq(node.body);
-    var lWin = fluxoLabelSize(fluxoWrap('em janela:', FLUXO_MAXCHARS));
+    var lWin = fluxoLabelSize(fluxoWrap(node.centered ? 'em janela(): centralizado' : 'em janela:', FLUXO_MAXCHARS));
     var hwWin = Math.max(lWin.w, 150);
     return { w: Math.max(hwWin, bmWin.w), h: FLUXO_FUNC_H + FLUXO_GAP + bmWin.h + 20 };
   }
@@ -8333,9 +8570,10 @@ function fluxoPlaceNode(node, cx, cy) {
     return { first: bsel2, last: bsel2, h: FLUXO_LOOP_H };
   }
   if (node.type === 'window') {
-    var lWin2 = fluxoLabelSize(fluxoWrap('em janela:', FLUXO_MAXCHARS));
+    var lblWin2 = node.centered ? 'em janela(): centralizado' : 'em janela:';
+    var lWin2 = fluxoLabelSize(fluxoWrap(lblWin2, FLUXO_MAXCHARS));
     var hwWin2 = Math.max(lWin2.w, 150);
-    var headerWin = fluxoBox('func', cx - hwWin2 / 2, cy, hwWin2, FLUXO_FUNC_H, 'em janela:', node.lineNo);
+    var headerWin = fluxoBox('func', cx - hwWin2 / 2, cy, hwWin2, FLUXO_FUNC_H, lblWin2, node.lineNo);
     var yBodyWin = cy + FLUXO_FUNC_H + FLUXO_GAP;
     var bodyWin = fluxoPlaceSeq(node.body, cx, yBodyWin);
     var endYWin = yBodyWin + bodyWin.h + 12;
@@ -8428,16 +8666,6 @@ function fluxoBuildGraph(nodes) {
   graph.w = totalW;
   graph.h = endY + endH;
   return graph;
-}
-
-function fluxoAnchor(b, which) {
-  var cx = b.x + b.w / 2;
-  var cy = b.y + b.h / 2;
-  if (which === 'top') return [cx, b.y];
-  if (which === 'bottom') return [cx, b.y + b.h];
-  if (which === 'left') return [b.x, cy];
-  if (which === 'right') return [b.x + b.w, cy];
-  return [cx, cy];
 }
 
 function fluxoDrawArrow(ctx, x1, y1, x2, y2) {
@@ -8865,7 +9093,6 @@ window.addEventListener('resize', syncAll);
 // ==================== Window Manager ====================
 var wmStack = [];
 var wmLabels = {
-  plotOverlay:       'Gráfico',
   janelaOverlay:     'Janela',
   emJanelaOverlay:   'emJanela',
   interpretadorOverlay: 'Interpretador',
@@ -8886,7 +9113,7 @@ function wmFindCurrent() {
   return null;
 }
 var _wmMaxMap = {
-  modalOverlay:'modal-maximized', quickRefOverlay:'qr-maximized', plotOverlay:'plot-maximized',
+  modalOverlay:'modal-maximized', quickRefOverlay:'qr-maximized',
   interpretadorOverlay:'interp-maximized',
   sugestoesOverlay:'sugestoes-maximized', comentadoOverlay:'comentado-maximized',
   graficoOverlay:'grafico-maximized',
