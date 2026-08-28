@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Willog IDE</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <span class="logo">W</span>
+  <div>
+    <h1>Willog IDE</h1>
+    <span class="subtitle">Linguagem de programação - Editor e interpretador</span>
+  </div>
+<div class="header-window-controls">
+    <button class="plot-win-btn" id="headerMaximize" title="Maximizar" aria-label="Maximizar">
+        <svg viewBox="0 0 14 14" id="headerMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+      <button class="header-close" id="headerClose" title="Fechar Willog">&times;</button>
+    </div>
+</header>
+
+<nav class="menubar">
+  <div class="menu">
+    <button class="menu-trigger" data-menu="menu-arquivo" type="button">Arquivo</button>
+    <div class="menu-dropdown" id="menu-arquivo">
+      <button id="btnSave" type="button">Salvar (.wil)</button>
+      <button id="btnLoad" type="button">Carregar...</button>
+      <hr class="menu-sep">
+      <button id="btnClear" type="button">Limpar Editor</button>
+    </div>
+  </div>
+  <div class="menu">
+    <button class="menu-trigger" data-menu="menu-console" type="button">Console</button>
+    <div class="menu-dropdown" id="menu-console">
+      <button id="btnClearConsole" type="button">Limpar Console</button>
+      <button id="btnGrafico" type="button">Console em Janela</button>
+      <button id="btnInterpretador" type="button">Interpretador</button>
+      <hr class="menu-sep">
+      <label class="menu-item-check"><input type="checkbox" id="chkAssign"> Mostrar atribui&ccedil;&otilde;es</label>
+    </div>
+  </div>
+  <div class="menu">
+    <button class="menu-trigger" data-menu="menu-exibir" type="button">Exibir</button>
+    <div class="menu-dropdown" id="menu-exibir">
+      <button id="btnZoomIn" type="button">Zoom + <span class="run-kbd">Ctrl +</span></button>
+      <button id="btnZoomOut" type="button">Zoom - <span class="run-kbd">Ctrl -</span></button>
+      <hr class="menu-sep">
+    <button id="btnPlainLang" type="button">Em Palavras</button>
+    <button id="btnPalette" type="button">Paletas de Cores</button>
+    <button id="btnTheme" type="button">Modo Claro</button>
+    <button id="btnFullscreen" type="button">Tela Cheia</button>
+    </div>
+  </div>
+  <div class="menu">
+    <button class="menu-trigger" data-menu="menu-ajuda" type="button">Ajuda</button>
+    <div class="menu-dropdown" id="menu-ajuda">
+      <button id="btnManual" type="button">Manual de Refer&ecirc;ncia</button>
+      <button id="btnQuickRef" type="button">Refer&ecirc;ncia R&aacute;pida</button>
+      <hr class="menu-sep">
+      <button id="btnSobre" type="button">Sobre o Willog</button>
+    </div>
+  </div>
+  <div class="run-side">
+    <button id="btnRun" class="primary" type="button">&#9654; Executar <span class="run-kbd">Ctrl+Enter</span></button>
+  </div>
+</nav>
+
+<main>
+  <div class="editor-wrap">
+    <div class="line-numbers" id="lineNumbers"></div>
+    <div class="code-wrap">
+      <pre id="highlight" aria-hidden="true"></pre>
+      <textarea id="code" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" placeholder="Digite seu código Willog aqui..."></textarea>
+      <div class="autocomplete" id="autocomplete"></div>
+    </div>
+  </div>
+
+  <div class="splitter" id="splitter" title="Arraste para redimensionar"></div>
+
+  <div class="console-panel" id="consolePanel">
+    <div class="console-head">
+      <span><strong>Console</strong></span>
+      <span class="head-right">
+        <span class="dot" id="runStatus"></span>
+      </span>
+    </div>
+    <div class="console-wrap">
+      <div class="console-gutter" id="consoleGutter"></div>
+      <div class="console" id="console">
+        <div class="placeholder">Pressione Executar para ver a sa&iacute;da do programa.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="statusbar">
+  <span id="statusbar">Linha 1, Coluna 1</span>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Manual de Refer&ecirc;ncia &mdash; Willog</h2>
+      <div class="plot-controls">
+        <button class="plot-win-btn" id="manualMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="manualMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="manualMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="modalClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-panel="panel-comandos">Comandos</button>
+      <button class="modal-tab" data-panel="panel-condicionais">Condicionais</button>
+      <button class="modal-tab" data-panel="panel-lacos">La&ccedil;os</button>
+      <button class="modal-tab" data-panel="panel-operadores">Operadores</button>
+      <button class="modal-tab" data-panel="panel-listas">Listas</button>
+      <button class="modal-tab" data-panel="panel-funcoes">Fun&ccedil;&otilde;es</button>
+      <button class="modal-tab" data-panel="panel-atalhos">Atalhos</button>
+    </div>
+    <div class="modal-body">
+    <div class="manual-panel active" id="panel-comandos">
+
+      <div class="mi-section"><span class="ms-icon">&#187;</span><h4>Sa&iacute;da e Console</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">mostre &lt;express&atilde;o&gt;</span>
+        <span class="mi-desc">Exibe o valor de uma express&atilde;o (n&uacute;meros, textos, listas, vari&aacute;veis e c&aacute;lculos).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre 2 + 3</span><span class="mi-arrow">&rarr;</span><span class="ex">5</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">limpe</span>
+        <span class="mi-desc">Apaga todo o conte&uacute;do do console durante a execu&ccedil;&atilde;o.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>limpe</span><span class="mi-arrow">&rarr;</span><span class="ex">console apagado</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">mensagem("T&iacute;tulo da janela", "mensagem")</span>
+        <span class="mi-desc">Abre uma caixa de mensagem (janela de di&aacute;logo) com o t&iacute;tulo e o texto fornecidos entre aspas. O programa pausa at&eacute; o usu&aacute;rio fechar a caixa.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mensagem("Bem-vindo", "Este &eacute; o Willog!")</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma caixa com o t&iacute;tulo "Bem-vindo" e o texto indicado</span></span>
+          <span class="mi-row"><span>nome = "Ana"<br>mensagem("Ol&aacute;, " + nome, "Voc&ecirc; concluiu o programa!")</span><span class="mi-arrow">&rarr;</span><span class="ex">t&iacute;tulo e texto montados com vari&aacute;veis</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">emJanela:</span>
+        <span class="mi-desc">Executa o bloco indentado a seguir em uma janela ao inv&eacute;s do console. Toda a sa&iacute;da (mostre, vari&aacute;veis, erros) vai para a janela. A janela abre sempre <b>maximizada</b> (tela inteira) e pode ser <b>minimizada</b> (s&oacute; a barra de t&iacute;tulo) ou <b>restaurada</b> com os bot&otilde;es da barra de t&iacute;tulo, permanecendo aberta ap&oacute;s o fim do programa at&eacute; ser fechada.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">emJanela:
+  mostre "Olá do janela!"
+  x = 5
+  mostre x + 1</pre>
+          <span class="mi-row"><span>Executar</span><span class="mi-arrow">&rarr;</span><span class="ex">abre a janela com "Olá do janela!" e "6"; o console principal permanece vazio</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">emJanela(centralizar):</span>
+        <span class="mi-desc">Funciona como <code>emJanela:</code>, mas exibe todo o texto da janela <b>centralizado</b> (horizontalmente).</span>
+        <div class="mi-example">
+          <pre class="manual-pre">emJanela(centralizar):
+  mostre "Título centralizado"
+  mostre "Linha 2"</pre>
+          <span class="mi-row"><span>Executar</span><span class="mi-arrow">&rarr;</span><span class="ex">abre a janela com o texto centralizado</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">=</span><h4>Vari&aacute;veis e Intervalos</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">&lt;vari&aacute;vel&gt; = &lt;express&atilde;o&gt;</span>
+        <span class="mi-desc">Armazena um valor numa vari&aacute;vel, reutiliz&aacute;vel depois.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>idade = 15</span></span>
+          <span class="mi-row"><span>mostre idade</span><span class="mi-arrow">&rarr;</span><span class="ex">15</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">&lt;vari&aacute;vel&gt; := &lt;express&atilde;o&gt;</span>
+        <span class="mi-desc">Define uma vari&aacute;vel de forma <b>pregui&ccedil;osa</b>: a express&atilde;o s&oacute; &eacute; calculada quando a vari&aacute;vel for usada.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>x := intervalo(1, 3)</span></span>
+          <span class="mi-row"><span>y := 2 * x</span></span>
+          <span class="mi-row"><span>mostre y</span><span class="mi-arrow">&rarr;</span><span class="ex">2,4,6</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">intervalo(in&iacute;cio, fim[, passo])</span>
+        <span class="mi-desc">Cria um intervalo num&eacute;rico do in&iacute;cio at&eacute; o fim (inclusive), com passo opcional. A forma antiga <code>(in&iacute;cio, fim[, passo])</code> continua funcionando.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>x := intervalo(-2, 2, 1)</span><span class="mi-arrow">&rarr;</span><span class="ex">-2,-1,0,1,2</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">vari&aacute;veis()</span>
+        <span class="mi-desc">Mostra todas as vari&aacute;veis definidas at&eacute; agora e seus valores.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">x = 5
+nome = "Ana"
+mostre variáveis()</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">Vari&aacute;veis (2):<br>x = 5<br>nome = Ana</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">constante &lt;nome&gt; = &lt;valor&gt;</span>
+        <span class="mi-desc">Define um valor imutável. Não pode ser alterado depois. Acessível com interpolação <code>"{NOME}"</code>.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">constante LOCAL="casa"
+constante PADRÃO=1.333
+mostre LOCAL
+mostre "{LOCAL}, {PADRÃO}"</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">casa</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">tipo(&lt;valor&gt;)</span>
+        <span class="mi-desc">Devolve o tipo do valor: <code>número</code>, <code>texto</code>, <code>lista</code> ou <code>booleano</code>.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre tipo(5)</span><span class="mi-arrow">&rarr;</span><span class="ex">número</span></span>
+          <span class="mi-row"><span>mostre tipo("Olá")</span><span class="mi-arrow">&rarr;</span><span class="ex">texto</span></span>
+          <span class="mi-row"><span>mostre tipo(5==7)</span><span class="mi-arrow">&rarr;</span><span class="ex">booleano</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8592;</span><h4>Entrada do Usu&aacute;rio</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">&lt;vari&aacute;vel&gt; = leia "mensagem"</span>
+        <span class="mi-desc">Pausa o programa e pede que o usu&aacute;rio digite um valor (n&uacute;mero ou texto), armazenado na vari&aacute;vel. A mensagem entre aspas &eacute; exibida como pergunta. Dentro de um bloco <code>emJanela</code>, a janela abre primeiro e a pergunta &eacute; feita com ela vis&iacute;vel, junto do conte&uacute;do j&aacute; escrito.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>nome = leia "Nome: "</span></span>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">abre uma caixa pedindo o valor</span></span>
+          <span class="mi-row"><span>mostre nome</span><span class="mi-arrow">&rarr;</span><span class="ex">mostra o valor digitado</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">aguardeTecla("tecla")</span>
+        <span class="mi-desc">Pausa o programa e mostra <b>Aguardando tecla!</b> at&eacute; o usu&aacute;rio pressionar a tecla indicada (letra ou n&uacute;mero; n&atilde;o diferencia mai&uacute;scula de min&uacute;scula). Sem argumentos, aguarda qualquer tecla.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>aguardeTecla("Z")</span><span class="mi-arrow">&rarr;</span><span class="ex">pausa e espera o usu&aacute;rio apertar a tecla z</span></span>
+          <span class="mi-row"><span>aguardeTecla("1")</span><span class="mi-arrow">&rarr;</span><span class="ex">pausa e espera o usu&aacute;rio apertar a tecla 1</span></span>
+          <span class="mi-row"><span>aguardeTecla()</span><span class="mi-arrow">&rarr;</span><span class="ex">pausa e espera qualquer tecla</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">captureTecla()</span>
+        <span class="mi-desc">Mostra qual tecla o usu&aacute;rio teclou como resposta ao &uacute;ltimo <b>aguardeTecla()</b>. Pode ser usada com <b>mostre</b> ou em uma express&atilde;o.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>aguardeTecla()</span><span class="mi-arrow">&rarr;</span><span class="ex">pausa e espera qualquer tecla</span></span>
+          <span class="mi-row"><span>mostre captureTecla()</span><span class="mi-arrow">&rarr;</span><span class="ex">mostra a tecla apertada (ex.: z)</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8629;</span><h4>Persist&ecirc;ncia de Dados</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">salvar(diret&oacute;rio, arquivo, valor1, valor2, ...)</span>
+        <span class="mi-desc">Salva vari&aacute;veis, textos e n&uacute;meros em um arquivo de texto. O dire&oacute;rio e o nome do arquivo s&atilde;o fornecidos entre aspas; os demais argumentos s&atilde;o as vari&aacute;veis (ou valores) a guardar.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">nome = "João"
+idade = 20
+salvar("dados", "perfil.txt", nome, idade)</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">grava nome="Jo&atilde;o" e idade=20 no arquivo dados/perfil.txt</span></span>
+          <span class="mi-row"><span class="mi-desc">No navegador, os dados ficam no armazenamento local (chave dire&oacute;rio/arquivo); no NW.js o arquivo &eacute; gravado de verdade no disco.</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">carregar(diret&oacute;rio, arquivo, vari&aacute;vel1, vari&aacute;vel2, ...)</span>
+        <span class="mi-desc">L&ecirc; o arquivo de texto e devolve os valores salvos &agrave;s vari&aacute;veis informadas. O valor &eacute; atribu&iacute;do pelo nome da vari&aacute;vel (quando o nome confere) ou, na falta, na ordem em que os valores aparecem no arquivo.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">nome = ""
+idade = 0
+carregar("dados", "perfil.txt", nome, idade)
+mostre nome + " tem " + idade + " anos"</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">Jo&atilde;o tem 20 anos</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">;</span><h4>Comandos M&uacute;ltiplos</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">;</span>
+        <span class="mi-desc">Separa v&aacute;rios comandos na mesma linha.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>a=10;b=20;c=30</span><span class="mi-arrow">&rarr;</span><span class="ex">equivale a 3 linhas separadas</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">_</span>
+        <span class="mi-desc">Dentro de um texto, no final da linha, indica que o texto continua na pr&oacute;xima linha do Editor. O <code>_</code> e a quebra de linha s&atilde;o removidos e o texto &eacute; unido como se tudo estivesse numa linha s&oacute;. Fora de um texto, o <code>_</code> no fim da linha n&atilde;o continua nada.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">mensagem = "Willog _
+é um IDE"
+mostre mensagem</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">Willog é um IDE</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">#</span><h4>Coment&aacute;rios</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">#</span>
+        <span class="mi-desc">Inicia um coment&aacute;rio (ignorado at&eacute; o fim da linha).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span># 2 + 2 n&atilde;o ser&aacute; mostrado</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">#: &lt;bloco de c&oacute;digo&gt; :#</span>
+        <span class="mi-desc">Coment&aacute;rio de bloco: todo o trecho entre <code>#:</code> e <code>:#</code> &eacute; ignorado na execu&ccedil;&atilde;o (pode ocupar v&aacute;rias linhas). &Uacute;til para desativar temporariamente um trecho de c&oacute;digo.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">mostre "antes"
+#:
+mostre "isto n&atilde;o executa"
+x = 10
+:#
+mostre "depois"</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">antes<br>depois</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8779;</span><h4>Controle de Fluxo</h4><span class="ms-count">exemplos nas abas abaixo</span></div>
+
+      <div class="manual-item">
+        <span class="mi-name">se &lt;condi&ccedil;&atilde;o&gt;:</span>
+        <span class="mi-desc">Executa o bloco indentado se a condi&ccedil;&atilde;o for verdadeira.</span>
+        <button class="tab-jump" data-tab="panel-condicionais">ver na aba Condicionais &rarr;</button>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">sen&atilde;o:</span>
+        <span class="mi-desc">Executa um bloco quando a condi&ccedil;&atilde;o do <code>se</code> for falsa.</span>
+        <button class="tab-jump" data-tab="panel-condicionais">ver na aba Condicionais &rarr;</button>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">para cada &lt;vari&aacute;vel&gt; em &lt;cole&ccedil;&atilde;o&gt;:</span>
+        <span class="mi-desc">Repete o bloco indentado para cada item da cole&ccedil;&atilde;o. O "cada" &eacute; opcional: <code>para &lt;vari&aacute;vel&gt; em &lt;cole&ccedil;&atilde;o&gt;:</code> funciona igual.</span>
+        <button class="tab-jump" data-tab="panel-lacos">ver na aba La&ccedil;os &rarr;</button>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">repita(&lt;quantidade&gt;):</span>
+        <span class="mi-desc">Repete o bloco indentado um n&uacute;mero fixo de vezes.</span>
+        <button class="tab-jump" data-tab="panel-lacos">ver na aba La&ccedil;os &rarr;</button>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">enquanto &lt;condi&ccedil;&atilde;o&gt;:</span>
+        <span class="mi-desc">Executa o bloco indentado enquanto a condi&ccedil;&atilde;o for verdadeira.</span>
+        <button class="tab-jump" data-tab="panel-lacos">ver na aba La&ccedil;os &rarr;</button>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">v&aacute; para &lt;r&oacute;tulo&gt;</span>
+        <span class="mi-desc">Salta imediatamente a execu&ccedil;&atilde;o do programa para o ponto marcado pelo r&oacute;tulo, como o GOTO do BASIC. O r&oacute;tulo &eacute; escrito sozinho numa linha como <code>:nome</code> e n&atilde;o executa nada por si s&oacute;. Pode ficar em qualquer parte do c&oacute;digo e ser alvo de um salto vindo de dentro de blocos <code>se</code>/<code>sen&atilde;o</code>, la&ccedil;os ou blocos <code>emJanela</code>. N&atilde;o &eacute; poss&iacute;vel saltar para dentro de fun&ccedil;&otilde;es ou das op&ccedil;&otilde;es do <code>selecionar op&ccedil;&atilde;o</code>.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">:início
+x = leia "Valor: "
+se x >= 10:
+   mostre "O valor deve ser menor que 10! Tente novamente!"
+   vá para início
+senão:
+   mostre "Valor aceito!"</pre>
+          <span class="mi-row"><span>digite 50</span><span class="mi-arrow">&rarr;</span><span class="ex">pede o valor novamente</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">definir fun&ccedil;&atilde;o &lt;nome&gt;(&lt;par&acirc;metros&gt;):</span>
+        <span class="mi-desc">Define uma nova fun&ccedil;&atilde;o. O bloco indentado &eacute; o corpo da fun&ccedil;&atilde;o; <code>retorne</code> (ou <code>retornar</code>) devolve um ou mais valores, separados por v&iacute;rgula.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">definir função quadrado(n):
+  retorne n * n
+mostre quadrado(7)</pre>
+          <span class="mi-row"><span>mostre quadrado(7)</span><span class="mi-arrow">&rarr;</span><span class="ex">49</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">selecionar op&ccedil;&atilde;o:</span>
+        <span class="mi-desc">Abre uma janela com um menu de op&ccedil;&otilde;es. O programa pausa at&eacute; a janela ser fechada; pressione a tecla da op&ccedil;&atilde;o (n&uacute;mero ou letra) para executar o bloco correspondente na janela. Cada op&ccedil;&atilde;o &eacute; escrita como <code>&lt;chave&gt; "t&iacute;tulo":</code> seguida do bloco indentado.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">selecionar opção:
+  &lt;1&gt; "Mostrar mensagem":
+    mostre "Opção 1"
+  &lt;A&gt; "Somar":
+    mostre 2 + 3</pre>
+          <span class="mi-row"><span>tecle 1</span><span class="mi-arrow">&rarr;</span><span class="ex">executa o bloco 1 na janela</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">pausa(s)</span>
+        <span class="mi-desc">Pausa a execu&ccedil;&atilde;o do programa por <b>s</b> segundos antes de continuar. O valor pode ser inteiro ou fracionado: <code>pausa(0.5)</code> pausa meio segundo.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">mostre "começando..."
+pausa(2)
+mostre "já se passaram 2 segundos"</pre>
+          <span class="mi-row"><span>pausa(0.5)</span><span class="mi-arrow">&rarr;</span><span class="ex">pausa de meio segundo</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">regressiva(s)</span>
+        <span class="mi-desc">Inicia uma contagem regressiva de <b>s</b> segundos sem parar o programa: a execu&ccedil;&atilde;o segue imediatamente em paralelo &agrave; contagem. O bloco indentado ap&oacute;s os dois-pontos &eacute; executado quando a contagem termina (&uacute;til para cronometragem em jogos). Diferente do comando <b>pausa</b>, que congela o programa. O valor pode ser inteiro ou fracionado.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">mostre "o jogo começou!"
+regressiva(30):
+  mostre "tempo esgotado!"
+mostre "seguindo o jogo enquanto o tempo corre..."
+pausa(2)
+mostre "passaram 2 segundos"</pre>
+          <span class="mi-row"><span>regressiva(10):</span><span class="mi-arrow">&rarr;</span><span class="ex">mostra a mensagem quando os 10 s terminam, mas o programa n&atilde;o para de rodar durante a contagem</span></span>
+        </div>
+      </div>
+
+    </div>
+    <div class="manual-panel" id="panel-condicionais">
+
+      <div class="manual-note">Os blocos do <code>se</code> e do <code>sen&atilde;o:</code> s&atilde;o delimitados pela <b>indenta&ccedil;&atilde;o</b>.</div>
+
+      <div class="mi-section"><span class="ms-icon">&#9670;</span><h4>Estrutura Condicional</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">se / sen&atilde;o:</span>
+        <span class="mi-desc">Executa o bloco indentado se a condi&ccedil;&atilde;o for verdadeira; o <code>sen&atilde;o:</code> roda quando for falsa.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">a = 10
+b = 3
+se a > b:
+  mostre "a é maior que b"
+senão:
+  mostre "b é maior que a"</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">a é maior que b</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8815;</span><h4>Compara&ccedil;&otilde;es</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">Compara&ccedil;&otilde;es</span>
+        <span class="mi-desc"><code>a &gt; b</code>, <code>a &lt; b</code>, <code>a &gt;= b</code>, <code>a &lt;= b</code>, <code>a == b</code>, <code>a != b</code> (ou <code>a = b</code> para igualdade).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre 5 &gt; 3</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8743;</span><h4>L&oacute;gica</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">L&oacute;gica</span>
+        <span class="mi-desc"><code>e</code> (e), <code>ou</code> (ou), <code>n&atilde;o</code> (n&atilde;o) e os valores <code>verdadeiro</code> / <code>falso</code>.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre verdadeiro e falso</span><span class="mi-arrow">&rarr;</span><span class="ex">falso</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">existe &lt;valor&gt; em &lt;texto ou lista&gt;</span>
+        <span class="mi-desc">Devolve <code>verdadeiro</code> se o valor existir dentro do texto ou da lista; caso contr&aacute;rio, <code>falso</code>. Em textos, busca o trecho inteiro.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre existe "ba" em "banana"</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          <span class="mi-row"><span>mostre existe "ca" em "escola"</span><span class="mi-arrow">&rarr;</span><span class="ex">falso</span></span>
+          <span class="mi-row"><span>mostre existe 2 em [1,2,3,4,5]</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          <span class="mi-row"><span>mostre existe "Bruna" em ["Ana","Bruna","Carla"]</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">&lt;valor&gt; em &lt;coleção&gt;</span>
+        <span class="mi-desc">Atalho para <code>existe</code>. Devolve <code>verdadeiro</code> se o valor está na coleção.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "Ana" em "Ana Clara"</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          <span class="mi-row"><span>mostre 5 em [1,2,3,4,5]</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">&lt;texto&gt; começa com &lt;prefixo&gt;</span>
+        <span class="mi-desc">Verifica se o texto começa com o prefixo.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "Willog" começa com "Will"</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          <span class="mi-row"><span>mostre "12345678" começa com "234"</span><span class="mi-arrow">&rarr;</span><span class="ex">falso</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">&lt;texto&gt; termina com &lt;sufixo&gt;</span>
+        <span class="mi-desc">Verifica se o texto termina com o sufixo.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "casa" termina com "sa"</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">escolha &lt;valor&gt;:</span>
+        <span class="mi-desc">Compara o valor com cada <code>caso</code> e executa o bloco correspondente; <code>padrao:</code> (ou <code>padrão:</code>) roda quando nenhum caso coincide.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">nota=10
+escolha nota:
+  caso 10: mostre "perfeito"
+  caso 9: mostre "otimo"
+  padrao: mostre "estude mais"</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">perfeito</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">&lt;valor&gt; se &lt;condição&gt; senão &lt;valor&gt;</span>
+        <span class="mi-desc">Operador ternário: escolhe um dos valores conforme a condição.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "Aprovado" se média>=7 senão "Reprovado"</span></span>
+          <span class="mi-row"><span>a=10; b=20; mostre a se a&lt;b senão b</span><span class="mi-arrow">&rarr;</span><span class="ex">10</span></span>
+        </div>
+      </div>
+
+    </div>
+    <div class="manual-panel" id="panel-lacos">
+
+      <div class="manual-note">Todos os la&ccedil;os usam <b>indenta&ccedil;&atilde;o</b> para delimitar o bloco repetido. <code>para cada &lt;vari&aacute;vel&gt; em &lt;cole&ccedil;&atilde;o&gt;:</code> (ou apenas <code>para &lt;vari&aacute;vel&gt; em &lt;cole&ccedil;&atilde;o&gt;:</code>) percorre os itens; <code>repita(&lt;quantidade&gt;):</code> repete n vezes; <code>enquanto &lt;condi&ccedil;&atilde;o&gt;:</code> repete enquanto a condi&ccedil;&atilde;o for verdadeira.</div>
+
+      <div class="mi-section"><span class="ms-icon">&#8635;</span><h4>La&ccedil;os</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">enquanto &lt;condi&ccedil;&atilde;o&gt;:</span>
+        <span class="mi-desc">Repete o bloco indentado enquanto a condi&ccedil;&atilde;o for verdadeira (reavaliada a cada itera&ccedil;&atilde;o).</span>
+        <div class="mi-example">
+          <pre class="manual-pre">n = 1
+enquanto n &lt;= 5:
+    mostre n
+    n = n + 1</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,5</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">repita(&lt;quantidade&gt;):</span>
+        <span class="mi-desc">Repete o bloco indentado a quantidade de vezes informada (aceita n&uacute;mero ou vari&aacute;vel).</span>
+        <div class="mi-example">
+          <pre class="manual-pre">repita(3):
+    mostre "olá"</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">olá</span></span>
+          <span class="mi-row"><span class="ex">olá</span></span>
+          <span class="mi-row"><span class="ex">olá</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">em intervalo(in&iacute;cio, fim[, passo])</span>
+        <span class="mi-desc">Percorre os n&uacute;meros do in&iacute;cio at&eacute; o fim (inclusive), usando o passo quando informado.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">para cada item em intervalo(1,10):
+    mostre item</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,5,6,7,8,9,10</span></span>
+          <pre class="manual-pre">para cada item em intervalo(1,10,3):
+    mostre item</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,4,7,10</span></span>
+          <pre class="manual-pre">para x em intervalo(1,10):   # "para cada" &eacute; opcional
+    mostre x</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,5,6,7,8,9,10</span></span>
+          <span class="mi-row"><span class="mi-desc">A forma antiga <code>(in&iacute;cio, fim)</code> tamb&eacute;m continua funcionando no la&ccedil;o.</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">em ("texto")</span>
+        <span class="mi-desc">Percorre cada letra do texto.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">para cada letra em ("palavra"):
+    mostre letra</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">p,a,l,a,v,r,a</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">em &lt;lista&gt;</span>
+        <span class="mi-desc">Percorre os elementos de uma lista.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">lista=[1,2,3,4,5,6]
+para cada numero em lista:
+    mostre numero</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,5,6</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">pare</span>
+        <span class="mi-desc">Interrompe imediatamente o la&ccedil;o atual (enquanto, repita ou para). O programa continua na primeira linha ap&oacute;s o la&ccedil;o.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">n = 1
+enquanto verdadeiro:
+    mostre n
+    n = n + 1
+    se n &gt; 3:
+        pare</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">continue</span>
+        <span class="mi-desc">Abandona a itera&ccedil;&atilde;o atual do la&ccedil;o e pula direto para a pr&oacute;xima repeti&ccedil;&atilde;o.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">para n em intervalo(1, 6):
+    se n == 3:
+        continue
+    mostre n</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,4,5,6</span></span>
+        </div>
+      </div>
+
+    </div>
+    <div class="manual-panel" id="panel-operadores">
+
+      <div class="mi-section"><span class="ms-icon">+</span><h4>Aritm&eacute;tica</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">+ - * /</span>
+        <span class="mi-desc">Adi&ccedil;&atilde;o, subtra&ccedil;&atilde;o, multiplica&ccedil;&atilde;o e divis&atilde;o.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>7 + 2</span><span class="mi-arrow">&rarr;</span><span class="ex">9</span></span>
+          <span class="mi-row"><span>7 - 2</span><span class="mi-arrow">&rarr;</span><span class="ex">5</span></span>
+          <span class="mi-row"><span>7 * 2</span><span class="mi-arrow">&rarr;</span><span class="ex">14</span></span>
+          <span class="mi-row"><span>7 / 2</span><span class="mi-arrow">&rarr;</span><span class="ex">3.5</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">// e \ (mod)</span>
+        <span class="mi-desc">Divis&atilde;o inteira (<code>//</code> &mdash; parte inteira do quociente) e resto da divis&atilde;o (<code>\</code> ou <code>mod</code> &mdash; resto, como em <code>a mod b</code>).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>10 // 3</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
+          <span class="mi-row"><span>10 \ 3</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span>
+          <span class="mi-row"><span>10 mod 3</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span>
+          <span class="mi-row"><span>7 \ 2</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span>
+          <span class="mi-row"><span>[10,11,12] \ 5</span><span class="mi-arrow">&rarr;</span><span class="ex">0,1,2</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">texto * n</span>
+        <span class="mi-desc">Repete um texto n vezes (n inteiro). Funciona com o texto de qualquer lado do asterisco.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>"abc" * 2</span><span class="mi-arrow">&rarr;</span><span class="ex">abcabc</span></span>
+          <span class="mi-row"><span>"123" * 3</span><span class="mi-arrow">&rarr;</span><span class="ex">123123123</span></span>
+          <span class="mi-row"><span>3 * "ab"</span><span class="mi-arrow">&rarr;</span><span class="ex">ababab</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">%(a, b)</span>
+        <span class="mi-desc">Porcentagem &mdash; calcula a% de b (a &times; b &divide; 100).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>%(10, 4)</span><span class="mi-arrow">&rarr;</span><span class="ex">0.4</span></span>
+          <span class="mi-row"><span>%(5, 100)</span><span class="mi-arrow">&rarr;</span><span class="ex">5</span></span>
+          <span class="mi-row"><span>%(12, 50)</span><span class="mi-arrow">&rarr;</span><span class="ex">6</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">** e ( )</span>
+        <span class="mi-desc">Potencia&ccedil;&atilde;o e agrupamento por par&ecirc;nteses.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>2 ** 10</span><span class="mi-arrow">&rarr;</span><span class="ex">1024</span></span>
+          <span class="mi-row"><span>(2 + 3) * 4</span><span class="mi-arrow">&rarr;</span><span class="ex">20</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8230;</span><h4>Valores</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">Valores</span>
+        <span class="mi-desc">N&uacute;meros inteiros e decimais (<code>3</code>, <code>3.6</code>) e textos entre aspas (<code>"nome"</code>).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "ola" + " mundo"</span><span class="mi-arrow">&rarr;</span><span class="ex">ola mundo</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">Interpola&ccedil;&atilde;o de Texto</span>
+        <span class="mi-desc">Em textos entre aspas duplas (<code>"..."</code>), use <code>{express&atilde;o}</code> para inserir o valor de vari&aacute;veis e c&aacute;lculos. Entre aspas simples (<code>'...'</code>) as chaves ficam literais.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>a = 10; b = 20</span></span>
+          <span class="mi-row"><span>mostre "{a} + {b} = "+(a+b)</span><span class="mi-arrow">&rarr;</span><span class="ex">10 + 20 = 30</span></span>
+          <span class="mi-row"><span>mostre '{a} + {b} = '+(a+b)</span><span class="mi-arrow">&rarr;</span><span class="ex">{a} + {b} = 30</span></span>
+          <span class="mi-row"><span>mostre "raiz = {raizq(81)}"</span><span class="mi-arrow">&rarr;</span><span class="ex">raiz = 9</span></span>
+          <span class="mi-row"><span>mostre '{'nome'}'</span><span class="mi-arrow">&rarr;</span><span class="ex">{nome}</span></span>
+          <span class="mi-row"><span>mostre "'{'nome'}'"</span><span class="mi-arrow">&rarr;</span><span class="ex">{nome}</span></span>
+          <span class="mi-row"><span class="mi-desc">Aspas simples dentro de chaves s&atilde;o retiradas; o texto fica literal (sem substituir o valor da vari&aacute;vel).</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">Decimais</span>
+        <span class="mi-desc">N&uacute;meros com decimais se mant&ecirc;m decimais nas opera&ccedil;&otilde;es.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>4/2</span><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span>
+          <span class="mi-row"><span>6/3.0</span><span class="mi-arrow">&rarr;</span><span class="ex">2.0</span></span>
+          <span class="mi-row"><span>10.0</span><span class="mi-arrow">&rarr;</span><span class="ex">10.0</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">[ ]</span><h4>Listas em Opera&ccedil;&otilde;es</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">Listas</span>
+        <span class="mi-desc">Operadores aplicados a listas agem em cada elemento.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre [1,2,3] * 2</span><span class="mi-arrow">&rarr;</span><span class="ex">2,4,6</span></span>
+          <span class="mi-row"><span>mostre [1,2] + [10,20]</span><span class="mi-arrow">&rarr;</span><span class="ex">11,22</span></span>
+        </div>
+      </div>
+
+    </div>
+    <div class="manual-panel" id="panel-listas">
+
+      <div class="mi-section"><span class="ms-icon">[ ]</span><h4>Cria&ccedil;&atilde;o e Acesso</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">[a, b, c, ...]</span>
+        <span class="mi-desc">Cria uma lista de valores (n&uacute;meros, textos ou outras listas).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>lista = [1, 2, 3]</span></span>
+          <span class="mi-row"><span>mostre lista</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista(i)</span>
+        <span class="mi-desc">Acessa o elemento na posi&ccedil;&atilde;o <b>i</b> (a contagem come&ccedil;a em 0).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>lista = [1, 2, 3, 4, 5]</span></span>
+          <span class="mi-row"><span>mostre lista(0)</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span>
+          <span class="mi-row"><span>mostre lista(4)</span><span class="mi-arrow">&rarr;</span><span class="ex">5</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">vari&aacute;vel(&iacute;ndice) = valor</span>
+        <span class="mi-desc">Indexa&ccedil;&atilde;o de vari&aacute;vel (estilo BASIC): guarda um valor sob um &iacute;ndice. Use <code>nome(i)</code> para ler e <code>nome(i) = expr</code> para gravar. Se a vari&aacute;vel tiver um valor padr&atilde;o (ex.: <code>valor = 0</code>), &iacute;ndices ainda n&atilde;o gravados devolvem esse padr&atilde;o.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">valor = 0
+para cada x em (1,10):
+  valor(x) = x
+  valor(x)</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1<br>2<br>3<br>...<br>10</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">selecionar(valor, in&iacute;cio, fim)</span>
+        <span class="mi-desc">Seleciona a parte de um texto, n&uacute;mero ou lista entre os &iacute;ndices <b>in&iacute;cio</b> e <b>fim</b> (ambos inclusive, a contagem come&ccedil;a em 0). Para listas, devolve uma nova lista com os elementos selecionados; para textos, um texto com as letras selecionadas; para n&uacute;meros, o bloco de algarismos selecionado.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>planeta = "Saturno"</span></span>
+          <span class="mi-row"><span>mostre selecionar(planeta, 0, 3)</span><span class="mi-arrow">&rarr;</span><span class="ex">Satu</span></span>
+          <span class="mi-row"><span>mostre selecionar("4893847", 3, 5)</span><span class="mi-arrow">&rarr;</span><span class="ex">384</span></span>
+          <span class="mi-row"><span>mostre selecionar([1, 3, 5, 7, 9, 11], 2, 4)</span><span class="mi-arrow">&rarr;</span><span class="ex">5,7,9</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8250;</span><h4>M&eacute;todos</h4></div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista.ordenada</span>
+        <span class="mi-desc">Retorna uma nova lista com os elementos em ordem crescente (n&uacute;meros) ou alfab&eacute;tica (textos).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre [3,1,2].ordenada</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista.soma</span>
+        <span class="mi-desc">Se a lista cont&eacute;m apenas n&uacute;meros, retorna a soma de todos os elementos. Se contiver textos (ou mistura), retorna todos os elementos concatenados em um &uacute;nico texto.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre [1,2,3,4,5,6].soma</span><span class="mi-arrow">&rarr;</span><span class="ex">21</span></span>
+          <span class="mi-row"><span>mostre ["a","b","c"].soma</span><span class="mi-arrow">&rarr;</span><span class="ex">abc</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">t.distintos</span>
+        <span class="mi-desc">Retorna apenas os valores &uacute;nicos, removendo duplicatas e mantendo apenas a primeira ocorr&ecirc;ncia. Funciona tanto em textos (letras) quanto em listas (elementos).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "banana".distintos</span><span class="mi-arrow">&rarr;</span><span class="ex">ban</span></span>
+          <span class="mi-row"><span>mostre "tomate".distintos</span><span class="mi-arrow">&rarr;</span><span class="ex">tomae</span></span>
+          <span class="mi-row"><span>mostre [1,2,2,3,4,5,5,5,6].distintos</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,5,6</span></span>
+          <span class="mi-row"><span>mostre ["a","b","c","a","d","c"].distintos</span><span class="mi-arrow">&rarr;</span><span class="ex">a,b,c,d</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista.m&iacute;nimo / lista.m&aacute;ximo</span>
+        <span class="mi-desc">Retorna o menor (m&iacute;nimo) ou o maior (m&aacute;ximo) valor num&eacute;rico da lista.</span>
+        <div class="mi-example">
+          <pre class="manual-pre">lista = [-2, -1, 0, 1, 2]
+mostre lista.m&iacute;nimo
+mostre lista.m&aacute;ximo</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">-2</span></span>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">t.invertida</span>
+        <span class="mi-desc">Retorna a lista ou o texto com a ordem dos itens invertida. N&atilde;o se aplica a n&uacute;meros puros.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre [1,2,3,4].invertida</span><span class="mi-arrow">&rarr;</span><span class="ex">4,3,2,1</span></span>
+          <span class="mi-row"><span>mostre "banana".invertida</span><span class="mi-arrow">&rarr;</span><span class="ex">ananab</span></span>
+          <span class="mi-row"><span>mostre "6789".invertida</span><span class="mi-arrow">&rarr;</span><span class="ex">9876</span></span>
+          <span class="mi-row"><span>a = "10987"</span></span>
+          <span class="mi-row"><span>mostre a.invertida</span><span class="mi-arrow">&rarr;</span><span class="ex">78901</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">t.contar</span>
+        <span class="mi-desc">Retorna a quantidade de itens de uma lista ou de caracteres de um texto. N&atilde;o se aplica a n&uacute;meros puros (para isso, use comprimento(n)).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "escola".contar</span><span class="mi-arrow">&rarr;</span><span class="ex">6</span></span>
+          <span class="mi-row"><span>mostre [1,2,3,4,5,6,7,8].contar</span><span class="mi-arrow">&rarr;</span><span class="ex">8</span></span>
+          <span class="mi-row"><span>mostre ["Ana","Ben&iacute;cio","Carlos"].contar</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">t.tamanho</span>
+        <span class="mi-desc">Alias de <code>t.contar</code>: retorna a quantidade de itens.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre [1,2,3,4,5].tamanho</span><span class="mi-arrow">&rarr;</span><span class="ex">5</span></span>
+          <span class="mi-row"><span>mostre "escola".tamanho</span><span class="mi-arrow">&rarr;</span><span class="ex">6</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">[1,2,3].primeiro</span>
+        <span class="mi-desc">Retorna o primeiro elemento da lista.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre [1,2,3].primeiro</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span>
+          <span class="mi-row"><span>mostre "Willog".primeiro</span><span class="mi-arrow">&rarr;</span><span class="ex">W</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">[1,2,3].ultimo</span>
+        <span class="mi-desc">Retorna o último elemento da lista (use <code>último</code> com acento também funciona).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre [1,2,3].ultimo</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
+          <span class="mi-row"><span>mostre "Willog".ultimo</span><span class="mi-arrow">&rarr;</span><span class="ex">g</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista.fatiar(início, fim)</span>
+        <span class="mi-desc">Retorna sublista/subtexto do índice início ao fim (inclusive).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre [1,2,3,4,5].fatiar(1,3)</span><span class="mi-arrow">&rarr;</span><span class="ex">2,3,4</span></span>
+          <span class="mi-row"><span>mostre "Willog".fatiar(0,2)</span><span class="mi-arrow">&rarr;</span><span class="ex">Wil</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">"texto".maiúsculo</span>
+        <span class="mi-desc">Converte para MAIÚSCULAS (propriedade, sem parênteses).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "banana".maiúsculo</span><span class="mi-arrow">&rarr;</span><span class="ex">BANANA</span></span>
+          <span class="mi-row"><span>a="laranja"; mostre a.maiúsculo</span><span class="mi-arrow">&rarr;</span><span class="ex">LARANJA</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">"texto".minúsculo</span>
+        <span class="mi-desc">Converte para minúsculas (propriedade).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "BANANA".minúsculo</span><span class="mi-arrow">&rarr;</span><span class="ex">banana</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">t.contarItem(valor)</span>
+        <span class="mi-desc">Retorna quantas vezes o valor aparece na lista ou no texto. N&atilde;o se aplica a n&uacute;meros puros.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre "banana".contarItem("a")</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
+          <span class="mi-row"><span>mostre [1,2,1,2,3,1,2,3,4,1,2,3,4,5].contarItem(2)</span><span class="mi-arrow">&rarr;</span><span class="ex">4</span></span>
+          <span class="mi-row"><span>mostre ["a","b","c","a","a","a","b","a"].contarItem("b")</span><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista.adicionar(valor1, valor2, ...) / texto.adicionar(...)</span>
+        <span class="mi-desc">Adiciona um ou mais valores ao final da lista (modifica a própria lista) ou concatena ao final do texto.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>lista = [1,2,3]</span></span>
+          <span class="mi-row"><span>lista.adicionar(7, 8, 9)</span></span>
+          <span class="mi-row"><span>mostre lista</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,7,8,9</span></span>
+          <span class="mi-row"><span>mostre "banana".adicionar("s")</span><span class="mi-arrow">&rarr;</span><span class="ex">bananas</span></span>
+          <span class="mi-row"><span>a="12345"; mostre a.adicionar("6789")</span><span class="mi-arrow">&rarr;</span><span class="ex">123456789</span></span>
+        </div>
+      </div>
+      </div>
+
+<div class="manual-item">
+        <span class="mi-name">lista.remover(posi&ccedil;&atilde;o)</span>
+        <span class="mi-desc">Remove o elemento na posi&ccedil;&atilde;o informada (a contagem come&ccedil;a em 0) e modifica a pr&oacute;pria lista.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre [1,2,3,4,5].remover(2)</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,4,5</span></span>
+          <span class="mi-row"><span>a = ["a","b","c","d","e"]</span></span>
+          <span class="mi-row"><span>a.remover(4)</span></span>
+          <span class="mi-row"><span>mostre a</span><span class="mi-arrow">&rarr;</span><span class="ex">a,b,c,d</span></span>
+        </div>
+      </div>
+
+            <div class="manual-item">
+        <span class="mi-name">lista.aleat&oacute;rio</span>
+        <span class="mi-desc">Sorteia um item qualquer da lista.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>lista = [1,2,3,4,5]</span></span>
+          <span class="mi-row"><span>mostre lista.aleat&oacute;rio</span><span class="mi-arrow">&rarr;</span><span class="ex">um dos itens da lista, sorteado</span></span>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">lista.embaralhar</span>
+        <span class="mi-desc">Embaralha os itens da lista (modifica a pr&oacute;pria lista) e retorna a lista embaralhada.</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>lista = [1,2,3,4,5,6]</span></span>
+          <span class="mi-row"><span>mostre lista.embaralhar</span><span class="mi-arrow">&rarr;</span><span class="ex">os mesmos itens, em ordem aleat&oacute;ria (ex.: 3,6,4,1,2,5)</span></span>
+        </div>
+      </div>
+
+    </div>
+    <div class="manual-panel" id="panel-funcoes">
+
+      <div class="mi-section"><span class="ms-icon">&#402;</span><h4>Fun&ccedil;&otilde;es Matem&aacute;ticas</h4></div>
+
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">raizq(x)</span>
+          <span class="mi-desc">Raiz quadrada de x.</span>
+          <div class="mi-example"><span class="mi-row"><span>raizq(144)</span><span class="mi-arrow">&rarr;</span><span class="ex">12</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">raizc(x)</span>
+          <span class="mi-desc">Raiz c&uacute;bica de x.</span>
+          <div class="mi-example"><span class="mi-row"><span>raizc(8)</span><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">absoluto(x) | abs(x)</span>
+          <span class="mi-desc">Valor absoluto de x (a parte inteira do m&oacute;dulo).</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>absoluto(-5)</span><span class="mi-arrow">&rarr;</span><span class="ex">5</span></span>
+            <span class="mi-row"><span>abs(-2.666666)</span><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">comprimento(x)</span>
+          <span class="mi-desc">Quantidade de caracteres de um texto, algarismos de um n&uacute;mero ou elementos de uma lista.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>comprimento("Willog")</span><span class="mi-arrow">&rarr;</span><span class="ex">6</span></span>
+            <span class="mi-row"><span>comprimento(1234567)</span><span class="mi-arrow">&rarr;</span><span class="ex">7</span></span>
+            <span class="mi-row"><span>comprimento([2, 4, 6, 8])</span><span class="mi-arrow">&rarr;</span><span class="ex">4</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">log(x, base)</span>
+          <span class="mi-desc">Logaritmo de x na base informada.</span>
+          <div class="mi-example"><span class="mi-row"><span>log(8, 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">logn(x) | ln(x)</span>
+          <span class="mi-desc">Logaritmo natural de x (base e).</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>logn(10)</span><span class="mi-arrow">&rarr;</span><span class="ex">2.30258509299405</span></span>
+            <span class="mi-row"><span>ln(10)</span><span class="mi-arrow">&rarr;</span><span class="ex">2.30258509299405</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">arredondar(x, casas) | arred(x, casas)</span>
+          <span class="mi-desc">Arredonda x com o n&uacute;mero de casas decimais informado (at&eacute; 15 casas).</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>n&uacute;mero = 1.333333333</span></span>
+            <span class="mi-row"><span>mostre arredondar(n&uacute;mero, 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.33</span></span>
+            <span class="mi-row"><span>mostre arredondar(n&uacute;mero, 6)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.333333</span></span>
+            <span class="mi-row"><span>mostre arred(n&uacute;mero, 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.33</span></span>
+            <span class="mi-row"><span>mostre arred(n&uacute;mero, 6)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.333333</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">pi()</span>
+          <span class="mi-desc">Valor de pi com 2 casas decimais.</span>
+          <div class="mi-example"><span class="mi-row"><span>pi()</span><span class="mi-arrow">&rarr;</span><span class="ex">3.14</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">pi(n)</span>
+          <span class="mi-desc">Valor de pi com n casas decimais (at&eacute; 100).</span>
+          <div class="mi-example"><span class="mi-row"><span>pi(10)</span><span class="mi-arrow">&rarr;</span><span class="ex">3.1415926536</span></span>
+            <span class="mi-row"><span>pi(20)</span><span class="mi-arrow">&rarr;</span><span class="ex">3.14159265358979307864</span></span>
+            <span class="mi-row"><span>pi(100)</span><span class="mi-arrow">&rarr;</span><span class="ex">3.14159265358979323846264338327950288419716939937510...</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">inteiro(x)</span>
+          <span class="mi-desc">Parte inteira do n&uacute;mero.</span>
+          <div class="mi-example"><span class="mi-row"><span>inteiro(2.67)</span><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">decimal(x)</span>
+          <span class="mi-desc">Parte decimal do n&uacute;mero.</span>
+          <div class="mi-example"><span class="mi-row"><span>decimal(3.6666)</span><span class="mi-arrow">&rarr;</span><span class="ex">0.6666</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">fra&ccedil;&atilde;o(x)</span>
+          <span class="mi-desc">Converte decimal em fra&ccedil;&atilde;o.</span>
+          <div class="mi-example"><span class="mi-row"><span>fra&ccedil;&atilde;o(0.5)</span><span class="mi-arrow">&rarr;</span><span class="ex">1/2</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">aleat&oacute;rio(min, max)</span>
+          <span class="mi-desc">N&uacute;mero aleat&oacute;rio inteiro entre min e max (inclusive).</span>
+          <div class="mi-example"><span class="mi-row"><span>aleat&oacute;rio(1, 10)</span><span class="mi-arrow">&rarr;</span><span class="ex">um n&uacute;mero entre 1 e 10</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">dado()</span>
+          <span class="mi-desc">Sorteia um n&uacute;mero aleat&oacute;rio inteiro de 1 a 6 (inclusive), como um dado de seis faces.</span>
+          <div class="mi-example"><span class="mi-row"><span>dado()</span><span class="mi-arrow">&rarr;</span><span class="ex">um n&uacute;mero entre 1 e 6</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">moeda()</span>
+          <span class="mi-desc">Sorteia aleatoriamente o texto <code>cara</code> ou <code>coroa</code>, como o lan&ccedil;amento de uma moeda.</span>
+          <div class="mi-example"><span class="mi-row"><span>moeda()</span><span class="mi-arrow">&rarr;</span><span class="ex">cara ou coroa</span></span></div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8736;</span><h4>Trigonometria</h4></div>
+
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">sen(x)</span>
+          <span class="mi-desc">Seno de x (em radianos).</span>
+          <div class="mi-example"><span class="mi-row"><span>sen(0)</span><span class="mi-arrow">&rarr;</span><span class="ex">0</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">cos(x)</span>
+          <span class="mi-desc">Cosseno de x (em radianos).</span>
+          <div class="mi-example"><span class="mi-row"><span>cos(0)</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">tan(x)</span>
+          <span class="mi-desc">Tangente de x (em radianos).</span>
+          <div class="mi-example"><span class="mi-row"><span>tan(0)</span><span class="mi-arrow">&rarr;</span><span class="ex">0</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">arcocos(x)</span>
+          <span class="mi-desc">Arcocosseno de x (resultado em radianos).</span>
+          <div class="mi-example"><span class="mi-row"><span>arcocos(1)</span><span class="mi-arrow">&rarr;</span><span class="ex">0</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">arcosen(x)</span>
+          <span class="mi-desc">Arcosseno de x (resultado em radianos).</span>
+          <div class="mi-example"><span class="mi-row"><span>arcosen(1)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.570796326794897</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">arcotan(x)</span>
+          <span class="mi-desc">Arcotangente de x (resultado em radianos).</span>
+          <div class="mi-example"><span class="mi-row"><span>arcotan(1)</span><span class="mi-arrow">&rarr;</span><span class="ex">0.785398163397448</span></span></div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8646;</span><h4>Convers&atilde;o</h4></div>
+
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">paraTexto(x)</span>
+          <span class="mi-desc">Converte um valor em texto.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>a=1.22222222</span></span>
+            <span class="mi-row"><span>mostre paraTexto(a)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.22222222</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">paraN&uacute;mero(x)</span>
+          <span class="mi-desc">Converte um texto num&eacute;rico em valor.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>b="2.33333"</span></span>
+            <span class="mi-row"><span>mostre paraN&uacute;mero(b)</span><span class="mi-arrow">&rarr;</span><span class="ex">2.33333</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">paraLista(lista)</span>
+          <span class="mi-desc">Retorna uma c&oacute;pia da lista.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>a = paraLista([1,2,3])</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
+            <span class="mi-row"><span>b = paraLista("1,2,3")</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8646;</span><h4>Texto</h4></div>
+
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">mai&uacute;sculo(t)</span>
+          <span class="mi-desc">Converte o texto para MAI&Uacute;SCULAS.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre mai&uacute;sculo("batata")</span><span class="mi-arrow">&rarr;</span><span class="ex">BATATA</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">min&uacute;sculo(t)</span>
+          <span class="mi-desc">Converte o texto para min&uacute;sculas.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre min&uacute;sculo("ESCOLA")</span><span class="mi-arrow">&rarr;</span><span class="ex">escola</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">substitua(t, busca, troca)</span>
+          <span class="mi-desc">Troca todas as ocorr&ecirc;ncias do trecho buscado pelo texto de troca.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre substitua("Ol&aacute;, mundo!", "Ol&aacute;", "Tchau")</span><span class="mi-arrow">&rarr;</span><span class="ex">Tchau, mundo!</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">divida(t, separador)</span>
+          <span class="mi-desc">Divide um texto em uma lista de partes, cortando em cada ocorr&ecirc;ncia do separador. Se receber um n&uacute;mero, devolve a lista dos seus algarismos.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre divida("a,b,c", ",")</span><span class="mi-arrow">&rarr;</span><span class="ex">a,b,c</span></span>
+            <span class="mi-row"><span>mostre divida(12345, ",")</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,5</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">junte(lista[, separador])</span>
+          <span class="mi-desc">Junta os elementos da lista em um &uacute;nico texto. Com separador, insere-o entre os elementos. &Eacute; o inverso de divida.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre junte([1,2,3,4,5])</span><span class="mi-arrow">&rarr;</span><span class="ex">12345</span></span>
+            <span class="mi-row"><span>mostre junte(["a","b","c"])</span><span class="mi-arrow">&rarr;</span><span class="ex">abc</span></span>
+            <span class="mi-row"><span>mostre junte([1,2,3], "-")</span><span class="mi-arrow">&rarr;</span><span class="ex">1-2-3</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">cont&eacute;m(t, valor)</span>
+          <span class="mi-desc">Verifica se um texto cont&eacute;m um trecho ou se uma lista cont&eacute;m um valor. Devolve verdadeiro ou falso.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre cont&eacute;m("escola", "esc")</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+            <span class="mi-row"><span>mostre cont&eacute;m("cidade", "cido")</span><span class="mi-arrow">&rarr;</span><span class="ex">falso</span></span>
+            <span class="mi-row"><span>mostre cont&eacute;m([1,2,3], 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">posi&ccedil;&atilde;o(t, valor)</span>
+          <span class="mi-desc">Devolve a posi&ccedil;&atilde;o (a partir de 0) da primeira ocorr&ecirc;ncia do valor em um texto, n&uacute;mero ou lista. Se n&atilde;o encontrar, devolve -1.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;o("escola", "o")</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;o("banana", "a")</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span>
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;o(12345654, 5)</span><span class="mi-arrow">&rarr;</span><span class="ex">4</span></span>
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;o([10,20,30], 20)</span><span class="mi-arrow">&rarr;</span><span class="ex">1</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">insira(t, posi&ccedil;&atilde;o, valor)</span>
+          <span class="mi-desc">Insere o valor depois do caractere (ou elemento) na posi&ccedil;&atilde;o informada, devolvendo um novo texto, n&uacute;mero ou lista.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre insira("banana", 3, "olo")</span><span class="mi-arrow">&rarr;</span><span class="ex">banaolona</span></span>
+            <span class="mi-row"><span>mostre insira("olho", 2, "ata")</span><span class="mi-arrow">&rarr;</span><span class="ex">olhatao</span></span>
+            <span class="mi-row"><span>mostre insira(1234567, 4, 9)</span><span class="mi-arrow">&rarr;</span><span class="ex">12345967</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">remova(t, posi&ccedil;&atilde;o)</span>
+          <span class="mi-desc">Remove o caractere (ou elemento) na posi&ccedil;&atilde;o informada, devolvendo um novo texto, n&uacute;mero ou lista.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre remova(12345, 3)</span><span class="mi-arrow">&rarr;</span><span class="ex">1235</span></span>
+            <span class="mi-row"><span>mostre remova("banana", 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">baana</span></span>
+            <span class="mi-row"><span>mostre remova([5,6,7,8,9], 4)</span><span class="mi-arrow">&rarr;</span><span class="ex">5,6,7,8</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">posi&ccedil;&atilde;oEm(t, posi&ccedil;&atilde;o)</span>
+          <span class="mi-desc">Devolve o caractere ou elemento que est&aacute; na posi&ccedil;&atilde;o informada (a contagem come&ccedil;a em 0). Em n&uacute;meros, devolve o algarismo como n&uacute;mero.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;oEm("banana", 2)</span><span class="mi-arrow">&rarr;</span><span class="ex">n</span></span>
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;oEm(12444, 3)</span><span class="mi-arrow">&rarr;</span><span class="ex">4</span></span>
+            <span class="mi-row"><span>mostre posi&ccedil;&atilde;oEm([1,2,3,4,5,6,7], 4)</span><span class="mi-arrow">&rarr;</span><span class="ex">5</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">fatorial(n)</span>
+        <span class="mi-desc">Calcula o fatorial de um n&uacute;mero inteiro n&atilde;o negativo (o operador p&oacute;s-fixo "!" tamb&eacute;m funciona).</span>
+        <div class="mi-example">
+          <span class="mi-row"><span>mostre fatorial(4)</span><span class="mi-arrow">&rarr;</span><span class="ex">24</span></span>
+          <span class="mi-row"><span>mostre 4!</span><span class="mi-arrow">&rarr;</span><span class="ex">24</span></span>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#9200;</span><h4>Data e Hora</h4></div>
+
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">ano()</span>
+          <span class="mi-desc">Ano atual no formato yyyy (ex.: 2026).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre ano()</span><span class="mi-arrow">&rarr;</span><span class="ex">2026</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">m&ecirc;s()</span>
+          <span class="mi-desc">M&ecirc;s atual no formato mm (ex.: 08).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre m&ecirc;s()</span><span class="mi-arrow">&rarr;</span><span class="ex">08</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">dia()</span>
+          <span class="mi-desc">Dia atual no formato dd (ex.: 05).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre dia()</span><span class="mi-arrow">&rarr;</span><span class="ex">05</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">hora()</span>
+          <span class="mi-desc">Hora atual (ex.: 20).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre hora()</span><span class="mi-arrow">&rarr;</span><span class="ex">20</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">data()</span>
+          <span class="mi-desc">Data atual no formato dd/MM/yyyy (ex.: 13/08/2026).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre data()</span><span class="mi-arrow">&rarr;</span><span class="ex">13/08/2026</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">agora()</span>
+          <span class="mi-desc">Hora, minutos e segundos atuais no formato HH:mm:ss (ex.: 20:42:03).</span>
+          <div class="mi-example"><span class="mi-row"><span>mostre agora()</span><span class="mi-arrow">&rarr;</span><span class="ex">20:42:03</span></span></div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">tempo("dd/MM/yyyy", "dd/MM/yyyy")</span>
+          <span class="mi-desc">Tempo decorrido em anos, meses e dias entre as duas datas informadas (a ordem das datas n&atilde;o importa).</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre tempo("13/08/2026", "10/02/2027")</span><span class="mi-arrow">&rarr;</span><span class="ex">5 meses e 28 dias</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">adicionarDias("dd/MM/yyyy", dias)</span>
+          <span class="mi-desc">Adiciona dias a uma data.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre adicionarDias("13/08/2026",10)</span><span class="mi-arrow">&rarr;</span><span class="ex">23/08/2026</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">diaSemana("dd/MM/yyyy")</span>
+          <span class="mi-desc">Dia da semana da data.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre diaSemana("13/08/2026")</span><span class="mi-arrow">&rarr;</span><span class="ex">quinta</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">?</span><h4>Introspecção</h4></div>
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">tipo(x)</span>
+          <span class="mi-desc">Devolve o tipo do valor: número, texto, lista, booleano, função.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre tipo(5)</span><span class="mi-arrow">&rarr;</span><span class="ex">número</span></span>
+            <span class="mi-row"><span>mostre tipo("Olá")</span><span class="mi-arrow">&rarr;</span><span class="ex">texto</span></span>
+            <span class="mi-row"><span>mostre tipo(5==7)</span><span class="mi-arrow">&rarr;</span><span class="ex">booleano</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">T</span><h4>Texto – Extras</h4></div>
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">aparar(t)</span>
+          <span class="mi-desc">Remove espaços do início e fim.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre aparar(" escola ")</span><span class="mi-arrow">&rarr;</span><span class="ex">escola</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">extrair(t, padrão)</span>
+          <span class="mi-desc">Extrai caracteres por padrão regex: "[0-9]", "[a-z]", "0-9", "a-z".</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre extrair("a1b2c3","[0-9]")</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">≡</span><h4>Lista – Filtragem</h4></div>
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">filtrar(coleção, condição)</span>
+          <span class="mi-desc">Filtra coleção por condição com variável (ex: x>2, palavra contém "a", primo(x)).</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre filtrar([1,2,3,4],x>2)</span><span class="mi-arrow">&rarr;</span><span class="ex">3,4</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">mapear(coleção, "x*2")</span>
+          <span class="mi-desc">Mapeia cada elemento pela expressão.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre mapear([1,2,3],"x*2")</span><span class="mi-arrow">&rarr;</span><span class="ex">2,4,6</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">P</span><h4>Matemática – Primalidade</h4></div>
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">primo(n)</span>
+          <span class="mi-desc">Verifica se número é primo.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre primo(11)</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">par(n)</span>
+          <span class="mi-desc">Verifica se número é par.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre par(8)</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">ímpar(n)</span>
+          <span class="mi-desc">Verifica se número é ímpar.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre ímpar(3)</span><span class="mi-arrow">&rarr;</span><span class="ex">verdadeiro</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#8734;</span><h4>Matem&aacute;tica &ndash; N&uacute;meros Inteiros</h4></div>
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">mmc(a, b, ...)</span>
+          <span class="mi-desc">M&iacute;nimo M&uacute;ltiplo Comum de dois ou mais n&uacute;meros inteiros.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre mmc(2, 4, 8)</span><span class="mi-arrow">&rarr;</span><span class="ex">8</span></span>
+            <span class="mi-row"><span>mostre mmc(3, 4)</span><span class="mi-arrow">&rarr;</span><span class="ex">12</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">mdc(a, b, ...)</span>
+          <span class="mi-desc">M&aacute;ximo Divisor Comum de dois ou mais n&uacute;meros inteiros.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre mdc(12, 18)</span><span class="mi-arrow">&rarr;</span><span class="ex">6</span></span>
+            <span class="mi-row"><span>mostre mdc(100, 75)</span><span class="mi-arrow">&rarr;</span><span class="ex">25</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">divisores(n)</span>
+          <span class="mi-desc">Retorna uma lista com todos os divisores de n.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre divisores(12)</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,4,6,12</span></span>
+            <span class="mi-row"><span>mostre divisores(17)</span><span class="mi-arrow">&rarr;</span><span class="ex">1,17</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">fatores(n)</span>
+          <span class="mi-desc">Retorna os fatores primos de n.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre fatores(42)</span><span class="mi-arrow">&rarr;</span><span class="ex">2,3,7</span></span>
+            <span class="mi-row"><span>mostre fatores(100)</span><span class="mi-arrow">&rarr;</span><span class="ex">2,2,5,5</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#9636;</span><h4>Visualiza&ccedil;&atilde;o</h4></div>
+
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">janela(x, y, cor de fundo, "título")</span>
+          <span class="mi-desc">Abre uma janela gr&aacute;fica com x pixels de largura (horizontal) por y pixels de altura (vertical). A cor de fundo pode ser preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom ou rosa (padr&atilde;o preto). O t&iacute;tulo, se omitido, &eacute; "Janela".</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500, 300, azul, "Meu Desenho")</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela de 500 x 300 pixels de fundo azul com o t&iacute;tulo "Meu Desenho"</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">ponto(x, y, cor)</span>
+          <span class="mi-desc">Desenha um ponto nas coordenadas (x, y) na janela aberta com o comando <b>janela</b>. A cor pode ser preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom ou rosa (padr&atilde;o branco). Execute <b>janela</b> antes de <b>ponto</b>.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500, 300); ponto(250, 150, vermelho)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e desenha um ponto vermelho no centro</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">linha(x1, y1, x2, y2, cor)</span>
+          <span class="mi-desc">Tra&ccedil;a uma linha do ponto (x1, y1) ao ponto (x2, y2) na janela aberta com o comando <b>janela</b>. A cor pode ser preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom ou rosa (padr&atilde;o branco). Execute <b>janela</b> antes de <b>linha</b>.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500, 300); linha(50, 50, 450, 250, azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e tra&ccedil;a uma linha azul entre os dois pontos</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">c&iacute;rculo(x, y, raio, cor da borda, cor de preenchimento)</span>
+          <span class="mi-desc">Desenha um c&iacute;rculo na janela aberta com o comando <b>janela</b>, sendo (x, y) as coordenadas do centro e <b>raio</b> a medida do raio em pixels. A cor da borda &eacute; a cor da linha da circunfer&ecirc;ncia (padr&atilde;o branco) e a cor de preenchimento pinta o interior (se omitida, o c&iacute;rculo n&atilde;o tem preenchimento). Execute <b>janela</b> antes de <b>c&iacute;rculo</b>.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500, 300); c&iacute;rculo(250, 150, 60, azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e desenha um c&iacute;rculo azul de raio 60 no centro, sem preenchimento</span></span>
+            <span class="mi-row"><span>janela(500, 300); c&iacute;rculo(250, 150, 60, azul, amarelo)</span><span class="mi-arrow">&rarr;</span><span class="ex">o mesmo c&iacute;rculo, agora com interior amarelo</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">ret&acirc;ngulo(x, y, largura, altura, cor da borda, cor de preenchimento)</span>
+          <span class="mi-desc">Desenha um ret&acirc;ngulo na janela aberta com o comando <b>janela</b>, sendo (x, y) as coordenadas do canto superior esquerdo, <b>largura</b> a medida horizontal e <b>altura</b> a medida vertical, em pixels. A cor da borda &eacute; a cor do contorno (padr&atilde;o branco) e a cor de preenchimento pinta o interior (se omitida, o ret&acirc;ngulo n&atilde;o tem preenchimento). Execute <b>janela</b> antes de <b>ret&acirc;ngulo</b>.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500, 300); ret&acirc;ngulo(50, 50, 200, 100, azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e desenha um ret&acirc;ngulo azul de 200 x 100 pixels a partir do ponto (50, 50), sem preenchimento</span></span>
+            <span class="mi-row"><span>janela(500, 300); ret&acirc;ngulo(50, 50, 200, 100, azul, amarelo)</span><span class="mi-arrow">&rarr;</span><span class="ex">o mesmo ret&acirc;ngulo, agora com interior amarelo</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">texto(x, y, "texto", cor, tamanho da fonte)</span>
+          <span class="mi-desc">Escreve o texto nas coordenadas (x, y) na janela aberta com o comando <b>janela</b>. A cor pode ser preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom ou rosa (padr&atilde;o branco). O tamanho da fonte &eacute; dado em pixels (padr&atilde;o 14). Execute <b>janela</b> antes de <b>texto</b>.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500, 300); texto(50, 50, "Ol&aacute;, mundo!", amarelo)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e escreve "Ol&aacute;, mundo!" em amarelo a partir do ponto (50, 50)</span></span>
+            <span class="mi-row"><span>janela(500, 300); texto(50, 50, "T&iacute;tulo", branco, 32)</span><span class="mi-arrow">&rarr;</span><span class="ex">escreve o texto com fonte de 32 pixels</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">pegar(x0, y0, x1, y1)</span>
+          <span class="mi-desc">Copia a parte do desenho que est&aacute; dentro do ret&acirc;ngulo (ou quadrado) com cantos em (x0, y0) e (x1, y1) na janela aberta com o comando <b>janela</b>. S&atilde;o copiados os pontos, linhas, c&iacute;rculos e textos cujo ponto de refer&ecirc;ncia (posi&ccedil;&atilde;o do ponto, centro da linha, centro do c&iacute;rculo ou posi&ccedil;&atilde;o do texto) esteja dentro da regi&atilde;o. Execute <b>janela</b> antes de <b>pegar</b>.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500, 300); linha(50, 50, 100, 100, vermelho); pegar(30, 30, 200, 200)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e copia a linha que est&aacute; dentro do ret&acirc;ngulo (30, 30)-(200, 200)</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">colocar(x0, y0, x1, y1)</span>
+          <span class="mi-desc">Coloca a parte copiada com <b>pegar</b> no ret&acirc;ngulo (ou quadrado) com cantos em (x0, y0) e (x1, y1). Se o novo ret&acirc;ngulo tiver tamanho diferente, a parte copiada &eacute; ampliada ou reduzida para se ajustar. Execute <b>janela</b> e <b>pegar</b> antes de <b>colocar</b>.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500, 300); linha(50, 50, 100, 100, vermelho); pegar(30, 30, 200, 200); colocar(250, 50, 420, 220)</span><span class="mi-arrow">&rarr;</span><span class="ex">coloca uma c&oacute;pia da linha dentro do ret&acirc;ngulo (250, 50)-(420, 220)</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">limparJanela</span>
+          <span class="mi-desc">Limpa a janela criada por <b>janela</b>, apagando pontos, linhas, círculos, retângulos e textos.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500,300); ponto(10,10,vermelho); limparJanela</span><span class="mi-arrow">&rarr;</span><span class="ex">janela limpa</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">corFundo(cor)</span>
+          <span class="mi-desc">Altera a cor de fundo da janela aberta. Usa as mesmas cores de <code>círculo</code>, <code>retângulo</code> etc. (preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom, rosa).</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>janela(500,500); corFundo(azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">fundo azul</span></span>
+            <span class="mi-row"><span>janela(500,500); corFundo(vermelho)</span><span class="mi-arrow">&rarr;</span><span class="ex">fundo vermelho</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mi-section"><span class="ms-icon">&#9835;</span><h4>Som</h4></div>
+
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">bipe(s)</span>
+          <span class="mi-desc">Emite um sinal sonoro (som cont&iacute;nuo) durante <b>s</b> segundos. Os segundos podem ser fracionados: <code>bipe(0.5)</code> dura meio segundo.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>bipe(1)</span><span class="mi-arrow">&rarr;</span><span class="ex">emite um bipe de 1 segundo</span></span>
+            <span class="mi-row"><span>bipe(0.5)</span><span class="mi-arrow">&rarr;</span><span class="ex">emite um bipe de meio segundo</span></span>
+            <span class="mi-row"><span>bipe(0.25); bipe(0.25)</span><span class="mi-arrow">&rarr;</span><span class="ex">dois bipes curtos</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">som(f, s)</span>
+          <span class="mi-desc">Emite um som de frequ&ecirc;ncia <b>f</b> em hertz (entre 37 e 32767) durante <b>s</b> segundos. Os segundos podem ser inteiros ou fracionados.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>som(440, 1)</span><span class="mi-arrow">&rarr;</span><span class="ex">emite o l&aacute; (440 Hz) por 1 segundo</span></span>
+            <span class="mi-row"><span>som(880, 0.25)</span><span class="mi-arrow">&rarr;</span><span class="ex">emite um tom agudo de um quarto de segundo</span></span>
+            <span class="mi-row"><span>som(37, 0.5)</span><span class="mi-arrow">&rarr;</span><span class="ex">emite o som mais grave permitido por meio segundo</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">toca("C", "D", "E", ..., s)</span>
+          <span class="mi-desc">Toca uma sequ&ecirc;ncia de notas musicais, cada uma por <b>s</b> segundos (inteiro ou decimal). As notas podem ser <code>C, D, E, F, G, A, B</code>, com sustenido (<code>#</code>: C#, D#, E#, F#, G#, A#, B#) ou bemol (<code>b</code>: Cb, Db, Eb, Fb, Gb, Ab, Bb).</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>toca("C", "D", "E", "F", "G", "A", "B", 0.25)</span><span class="mi-arrow">&rarr;</span><span class="ex">toca a escala de D&oacute; maior, cada nota por um quarto de segundo</span></span>
+            <span class="mi-row"><span>toca("C", "C#", "D", "D#", "E", "F", "F#", 0.3)</span><span class="mi-arrow">&rarr;</span><span class="ex">escala crom&aacute;tica ascendente</span></span>
+            <span class="mi-row"><span>toca("E", "G", "B", 0.5)</span><span class="mi-arrow">&rarr;</span><span class="ex">acorde de mi menor, cada nota por meio segundo</span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="manual-panel" id="panel-atalhos">
+
+      <div class="manual-note">Atalhos dispon&iacute;veis no editor.</div>
+
+      <div class="manual-item">
+        <span class="mi-name"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
+        <span class="mi-desc">Executar o programa.</span>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name"><kbd>Tab</kbd></span>
+        <span class="mi-desc">Insere dois espa&ccedil;os.</span>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name"><kbd>Enter</kbd> ap&oacute;s <code>:</code></span>
+        <span class="mi-desc">Inicia a pr&oacute;xima linha j&aacute; indentada (dois espa&ccedil;os al&eacute;m da indenta&ccedil;&atilde;o atual).</span>
+      </div>
+
+      <div class="manual-item">
+        <span class="mi-name">Autocompletar</span>
+        <span class="mi-desc">Enquanto digita, o editor sugere comandos, fun&ccedil;&otilde;es, propriedades e vari&aacute;veis. Use <kbd>&uarr;</kbd> e <kbd>&darr;</kbd> para navegar, <kbd>Enter</kbd> ou <kbd>Tab</kbd> para aceitar e <kbd>Esc</kbd> para fechar. <kbd>Ctrl</kbd> + <kbd>Espa&ccedil;o</kbd> abre a lista de sugest&otilde;es a qualquer momento.</span>
+      </div>
+
+    </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="janelaOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="janelaTitle">Janela</h2>
+      <div class="plot-controls">
+        <button class="plot-win-btn" id="janelaMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="janelaMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="janelaMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="janelaClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body janela-body" id="janelaBody">
+      <canvas id="janelaCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mensagemOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="mensagemTitle">Mensagem</h2>
+      <button class="modal-close" id="mensagemClose" title="Fechar">&times;</button>
+    </div>
+    <div class="modal-body msg-body">
+      <p id="mensagemText"></p>
+      <div class="msg-buttons">
+        <button id="mensagemOk">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="selecionarOverlay" tabindex="-1">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="selecionarTitle">Selecionar opção</h2>
+      <button class="modal-close" id="selecionarClose" title="Fechar">&times;</button>
+    </div>
+    <div class="modal-body sel-body">
+      <div class="sel-options" id="selecionarOptions"></div>
+      <div class="sel-output" id="selecionarOutput"></div>
+      <div class="sel-hint">Pressione a tecla da opção desejada para executá-la. Feche a janela para continuar o programa.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="emJanelaOverlay">
+  <div class="modal" id="emJanelaModal">
+    <div class="modal-head">
+      <h2 id="emJanelaTitle">Janela</h2>
+      <div class="plot-controls">
+        <button class="plot-win-btn" id="emJanelaMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="emJanelaMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="emJanelaMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="emJanelaClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body emjanela-body">
+      <div id="emJanelaOutput" class="console emjanela-output">
+        <div class="placeholder">Sem saída ainda.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="leiaOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="leiaTitle">Entrada</h2>
+      <button class="modal-close" id="leiaClose" title="Fechar">&times;</button>
+    </div>
+    <div class="modal-body msg-body">
+      <p id="leiaText"></p>
+      <input type="text" id="leiaInput" spellcheck="false" autocomplete="off" />
+      <div class="msg-buttons">
+        <button id="leiaCancel">Cancelar</button>
+        <button id="leiaOk">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="interpretadorOverlay">
+  <div class="modal" id="interpretadorModal">
+    <div class="modal-head">
+      <h2>Interpretador</h2>
+      <div class="zoom-controls">
+        <button class="plot-zoom-btn" data-win-zoom="out" data-win-zoom-target="interpretadorOverlay" title="Diminuir fonte" aria-label="Diminuir fonte">&minus;</button>
+        <button class="plot-zoom-btn" data-win-zoom="in" data-win-zoom-target="interpretadorOverlay" title="Aumentar fonte" aria-label="Aumentar fonte">+</button>
+      </div>
+      <div class="plot-controls">
+        <button class="plot-win-btn" id="interpMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="interpMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="interpMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="interpClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body interp-body">
+      <div class="interp-input-wrap">
+        <span class="interp-prompt">&gt;</span>
+        <input type="text" id="interpInput" placeholder="Digite um comando..." spellcheck="false" autocomplete="off" />
+      </div>
+      <div class="interp-output" id="interpOutput">
+        <div class="placeholder">Digite comandos e pressione Enter para executar.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ctx-menu" id="ctxMenu">
+  <div class="ctx-clipboard">
+    <div class="ctx-clip-item" data-action="cut">
+      <span class="ctx-name">Recortar</span>
+      <span class="ctx-desc">Ctrl+X</span>
+    </div>
+    <div class="ctx-clip-item" data-action="copy">
+      <span class="ctx-name">Copiar</span>
+      <span class="ctx-desc">Ctrl+C</span>
+    </div>
+    <div class="ctx-clip-item" data-action="paste">
+      <span class="ctx-name">Colar</span>
+      <span class="ctx-desc">Ctrl+V</span>
+    </div>
+    <hr class="ctx-sep">
+  </div>
+  <div class="ctx-search"><input type="text" id="ctxSearch" placeholder="Buscar função..."></div>
+  <div class="ctx-list" id="ctxList"></div>
+</div>
+
+
+
+<div class="modal-overlay" id="graficoOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Console</h2>
+      <div class="plot-controls">
+        <button id="graficoCopy" title="Copiar conteúdo para a área de transferência">Copiar</button>
+        <button class="plot-win-btn" id="graficoMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="graficoMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="graficoMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="graficoClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body grafico-body">
+      <canvas id="graficoCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="sobreOverlay">
+  <div class="modal sobre-modal">
+    <div class="modal-head">
+      <h2>Sobre o Willog</h2>
+      <button class="modal-close" id="sobreClose" title="Fechar">&times;</button>
+    </div>
+    <div class="modal-body sobre-body">
+      <div class="sobre-text">Willog (baseado em BASIC e Python)</div>
+      <div class="sobre-text">Desenvolvido por:</div>
+      <div class="sobre-author">Wilson Jos&eacute; Andriolli Junior</div>
+      <div class="sobre-texto-pequeno">wjunior1973@gmail.com</div>
+      <div class="sobre-ano-negrito">2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="quickRefOverlay">
+  <div class="modal quickref-modal">
+    <div class="modal-head">
+      <h2>Refer&ecirc;ncia r&aacute;pida &mdash; Willog</h2>
+      <div class="plot-controls">
+        <button class="plot-win-btn" id="quickRefMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="quickRefMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="quickRefMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="quickRefClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body quickref-body">
+      <input type="text" id="quickRefSearch" class="quickref-search" placeholder="Filtrar comandos e fun&ccedil;&otilde;es..." />
+      <div class="quickref-list" id="quickRefList"></div>
+      <div class="quickref-empty" id="quickRefEmpty" style="display:none">Nenhum comando ou fun&ccedil;&atilde;o encontrado.</div>
+    </div>
+  </div>
+</div>
+
+<div id="minimizedBar"></div>
+
+<div class="modal-overlay" id="paletteOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Paletas de Cores &mdash; Willog IDE</h2>
+      <div class="plot-controls">
+        <button class="plot-win-btn" id="paletteMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="paletteMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="paletteMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="paletteClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="palette-tabs">
+      <button class="palette-tab active" data-tab="palette-dark">Escuro</button>
+      <button class="palette-tab" data-tab="palette-light">Claro</button>
+    </div>
+  <div class="palette-grid" id="palette-dark"></div>
+  <div class="palette-grid" id="palette-light" style="display:none;"></div>
+</div>
+</div>
+
+<div class="modal-overlay" id="plainLangOverlay">
+  <div class="modal pl-maximized">
+    <div class="modal-head">
+      <h2>Em Palavras &mdash; Willog IDE</h2>
+      <div class="plot-controls">
+        <button id="plainLangAtualizar" title="Gerar novamente">Atualizar</button>
+        <button class="plot-win-btn" id="plainLangMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="plainLangMaximize" title="Restaurar" aria-label="Restaurar">
+          <svg viewBox="0 0 14 14" id="plainLangMaxIcon"><rect x="3.5" y="1.5" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="5.5" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="plainLangClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="plainlang-body" id="plainLangBody">
+      <div class="plainlang-empty">Abra um programa e clique em &ldquo;Em Palavras&rdquo;</div>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="js/palettes.js"></script>
+<script src="js/interpreter.js"></script>
+<script src="js/syntax-highlight.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
