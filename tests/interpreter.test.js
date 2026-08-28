@@ -796,6 +796,48 @@ describe('Funções Matemáticas', function () {
     assertDeepEqual(runTexts('mostre fatores(100)'), ['2,2,5,5']);
     assertDeepEqual(runTexts('mostre fatores(2)'), ['2']);
   });
+
+  it('média() calcula média aritmética', function () {
+    assertDeepEqual(runTexts('mostre média([10, 20, 30])'), ['20']);
+    assertDeepEqual(runTexts('mostre média([8, 7, 9, 6, 10])'), ['8']);
+  });
+
+  it('media() funciona sem acento', function () {
+    assertDeepEqual(runTexts('mostre media([4, 4, 4, 4])'), ['4']);
+  });
+
+  it('mediana() calcula mediana', function () {
+    assertDeepEqual(runTexts('mostre mediana([3, 1, 4, 1, 5])'), ['3']);
+    assertDeepEqual(runTexts('mostre mediana([1, 2, 3, 4])'), ['2.5']);
+    assertDeepEqual(runTexts('mostre mediana([7])'), ['7']);
+  });
+
+  it('moda() encontra valor mais frequente', function () {
+    assertDeepEqual(runTexts('mostre moda([1, 2, 2, 3])'), ['2']);
+    assertDeepEqual(runTexts('mostre moda([1, 1, 2, 3, 3, 3])'), ['3']);
+  });
+
+  it('variância() calcula variância', function () {
+    assertDeepEqual(runTexts('mostre variância([2, 4, 4, 4, 5, 5, 7, 9])'), ['4']);
+  });
+
+  it('variancia() funciona sem acento', function () {
+    assertDeepEqual(runTexts('mostre variancia([2, 4, 4, 4, 5, 5, 7, 9])'), ['4']);
+  });
+
+  it('desvioPadrao() calcula desvio padrão', function () {
+    assertDeepEqual(runTexts('mostre desvioPadrao([2, 4, 4, 4, 5, 5, 7, 9])'), ['2']);
+  });
+
+  it('desvioPadrão() funciona com acento', function () {
+    assertDeepEqual(runTexts('mostre desvioPadrão([2, 4, 4, 4, 5, 5, 7, 9])'), ['2']);
+  });
+
+  it('produto() calcula produto dos elementos', function () {
+    assertDeepEqual(runTexts('mostre produto([2, 3, 4])'), ['24']);
+    assertDeepEqual(runTexts('mostre produto([5, 1, 1])'), ['5']);
+    assertDeepEqual(runTexts('mostre produto([10])'), ['10']);
+  });
 });
 
 // ============================================================

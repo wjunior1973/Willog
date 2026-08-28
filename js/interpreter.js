@@ -831,6 +831,113 @@ function callFunction(name, args, rawName) {
     if (_fn > 1) _facts.push(mkNum(_fn, false));
     return _facts;
   }
+  // ---- Helper: extrair array numérico de args (lista ou múltiplos args) ----
+  function _numArray(a) {
+    var arr = [];
+    if (Array.isArray(a)) {
+      for (var _ai = 0; _ai < a.length; _ai++) arr.push(numVal(a[_ai]));
+    } else {
+      for (var _aj = 0; _aj < a.length; _aj++) arr.push(numVal(a[_aj]));
+    }
+    return arr;
+  }
+  function _validateNums(arr, fname) {
+    for (var _vi = 0; _vi < arr.length; _vi++) {
+      if (typeof arr[_vi] !== 'number' || !isFinite(arr[_vi])) {
+        throw new Error(fname + ': todos os elementos devem ser números');
+      }
+    }
+  }
+  // ---- média(lista) — média aritmética ----
+  if (name === 'média' || name === 'media') {
+    if (args.length !== 1) throw new Error('média espera 1 argumento: média(lista)');
+    var _mArr = _numArray(args[0]);
+    if (_mArr.length === 0) throw new Error('média: lista vazia');
+    _validateNums(_mArr, 'média');
+    var _mSum = 0;
+    for (var _mi2 = 0; _mi2 < _mArr.length; _mi2++) _mSum += _mArr[_mi2];
+    var _mResult = _mSum / _mArr.length;
+    return mkNum(_mResult, _mResult % 1 !== 0);
+  }
+  // ---- mediana(lista) — valor central ----
+  if (name === 'mediana') {
+    if (args.length !== 1) throw new Error('mediana espera 1 argumento: mediana(lista)');
+    var _mdArr = _numArray(args[0]);
+    if (_mdArr.length === 0) throw new Error('mediana: lista vazia');
+    _validateNums(_mdArr, 'mediana');
+    _mdArr.sort(function (a, b) { return a - b; });
+    var _mdLen = _mdArr.length;
+    var _mdResult;
+    if (_mdLen % 2 === 1) {
+      _mdResult = _mdArr[Math.floor(_mdLen / 2)];
+    } else {
+      _mdResult = (_mdArr[_mdLen / 2 - 1] + _mdArr[_mdLen / 2]) / 2;
+    }
+    return mkNum(_mdResult, _mdResult % 1 !== 0);
+  }
+  // ---- moda(lista) — valor mais frequente ----
+  if (name === 'moda') {
+    if (args.length !== 1) throw new Error('moda espera 1 argumento: moda(lista)');
+    var _moRaw = args[0];
+    var _moList = Array.isArray(_moRaw) ? _moRaw : [_moRaw];
+    if (_moList.length === 0) throw new Error('moda: lista vazia');
+    var _moFreq = {};
+    var _moMaxCount = 0;
+    var _moResult = _moList[0];
+    for (var _moi = 0; _moi < _moList.length; _moi++) {
+      var _moKey = String(formatValue(_moList[_moi]));
+      _moFreq[_moKey] = (_moFreq[_moKey] || 0) + 1;
+      if (_moFreq[_moKey] > _moMaxCount) {
+        _moMaxCount = _moFreq[_moKey];
+        _moResult = _moList[_moi];
+      }
+    }
+    return _moResult;
+  }
+  // ---- variância(lista) ----
+  if (name === 'variância' || name === 'variancia') {
+    if (args.length !== 1) throw new Error('variância espera 1 argumento: variância(lista)');
+    var _vaArr = _numArray(args[0]);
+    if (_vaArr.length === 0) throw new Error('variância: lista vazia');
+    _validateNums(_vaArr, 'variância');
+    var _vaSum = 0;
+    for (var _vai = 0; _vai < _vaArr.length; _vai++) _vaSum += _vaArr[_vai];
+    var _vaMean = _vaSum / _vaArr.length;
+    var _vaSqDiff = 0;
+    for (var _vaj = 0; _vaj < _vaArr.length; _vaj++) {
+      var _vd = _vaArr[_vaj] - _vaMean;
+      _vaSqDiff += _vd * _vd;
+    }
+    var _vaResult = _vaSqDiff / _vaArr.length;
+    return mkNum(_vaResult, _vaResult % 1 !== 0);
+  }
+  // ---- desvioPadrao(lista) ----
+  if (name === 'desvioPadrao' || name === 'desvioPadrão') {
+    if (args.length !== 1) throw new Error('desvioPadrao espera 1 argumento: desvioPadrao(lista)');
+    var _dpArr = _numArray(args[0]);
+    if (_dpArr.length === 0) throw new Error('desvioPadrao: lista vazia');
+    _validateNums(_dpArr, 'desvioPadrao');
+    var _dpSum = 0;
+    for (var _dpi = 0; _dpi < _dpArr.length; _dpi++) _dpSum += _dpArr[_dpi];
+    var _dpMean = _dpSum / _dpArr.length;
+    var _dpSqDiff = 0;
+    for (var _dpj = 0; _dpj < _dpArr.length; _dpj++) {
+      var _dpd = _dpArr[_dpj] - _dpMean;
+      _dpSqDiff += _dpd * _dpd;
+    }
+    var _dpResult = Math.sqrt(_dpSqDiff / _dpArr.length);
+    return mkNum(_dpResult, _dpResult % 1 !== 0);
+  }
+  // ---- produto(lista) — produto de todos os elementos ----
+  if (name === 'produto') {
+    if (args.length !== 1) throw new Error('produto espera 1 argumento: produto(lista)');
+    var _prArr = _numArray(args[0]);
+    if (_prArr.length === 0) throw new Error('produto: lista vazia');
+    _validateNums(_prArr, 'produto');
+    var _prResult = 1;
+    for (var _pri = 0; _pri < _prArr.length; _pri++) _prResult *= _prArr[_pri];
+    return mkNum(_prResult, _prResult % 1 !== 0);
+  }
   if (name === 'inteiro') {
     if (args.length !== 1) throw new Error('inteiro espera 1 argumento');
     return mkNum(Math.trunc(numVal(args[0])), false);
@@ -2054,7 +2161,7 @@ function parse(input, env) {
           }
         }
         expectOp(')');
-        if (t.name === 'selecionar' || t.name === 'comprimento' || t.name === 'captureTecla' || t.name === 'absoluto' || t.name === 'abs' || t.name === 'fatorial'  || t.name === 'variáveis' || t.name === 'variaveis' || t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi'    || t.name === 'inteiro' || t.name === 'decimal' || t.name === 'fração' || t.name === 'fracao'     || t.name === 'paraLista'  || t.name === 'paraTexto' || t.name === 'paraNúmero'       || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'dado' || t.name === 'moeda'   || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo' || t.name === 'retângulo' || t.name === 'texto' || t.name === 'intervalo' || t.name === 'log' || t.name === 'logn' || t.name === 'ln' || t.name === 'arredondar' || t.name === 'arred' || t.name === 'ano' || t.name === 'mês' || t.name === 'dia' || t.name === 'hora' || t.name === 'data' || t.name === 'agora' || t.name === 'tempo' || t.name === 'adicionarDias' || t.name === 'diaSemana'     || t.name === 'bipe' || t.name === 'som' || t.name === 'toca' || t.name === 'mensagem' || t.name === 'pegar' || t.name === 'colocar' || t.name === 'limparJanela' || t.name === 'corFundo' || t.name === 'aparar' || t.name === 'extrair' || t.name === 'filtrar' || t.name === 'mapear' || t.name === 'tipo' || t.name === 'primo' || t.name === 'par' || t.name === 'ímpar' || t.name === 'impar' || t.name === 'maiúsculo' || t.name === 'minúsculo' || t.name === 'substitua' || t.name === 'divida' || t.name === 'junte' || t.name === 'contém' || t.name === 'posição' || t.name === 'insira' || t.name === 'remova' || t.name === 'posiçãoEm' || t.name === 'mmc' || t.name === 'mdc' || t.name === 'divisores' || t.name === 'fatores'  ) {
+        if (t.name === 'selecionar' || t.name === 'comprimento' || t.name === 'captureTecla' || t.name === 'absoluto' || t.name === 'abs' || t.name === 'fatorial'  || t.name === 'variáveis' || t.name === 'variaveis' || t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi'    || t.name === 'inteiro' || t.name === 'decimal' || t.name === 'fração' || t.name === 'fracao'     || t.name === 'paraLista'  || t.name === 'paraTexto' || t.name === 'paraNúmero'       || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'dado' || t.name === 'moeda'   || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo' || t.name === 'retângulo' || t.name === 'texto' || t.name === 'intervalo' || t.name === 'log' || t.name === 'logn' || t.name === 'ln' || t.name === 'arredondar' || t.name === 'arred' || t.name === 'ano' || t.name === 'mês' || t.name === 'dia' || t.name === 'hora' || t.name === 'data' || t.name === 'agora' || t.name === 'tempo' || t.name === 'adicionarDias' || t.name === 'diaSemana'     || t.name === 'bipe' || t.name === 'som' || t.name === 'toca' || t.name === 'mensagem' || t.name === 'pegar' || t.name === 'colocar' || t.name === 'limparJanela' || t.name === 'corFundo' || t.name === 'aparar' || t.name === 'extrair' || t.name === 'filtrar' || t.name === 'mapear' || t.name === 'tipo' || t.name === 'primo' || t.name === 'par' || t.name === 'ímpar' || t.name === 'impar' || t.name === 'maiúsculo' || t.name === 'minúsculo' || t.name === 'substitua' || t.name === 'divida' || t.name === 'junte' || t.name === 'contém' || t.name === 'posição' || t.name === 'insira' || t.name === 'remova' || t.name === 'posiçãoEm' || t.name === 'mmc' || t.name === 'mdc' || t.name === 'divisores' || t.name === 'fatores' || t.name === 'média' || t.name === 'media' || t.name === 'mediana' || t.name === 'moda' || t.name === 'variância' || t.name === 'variancia' || t.name === 'desvioPadrao' || t.name === 'desvioPadrão' || t.name === 'produto'  ) {
           return callFunction(t.name, args);
         }
         var _k0 = findVarKey(t.name);

@@ -666,84 +666,6 @@
   body.light .interp-input-wrap { background: #f3f3f3; border-top-color: #d8d8d8; }
   body.light .interp-prompt { color: #00639e; }
 
-  /* ===== Menu de contexto do editor ===== */
-  .ctx-menu {
-    display: none; position: fixed; z-index: 10002;
-    background: #252526; border: 1px solid #4a4a4a; border-radius: 7px;
-    box-shadow: 0 8px 28px rgba(0,0,0,.6);
-    min-width: 220px; max-width: 340px; max-height: 70vh;
-    flex-direction: column; overflow: visible;
-  }
-  .ctx-menu.open { display: flex; }
-  .ctx-clipboard { flex: 0 0 auto; padding: 4px 0; }
-  .ctx-clip-item {
-    display: flex; align-items: center; justify-content: space-between; gap: 24px;
-    padding: 5px 12px; cursor: pointer; font-size: 12px; color: #c8c8c8;
-    user-select: none;
-  }
-  .ctx-clip-item:hover { background: #0e639c; color: #fff; }
-  .ctx-clip-item .ctx-desc { color: #888; font-size: 11px; }
-  .ctx-clip-item:hover .ctx-desc { color: #cfe6f5; }
-  .ctx-sep { border: none; border-top: 1px solid #3c3c3c; margin: 4px 0; }
-  .ctx-search {
-    flex: 0 0 auto; padding: 6px 8px; border-bottom: 1px solid #3c3c3c;
-    background: #2d2d2d; border-radius: 7px 7px 0 0;
-  }
-  .ctx-search input {
-    width: 100%; padding: 5px 8px; background: #1e1e1e; color: #c8c8c8;
-    border: 1px solid #4a4a4a; border-radius: 4px; font-size: 12px;
-    font-family: inherit; outline: none;
-  }
-  .ctx-search input:focus { border-color: #0e639c; }
-  .ctx-search input::placeholder { color: #666; }
-  .ctx-list {
-    flex: 1 1 auto; overflow-y: auto; padding: 4px 0; min-height: 0;
-    max-height: calc(70vh - 40px);
-  }
-  .ctx-list::-webkit-scrollbar { width: 6px; }
-  .ctx-list::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 3px; }
-  .ctx-cat {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 6px 12px; font-size: 12px; color: #c8c8c8; font-weight: 600;
-    user-select: none; cursor: pointer; position: relative;
-  }
-  .ctx-cat:hover { background: #0e639c; color: #fff; }
-  .ctx-cat::after { content: '\203A'; font-size: 16px; margin-left: 8px; opacity: .6; }
-  .ctx-cat:hover::after { opacity: 1; }
-  .ctx-submenu {
-    display: none; position: fixed;
-    background: #252526; border: 1px solid #4a4a4a; border-radius: 7px;
-    box-shadow: 0 8px 28px rgba(0,0,0,.6);
-    min-width: 260px; max-width: 360px; max-height: 70vh;
-    overflow-y: auto; z-index: 10003;
-  }
-  .ctx-submenu.open { display: flex; flex-direction: column; }
-  .ctx-submenu::-webkit-scrollbar { width: 6px; }
-  .ctx-submenu::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 3px; }
-  .ctx-item {
-    display: flex; align-items: center; gap: 8px; padding: 5px 12px;
-    cursor: pointer; font-size: 12px; color: #c8c8c8; user-select: none;
-  }
-  .ctx-item:hover { background: #0e639c; color: #fff; }
-  .ctx-item .ctx-name { font-family: Consolas,monospace; font-weight: 600; white-space: nowrap; }
-  .ctx-item .ctx-desc { color: #888; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
-  .ctx-item:hover .ctx-desc { color: #cfe6f5; }
-  body.light .ctx-menu { background: #fff; border-color: #ccc; box-shadow: 0 8px 28px rgba(0,0,0,.2); }
-  body.light .ctx-search { background: #f5f5f5; border-color: #e0e0e0; }
-  body.light .ctx-search input { background: #fff; color: #333; border-color: #ddd; }
-  body.light .ctx-list { background: #fff; }
-  body.light .ctx-cat { color: #333; }
-  body.light .ctx-cat:hover { background: #0078d4; color: #fff; }
-  body.light .ctx-clip-item { color: #333; }
-  body.light .ctx-clip-item:hover { background: #0078d4; color: #fff; }
-  body.light .ctx-clip-item .ctx-desc { color: #888; }
-  body.light .ctx-clip-item:hover .ctx-desc { color: #cfe6f5; }
-  body.light .ctx-sep { border-color: #e0e0e0; }
-  body.light .ctx-submenu { background: #fff; border-color: #ccc; box-shadow: 0 8px 28px rgba(0,0,0,.2); }
-  body.light .ctx-item { color: #333; }
-  body.light .ctx-item:hover { background: #0078d4; color: #fff; }
-  body.light .ctx-item .ctx-desc { color: #888; }
-  body.light .ctx-item:hover .ctx-desc { color: #cfe6f5; }
 
   /* ===== Janela do Modo gráfico (console em canvas) ===== */
   #graficoOverlay .modal { width: 900px; }
@@ -1130,3 +1052,47 @@ body.light .sobre-author { color: #0078d4; }
   .plainlang-sep { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
   .plainlang-block { border-left: 2px solid var(--border); padding-left: 12px; margin: 6px 0 6px 8px; }
 
+
+/* ===== Editor Tooltip ===== */
+.editor-tooltip {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  max-width: 380px;
+  min-width: 180px;
+  background: #1a1a2e;
+  border: 1px solid #4fc3f7;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #e0e0e0;
+  line-height: 1.5;
+  box-shadow: 0 6px 24px rgba(0,0,0,.6);
+  pointer-events: none;
+}
+.editor-tooltip.visible { display: block; }
+.editor-tooltip .tt-name {
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 14px; font-weight: 700; color: #dcdcaa; margin-bottom: 4px;
+}
+.editor-tooltip .tt-cat {
+  display: inline-block; font-size: 10px; color: #4fc3f7;
+  background: rgba(79,195,247,.12); border: 1px solid rgba(79,195,247,.3);
+  border-radius: 4px; padding: 1px 6px; margin-left: 8px;
+  vertical-align: middle; text-transform: uppercase; letter-spacing: .4px;
+}
+.editor-tooltip .tt-desc { color: #b0b0b0; margin-top: 2px; }
+.editor-tooltip .tt-example {
+  margin-top: 6px; font-family: Consolas, monospace; font-size: 12.5px;
+  color: #81c784; background: rgba(0,0,0,.3); border-radius: 4px;
+  padding: 4px 8px; white-space: pre;
+}
+body.light .editor-tooltip {
+  background: #ffffff; border-color: #0078d4; color: #333;
+  box-shadow: 0 6px 24px rgba(0,0,0,.2);
+}
+body.light .editor-tooltip .tt-name { color: #795e26; }
+body.light .editor-tooltip .tt-cat { color: #0078d4; background: rgba(0,120,212,.08); border-color: rgba(0,120,212,.3); }
+body.light .editor-tooltip .tt-desc { color: #555; }
+body.light .editor-tooltip .tt-example { color: #008000; background: rgba(0,0,0,.04); }

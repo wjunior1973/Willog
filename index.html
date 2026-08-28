@@ -1342,6 +1342,52 @@ mostre lista.m&aacute;ximo</pre>
         </div>
       </div>
 
+      <div class="mi-section"><span class="ms-icon">&#931;</span><h4>Estat&iacute;stica</h4></div>
+      <div class="fn-grid">
+        <div class="manual-item">
+          <span class="mi-name">m&eacute;dia(lista)</span>
+          <span class="mi-desc">M&eacute;dia aritm&eacute;tica dos elementos num&eacute;ricos.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre m&eacute;dia([10, 20, 30])</span><span class="mi-arrow">&rarr;</span><span class="ex">20</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">mediana(lista)</span>
+          <span class="mi-desc">Valor central de uma lista ordenada.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre mediana([3, 1, 4, 1, 5])</span><span class="mi-arrow">&rarr;</span><span class="ex">3</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">moda(lista)</span>
+          <span class="mi-desc">Valor que mais aparece na lista.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre moda([1, 2, 2, 3])</span><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">vari&acirc;ncia(lista)</span>
+          <span class="mi-desc">Vari&acirc;ncia estat&iacute;stica dos elementos.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre vari&acirc;ncia([2, 4, 4, 4, 5, 5, 7, 9])</span><span class="mi-arrow">&rarr;</span><span class="ex">4</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">desvioPadrao(lista)</span>
+          <span class="mi-desc">Desvio padr&atilde;o dos elementos.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre desvioPadrao([2, 4, 4, 4, 5, 5, 7, 9])</span><span class="mi-arrow">&rarr;</span><span class="ex">2</span></span>
+          </div>
+        </div>
+        <div class="manual-item">
+          <span class="mi-name">produto(lista)</span>
+          <span class="mi-desc">Multiplica todos os elementos entre si.</span>
+          <div class="mi-example">
+            <span class="mi-row"><span>mostre produto([2, 3, 4])</span><span class="mi-arrow">&rarr;</span><span class="ex">24</span></span>
+          </div>
+        </div>
+      </div>
+
       <div class="mi-section"><span class="ms-icon">&#8734;</span><h4>Matem&aacute;tica &ndash; N&uacute;meros Inteiros</h4></div>
       <div class="fn-grid">
         <div class="manual-item">
@@ -1638,27 +1684,6 @@ mostre lista.m&aacute;ximo</pre>
 </div>
 
 
-<div class="ctx-menu" id="ctxMenu">
-  <div class="ctx-clipboard">
-    <div class="ctx-clip-item" data-action="cut">
-      <span class="ctx-name">Recortar</span>
-      <span class="ctx-desc">Ctrl+X</span>
-    </div>
-    <div class="ctx-clip-item" data-action="copy">
-      <span class="ctx-name">Copiar</span>
-      <span class="ctx-desc">Ctrl+C</span>
-    </div>
-    <div class="ctx-clip-item" data-action="paste">
-      <span class="ctx-name">Colar</span>
-      <span class="ctx-desc">Ctrl+V</span>
-    </div>
-    <hr class="ctx-sep">
-  </div>
-  <div class="ctx-search"><input type="text" id="ctxSearch" placeholder="Buscar função..."></div>
-  <div class="ctx-list" id="ctxList"></div>
-</div>
-
-
 
 <div class="modal-overlay" id="graficoOverlay">
   <div class="modal">
@@ -1719,6 +1744,7 @@ mostre lista.m&aacute;ximo</pre>
   </div>
 </div>
 
+<div id="editorTooltip" class="editor-tooltip"></div>
 <div id="minimizedBar"></div>
 
 <div class="modal-overlay" id="paletteOverlay">

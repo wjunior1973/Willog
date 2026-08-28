@@ -618,7 +618,14 @@ var AC_ALL = (function () {
     ['mmc', 'Matemática', 'Mínimo múltiplo comum: mmc(2,4,8) -> 8'],
     ['mdc', 'Matemática', 'Máximo divisor comum: mdc(12,18) -> 6'],
     ['divisores', 'Matemática', 'Lista de divisores: divisores(12) -> 1,2,3,4,6,12'],
-    ['fatores', 'Matemática', 'Fatores primos: fatores(42) -> 2,3,7']
+    ['fatores', 'Matemática', 'Fatores primos: fatores(42) -> 2,3,7'],
+    ['média', 'Estatística', 'Média aritmética: média([10,20,30]) -> 20'],
+    ['media', 'Estatística', 'Média aritmética (sem acento)'],
+    ['mediana', 'Estatística', 'Valor central: mediana([3,1,4,1,5]) -> 3'],
+    ['moda', 'Estatística', 'Valor mais frequente: moda([1,2,2,3]) -> 2'],
+    ['variância', 'Estatística', 'Variância: variância([2,4,4,5,5,7,9]) -> 4'],
+    ['desvioPadrao', 'Estatística', 'Desvio padrão: desvioPadrao([2,4,4,5,5,7,9]) -> 2'],
+    ['produto', 'Estatística', 'Produto dos elementos: produto([2,3,4]) -> 24']
   ];
   for (var i = 0; i < fns.length; i++) {
     add(fns[i][0], fns[i][0] + '()', true, fns[i][1], fns[i][2]);
@@ -729,6 +736,15 @@ var QUICK_REF = (function () {
   qr('mdc', 'Função', 'Máximo divisor comum de dois ou mais números', 'mostre mdc(12, 18)\nmostre mdc(100, 75)\nmostre mdc(17, 13)');
   qr('divisores', 'Função', 'Lista de todos os divisores de um número', 'mostre divisores(12)\nmostre divisores(17)\nmostre divisores(100)');
   qr('fatores', 'Função', 'Fatores primos de um número', 'mostre fatores(39)\nmostre fatores(42)\nmostre fatores(100)');
+  qr('média', 'Função', 'Média aritmética de uma lista numérica', 'notas = [8, 7, 9, 6, 10]\nmostre média(notas)');
+  qr('media', 'Função', 'Média aritmética (sem acento)', 'notas = [8, 7, 9, 6, 10]\nmostre media(notas)');
+  qr('mediana', 'Função', 'Valor central de uma lista ordenada', 'dados = [3, 1, 4, 1, 5]\nmostre mediana(dados)');
+  qr('moda', 'Função', 'Valor que mais aparece na lista', 'cores = ["azul", "azul", "verde"]\nmostre moda(cores)');
+  qr('variância', 'Função', 'Variância estatística de uma lista', 'notas = [7, 8, 8, 9, 10]\nmostre variância(notas)');
+  qr('variancia', 'Função', 'Variância estatística (sem acento)', 'notas = [7, 8, 8, 9, 10]\nmostre variancia(notas)');
+  qr('desvioPadrao', 'Função', 'Desvio padrão de uma lista', 'notas = [7, 8, 8, 9, 10]\nmostre desvioPadrao(notas)');
+  qr('desvioPadrão', 'Função', 'Desvio padrão (com acento)', 'notas = [7, 8, 8, 9, 10]\nmostre desvioPadrão(notas)');
+  qr('produto', 'Função', 'Produto de todos os elementos da lista', 'fatores = [2, 3, 5]\nmostre produto(fatores)');
   qr('dado', 'Função', 'Sorteia um número inteiro de 1 a 6, como um dado de seis faces', 'mostre dado()\nrepita(3):\n  mostre dado()');
   qr('moeda', 'Função', 'Sorteia "cara" ou "coroa", como o lançamento de uma moeda', 'mostre moeda()\nrepita(3):\n  mostre moeda()');
   qr('cos', 'Função', 'Cosseno de x (em radianos)', 'mostre cos(3.14159265)');
@@ -2810,300 +2826,6 @@ editor.addEventListener('scroll', function () {
 editor.addEventListener('blur', acClose);
 
 // ============================================================
-//  MENU DE CONTEXTO DO EDITOR (clique direito)
-// ============================================================
-
-(function () {
-  var ctxMenu = document.getElementById('ctxMenu');
-  var ctxList = document.getElementById('ctxList');
-  var ctxSearch = document.getElementById('ctxSearch');
-  var codeWrap = document.querySelector('.code-wrap');
-  var openSub = null;
-  var hideTimer = null;
-
-  function sortItems(items) {
-    items.sort(function (a, b) { return a.name.localeCompare(b.name, 'pt-BR'); });
-  }
-
-  function buildItemRow(it) {
-    var row = document.createElement('div');
-    row.className = 'ctx-item';
-    var nm = document.createElement('span');
-    nm.className = 'ctx-name';
-    nm.textContent = it.insert;
-    row.appendChild(nm);
-    if (it.desc) {
-      var ds = document.createElement('span');
-      ds.className = 'ctx-desc';
-      ds.textContent = it.desc;
-      row.appendChild(ds);
-    }
-    row.addEventListener('mousedown', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      ctxClose();
-      insertAtCursor(it.insert, it.paren);
-    });
-    return row;
-  }
-
-  function showSubmenu(catEl, sub) {
-    clearTimeout(hideTimer);
-    if (openSub && openSub !== sub) { openSub.classList.remove('open'); openSub.remove(); }
-    sub.style.left = '';
-    sub.style.top = '';
-    document.body.appendChild(sub);
-    sub.classList.add('open');
-    var catRect = catEl.getBoundingClientRect();
-    var subRect = sub.getBoundingClientRect();
-    var x = catRect.right - 4;
-    var y = catRect.top - 4;
-    if (x + subRect.width > window.innerWidth - 8) {
-      x = catRect.left - subRect.width + 4;
-    }
-    if (x < 8) x = 8;
-    if (y + subRect.height > window.innerHeight - 8) {
-      y = window.innerHeight - subRect.height - 8;
-    }
-    if (y < 8) y = 8;
-    sub.style.left = x + 'px';
-    sub.style.top = y + 'px';
-    openSub = sub;
-  }
-
-  function hideSubmenu() {
-    hideTimer = setTimeout(function () {
-      if (openSub) { openSub.classList.remove('open'); openSub.remove(); openSub = null; }
-    }, 150);
-  }
-
-  function buildCtxMenu(filter) {
-    ctxList.innerHTML = '';
-    var wl = (filter || '').toLowerCase();
-    if (wl) {
-      var matched = [];
-      for (var i = 0; i < AC_ALL.length; i++) {
-        if (AC_ALL[i].name.toLowerCase().indexOf(wl) !== -1) matched.push(AC_ALL[i]);
-      }
-      sortItems(matched);
-      if (matched.length === 0) {
-        var empty = document.createElement('div');
-        empty.style.cssText = 'padding:10px 12px;color:#888;font-size:12px;font-style:italic;';
-        empty.textContent = 'Nenhuma função encontrada.';
-        ctxList.appendChild(empty);
-        return;
-      }
-      for (var m = 0; m < matched.length; m++) {
-        ctxList.appendChild(buildItemRow(matched[m]));
-      }
-      return;
-    }
-    var cats = {};
-    for (var i = 0; i < AC_ALL.length; i++) {
-      var item = AC_ALL[i];
-      if (!cats[item.cat]) cats[item.cat] = [];
-      cats[item.cat].push(item);
-    }
-    var catNames = Object.keys(cats).sort(function (a, b) { return a.localeCompare(b, 'pt-BR'); });
-    for (var c = 0; c < catNames.length; c++) {
-      (function (catName) {
-        var catEl = document.createElement('div');
-        catEl.className = 'ctx-cat';
-        catEl.textContent = catName;
-        var items = cats[catName];
-        sortItems(items);
-        var sub = document.createElement('div');
-        sub.className = 'ctx-submenu';
-        for (var j = 0; j < items.length; j++) {
-          sub.appendChild(buildItemRow(items[j]));
-        }
-        catEl.addEventListener('mouseenter', function () {
-          showSubmenu(catEl, sub);
-        });
-        catEl.addEventListener('mouseleave', function () {
-          hideSubmenu();
-        });
-        sub.addEventListener('mouseenter', function () {
-          clearTimeout(hideTimer);
-        });
-        sub.addEventListener('mouseleave', function () {
-          hideSubmenu();
-        });
-        ctxList.appendChild(catEl);
-      })(catNames[c]);
-    }
-  }
-
-  function ctxOpen(x, y) {
-    ctxSearch.value = '';
-    var old = document.querySelectorAll('.ctx-submenu');
-    for (var i = 0; i < old.length; i++) old[i].remove();
-    openSub = null;
-    buildCtxMenu('');
-    ctxMenu.classList.add('open');
-    var mw = ctxMenu.offsetWidth || 280;
-    var mh = ctxMenu.offsetHeight || 400;
-    var ww = window.innerWidth, wh = window.innerHeight;
-    if (x + mw > ww - 8) x = ww - mw - 8;
-    if (y + mh > wh - 8) y = wh - mh - 8;
-    if (x < 8) x = 8;
-    if (y < 8) y = 8;
-    ctxMenu.style.left = x + 'px';
-    ctxMenu.style.top = y + 'px';
-    setTimeout(function () { ctxSearch.focus(); }, 0);
-  }
-
-  function ctxClose() {
-    ctxMenu.classList.remove('open');
-    var old = document.querySelectorAll('.ctx-submenu');
-    for (var i = 0; i < old.length; i++) old[i].remove();
-    openSub = null;
-  }
-
-  ctxSearch.addEventListener('input', function () {
-    var old = document.querySelectorAll('.ctx-submenu');
-    for (var i = 0; i < old.length; i++) old[i].remove();
-    openSub = null;
-    buildCtxMenu(ctxSearch.value);
-  });
-
-  ctxSearch.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { ctxClose(); editor.focus(); return; }
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      var first = ctxList.querySelector('.ctx-item') || ctxList.querySelector('.ctx-cat');
-      if (first) first.focus();
-      return;
-    }
-    var items = ctxList.querySelectorAll('.ctx-item, .ctx-cat');
-    var idx = -1;
-    for (var i = 0; i < items.length; i++) {
-      if (items[i] === document.activeElement) { idx = i; break; }
-    }
-    if (e.key === 'ArrowDown' && idx < items.length - 1) {
-      e.preventDefault();
-      items[idx + 1].focus();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (idx <= 0) { ctxSearch.focus(); } else { items[idx - 1].focus(); }
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (idx >= 0 && items[idx]) {
-        if (items[idx].classList.contains('ctx-cat')) {
-          items[idx].dispatchEvent(new Event('mouseenter'));
-          setTimeout(function () {
-            var subItem = document.querySelector('.ctx-submenu.open .ctx-item');
-            if (subItem) subItem.focus();
-          }, 0);
-        } else {
-          items[idx].dispatchEvent(new Event('mousedown'));
-        }
-      }
-    }
-  });
-
-  ctxList.addEventListener('keydown', function (e) {
-    var items = ctxList.querySelectorAll('.ctx-item, .ctx-cat');
-    var idx = -1;
-    for (var i = 0; i < items.length; i++) {
-      if (items[i] === document.activeElement) { idx = i; break; }
-    }
-    if (e.key === 'ArrowDown' && idx < items.length - 1) {
-      e.preventDefault();
-      items[idx + 1].focus();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (idx <= 0) { ctxSearch.focus(); } else { items[idx - 1].focus(); }
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (idx >= 0 && items[idx]) {
-        if (items[idx].classList.contains('ctx-cat')) {
-          items[idx].dispatchEvent(new Event('mouseenter'));
-          setTimeout(function () {
-            var subItem = document.querySelector('.ctx-submenu.open .ctx-item');
-            if (subItem) subItem.focus();
-          }, 0);
-        } else {
-          items[idx].dispatchEvent(new Event('mousedown'));
-        }
-      }
-    } else if (e.key === 'Escape') {
-      ctxClose(); editor.focus();
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      if (idx >= 0 && items[idx] && items[idx].classList.contains('ctx-cat')) {
-        items[idx].dispatchEvent(new Event('mouseenter'));
-        setTimeout(function () {
-          var subItem = document.querySelector('.ctx-submenu.open .ctx-item');
-          if (subItem) subItem.focus();
-        }, 0);
-      }
-    }
-  });
-
-  codeWrap.addEventListener('contextmenu', function (e) {
-    e.preventDefault();
-    ctxOpen(e.clientX, e.clientY);
-  });
-
-  var clipItems = document.querySelectorAll('.ctx-clip-item');
-  for (var ci = 0; ci < clipItems.length; ci++) {
-    clipItems[ci].addEventListener('mousedown', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var act = this.getAttribute('data-action');
-      ctxClose();
-      if (act === 'cut' || act === 'copy') {
-        var hasSel2 = editor.selectionStart !== editor.selectionEnd;
-        if (!hasSel2 && act === 'cut') return;
-        var selStart = editor.selectionStart;
-        var selEnd = editor.selectionEnd;
-        var selText = editor.value.substring(selStart, selEnd);
-        if (act === 'copy' && !hasSel2) return;
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(selText);
-          } else {
-            editor.focus();
-            document.execCommand('copy');
-          }
-        } catch (err) {
-          editor.focus();
-          document.execCommand(act === 'copy' ? 'copy' : 'cut');
-        }
-        if (act === 'cut' && hasSel2) {
-          var newVal = editor.value.substring(0, selStart) + editor.value.substring(selEnd);
-          editor.value = newVal;
-          editor.setSelectionRange(selStart, selStart);
-          editor.dispatchEvent(new Event('input'));
-        }
-      } else if (act === 'paste') {
-        editor.focus();
-        navigator.clipboard.readText().then(function (text) {
-          var start = editor.selectionStart;
-          var end = editor.selectionEnd;
-          var cur = editor.value;
-          editor.value = cur.substring(0, start) + text + cur.substring(end);
-          var pos = start + text.length;
-          editor.setSelectionRange(pos, pos);
-          editor.dispatchEvent(new Event('input'));
-        }).catch(function () {
-          document.execCommand('paste');
-        });
-      }
-    });
-  }
-
-
-  document.addEventListener('mousedown', function (e) {
-    if (!ctxMenu.contains(e.target) && !(openSub && openSub.contains(e.target))) ctxClose();
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && ctxMenu.classList.contains('open')) ctxClose();
-
-  });
-})();
 
 // ==================== Window Manager ====================
 var wmStack = [];
@@ -3229,3 +2951,284 @@ if (isFinite(savedWidth) && savedWidth > 0) {
   consolePanel.style.flex = '0 0 ' + wPct + '%';
 }
 
+
+// ============================================================
+// ============================================================
+//  EDITOR TOOLTIP (hover sobre comandos/funções)
+// ============================================================
+(function () {
+  var ttEl = document.getElementById('editorTooltip');
+  if (!ttEl) return;
+
+  var TOOLTIPS = {
+    'mostre': { cat: 'Comando', desc: 'Exibe o valor de uma expressão no console', ex: 'mostre 2 + 3' },
+    'limpe':  { cat: 'Comando', desc: 'Apaga todo o conteúdo do console' },
+    'mensagem': { cat: 'Comando', desc: 'Abre uma caixa de mensagem com título e texto', ex: 'mensagem("Título", "Corpo")' },
+    'emJanela': { cat: 'Comando', desc: 'Executa o bloco em uma janela ao invés do console' },
+    'leia': { cat: 'Comando', desc: 'Pede que o usuário digite um valor', ex: 'nome = leia "Nome: "' },
+    'aguardeTecla': { cat: 'Comando', desc: 'Pausa até o usuário pressionar uma tecla', ex: 'aguardeTecla("Z")' },
+    'captureTecla': { cat: 'Função', desc: 'Retorna a tecla pressionada no último aguardeTecla()' },
+    'se': { cat: 'Comando', desc: 'Executa o bloco se a condição for verdadeira', ex: 'se x > 5:\n  mostre "grande"' },
+    'senão': { cat: 'Comando', desc: 'Bloco executado quando a condição do se é falsa' },
+    'enquanto': { cat: 'Comando', desc: 'Repete o bloco enquanto a condição for verdadeira', ex: 'enquanto n > 0:\n  mostre n' },
+    'repita': { cat: 'Comando', desc: 'Repete o bloco um número fixo de vezes', ex: 'repita(3):\n  mostre "oi"' },
+    'para': { cat: 'Comando', desc: 'Percorre itens de uma coleção (para cada / para x em)', ex: 'para n em intervalo(1,5):\n  mostre n' },
+    'cada': { cat: 'Comando', desc: 'Parte de "para cada" — percorre uma coleção' },
+    'em': { cat: 'Comando', desc: 'Parte de "para x em" — indica a coleção a percorrer' },
+    'pare': { cat: 'Comando', desc: 'Interrompe imediatamente o laço atual' },
+    'continue': { cat: 'Comando', desc: 'Pula para a próxima iteração do laço' },
+    'vá': { cat: 'Comando', desc: 'Salta a execução para um rótulo (vá para :nome)', ex: 'vá para início' },
+    'escolha': { cat: 'Comando', desc: 'Compara o valor com cada caso (estilo switch)', ex: 'escolha nota:\n  caso 10: mostre "perfeito"' },
+    'caso': { cat: 'Comando', desc: 'Opção dentro de um bloco escolha' },
+    'padrao': { cat: 'Comando', desc: 'Caso padrão quando nenhum caso coincide' },
+    'selecionar': { cat: 'Comando', desc: 'Abre uma janela com menu de opções executáveis pelo teclado' },
+    'definir': { cat: 'Comando', desc: 'Define uma nova função', ex: 'definir função dobro(n):\n  retorne n * 2' },
+    'função': { cat: 'Comando', desc: 'Parte de "definir função" — declara uma função' },
+    'retorne': { cat: 'Comando', desc: 'Retorna um ou mais valores de uma função', ex: 'retorne n * n' },
+    'retornar': { cat: 'Comando', desc: 'Sinônimo de retorne' },
+    'constante': { cat: 'Comando', desc: 'Define um valor imutável', ex: 'constante PI = 3.14' },
+    'tipo': { cat: 'Função', desc: 'Retorna o tipo do valor: número, texto, lista ou booleano', ex: 'tipo(42) → número' },
+    'variáveis': { cat: 'Função', desc: 'Mostra todas as variáveis definidas e seus valores' },
+    'e': { cat: 'Operador', desc: 'E lógico — verdadeiro se ambas as condições forem verdadeiras' },
+    'ou': { cat: 'Operador', desc: 'Ou lógico — verdadeiro se pelo menos uma condição for verdadeira' },
+    'não': { cat: 'Operador', desc: 'Negação lógica — inverte o valor booleano' },
+    'existe': { cat: 'Operador', desc: 'Verifica se um valor existe em texto ou lista', ex: 'existe "ba" em "banana"' },
+    'verdadeiro': { cat: 'Valor', desc: 'Valor booleano verdadeiro' },
+    'falso': { cat: 'Valor', desc: 'Valor booleano falso' },
+    'absoluto': { cat: 'Função', desc: 'Valor absoluto (parte inteira) de um número', ex: 'absoluto(-5) → 5' },
+    'abs': { cat: 'Função', desc: 'Sinônimo de absoluto' },
+    'raizq': { cat: 'Função', desc: 'Raiz quadrada de um número', ex: 'raizq(9) → 3' },
+    'raizc': { cat: 'Função', desc: 'Raiz cúbica de um número', ex: 'raizc(8) → 2' },
+    'log': { cat: 'Função', desc: 'Logaritmo na base informada', ex: 'log(100, 10) → 2' },
+    'logn': { cat: 'Função', desc: 'Logaritmo natural', ex: 'logn(1) → 0' },
+    'ln': { cat: 'Função', desc: 'Logaritmo natural (sinônimo de logn)' },
+    'pi': { cat: 'Função', desc: 'Valor de pi — pi() para 2 casas, pi(n) para n casas', ex: 'pi() → 3.14' },
+    'sen': { cat: 'Função', desc: 'Seno de um ângulo em radianos', ex: 'sen(0) → 0' },
+    'cos': { cat: 'Função', desc: 'Cosseno de um ângulo em radianos', ex: 'cos(0) → 1' },
+    'tan': { cat: 'Função', desc: 'Tangente de um ângulo em radianos', ex: 'tan(0) → 0' },
+    'arcosen': { cat: 'Função', desc: 'Arco-seno (seno inverso)' },
+    'arcocos': { cat: 'Função', desc: 'Arco-cosseno (cosseno inverso)' },
+    'arcotan': { cat: 'Função', desc: 'Arco-tangente (tangente inversa)' },
+    'fatorial': { cat: 'Função', desc: 'Fatorial de um número inteiro não negativo (n! também funciona)', ex: 'fatorial(5) → 120' },
+    'primo': { cat: 'Função', desc: 'Verifica se o número é primo', ex: 'primo(7) → verdadeiro' },
+    'par': { cat: 'Função', desc: 'Verifica se o número é par', ex: 'par(4) → verdadeiro' },
+    'ímpar': { cat: 'Função', desc: 'Verifica se o número é ímpar', ex: 'ímpar(3) → verdadeiro' },
+    'impar': { cat: 'Função', desc: 'Sinônimo de ímpar (sem acento)' },
+    'arredondar': { cat: 'Função', desc: 'Arredonda com um número de casas decimais', ex: 'arredondar(3.456, 2) → 3.46' },
+    'arred': { cat: 'Função', desc: 'Sinônimo de arredondar' },
+    'inteiro': { cat: 'Função', desc: 'Parte inteira do número', ex: 'inteiro(9.99) → 9' },
+    'decimal': { cat: 'Função', desc: 'Parte decimal do número', ex: 'decimal(9.75) → 0.75' },
+    'fração': { cat: 'Função', desc: 'Converte decimal em fração', ex: 'fração(0.5) → 1/2' },
+    'mmc': { cat: 'Função', desc: 'Mínimo múltiplo comum de dois ou mais números', ex: 'mmc(2, 4, 8) → 8' },
+    'mdc': { cat: 'Função', desc: 'Máximo divisor comum de dois ou mais números', ex: 'mdc(12, 18) → 6' },
+    'divisores': { cat: 'Função', desc: 'Lista de todos os divisores de um número', ex: 'divisores(12) → 1,2,3,4,6,12' },
+    'fatores': { cat: 'Função', desc: 'Fatores primos de um número', ex: 'fatores(42) → 2,3,7' },
+    'média': { cat: 'Função', desc: 'Média aritmética de uma lista numérica', ex: 'média([10,20,30]) → 20' },
+    'media': { cat: 'Função', desc: 'Sinônimo de média (sem acento)' },
+    'mediana': { cat: 'Função', desc: 'Valor central de uma lista ordenada', ex: 'mediana([3,1,4,1,5]) → 3' },
+    'moda': { cat: 'Função', desc: 'Valor que mais aparece na lista', ex: 'moda([1,2,2,3]) → 2' },
+    'variância': { cat: 'Função', desc: 'Variância estatística de uma lista', ex: 'variância([2,4,4,5,5,7,9]) → 4' },
+    'variancia': { cat: 'Função', desc: 'Sinônimo de variância (sem acento)' },
+    'desvioPadrao': { cat: 'Função', desc: 'Desvio padrão de uma lista numérica', ex: 'desvioPadrao([2,4,4,5,5,7,9]) → 2' },
+    'desvioPadrão': { cat: 'Função', desc: 'Sinônimo de desvioPadrao (com acento)' },
+    'produto': { cat: 'Função', desc: 'Produto de todos os elementos da lista', ex: 'produto([2,3,4]) → 24' },
+    'aleatório': { cat: 'Função', desc: 'Número aleatório inteiro entre min e max', ex: 'aleatório(1, 6)' },
+    'dado': { cat: 'Função', desc: 'Retorna um número aleatório de 1 a 6 (simula um dado)' },
+    'moeda': { cat: 'Função', desc: 'Retorna "cara" ou "coroa" aleatoriamente' },
+    'intervalo': { cat: 'Função', desc: 'Cria um intervalo numérico do início até o fim (inclusive)', ex: 'intervalo(1, 5) → 1,2,3,4,5' },
+    'paraLista': { cat: 'Função', desc: 'Converte valor em lista' },
+    'paraTexto': { cat: 'Função', desc: 'Converte valor em texto', ex: 'paraTexto(42) → "42"' },
+    'paraNúmero': { cat: 'Função', desc: 'Converte valor em número' },
+    'comprimento': { cat: 'Função', desc: 'Comprimento de uma string ou lista', ex: 'comprimento("hello") → 5' },
+    'filtrar': { cat: 'Função', desc: 'Filtra lista por condição' },
+    'mapear': { cat: 'Função', desc: 'Aplica uma expressão a cada elemento', ex: 'mapear([1,2,3], "x*2") → 2,4,6' },
+    'maiúsculo': { cat: 'Função', desc: 'Converte para maiúsculas', ex: 'maiúsculo("ola") → "OLA"' },
+    'minúsculo': { cat: 'Função', desc: 'Converte para minúsculas', ex: 'minúsculo("OLA") → "ola"' },
+    'aparar': { cat: 'Função', desc: 'Remove espaços do início e fim', ex: 'aparar("  oi  ") → "oi"' },
+    'substitua': { cat: 'Função', desc: 'Substitui texto por outro' },
+    'divida': { cat: 'Função', desc: 'Divide texto em lista', ex: 'divida("a,b,c", ",") → a,b,c' },
+    'junte': { cat: 'Função', desc: 'Junta lista em texto', ex: 'junte([1,2], "-") → "1-2"' },
+    'contém': { cat: 'Função', desc: 'Verifica se contém o valor', ex: 'contém("banana", "nan") → verdadeiro' },
+    'posição': { cat: 'Função', desc: 'Posição da primeira ocorrência', ex: 'posição("hello", "ll") → 2' },
+    'insira': { cat: 'Função', desc: 'Insere valor em texto ou lista na posição' },
+    'remova': { cat: 'Função', desc: 'Remove caractere/elemento na posição' },
+    'posiçãoEm': { cat: 'Função', desc: 'Posição de um elemento na lista', ex: 'posiçãoEm([10,20,30], 20) → 1' },
+    'extrair': { cat: 'Função', desc: 'Extrai texto por padrão regex' },
+    'ano': { cat: 'Função', desc: 'Ano atual (ex.: 2026)' },
+    'mês': { cat: 'Função', desc: 'Mês atual (1–12)' },
+    'dia': { cat: 'Função', desc: 'Dia atual (1–31)' },
+    'hora': { cat: 'Função', desc: 'Hora atual (0–23)' },
+    'data': { cat: 'Função', desc: 'Data atual no formato dd/MM/yyyy' },
+    'agora': { cat: 'Função', desc: 'Data e hora atuais' },
+    'tempo': { cat: 'Função', desc: 'Diferença em dias entre duas datas', ex: 'tempo("01/01/2023", "01/02/2023") → 31' },
+    'adicionarDias': { cat: 'Função', desc: 'Adiciona dias a uma data' },
+    'diaSemana': { cat: 'Função', desc: 'Dia da semana de uma data', ex: 'diaSemana("25/12/2023") → segunda' },
+    'bipe': { cat: 'Função', desc: 'Emite um sinal sonoro por s segundos', ex: 'bipe(0.5)' },
+    'som': { cat: 'Função', desc: 'Emite um som com frequência em Hz', ex: 'som(440, 1)' },
+    'toca': { cat: 'Função', desc: 'Toca notas musicais (C, D, E...)', ex: 'toca("C", "D", "E", 0.3)' },
+    'pausa': { cat: 'Comando', desc: 'Pausa a execução por s segundos', ex: 'pausa(2)' },
+    'regressiva': { cat: 'Comando', desc: 'Contagem regressiva sem parar o programa' },
+    'janela': { cat: 'Função', desc: 'Abre janela gráfica com x×y pixels', ex: 'janela(500, 300, azul)' },
+    'ponto': { cat: 'Função', desc: 'Desenha um ponto na janela' },
+    'linha': { cat: 'Função', desc: 'Traça uma linha entre dois pontos' },
+    'círculo': { cat: 'Função', desc: 'Desenha um círculo na janela' },
+    'retângulo': { cat: 'Função', desc: 'Desenha um retângulo na janela' },
+    'texto': { cat: 'Função', desc: 'Escreve texto na janela gráfica' },
+    'pegar': { cat: 'Função', desc: 'Copia uma região da janela' },
+    'colocar': { cat: 'Função', desc: 'Cola região copiada na janela' },
+    'limparJanela': { cat: 'Comando', desc: 'Limpa toda a janela gráfica' },
+    'corFundo': { cat: 'Função', desc: 'Altera a cor de fundo da janela' },
+    'salvar': { cat: 'Função', desc: 'Salva variáveis em arquivo de texto' },
+    'carregar': { cat: 'Função', desc: 'Lê variáveis de arquivo de texto' },
+    'ordenada': { cat: 'Propriedade', desc: 'Retorna a lista em ordem crescente', ex: 'lista.ordenada' },
+    'invertida': { cat: 'Propriedade', desc: 'Retorna a lista invertida', ex: 'lista.invertida' },
+    'contar': { cat: 'Propriedade', desc: 'Conta os itens da lista ou caracteres do texto', ex: 'lista.contar' },
+    'tamanho': { cat: 'Propriedade', desc: 'Quantidade de itens/caracteres', ex: '"hello".tamanho → 5' },
+    'primeiro': { cat: 'Propriedade', desc: 'Primeiro item da lista ou caractere', ex: 'lista.primeiro' },
+    'último': { cat: 'Propriedade', desc: 'Último item da lista ou caractere', ex: 'lista.último' },
+    'soma': { cat: 'Propriedade', desc: 'Soma de todos os elementos numéricos', ex: 'lista.soma' },
+    'mínimo': { cat: 'Propriedade', desc: 'Menor valor numérico da lista', ex: 'lista.mínimo' },
+    'máximo': { cat: 'Propriedade', desc: 'Maior valor numérico da lista', ex: 'lista.máximo' },
+    'embaralhar': { cat: 'Propriedade', desc: 'Embaralha os itens aleatoriamente', ex: 'lista.embaralhar' },
+    'distintos': { cat: 'Propriedade', desc: 'Remove itens duplicados', ex: 'lista.distintos' },
+    'fatiar': { cat: 'Propriedade', desc: 'Extrai sublista ou substring por índices' },
+    'contarItem': { cat: 'Propriedade', desc: 'Conta quantas vezes o valor aparece' },
+    'adicionar': { cat: 'Propriedade', desc: 'Adiciona valor ao final da lista', ex: 'lista.adicionar(5)' },
+    'remover': { cat: 'Propriedade', desc: 'Remove item na posição informada' },
+    'começa': { cat: 'Operador', desc: 'Verifica se o texto começa com o prefixo', ex: '"abc" começa com "a"' },
+    'termina': { cat: 'Operador', desc: 'Verifica se o texto termina com o sufixo', ex: '"abc" termina com "c"' },
+    'mod': { cat: 'Operador', desc: 'Resto da divisão (alias de \\)' },
+    '//': { cat: 'Operador', desc: 'Divisão inteira — parte inteira do quociente', ex: '10 // 3 → 3' },
+    '**': { cat: 'Operador', desc: 'Potência — base elevada ao expoente', ex: '2 ** 3 → 8' },
+    ':=': { cat: 'Operador', desc: 'Variável preguiçosa — calcula só quando usada' },
+    '#': { cat: 'Comentário', desc: 'Comentário de linha — ignorado na execução' }
+  };
+
+  function getWordAtPos(text, pos) {
+    var start = pos;
+    while (start > 0 && /[A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF_]/.test(text[start - 1])) start--;
+    var end = pos;
+    while (end < text.length && /[A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF_]/.test(text[end])) end++;
+    return text.slice(start, end);
+  }
+
+  function lookupTooltip(word) {
+    if (!word) return null;
+    if (TOOLTIPS[word]) return TOOLTIPS[word];
+    var lower = word.toLowerCase();
+    for (var k in TOOLTIPS) {
+      if (k.toLowerCase() === lower) return TOOLTIPS[k];
+    }
+    return null;
+  }
+
+  function showTooltip(info, x, y) {
+    var html = '<div class="tt-name">' + info.name;
+    if (info.cat) html += ' <span class="tt-cat">' + info.cat + '</span>';
+    html += '</div>';
+    html += '<div class="tt-desc">' + info.desc + '</div>';
+    if (info.ex) html += '<div class="tt-example">' + info.ex + '</div>';
+    ttEl.innerHTML = html;
+    ttEl.classList.add('visible');
+    var tw = ttEl.offsetWidth;
+    var th = ttEl.offsetHeight;
+    var left = x + 12;
+    var top = y - th - 8;
+    if (left + tw > window.innerWidth - 8) left = x - tw - 12;
+    if (top < 8) top = y + 20;
+    if (left < 8) left = 8;
+    ttEl.style.left = left + 'px';
+    ttEl.style.top = top + 'px';
+  }
+
+  function hideTooltip() {
+    ttEl.classList.remove('visible');
+  }
+
+  var _ttTimer = null;
+  var _ttLastWord = '';
+
+  // Obtém a posição do caractere sob o mouse usando caretPositionFromPoint
+  function getCaretPosFromPoint(x, y) {
+    if (document.caretPositionFromPoint) {
+      var cp = document.caretPositionFromPoint(x, y);
+      if (cp && cp.offsetNode === editor) return cp.offset;
+    }
+    if (document.caretRangeFromPoint) {
+      var range = document.caretRangeFromPoint(x, y);
+      if (range && range.startContainer === editor || range && editor.contains(range.startContainer)) {
+        // Converter offset relativo ao container para offset no value
+        var textNode = range.startContainer;
+        var offset = range.startOffset;
+        if (textNode === editor) return offset;
+        // Se está dentro de um text node, calcular offset absoluto
+        var walk = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null, false);
+        var total = 0;
+        var node;
+        while (node = walk.nextNode()) {
+          if (node === textNode) return total + offset;
+          total += node.textContent.length;
+        }
+      }
+    }
+    // Fallback: usar elementFromPoint para encontrar a posição
+    var rect = editor.getBoundingClientRect();
+    var relX = x - rect.left;
+    var relY = y - rect.top;
+    // Estimar linha/coluna baseado no tamanho da fonte
+    var lineHeight = editorLineHeight || 21;
+    var charWidth = (editorFontSize || 14) * 0.6;
+    var line = Math.floor(relY / lineHeight);
+    var col = Math.floor(relX / charWidth);
+    var lines = editor.value.split('\n');
+    if (line >= lines.length) line = lines.length - 1;
+    if (line < 0) line = 0;
+    var pos2 = 0;
+    for (var li = 0; li < line; li++) pos2 += lines[li].length + 1;
+    pos2 += Math.min(col, lines[line].length);
+    return pos2;
+  }
+
+  editor.addEventListener('mousemove', function (e) {
+    if (acEl && acEl.classList.contains('open')) { hideTooltip(); return; }
+    var pos = getCaretPosFromPoint(e.clientX, e.clientY);
+    if (pos < 0 || pos > editor.value.length) { hideTooltip(); _ttLastWord = ''; return; }
+    var word = getWordAtPos(editor.value, pos);
+    var info = lookupTooltip(word);
+
+    if (info && word !== _ttLastWord) {
+      _ttLastWord = word;
+      clearTimeout(_ttTimer);
+      _ttTimer = setTimeout(function () {
+        showTooltip({ name: word, cat: info.cat, desc: info.desc, ex: info.ex }, e.clientX, e.clientY);
+      }, 200);
+    } else if (!info) {
+      _ttLastWord = '';
+      clearTimeout(_ttTimer);
+      hideTooltip();
+    } else {
+      showTooltip({ name: word, cat: info.cat, desc: info.desc, ex: info.ex }, e.clientX, e.clientY);
+    }
+  });
+
+  editor.addEventListener('mouseleave', function () {
+    clearTimeout(_ttTimer);
+    hideTooltip();
+    _ttLastWord = '';
+  });
+
+  editor.addEventListener('input', function () {
+    hideTooltip();
+    _ttLastWord = '';
+  });
+
+  editor.addEventListener('keydown', function () {
+    hideTooltip();
+    _ttLastWord = '';
+  });
+
+  editor.addEventListener('click', function () {
+    hideTooltip();
+    _ttLastWord = '';
+  });
+})();
