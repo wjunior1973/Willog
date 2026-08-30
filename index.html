@@ -172,6 +172,7 @@
   button.primary:hover:not(:disabled) { background: #1177bb; }
 
   main { flex: 1; display: flex; flex-direction: row; min-height: 0; min-width: 0; }
+  main.console-docked { flex-direction: column; }
 
   .splitter {
     width: 6px;
@@ -182,6 +183,9 @@
   }
   .splitter:hover, body.dragging .splitter { background: var(--accent); }
   body.dragging { user-select: none; cursor: col-resize; }
+  main.console-docked .splitter { width: 100%; height: 6px; cursor: row-resize; flex: 0 0 auto; }
+  main.console-docked .console-panel { flex: 0 0 32%; min-width: 0; min-height: 140px; border-left: none; border-top: 1px solid var(--border); width: 100%; }
+  body.dragging.console-docked { cursor: row-resize; }
 
   .editor-wrap { flex: 1; display: flex; min-height: 0; min-width: 0; }
   .line-numbers {
@@ -1082,25 +1086,6 @@ body.light .sobre-author { color: #0078d4; }
   .palette-item .pi-name { font-size: 12.5px; color: var(--fg); font-weight: 500; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .palette-item.active .pi-name { color: var(--accent); }
   .palette-empty { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--fg2); font-size: 13px; }
-
-
-  #plainLangOverlay .modal { width: 620px; max-width: 94vw; height: 65vh; min-height: 260px; display: flex; flex-direction: column; }
-  #plainLangOverlay .modal.pl-maximized { width: 100vw; max-width: none; max-height: none; height: 100vh; border-radius: 0; border: none; }
-  .plainlang-body { flex: 1; overflow-y: auto; padding: 24px 28px; line-height: 1.75; font-size: 14.5px; color: var(--fg); }
-  .plainlang-empty { color: var(--fg2); font-size: 13px; text-align: center; padding: 40px; }
-  .plainlang-para { margin-bottom: 14px; text-align: justify; }
-  .plainlang-para:last-child { margin-bottom: 0; }
-  .plainlang-kw { color: var(--hl-keyword); font-weight: 600; }
-  .plainlang-str { color: var(--hl-str); }
-  .plainlang-fn { color: var(--hl-func); }
-  .plainlang-ln { display: inline-block; min-width: 26px; text-align: center; font-size: 14px; font-weight: 700; color: var(--accent); background: var(--bg3); border-radius: 4px; padding: 2px 6px; margin: 0 4px; cursor: default; vertical-align: middle; position: relative; line-height: 20px; }
-  .plainlang-ln:hover { background: var(--accent); color: var(--accent-fg); }
-  .plainlang-tip { display: none; position: fixed; z-index: 100000; background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 8px 12px; font-family: Consolas, monospace; font-size: 15px; line-height: 1.5; color: var(--fg); white-space: pre; max-width: 60vw; overflow: hidden; text-overflow: ellipsis; pointer-events: none; box-shadow: 0 4px 16px rgba(0,0,0,.45); }
-  .plainlang-ln:hover .plainlang-tip { display: block; }
-  .plainlang-sep { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
-  .plainlang-block { border-left: 2px solid var(--border); padding-left: 12px; margin: 6px 0 6px 8px; }
-
-
 /* ===== Editor Tooltip ===== */
 .editor-tooltip {
   display: none;
@@ -1189,7 +1174,6 @@ body.light .editor-tooltip .tt-example { color: #008000; background: rgba(0,0,0,
       <button id="btnZoomIn" type="button">Zoom + <span class="run-kbd">Ctrl +</span></button>
       <button id="btnZoomOut" type="button">Zoom - <span class="run-kbd">Ctrl -</span></button>
       <hr class="menu-sep">
-    <button id="btnPlainLang" type="button">Em Palavras</button>
     <button id="btnPalette" type="button">Paletas de Cores</button>
     <button id="btnTheme" type="button">Modo Claro</button>
     <button id="btnFullscreen" type="button">Tela Cheia</button>
@@ -1226,6 +1210,12 @@ body.light .editor-tooltip .tt-example { color: #008000; background: rgba(0,0,0,
     <div class="console-head">
       <span><strong>Console</strong></span>
       <span class="head-right">
+        <button class="plot-win-btn" id="btnConsoleFloat" title="Abrir console em janela flutuante" aria-label="Janela flutuante">
+          <svg viewBox="0 0 14 14"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="5" y="5" width="7" height="7" rx="1" fill="currentColor" opacity="0.85"/></svg>
+        </button>
+        <button class="plot-win-btn" id="btnConsoleDock" title="Console embaixo" aria-label="Mover console">
+          <svg viewBox="0 0 14 14" id="consoleDockIcon"><rect x="2" y="2" width="10" height="3.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="8.5" width="10" height="3.5" rx="1" fill="currentColor" opacity="0.9"/></svg>
+        </button>
         <span class="dot" id="runStatus"></span>
       </span>
     </div>
@@ -2940,26 +2930,7 @@ mostre lista.m&aacute;ximo</pre>
 </div>
 </div>
 
-<div class="modal-overlay" id="plainLangOverlay">
-  <div class="modal pl-maximized">
-    <div class="modal-head">
-      <h2>Em Palavras &mdash; Willog IDE</h2>
-      <div class="plot-controls">
-        <button id="plainLangAtualizar" title="Gerar novamente">Atualizar</button>
-        <button class="plot-win-btn" id="plainLangMinimize" title="Minimizar" aria-label="Minimizar">
-          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
-        </button>
-        <button class="plot-win-btn" id="plainLangMaximize" title="Restaurar" aria-label="Restaurar">
-          <svg viewBox="0 0 14 14" id="plainLangMaxIcon"><rect x="3.5" y="1.5" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="5.5" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
-        </button>
-        <button class="modal-close" id="plainLangClose" title="Fechar">&times;</button>
-      </div>
-    </div>
-    <div class="plainlang-body" id="plainLangBody">
-      <div class="plainlang-empty">Abra um programa e clique em &ldquo;Em Palavras&rdquo;</div>
-    </div>
-  </div>
-</div>
+
 
 
 
@@ -10143,6 +10114,13 @@ function comentarComando(text) {
     var rest = stripQuotes(t.replace(/^mostre\b/, '').trim());
     return 'O "mostre" imprime "' + rest + '" na tela (no console).';
   }
+  if (/^".*"$/.test(t) || /^'.*'$/.test(t)) {
+    var rest = stripQuotes(t);
+    return 'O "mostre" imprime "' + rest + '" na tela (no console).';
+  }
+  if (/^[A-Za-z\u00C0-\u00FF_][A-Za-z0-9\u00C0-\u00FF_]*$/.test(t)) {
+    return 'O "mostre" imprime "' + t + '" na tela (no console).';
+  }
   if (/^bipe\s*\(/.test(t)) {
     var bm = t.match(/^bipe\s*\((.+)\)\s*$/);
     return 'O "bipe" faz um biiip! dura' + (bm && bm[1] ? ' "' + bm[1].trim() + '"' : '') + ' segundo(s). Dá pra usar valores quebrados, tipo bipe(0.5) = meio segundo.';
@@ -10484,164 +10462,6 @@ if (savedPaletteName && palettes[savedPaletteName]) {
   var defaultName = mode === 'dark' ? 'VS Code Dark' : 'VS Code Light';
   setPalette(defaultName, mode);
 }
-
-// ============================================================
-//  PLAIN LANGUAGE MODULE ("Em Palavras")
-// ============================================================
-var PlainLang = (function () {
-
-  function generate(code) {
-    var lines = code.split('\n');
-    if (!lines.length || !code.trim()) return null;
-    var blockFlags = markBlockCommentLines(code);
-    var items = [];
-
-    for (var i = 0; i < lines.length; i++) {
-      var raw = lines[i];
-      var trimmed = raw.trim();
-      if (!trimmed) continue;
-      if (blockFlags[i] && !/#:/.test(trimmed) && !/:#/.test(trimmed)) continue;
-      var info = gerarComentarioLinha(raw, blockFlags[i]);
-      if (!info.comments || !info.comments.length) continue;
-      if (info.isBlank) continue;
-      var depth = getDepth(raw);
-      for (var j = 0; j < info.comments.length; j++) {
-        var c = info.comments[j];
-        if (!c) continue;
-        c = cleanComment(c);
-        if (!c) continue;
-        items.push({ text: c, lineNo: i + 1, raw: trimmed, depth: depth, isBlock: info.isBlock });
-      }
-    }
-    return items;
-  }
-
-  function getDepth(raw) {
-    var m = raw.match(/^(\s*)/);
-    var len = m ? m[1].replace(/\t/g, '    ').length : 0;
-    return Math.floor(len / 2);
-  }
-
-  function cleanComment(c) {
-    c = c.replace(/^Essa linha (?:está dentro de|é só)/, 'Está dentro de');
-    c = c.replace(/Linha vazia — o computador pula isso\./, '');
-    return c.trim();
-  }
-
-  function toHtml(items) {
-    if (!items || !items.length) return '<div class="plainlang-empty">N\u00e3o h\u00e1 c\u00f3digo para descrever.</div>';
-    var html = '<p class="plainlang-para">Este programa faz o seguinte:</p>';
-    var prevDepth = 0;
-    var openBlock = 0;
-    for (var i = 0; i < items.length; i++) {
-      var s = items[i];
-      if (s.depth > prevDepth) {
-        html += '<div class="plainlang-block">';
-        openBlock++;
-      }
-      if (i > 0 && s.depth === prevDepth) html += ' ';
-      html += lnBadge(s.lineNo, s.raw) + highlightTerms(escHtml(s.text));
-      var next = items[i + 1];
-      if (!next || next.depth < s.depth) {
-        while (openBlock > 0 && (!next || next.depth < s.depth)) {
-          html += '</div>';
-          openBlock--;
-        }
-        if (next && next.depth <= s.depth) html += '</p><p class="plainlang-para">';
-      }
-      prevDepth = s.depth;
-    }
-    while (openBlock > 0) { html += '</div>'; openBlock--; }
-    html += '</p>';
-    return html;
-  }
-
-  function lnBadge(lineNo, raw) {
-    var tip = escHtml(raw);
-    return '<span class="plainlang-ln" data-line="' + lineNo + '">' + lineNo + '<span class="plainlang-tip">' + tip + '</span></span>';
-  }
-
-  function highlightTerms(t) {
-    t = t.replace(/"([^"]+)"/g, '"<span class="plainlang-str">$1</span>"');
-    t = t.replace(/\b(se|senão|repita|enquanto|para cada|definir função|mostre|leia|limpe|retorne|retornar|pare|continue|pausa|bipe|som|toca|mensagem|aguarde|captureTecla|capture)\b/g, '<span class="plainlang-kw">$1</span>');
-    return t;
-  }
-
-  function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-
-  return { generate: generate, toHtml: toHtml };
-})();
-
-// ============================================================
-//  PLAIN LANGUAGE CONTROLS
-// ============================================================
-var plOverlay = document.getElementById('plainLangOverlay');
-var plBody = document.getElementById('plainLangBody');
-
-function plOpen() {
-  closeAllMenus();
-  plOverlay.classList.add('open');
-  plRender();
-}
-
-function plRender() {
-  var code = editor.value;
-  if (!code.trim()) { plBody.innerHTML = '<div class="plainlang-empty">N\u00e3o h\u00e1 c\u00f3digo para descrever.</div>'; return; }
-  var sentences = PlainLang.generate(code);
-  plBody.innerHTML = PlainLang.toHtml(sentences);
-  plBindTooltips();
-}
-
-function plBindTooltips() {
-  var badges = plBody.querySelectorAll('.plainlang-ln');
-  for (var i = 0; i < badges.length; i++) plBindOne(badges[i]);
-}
-
-function plBindOne(badge) {
-  var tip = badge.querySelector('.plainlang-tip');
-  if (!tip) return;
-  badge.addEventListener('mouseenter', function () { plPositionTip(badge, tip); });
-  badge.addEventListener('mousemove', function () { plPositionTip(badge, tip); });
-}
-
-function plPositionTip(badge, tip) {
-  var rect = badge.getBoundingClientRect();
-  var tipRect = tip.getBoundingClientRect();
-  var ww = window.innerWidth;
-  var margin = 8;
-  var x = rect.left + rect.width / 2 - tipRect.width / 2;
-  if (x < margin) x = margin;
-  if (x + tipRect.width > ww - margin) x = ww - margin - tipRect.width;
-  var spaceAbove = rect.top - margin;
-  var spaceBelow = window.innerHeight - rect.bottom - margin;
-
-  if (spaceAbove >= tipRect.height + margin || spaceAbove >= spaceBelow) {
-    tip.style.bottom = 'auto';
-    tip.style.top = (rect.top - tipRect.height - margin) + 'px';
-  } else {
-    tip.style.bottom = 'auto';
-    tip.style.top = (rect.bottom + margin) + 'px';
-  }
-  tip.style.left = x + 'px';
-}
-
-document.getElementById('btnPlainLang').addEventListener('click', plOpen);
-document.getElementById('plainLangClose').addEventListener('click', function () { plOverlay.classList.remove('open'); });
-plOverlay.addEventListener('click', function (e) { if (e.target === plOverlay) plOverlay.classList.remove('open'); });
-document.getElementById('plainLangAtualizar').addEventListener('click', plRender);
-document.getElementById('plainLangMinimize').addEventListener('click', function () { wmMinimize('plainLangOverlay'); });
-document.getElementById('plainLangMaximize').addEventListener('click', function () {
-  var modal = plOverlay.querySelector('.modal');
-  var maximized = modal.classList.toggle('pl-maximized');
-  var icon = document.getElementById('plainLangMaxIcon');
-  if (icon) icon.innerHTML = maximized
-    ? '<rect x="3.5" y="1.5" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="5.5" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/>'
-    : '<rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>';
-});
-
-
-
-
 
 var btnFullscreen = document.getElementById('btnFullscreen');
 function syncFullscreen() {
@@ -11513,26 +11333,73 @@ splitter.addEventListener('mousedown', function (e) {
   dragging = true;
   e.preventDefault();
   document.body.classList.add('dragging');
+  if (mainEl.classList.contains('console-docked')) document.body.classList.add('console-docked');
 });
 document.addEventListener('mousemove', function (e) {
   if (!dragging) return;
   var rect = mainEl.getBoundingClientRect();
-  var width = rect.right - e.clientX;
-  var minW = 180;
-  var maxW = rect.width - 320;
-  if (width < minW) width = minW;
-  if (width > maxW) width = maxW;
-  consolePanel.style.flex = '0 0 ' + width + 'px';
+  if (mainEl.classList.contains('console-docked')) {
+    var height = rect.bottom - e.clientY;
+    var minH = 120;
+    var maxH = rect.height - 200;
+    if (height < minH) height = minH;
+    if (height > maxH) height = maxH;
+    consolePanel.style.flex = '0 0 ' + height + 'px';
+  } else {
+    var width = rect.right - e.clientX;
+    var minW = 180;
+    var maxW = rect.width - 320;
+    if (width < minW) width = minW;
+    if (width > maxW) width = maxW;
+    consolePanel.style.flex = '0 0 ' + width + 'px';
+  }
 });
 document.addEventListener('mouseup', function () {
   if (dragging) {
     dragging = false;
     document.body.classList.remove('dragging');
+    document.body.classList.remove('console-docked');
     var rect = mainEl.getBoundingClientRect();
-    var pct = rect.width > 0 ? consolePanel.getBoundingClientRect().width / rect.width * 100 : 42;
-    try { localStorage.setItem('willprogConsoleWidth', String(pct)); } catch (e) {}
+    if (mainEl.classList.contains('console-docked')) {
+      var pctH = rect.height > 0 ? consolePanel.getBoundingClientRect().height / rect.height * 100 : 32;
+      try { localStorage.setItem('willprogConsoleHeight', String(pctH)); } catch (e) {}
+    } else {
+      var pct = rect.width > 0 ? consolePanel.getBoundingClientRect().width / rect.width * 100 : 42;
+      try { localStorage.setItem('willprogConsoleWidth', String(pct)); } catch (e) {}
+    }
   }
 });
+
+// Console dock / float buttons
+(function(){
+  var btnFloat = document.getElementById('btnConsoleFloat');
+  var btnDock = document.getElementById('btnConsoleDock');
+  var dockIcon = document.getElementById('consoleDockIcon');
+  var dockSideIcon = '<rect x="2" y="2" width="10" height="3.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="8.5" width="10" height="3.5" rx="1" fill="currentColor" opacity="0.9"/>';
+  var dockBottomIcon = '<rect x="2" y="2" width="3.5" height="10" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="2" width="3.5" height="10" rx="1" fill="currentColor" opacity="0.9"/>';
+  function applyDock(docked){
+    if(docked){
+      mainEl.classList.add('console-docked');
+      consolePanel.style.flex = '';
+      var hPct=null; try{ hPct=parseFloat(localStorage.getItem('willprogConsoleHeight')); }catch(e){}
+      if(isFinite(hPct) && hPct>10 && hPct<80) consolePanel.style.flex='0 0 '+hPct+'%';
+      if(dockIcon) dockIcon.innerHTML = dockBottomIcon;
+      if(btnDock){ btnDock.title='Console na lateral'; btnDock.setAttribute('aria-label','Console na lateral'); }
+    } else {
+      mainEl.classList.remove('console-docked');
+      consolePanel.style.flex = '';
+      var wPct=null; try{ wPct=parseFloat(localStorage.getItem('willprogConsoleWidth')); }catch(e){}
+      if(isFinite(wPct) && wPct>10 && wPct<90) consolePanel.style.flex='0 0 '+wPct+'%';
+      if(dockIcon) dockIcon.innerHTML = dockSideIcon;
+      if(btnDock){ btnDock.title='Console embaixo'; btnDock.setAttribute('aria-label','Console embaixo'); }
+    }
+    try{ localStorage.setItem('willprogConsoleDock', docked?'bottom':'side'); }catch(e){}
+  }
+  var savedDock=null; try{ savedDock=localStorage.getItem('willprogConsoleDock'); }catch(e){}
+  applyDock(savedDock==='bottom');
+  if(btnFloat) btnFloat.addEventListener('click', function(){ openGrafico(); });
+  if(btnDock) btnDock.addEventListener('click', function(){ applyDock(!mainEl.classList.contains('console-docked')); });
+})();
 
 editor.addEventListener('keydown', function (e) {
   if (acIsOpen()) {
@@ -11703,11 +11570,14 @@ for (var _wi = 0; _wi < winIds.length; _wi++) {
   }
 }
 
-var savedWidth = null;
-try { savedWidth = parseFloat(localStorage.getItem('willprogConsoleWidth')); } catch (e) {}
-if (isFinite(savedWidth) && savedWidth > 0) {
-  var wPct = Math.max(10, Math.min(90, savedWidth));
-  consolePanel.style.flex = '0 0 ' + wPct + '%';
+var _savedDockFinal = null; try { _savedDockFinal = localStorage.getItem('willprogConsoleDock'); } catch(e) {}
+if (_savedDockFinal !== 'bottom') {
+  var savedWidth = null;
+  try { savedWidth = parseFloat(localStorage.getItem('willprogConsoleWidth')); } catch (e) {}
+  if (isFinite(savedWidth) && savedWidth > 0) {
+    var wPct = Math.max(10, Math.min(90, savedWidth));
+    consolePanel.style.flex = '0 0 ' + wPct + '%';
+  }
 }
 
 
