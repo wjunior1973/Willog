@@ -935,6 +935,47 @@ body.light .sobre-author { color: #0078d4; }
   body.light .quickref-example { background: #fafafa; border-color: #e0e0e0; border-left-color: #0078d4; }
   body.light .quickref-example pre { color: #333; }
 
+  /* ===== Exemplos ===== */
+  #exemplosOverlay .modal { width: 860px; max-width: 94vw; height: 80vh; min-height: 400px; }
+  #exemplosOverlay .modal.exemplos-maximized { width: 100vw; max-width: none; max-height: none; height: 100vh; border-radius: 0; border: none; }
+  .exemplos-body { padding: 12px 14px; font-size: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .exemplos-search { width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #3c3c3c; border-radius: 6px; background: #1e1e1e; color: #e0e0e0; font-size: 14px; outline: none; }
+  .exemplos-search:focus { border-color: #0078d4; }
+  .exemplos-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .exemplos-filter { flex: 1; min-width: 180px; padding: 6px 10px; border: 1px solid #3c3c3c; border-radius: 6px; background: #1e1e1e; color: #e0e0e0; font-size: 13px; outline: none; }
+  .exemplos-count { font-size: 12px; color: #8a8a8a; white-space: nowrap; }
+  .exemplos-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding-bottom: 6px; border-bottom: 1px solid #2d2d2d; }
+  .exemplos-tab { background: #2d2d2d; border: 1px solid #3c3c3c; color: #8a8a8a; font-size: 12px; padding: 5px 10px; border-radius: 16px; cursor: pointer; font-family: inherit; transition: all .15s; }
+  .exemplos-tab:hover { background: #3a3a3a; color: #fff; }
+  .exemplos-tab.active { background: #0e639c; border-color: #1177bb; color: #fff; font-weight: 600; }
+  .exemplos-list { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; max-height: 60vh; padding-right: 4px; }
+  .exemplos-card { background: #212121; border: 1px solid #3a3a3a; border-radius: 8px; padding: 14px; transition: border-color .15s; }
+  .exemplos-card:hover { border-color: #4fc3f7; }
+  .exemplos-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+  .exemplos-card-title { font-family: Consolas, 'Courier New', monospace; font-size: 14px; color: #dcdcaa; font-weight: 700; }
+  .exemplos-card-category { font-size: 10px; color: #4fc3f7; background: rgba(79,195,247,.12); border: 1px solid rgba(79,195,247,.3); border-radius: 10px; padding: 2px 8px; text-transform: uppercase; letter-spacing: .4px; }
+  .exemplos-card-desc { font-size: 13px; color: #9a9a9a; margin-bottom: 10px; line-height: 1.5; }
+  .exemplos-code { background: #1e1e1e; border: 1px solid #3c3c3c; border-left: 3px solid #0e639c; border-radius: 6px; padding: 10px 12px; font-family: Consolas, 'Courier New', monospace; font-size: 13px; line-height: 1.6; color: #d4d4d4; white-space: pre; overflow-x: auto; margin-bottom: 10px; }
+  .exemplos-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .exemplos-actions button { background: #2d2d2d; border: 1px solid #4a4a4a; color: #e0e0e0; padding: 6px 12px; border-radius: 5px; font-size: 12px; cursor: pointer; }
+  .exemplos-actions button.primary { background: #0e639c; border-color: #1177bb; color: #fff; font-weight: 600; }
+  .exemplos-actions button:hover { background: #3a3a3a; }
+  .exemplos-actions button.primary:hover { background: #1177bb; }
+  .exemplos-empty { color: #8a8a8a; padding: 20px; text-align: center; font-size: 14px; }
+  #exemplosMinimize:hover { color: #ffb74d; }
+  #exemplosMaximize:hover { color: #81c784; }
+  body.light #exemplosOverlay .modal { background: #f3f3f3; }
+  body.light .exemplos-search, body.light .exemplos-filter { background: #fff; border-color: #d8d8d8; color: #1f1f1f; }
+  body.light .exemplos-tabs { border-bottom-color: #e0e0e0; }
+  body.light .exemplos-tab { background: #e8e8e8; border-color: #d8d8d8; color: #666; }
+  body.light .exemplos-tab.active { background: #0078d4; border-color: #005a9e; color: #fff; }
+  body.light .exemplos-card { background: #ffffff; border-color: #e2e2e2; }
+  body.light .exemplos-card:hover { border-color: #0078d4; }
+  body.light .exemplos-card-title { color: #795e26; }
+  body.light .exemplos-card-category { color: #0078d4; background: rgba(0,120,212,.08); border-color: rgba(0,120,212,.3); }
+  body.light .exemplos-card-desc { color: #666; }
+  body.light .exemplos-code { background: #fafafa; border-color: #e0e0e0; border-left-color: #0078d4; color: #1f1f1f; }
+
   /* ===== Modo claro ===== */
   body.light {
     --bg: #ffffff;
@@ -1159,6 +1200,7 @@ body.light .editor-tooltip .tt-example { color: #008000; background: rgba(0,0,0,
     <div class="menu-dropdown" id="menu-ajuda">
       <button id="btnManual" type="button">Manual de Refer&ecirc;ncia</button>
       <button id="btnQuickRef" type="button">Refer&ecirc;ncia R&aacute;pida</button>
+      <button id="btnExemplos" type="button">Exemplos</button>
       <hr class="menu-sep">
       <button id="btnSobre" type="button">Sobre o Willog</button>
     </div>
@@ -1301,18 +1343,19 @@ body.light .editor-tooltip .tt-example { color: #008000; background: rgba(0,0,0,
         <span class="mi-name">intervalo(in&iacute;cio, fim[, passo])</span>
         <span class="mi-desc">Cria um intervalo num&eacute;rico do in&iacute;cio at&eacute; o fim (inclusive), com passo opcional. A forma antiga <code>(in&iacute;cio, fim[, passo])</code> continua funcionando.</span>
         <div class="mi-example">
-          <span class="mi-row"><span>x := intervalo(-2, 2, 1)</span><span class="mi-arrow">&rarr;</span><span class="ex">-2,-1,0,1,2</span></span>
+          <span class="mi-row"><span>x := intervalo(-2, 2, 1)</span></span>
+          <span class="mi-row"><span>mostre x</span><span class="mi-arrow">&rarr;</span><span class="ex">-2,-1,0,1,2</span></span>
         </div>
       </div>
 
       <div class="manual-item">
         <span class="mi-name">vari&aacute;veis()</span>
-        <span class="mi-desc">Mostra todas as vari&aacute;veis definidas at&eacute; agora e seus valores.</span>
+        <span class="mi-desc">Mostra todas as vari&aacute;veis definidas at&eacute; agora e seus valores (em ordem alfabética).</span>
         <div class="mi-example">
           <pre class="manual-pre">x = 5
 nome = "Ana"
 mostre variáveis()</pre>
-          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">Vari&aacute;veis (2):<br>x = 5<br>nome = Ana</span></span>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">Vari&aacute;veis (2):<br>nome = Ana<br>x = 5</span></span>
         </div>
       </div>
 
@@ -1324,7 +1367,7 @@ mostre variáveis()</pre>
 constante PADRÃO=1.333
 mostre LOCAL
 mostre "{LOCAL}, {PADRÃO}"</pre>
-          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">casa</span></span>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">casa<br>casa, 1.333</span></span>
         </div>
       </div>
 
@@ -1493,8 +1536,8 @@ senão:
         <div class="mi-example">
           <pre class="manual-pre">definir função quadrado(n):
   retorne n * n
-  mostre quadrado(7)</pre>
-          <span class="mi-row"><span>mostre quadrado(7)</span><span class="mi-arrow">&rarr;</span><span class="ex">49</span></span>
+mostre quadrado(7)</pre>
+          <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">49</span></span>
         </div>
       </div>
 
@@ -1631,7 +1674,8 @@ escolha nota:
         <span class="mi-name">&lt;valor&gt; se &lt;condição&gt; senão &lt;valor&gt;</span>
         <span class="mi-desc">Operador ternário: escolhe um dos valores conforme a condição.</span>
         <div class="mi-example">
-          <span class="mi-row"><span>mostre "Aprovado" se média>=7 senão "Reprovado"</span></span>
+          <span class="mi-row"><span>média=8</span></span>
+          <span class="mi-row"><span>mostre "Aprovado" se média>=7 senão "Reprovado"</span><span class="mi-arrow">&rarr;</span><span class="ex">Aprovado</span></span>
           <span class="mi-row"><span>a=10; b=20; mostre a se a&lt;b senão b</span><span class="mi-arrow">&rarr;</span><span class="ex">10</span></span>
         </div>
       </div>
@@ -1726,7 +1770,7 @@ enquanto verdadeiro:
           <pre class="manual-pre">para n em intervalo(1, 6):
   se n == 3:
     continue
-    mostre n</pre>
+  mostre n</pre>
           <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">1,2,4,5,6</span></span>
         </div>
       </div>
@@ -2009,11 +2053,10 @@ mostre lista.m&aacute;ximo</pre>
 
       <div class="manual-item">
         <span class="mi-name">lista.adicionar(valor1, valor2, ...) / texto.adicionar(...)</span>
-        <span class="mi-desc">Adiciona um ou mais valores ao final da lista (modifica a própria lista) ou concatena ao final do texto.</span>
+        <span class="mi-desc">Adiciona um ou mais valores ao final da lista (modifica a própria lista) ou concatena ao final do texto. Quando usado sem <code>mostre</code>, o valor retornado também aparece no console.</span>
         <div class="mi-example">
           <span class="mi-row"><span>lista = [1,2,3]</span></span>
-          <span class="mi-row"><span>lista.adicionar(7, 8, 9)</span></span>
-          <span class="mi-row"><span>mostre lista</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,7,8,9</span></span>
+          <span class="mi-row"><span>mostre lista.adicionar(7, 8, 9)</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3,7,8,9</span></span>
           <span class="mi-row"><span>mostre "banana".adicionar("s")</span><span class="mi-arrow">&rarr;</span><span class="ex">bananas</span></span>
           <span class="mi-row"><span>a="12345"; mostre a.adicionar("6789")</span><span class="mi-arrow">&rarr;</span><span class="ex">123456789</span></span>
         </div>
@@ -2021,12 +2064,11 @@ mostre lista.m&aacute;ximo</pre>
 
       <div class="manual-item">
         <span class="mi-name">lista.remover(posi&ccedil;&atilde;o)</span>
-        <span class="mi-desc">Remove o elemento na posi&ccedil;&atilde;o informada (a contagem come&ccedil;a em 0) e modifica a pr&oacute;pria lista.</span>
+        <span class="mi-desc">Remove o elemento na posi&ccedil;&atilde;o informada (a contagem come&ccedil;a em 0) e modifica a pr&oacute;pria lista. Quando usado sem <code>mostre</code>, o valor retornado também aparece no console.</span>
         <div class="mi-example">
           <span class="mi-row"><span>mostre [1,2,3,4,5].remover(2)</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,4,5</span></span>
           <span class="mi-row"><span>a = ["a","b","c","d","e"]</span></span>
-          <span class="mi-row"><span>a.remover(4)</span></span>
-          <span class="mi-row"><span>mostre a</span><span class="mi-arrow">&rarr;</span><span class="ex">a,b,c,d</span></span>
+          <span class="mi-row"><span>mostre a.remover(4)</span><span class="mi-arrow">&rarr;</span><span class="ex">a,b,c,d</span></span>
         </div>
       </div>
 
@@ -2113,8 +2155,8 @@ mostre lista.m&aacute;ximo</pre>
         <div class="manual-item">
           <span class="mi-name">pi(n)</span>
           <span class="mi-desc">Valor de pi com n casas decimais (at&eacute; 100).</span>
-          <div class="mi-example"><span class="mi-row"><span>pi(10)</span><span class="mi-arrow">&rarr;</span><span class="ex">3.1415926536</span></span>
-            <span class="mi-row"><span>pi(20)</span><span class="mi-arrow">&rarr;</span><span class="ex">3.14159265358979307864</span></span>
+          <div class="mi-example"><span class="mi-row"><span>pi(10)</span><span class="mi-arrow">&rarr;</span><span class="ex">3.1415926535</span></span>
+            <span class="mi-row"><span>pi(20)</span><span class="mi-arrow">&rarr;</span><span class="ex">3.14159265358979323846</span></span>
             <span class="mi-row"><span>pi(100)</span><span class="mi-arrow">&rarr;</span><span class="ex">3.14159265358979323846264338327950288419716939937510...</span></span></div>
         </div>
         <div class="manual-item">
@@ -2175,7 +2217,7 @@ mostre lista.m&aacute;ximo</pre>
         <div class="manual-item">
           <span class="mi-name">arcosen(x)</span>
           <span class="mi-desc">Arcosseno de x (resultado em radianos).</span>
-          <div class="mi-example"><span class="mi-row"><span>arcosen(1)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.570796326794897</span></span></div>
+          <div class="mi-example"><span class="mi-row"><span>arcosen(1)</span><span class="mi-arrow">&rarr;</span><span class="ex">1.5707963267949</span></span></div>
         </div>
         <div class="manual-item">
           <span class="mi-name">arcotan(x)</span>
@@ -2207,8 +2249,8 @@ mostre lista.m&aacute;ximo</pre>
           <span class="mi-name">paraLista(lista)</span>
           <span class="mi-desc">Retorna uma c&oacute;pia da lista.</span>
           <div class="mi-example">
-            <span class="mi-row"><span>a = paraLista([1,2,3])</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
-            <span class="mi-row"><span>b = paraLista("1,2,3")</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
+            <span class="mi-row"><span>mostre paraLista([1,2,3])</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
+            <span class="mi-row"><span>mostre paraLista("1,2,3")</span><span class="mi-arrow">&rarr;</span><span class="ex">1,2,3</span></span>
           </div>
         </div>
       </div>
@@ -2839,6 +2881,35 @@ mostre lista.m&aacute;ximo</pre>
       <input type="text" id="quickRefSearch" class="quickref-search" placeholder="Filtrar comandos e fun&ccedil;&otilde;es..." />
       <div class="quickref-list" id="quickRefList"></div>
       <div class="quickref-empty" id="quickRefEmpty" style="display:none">Nenhum comando ou fun&ccedil;&atilde;o encontrado.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="exemplosOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Exemplos &mdash; Willog</h2>
+      <div class="plot-controls">
+        <button class="plot-win-btn" id="exemplosMinimize" title="Minimizar" aria-label="Minimizar">
+          <svg viewBox="0 0 14 14"><rect x="2" y="9.5" width="10" height="2.5" rx="1"/></svg>
+        </button>
+        <button class="plot-win-btn" id="exemplosMaximize" title="Maximizar" aria-label="Maximizar">
+          <svg viewBox="0 0 14 14" id="exemplosMaxIcon"><rect x="2.5" y="2.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="modal-close" id="exemplosClose" title="Fechar">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body exemplos-body">
+      <input type="text" id="exemplosSearch" class="exemplos-search" placeholder="Filtrar exemplos por nome, categoria ou descrição..." />
+      <div class="exemplos-controls">
+        <select id="exemplosFilter" class="exemplos-filter">
+          <option value="">Todas as categorias</option>
+        </select>
+        <span class="exemplos-count" id="exemplosCount"></span>
+      </div>
+      <div class="exemplos-tabs" id="exemplosTabs"></div>
+      <div class="exemplos-list" id="exemplosList"></div>
+      <div class="exemplos-empty" id="exemplosEmpty" style="display:none">Nenhum exemplo encontrado.</div>
     </div>
   </div>
 </div>
@@ -4929,8 +5000,12 @@ function callFunction(name, args, rawName) {
       throw new Error('ponto: coordenada fora da janela (largura ' + lastJanela.w + ', altura ' + lastJanela.h + ')');
     }
     var pc = janelaCor(args[2], '#ffffff');
-    lastJanela.points.push({ x: px, y: py, c: pc });
+    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
+      CURRENT_OUT.push({kind:'ponto', x:px, y:py, c:pc, lineNo: null});
+    } else {
+      lastJanela.points.push({ x: px, y: py, c: pc });
     janelaDirty = true;
+    }
     return 'ponto desenhado';
   }
   if (name === 'linha') {
@@ -4953,8 +5028,12 @@ function callFunction(name, args, rawName) {
       throw new Error('linha: coordenada fora da janela (largura ' + lastJanela.w + ', altura ' + lastJanela.h + ')');
     }
     var lc = janelaCor(args[4], '#ffffff');
-    lastJanela.lines.push({ x1: lx1, y1: ly1, x2: lx2, y2: ly2, c: lc });
+    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
+      CURRENT_OUT.push({kind:'linha', x1:lx1, y1:ly1, x2:lx2, y2:ly2, c:lc, lineNo: null});
+    } else {
+      lastJanela.lines.push({ x1: lx1, y1: ly1, x2: lx2, y2: ly2, c: lc });
     janelaDirty = true;
+    }
     return 'linha desenhada';
   }
   if (name === 'círculo') {
@@ -4979,8 +5058,12 @@ function callFunction(name, args, rawName) {
     }
     var cc = janelaCor(args[3], '#ffffff');
     var cf = janelaCor(args[4], null);
-    lastJanela.circles.push({ x: cx, y: cy, r: cr, c: cc, fill: cf });
+    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
+      CURRENT_OUT.push({kind:'circulo', x:cx, y:cy, r:cr, c:cc, fill:cf, lineNo: null});
+    } else {
+      lastJanela.circles.push({ x: cx, y: cy, r: cr, c: cc, fill: cf });
     janelaDirty = true;
+    }
     return 'círculo desenhado';
   }
   if (name === 'retângulo') {
@@ -5006,8 +5089,12 @@ function callFunction(name, args, rawName) {
     }
     var rc = janelaCor(args[4], '#ffffff');
     var rf = janelaCor(args[5], null);
-    lastJanela.rects.push({ x: rx, y: ry, w: rw, h: rh, c: rc, fill: rf });
+    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
+      CURRENT_OUT.push({kind:'retangulo', x:rx, y:ry, w:rw, h:rh, c:rc, fill:rf, lineNo: null});
+    } else {
+      lastJanela.rects.push({ x: rx, y: ry, w: rw, h: rh, c: rc, fill: rf });
     janelaDirty = true;
+    }
     return 'retângulo desenhado';
   }
   if (name === 'texto') {
@@ -5033,8 +5120,12 @@ function callFunction(name, args, rawName) {
     if (typeof tfs !== 'number' || !isFinite(tfs) || tfs <= 0) {
       throw new Error('texto: o tamanho da fonte deve ser um número positivo (em pixels)');
     }
-    lastJanela.texts.push({ x: tx, y: ty, t: args[2], c: tc, s: tfs });
+    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
+      CURRENT_OUT.push({kind:'texto', x:tx, y:ty, t:args[2], c:tc, s:tfs, lineNo: null});
+    } else {
+      lastJanela.texts.push({ x: tx, y: ty, t: args[2], c: tc, s: tfs });
     janelaDirty = true;
+    }
     return 'texto desenhado';
   }
   if (name === 'pegar') {
@@ -5099,7 +5190,11 @@ function callFunction(name, args, rawName) {
         pgT.push({ x: pgt.x, y: pgt.y, t: pgt.t, c: pgt.c, s: pgt.s });
       }
     }
-    lastJanelaCopy = { x0: pgMinX, y0: pgMinY, x1: pgMaxX, y1: pgMaxY, points: pgP, lines: pgL, circles: pgC, rects: pgR, texts: pgT };
+    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
+      CURRENT_OUT.push({kind:'pegar', x0:pgMinX, y0:pgMinY, x1:pgMaxX, y1:pgMaxY, lineNo: null});
+    } else {
+      lastJanelaCopy = { x0: pgMinX, y0: pgMinY, x1: pgMaxX, y1: pgMaxY, points: pgP, lines: pgL, circles: pgC, rects: pgR, texts: pgT };
+    }
     return 'região copiada';
   }
   if (name === 'colocar') {
@@ -5117,7 +5212,7 @@ function callFunction(name, args, rawName) {
     if (!lastJanela) {
       throw new Error('colocar: execute janela(largura, altura) antes de usar colocar');
     }
-    if (!lastJanelaCopy) {
+    if (!lastJanelaCopy && !(typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT)) {
       throw new Error('colocar: execute pegar(x0, y0, x1, y1) antes de usar colocar');
     }
     var clMinX = Math.min(clX0, clX1);
@@ -5130,49 +5225,53 @@ function callFunction(name, args, rawName) {
     if (clMaxX === clMinX || clMaxY === clMinY) {
       throw new Error('colocar: a região deve ter largura e altura maiores que zero');
     }
-    var clSX = (clMaxX - clMinX) / (lastJanelaCopy.x1 - lastJanelaCopy.x0);
-    var clSY = (clMaxY - clMinY) / (lastJanelaCopy.y1 - lastJanelaCopy.y0);
-    var clSR = (clSX + clSY) / 2;
-    for (var clpi = 0; clpi < lastJanelaCopy.points.length; clpi++) {
-      var clp = lastJanelaCopy.points[clpi];
-      lastJanela.points.push({ x: clMinX + (clp.x - lastJanelaCopy.x0) * clSX, y: clMinY + (clp.y - lastJanelaCopy.y0) * clSY, c: clp.c });
+    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
+      CURRENT_OUT.push({kind:'colocar', x0:clX0, y0:clY0, x1:clX1, y1:clY1, lineNo: null});
+    } else {
+      var clSX = (clMaxX - clMinX) / (lastJanelaCopy.x1 - lastJanelaCopy.x0);
+      var clSY = (clMaxY - clMinY) / (lastJanelaCopy.y1 - lastJanelaCopy.y0);
+      var clSR = (clSX + clSY) / 2;
+      for (var clpi = 0; clpi < lastJanelaCopy.points.length; clpi++) {
+        var clp = lastJanelaCopy.points[clpi];
+        lastJanela.points.push({ x: clMinX + (clp.x - lastJanelaCopy.x0) * clSX, y: clMinY + (clp.y - lastJanelaCopy.y0) * clSY, c: clp.c });
+      }
+      for (var clli = 0; clli < lastJanelaCopy.lines.length; clli++) {
+        var cll = lastJanelaCopy.lines[clli];
+        lastJanela.lines.push({
+          x1: clMinX + (cll.x1 - lastJanelaCopy.x0) * clSX,
+          y1: clMinY + (cll.y1 - lastJanelaCopy.y0) * clSY,
+          x2: clMinX + (cll.x2 - lastJanelaCopy.x0) * clSX,
+          y2: clMinY + (cll.y2 - lastJanelaCopy.y0) * clSY,
+          c: cll.c
+        });
+      }
+      for (var clci = 0; clci < lastJanelaCopy.circles.length; clci++) {
+        var clc = lastJanelaCopy.circles[clci];
+        lastJanela.circles.push({
+          x: clMinX + (clc.x - lastJanelaCopy.x0) * clSX,
+          y: clMinY + (clc.y - lastJanelaCopy.y0) * clSY,
+          r: clc.r * clSR,
+          c: clc.c,
+          fill: clc.fill
+        });
+      }
+      for (var clri = 0; clri < lastJanelaCopy.rects.length; clri++) {
+        var clr = lastJanelaCopy.rects[clri];
+        lastJanela.rects.push({
+          x: clMinX + (clr.x - lastJanelaCopy.x0) * clSX,
+          y: clMinY + (clr.y - lastJanelaCopy.y0) * clSY,
+          w: clr.w * clSX,
+          h: clr.h * clSY,
+          c: clr.c,
+          fill: clr.fill
+        });
+      }
+      for (var clti = 0; clti < lastJanelaCopy.texts.length; clti++) {
+        var clt = lastJanelaCopy.texts[clti];
+        lastJanela.texts.push({ x: clMinX + (clt.x - lastJanelaCopy.x0) * clSX, y: clMinY + (clt.y - lastJanelaCopy.y0) * clSY, t: clt.t, c: clt.c, s: clt.s * clSR });
+      }
+      janelaDirty = true;
     }
-    for (var clli = 0; clli < lastJanelaCopy.lines.length; clli++) {
-      var cll = lastJanelaCopy.lines[clli];
-      lastJanela.lines.push({
-        x1: clMinX + (cll.x1 - lastJanelaCopy.x0) * clSX,
-        y1: clMinY + (cll.y1 - lastJanelaCopy.y0) * clSY,
-        x2: clMinX + (cll.x2 - lastJanelaCopy.x0) * clSX,
-        y2: clMinY + (cll.y2 - lastJanelaCopy.y0) * clSY,
-        c: cll.c
-      });
-    }
-    for (var clci = 0; clci < lastJanelaCopy.circles.length; clci++) {
-      var clc = lastJanelaCopy.circles[clci];
-      lastJanela.circles.push({
-        x: clMinX + (clc.x - lastJanelaCopy.x0) * clSX,
-        y: clMinY + (clc.y - lastJanelaCopy.y0) * clSY,
-        r: clc.r * clSR,
-        c: clc.c,
-        fill: clc.fill
-      });
-    }
-    for (var clri = 0; clri < lastJanelaCopy.rects.length; clri++) {
-      var clr = lastJanelaCopy.rects[clri];
-      lastJanela.rects.push({
-        x: clMinX + (clr.x - lastJanelaCopy.x0) * clSX,
-        y: clMinY + (clr.y - lastJanelaCopy.y0) * clSY,
-        w: clr.w * clSX,
-        h: clr.h * clSY,
-        c: clr.c,
-        fill: clr.fill
-      });
-    }
-    for (var clti = 0; clti < lastJanelaCopy.texts.length; clti++) {
-      var clt = lastJanelaCopy.texts[clti];
-      lastJanela.texts.push({ x: clMinX + (clt.x - lastJanelaCopy.x0) * clSX, y: clMinY + (clt.y - lastJanelaCopy.y0) * clSY, t: clt.t, c: clt.c, s: clt.s * clSR });
-    }
-    janelaDirty = true;
     return 'região colada';
   }
   if (name === 'limparJanela') {
@@ -5218,11 +5317,11 @@ function callFunction(name, args, rawName) {
   }
   if (name === 'mês') {
     if (args.length !== 0) throw new Error('mês espera nenhum argumento');
-    return mkNum(parseInt(pad2(new Date().getMonth() + 1),10), false);
+    return pad2(new Date().getMonth() + 1);
   }
   if (name === 'dia') {
     if (args.length !== 0) throw new Error('dia espera nenhum argumento');
-    return mkNum(parseInt(pad2(new Date().getDate()),10), false);
+    return pad2(new Date().getDate());
   }
   if (name === 'hora') {
     if (args.length !== 0) throw new Error('hora espera nenhum argumento');
@@ -5635,7 +5734,10 @@ function parse(input, env) {
           }
           return mkNum(lv * rv, numFloat(a) || numFloat(b));
         }
-        if (op === '/') return mkNum(lv / rv, true);
+        if (op === '/') {
+          var _div = lv / rv;
+          return mkNum(_div, numFloat(a) || numFloat(b) || _div % 1 !== 0);
+        }
         if (op === '//') return mkNum(Math.floor(lv / rv), false);
         if (op === '\\') {
           if (rv === 0) throw new Error('mod: divisão por zero');
@@ -5821,7 +5923,8 @@ function parse(input, env) {
       var pctB = parseExpr();
       expectOp(')');
       return binOp(pctA, pctB, function (a, b) {
-        return mkNum(numVal(a) * numVal(b) / 100, true);
+        var _pct = numVal(a) * numVal(b) / 100;
+        return mkNum(_pct, numFloat(a) || numFloat(b) || _pct % 1 !== 0);
       });
     }
     if (isOp(t) && t.text === '{') {
@@ -7002,7 +7105,11 @@ out.push({ kind: 'pause', text: '', silent: true, secs: pauseSecs, lineNo: lineN
               out.push({ kind: 'assign', text: m[1] + ' = ' + formatValue(val), lineNo: lineNo });
             } else if (/^limparJanela\s*(\(\s*\))?\s*$/.test(line)) {
               if (!lastJanela) throw new Error('limparJanela: execute janela(largura, altura) antes de usar limparJanela');
-              out.push({kind:'clearJanela', lineNo: lineNo});
+              if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
+                CURRENT_OUT.push({kind:'clearJanela', lineNo: lineNo});
+              } else {
+                lastJanela.points=[]; lastJanela.lines=[]; lastJanela.circles=[]; lastJanela.rects=[]; lastJanela.texts=[]; lastJanelaCopy=null; janelaDirty=true;
+              }
             } else if (/^(janela|ponto|linha|círculo|retângulo|texto|pegar|colocar|limparJanela|corFundo)\s*\(/.test(line)) {
               parse(line, env);
             } else {
@@ -7895,6 +8002,151 @@ async function run() {
       }
       continue;
     }
+    if (rec.kind === 'ponto') {
+      if (lastJanela) {
+        lastJanela.points.push({ x: rec.x, y: rec.y, c: rec.c });
+        janelaDirty = true;
+      }
+      if (!(janelaUsada && janelaFechada)) {
+        janelaVis = { p: lastJanela ? lastJanela.points.length : 0, l: lastJanela ? lastJanela.lines.length : 0, c: lastJanela ? lastJanela.circles.length : 0, r: lastJanela ? lastJanela.rects.length : 0, t: lastJanela ? lastJanela.texts.length : 0 };
+        renderJanela();
+        janelaDirty = false;
+      }
+      continue;
+    }
+    if (rec.kind === 'linha') {
+      if (lastJanela) {
+        lastJanela.lines.push({ x1: rec.x1, y1: rec.y1, x2: rec.x2, y2: rec.y2, c: rec.c });
+        janelaDirty = true;
+      }
+      if (!(janelaUsada && janelaFechada)) {
+        janelaVis = { p: lastJanela ? lastJanela.points.length : 0, l: lastJanela ? lastJanela.lines.length : 0, c: lastJanela ? lastJanela.circles.length : 0, r: lastJanela ? lastJanela.rects.length : 0, t: lastJanela ? lastJanela.texts.length : 0 };
+        renderJanela();
+        janelaDirty = false;
+      }
+      continue;
+    }
+    if (rec.kind === 'circulo') {
+      if (lastJanela) {
+        lastJanela.circles.push({ x: rec.x, y: rec.y, r: rec.r, c: rec.c, fill: rec.fill });
+        janelaDirty = true;
+      }
+      if (!(janelaUsada && janelaFechada)) {
+        janelaVis = { p: lastJanela ? lastJanela.points.length : 0, l: lastJanela ? lastJanela.lines.length : 0, c: lastJanela ? lastJanela.circles.length : 0, r: lastJanela ? lastJanela.rects.length : 0, t: lastJanela ? lastJanela.texts.length : 0 };
+        renderJanela();
+        janelaDirty = false;
+      }
+      continue;
+    }
+    if (rec.kind === 'retangulo') {
+      if (lastJanela) {
+        lastJanela.rects.push({ x: rec.x, y: rec.y, w: rec.w, h: rec.h, c: rec.c, fill: rec.fill });
+        janelaDirty = true;
+      }
+      if (!(janelaUsada && janelaFechada)) {
+        janelaVis = { p: lastJanela ? lastJanela.points.length : 0, l: lastJanela ? lastJanela.lines.length : 0, c: lastJanela ? lastJanela.circles.length : 0, r: lastJanela ? lastJanela.rects.length : 0, t: lastJanela ? lastJanela.texts.length : 0 };
+        renderJanela();
+        janelaDirty = false;
+      }
+      continue;
+    }
+    if (rec.kind === 'texto') {
+      if (lastJanela) {
+        lastJanela.texts.push({ x: rec.x, y: rec.y, t: rec.t, c: rec.c, s: rec.s });
+        janelaDirty = true;
+      }
+      if (!(janelaUsada && janelaFechada)) {
+        janelaVis = { p: lastJanela ? lastJanela.points.length : 0, l: lastJanela ? lastJanela.lines.length : 0, c: lastJanela ? lastJanela.circles.length : 0, r: lastJanela ? lastJanela.rects.length : 0, t: lastJanela ? lastJanela.texts.length : 0 };
+        renderJanela();
+        janelaDirty = false;
+      }
+      continue;
+    }
+    if (rec.kind === 'pegar') {
+      if (lastJanela) {
+        var pgMinX = Math.min(rec.x0, rec.x1);
+        var pgMaxX = Math.max(rec.x0, rec.x1);
+        var pgMinY = Math.min(rec.y0, rec.y1);
+        var pgMaxY = Math.max(rec.y0, rec.y1);
+        var pgP = [];
+        for (var pgpi = 0; pgpi < lastJanela.points.length; pgpi++) {
+          var pgp = lastJanela.points[pgpi];
+          if (pgp.x >= pgMinX && pgp.x <= pgMaxX && pgp.y >= pgMinY && pgp.y <= pgMaxY) {
+            pgP.push({ x: pgp.x, y: pgp.y, c: pgp.c });
+          }
+        }
+        var pgL = [];
+        for (var pgli = 0; pgli < lastJanela.lines.length; pgli++) {
+          var pgl = lastJanela.lines[pgli];
+          var pgmx = (pgl.x1 + pgl.x2) / 2;
+          var pgmy = (pgl.y1 + pgl.y2) / 2;
+          if (pgmx >= pgMinX && pgmx <= pgMaxX && pgmy >= pgMinY && pgmy <= pgMaxY) {
+            pgL.push({ x1: pgl.x1, y1: pgl.y1, x2: pgl.x2, y2: pgl.y2, c: pgl.c });
+          }
+        }
+        var pgC = [];
+        for (var pgci = 0; pgci < lastJanela.circles.length; pgci++) {
+          var pgc = lastJanela.circles[pgci];
+          if (pgc.x >= pgMinX && pgc.x <= pgMaxX && pgc.y >= pgMinY && pgc.y <= pgMaxY) {
+            pgC.push({ x: pgc.x, y: pgc.y, r: pgc.r, c: pgc.c, fill: pgc.fill });
+          }
+        }
+        var pgR = [];
+        for (var pgri = 0; pgri < lastJanela.rects.length; pgri++) {
+          var pgr = lastJanela.rects[pgri];
+          if (pgr.x >= pgMinX && pgr.x <= pgMaxX && pgr.y >= pgMinY && pgr.y <= pgMaxY) {
+            pgR.push({ x: pgr.x, y: pgr.y, w: pgr.w, h: pgr.h, c: pgr.c, fill: pgr.fill });
+          }
+        }
+        var pgT = [];
+        for (var pgti = 0; pgti < lastJanela.texts.length; pgti++) {
+          var pgt = lastJanela.texts[pgti];
+          if (pgt.x >= pgMinX && pgt.x <= pgMaxX && pgt.y >= pgMinY && pgt.y <= pgMaxY) {
+            pgT.push({ x: pgt.x, y: pgt.y, t: pgt.t, c: pgt.c, s: pgt.s });
+          }
+        }
+        lastJanelaCopy = { x0: pgMinX, y0: pgMinY, x1: pgMaxX, y1: pgMaxY, points: pgP, lines: pgL, circles: pgC, rects: pgR, texts: pgT };
+      }
+      continue;
+    }
+    if (rec.kind === 'colocar') {
+      if (lastJanela && lastJanelaCopy) {
+        var clMinX = Math.min(rec.x0, rec.x1);
+        var clMaxX = Math.max(rec.x0, rec.x1);
+        var clMinY = Math.min(rec.y0, rec.y1);
+        var clMaxY = Math.max(rec.y0, rec.y1);
+        var clSX = (clMaxX - clMinX) / (lastJanelaCopy.x1 - lastJanelaCopy.x0);
+        var clSY = (clMaxY - clMinY) / (lastJanelaCopy.y1 - lastJanelaCopy.y0);
+        var clSR = (clSX + clSY) / 2;
+        for (var clpi = 0; clpi < lastJanelaCopy.points.length; clpi++) {
+          var clp = lastJanelaCopy.points[clpi];
+          lastJanela.points.push({ x: clMinX + (clp.x - lastJanelaCopy.x0) * clSX, y: clMinY + (clp.y - lastJanelaCopy.y0) * clSY, c: clp.c });
+        }
+        for (var clli = 0; clli < lastJanelaCopy.lines.length; clli++) {
+          var cll = lastJanelaCopy.lines[clli];
+          lastJanela.lines.push({ x1: clMinX + (cll.x1 - lastJanelaCopy.x0) * clSX, y1: clMinY + (cll.y1 - lastJanelaCopy.y0) * clSY, x2: clMinX + (cll.x2 - lastJanelaCopy.x0) * clSX, y2: clMinY + (cll.y2 - lastJanelaCopy.y0) * clSY, c: cll.c });
+        }
+        for (var clci = 0; clci < lastJanelaCopy.circles.length; clci++) {
+          var clc = lastJanelaCopy.circles[clci];
+          lastJanela.circles.push({ x: clMinX + (clc.x - lastJanelaCopy.x0) * clSX, y: clMinY + (clc.y - lastJanelaCopy.y0) * clSY, r: clc.r * clSR, c: clc.c, fill: clc.fill });
+        }
+        for (var clri = 0; clri < lastJanelaCopy.rects.length; clri++) {
+          var clr = lastJanelaCopy.rects[clri];
+          lastJanela.rects.push({ x: clMinX + (clr.x - lastJanelaCopy.x0) * clSX, y: clMinY + (clr.y - lastJanelaCopy.y0) * clSY, w: clr.w * clSX, h: clr.h * clSY, c: clr.c, fill: clr.fill });
+        }
+        for (var clti = 0; clti < lastJanelaCopy.texts.length; clti++) {
+          var clt = lastJanelaCopy.texts[clti];
+          lastJanela.texts.push({ x: clMinX + (clt.x - lastJanelaCopy.x0) * clSX, y: clMinY + (clt.y - lastJanelaCopy.y0) * clSY, t: clt.t, c: clt.c, s: clt.s * clSR });
+        }
+        janelaDirty = true;
+      }
+      if (!(janelaUsada && janelaFechada)) {
+        janelaVis = { p: lastJanela ? lastJanela.points.length : 0, l: lastJanela ? lastJanela.lines.length : 0, c: lastJanela ? lastJanela.circles.length : 0, r: lastJanela ? lastJanela.rects.length : 0, t: lastJanela ? lastJanela.texts.length : 0 };
+        renderJanela();
+        janelaDirty = false;
+      }
+      continue;
+    }
     if (rec.kind === 'corFundo') {
       if (lastJanela) {
         lastJanela.bg = rec.bg;
@@ -8762,6 +9014,972 @@ document.getElementById('quickRefMaximize').addEventListener('click', function (
 quickRefSearch.addEventListener('input', function () {
   renderQuickRef(this.value);
 });
+var exemplosOverlay = document.getElementById('exemplosOverlay');
+var exemplosList = document.getElementById('exemplosList');
+var exemplosSearch = document.getElementById('exemplosSearch');
+var exemplosFilter = document.getElementById('exemplosFilter');
+var exemplosTabs = document.getElementById('exemplosTabs');
+var exemplosCount = document.getElementById('exemplosCount');
+var exemplosEmpty = document.getElementById('exemplosEmpty');
+var exemplosModal = document.querySelector('#exemplosOverlay .modal');
+var exemplosMaxIcon = document.getElementById('exemplosMaxIcon');
+
+var EXEMPLOS = [
+  {
+    id: 'mostre',
+    title: 'mostre — Relatório Profissional',
+    category: 'Saída e Console',
+    desc: 'Gera um relatório completo com cabeçalho, cálculos e formatação. Demonstra interpolação e múltiplos mostre.',
+    code: `# Relatório de vendas - exemplo profissional
+constante EMPRESA = "Willog Comércio Ltda"
+vendas = [1250, 3400, 2890, 4100, 1750]
+total = vendas.soma
+media = total / vendas.contar
+maior = vendas.máximo
+menor = vendas.mínimo
+mostre "=== {EMPRESA} ==="
+mostre "Total de vendas: R$ {total}"
+mostre "Média diária: R$ {media}"
+mostre "Maior venda: R$ {maior} | Menor: R$ {menor}"
+mostre "Vendas ordenadas: {vendas.ordenada}"`
+  },
+  {
+    id: 'limpe',
+    title: 'limpe — Dashboard Limpo',
+    category: 'Saída e Console',
+    desc: 'Demonstra limpeza do console antes de exibir um novo painel. Útil para atualizar telas.',
+    code: `# Dashboard com limpeza
+mostre "Carregando dados..."
+pausa(0.5)
+limpe
+mostre "=== DASHBOARD ATUALIZADO ==="
+mostre "Usuários online: {aleatório(120, 300)}"
+mostre "Vendas hoje: R$ {aleatório(5000, 15000)}"`
+  },
+  {
+    id: 'mensagem',
+    title: 'mensagem — Boas-vindas Interativa',
+    category: 'Saída e Console',
+    desc: 'Exibe caixas de diálogo com título e mensagem personalizados, usando variáveis e concatenação.',
+    code: `# Boas-vindas com mensagem
+nome = "Ana Clara"
+horario = hora()
+saudacao = "Bom dia" se horario < 12 senão "Boa tarde" se horario < 18 senão "Boa noite"
+mensagem(saudacao, "Bem-vinda, {nome}!\\nSeja bem-vinda ao Willog IDE.")
+mensagem("Dica", "Use Ctrl+Enter para executar seu código rapidamente.")`
+  },
+  {
+    id: 'emJanela',
+    title: 'emJanela — Relatório em Janela',
+    category: 'Saída e Console',
+    desc: 'Executa bloco em janela maximizada. Ideal para relatórios que não cabem no console.',
+    code: `# Relatório em janela
+emJanela:
+  mostre "===== RELATÓRIO FINANCEIRO ====="
+  receitas = [5000, 6200, 4800, 7500]
+  despesas = [3200, 4100, 2900, 3800]
+  lucro = receitas.soma - despesas.soma
+  mostre "Receita total: R$ {receitas.soma}"
+  mostre "Despesa total: R$ {despesas.soma}"
+  mostre "Lucro: R$ {lucro}"
+  se lucro > 5000:
+    mostre "Resultado: EXCELENTE"
+  senão:
+    mostre "Resultado: Dentro da meta"`
+  },
+  {
+    id: 'emJanela-centralizar',
+    title: 'emJanela(centralizar) — Certificado',
+    category: 'Saída e Console',
+    desc: 'Mesmo que emJanela, mas com texto centralizado para certificados e títulos.',
+    code: `# Certificado centralizado
+emJanela(centralizar):
+  mostre "================================"
+  mostre "CERTIFICADO DE CONCLUSÃO"
+  mostre "================================"
+  mostre ""
+  mostre "Concedido a: João Silva"
+  mostre "Curso: Willog Básico"
+  mostre "Data: {data()}"
+  mostre ""
+  mostre "Parabéns!"`
+  },
+  {
+    id: 'variavel-atribuicao',
+    title: 'variável = — Cadastro de Produto',
+    category: 'Variáveis e Intervalos',
+    desc: 'Armazena dados de produto e calcula preço final com impostos.',
+    code: `# Cadastro de produto
+nomeProduto = "Notebook Gamer"
+precoBase = 4599.90
+imposto = precoBase * 0.15
+precoFinal = precoBase + imposto
+mostre "Produto: {nomeProduto}"
+mostre "Preço base: R$ {precoBase}"
+mostre "Preço final: R$ {arredondar(precoFinal, 2)}"`
+  },
+  {
+    id: 'variavel-lazy',
+    title: 'variável := — Avaliação Preguiçosa',
+    category: 'Variáveis e Intervalos',
+    desc: 'Define variável que só calcula quando usada. Ideal para intervalos grandes.',
+    code: `# Avaliação preguiçosa
+x := intervalo(1, 100)
+y := x * 2
+numerosPares = filtrar(y, y <= 20)
+mostre "Primeiros pares dobrados até 20: {numerosPares}"
+# x só foi calculado ao usar y`
+  },
+  {
+    id: 'intervalo',
+    title: 'intervalo() — Tabuada e Sequências',
+    category: 'Variáveis e Intervalos',
+    desc: 'Cria sequências numéricas para loops e cálculos.',
+    code: `# Tabuada do 7 com intervalo
+numero = 7
+mostre "Tabuada do {numero}:"
+para n em intervalo(1, 10):
+  resultado = numero * n
+  mostre "{numero} x {n} = {resultado}"
+mostre ""
+# Sequência com passo
+mostre "Pares de 2 a 20: {intervalo(2, 20, 2)}"`
+  },
+  {
+    id: 'variaveis',
+    title: 'variáveis() — Debug Profissional',
+    category: 'Variáveis e Intervalos',
+    desc: 'Inspeciona todas as variáveis para debug. Ordem alfabética.',
+    code: `# Debug de sistema
+constante VERSAO = "2.1.0"
+usuario = "Carlos"
+idade = 28
+saldo = 1250.75
+ativo = verdadeiro
+mostre variáveis()
+mostre "Sistema v{ VERSAO } em execução"`
+  },
+  {
+    id: 'constante',
+    title: 'constante — Configuração Imutável',
+    category: 'Variáveis e Intervalos',
+    desc: 'Define valores que não podem ser alterados, acessíveis via interpolação.',
+    code: `# Configuração do sistema
+constante EMPRESA = "Willog"
+constante PI_APROX = 3.14
+constante TAXA = 0.08
+preco = 100
+precoComTaxa = preco * (1 + TAXA)
+mostre "{EMPRESA} - Preço com taxa: R$ {precoComTaxa}"
+mostre "PI aproximado: {PI_APROX}"`
+  },
+  {
+    id: 'tipo',
+    title: 'tipo() — Validador de Tipos',
+    category: 'Variáveis e Intervalos',
+    desc: 'Verifica o tipo de valores para validação.',
+    code: `# Validador de tipos
+valores = [42, "texto", verdadeiro, [1,2,3]]
+para v em valores:
+  t = tipo(v)
+  mostre "{v} é do tipo {t}"
+mostre "tipo(3.14) = {tipo(3.14)}"
+mostre "tipo([1,2]) = {tipo([1,2])}"`
+  },
+  {
+    id: 'leia',
+    title: 'leia — Formulário Completo',
+    category: 'Entrada do Usuário',
+    desc: 'Coleta dados do usuário com mensagens personalizadas. Funciona em janela também.',
+    code: `# Formulário de cadastro
+nome = leia "Digite seu nome: "
+idade = leia "Digite sua idade: "
+cidade = leia "Digite sua cidade: "
+mostre ""
+mostre "=== CADASTRO REALIZADO ==="
+mostre "Nome: {nome} ({tipo(nome)})"
+mostre "Idade: {idade} anos"
+mostre "Cidade: {cidade}"
+mensagem("Sucesso", "Cadastro de {nome} concluído!")`
+  },
+  {
+    id: 'aguardeTecla',
+    title: 'aguardeTecla / captureTecla — Menu Interativo',
+    category: 'Entrada do Usuário',
+    desc: 'Aguarda tecla específica e captura qual foi pressionada. Case-insensitive.',
+    code: `# Menu interativo com teclas
+mostre "Pressione S para iniciar ou N para sair"
+aguardeTecla("S")
+mostre "Você pressionou: {captureTecla()}"
+mostre "Pressione qualquer tecla para continuar..."
+aguardeTecla()
+mostre "Tecla capturada: {captureTecla()}"
+mostre "Continuando..."`
+  },
+  {
+    id: 'salvar-carregar',
+    title: 'salvar() / carregar() — Persistência',
+    category: 'Persistência',
+    desc: 'Salva e carrega dados em arquivo. Funciona no navegador (localStorage) e NW.js.',
+    code: `# Sistema de persistência
+nome = "Mariana"
+nota1 = 8.5
+nota2 = 9.2
+media = (nota1 + nota2) / 2
+salvar("escola", "aluno.txt", nome, nota1, nota2, media)
+mostre "Dados salvos!"
+
+# Simulando novo acesso
+nome = ""
+nota1 = 0
+carregar("escola", "aluno.txt", nome, nota1, nota2, media)
+mostre "Bem-vinda de volta, {nome}! Média: {media}"`
+  },
+  {
+    id: 'operador-ponto-virgula',
+    title: ';  — Múltiplos Comandos',
+    category: 'Operadores',
+    desc: 'Separa vários comandos na mesma linha. Útil para inicializações rápidas.',
+    code: `# Inicialização compacta
+a=10; b=20; c=30; soma = a + b + c
+mostre "Soma de {a}+{b}+{c} = {soma}"
+# Também funciona com mostre
+x=5; y=10; mostre "x={x}, y={y}, produto={x*y}"`
+  },
+  {
+    id: 'operador-underscore',
+    title: '_  — Continuação de Texto',
+    category: 'Operadores',
+    desc: 'Quebra texto longo no editor sem quebrar a string. O _ e a quebra são removidos.',
+    code: `# Texto longo com continuação
+textoLongo = "Este é um texto muito longo que foi _
+quebrado em duas linhas no editor mas _
+será unido como uma linha só."
+mostre textoLongo
+mostre "Tamanho: {textoLongo.contar} caracteres"`
+  },
+  {
+    id: 'comentarios',
+    title: '# e #: :# — Comentários Profissionais',
+    category: 'Operadores',
+    desc: 'Documenta código com comentários de linha e de bloco.',
+    code: `# Sistema de cálculo de média
+# Este bloco calcula a média de 3 notas
+nota1 = 7.5
+nota2 = 8.0
+nota3 = 9.2
+#:
+  Código antigo desativado:
+  mediaAntiga = (nota1 + nota2) / 2
+:#
+media = (nota1 + nota2 + nota3) / 3
+mostre "Média final: {arredondar(media,2)}"
+# Resultado com 2 casas decimais`
+  },
+  {
+    id: 'se-senão',
+    title: 'se / senão — Sistema de Notas',
+    category: 'Condicionais',
+    desc: 'Condicionais com indentação. Exemplo completo com aninhamento e operadores lógicos.',
+    code: `# Sistema de aprovação
+nota = 7.5
+frequencia = 85
+se nota >= 7 e frequencia >= 75:
+  mostre "APROVADO - Parabéns!"
+  se nota >= 9:
+    mostre "Com louvor!"
+senão:
+  mostre "REPROVADO"
+  se frequencia < 75:
+    mostre "Motivo: Frequência insuficiente"`
+  },
+  {
+    id: 'escolha',
+    title: 'escolha / caso / padrão — Menu de Conceitos',
+    category: 'Condicionais',
+    desc: 'Estrutura escolha como switch, com caso e padrão.',
+    code: `# Conversor de conceito
+nota = 8
+escolha nota:
+  caso 10: mostre "A - Excelente"
+  caso 9: mostre "A - Excelente"
+  caso 8: mostre "B - Ótimo"
+  caso 7: mostre "C - Bom"
+  caso 6: mostre "D - Regular"
+  padrao: mostre "F - Insuficiente"`
+  },
+  {
+    id: 'ternario',
+    title: 'se ... senão — Operador Ternário',
+    category: 'Condicionais',
+    desc: 'Escolhe valor conforme condição em uma linha.',
+    code: `# Ternário profissional
+preco = 150
+frete = 0 se preco >= 100 senão 15
+mostre "Frete: R$ {frete}"
+# Outro exemplo
+idade = 20
+status = "Maior" se idade >= 18 senão "Menor"
+mostre "Status: {status}"`
+  },
+  {
+    id: 'operadores-logicos',
+    title: 'existe / em / começa com / termina com',
+    category: 'Condicionais',
+    desc: 'Operadores de pertencimento e texto.',
+    code: `# Validação de dados
+email = "ana@escola.com"
+mostre "Email válido? {existe '@' em email}"
+nome = "Willog IDE"
+mostre "'Willog' no início? {nome começa com 'Will'}"
+mostre "'IDE' no fim? {nome termina com 'IDE'}"
+frutas = ["maçã", "banana", "uva"]
+mostre "Tem banana? {existe 'banana' em frutas}"
+mostre "5 em lista? {5 em [1,2,3,4,5]}"`
+  },
+  {
+    id: 'lacos-enquanto',
+    title: 'enquanto — Fatorial e Contagem',
+    category: 'Laços',
+    desc: 'Repete enquanto condição for verdadeira. Com contador e acumulador.',
+    code: `# Cálculo de fatorial com enquanto
+n = 5
+fat = 1
+cont = 1
+enquanto cont <= n:
+  fat = fat * cont
+  cont = cont + 1
+mostre "Fatorial de {n} = {fat}"
+# Contagem regressiva
+mostre "Contagem:"
+n = 5
+enquanto n > 0:
+  mostre n
+  n = n - 1`
+  },
+  {
+    id: 'lacos-repita',
+    title: 'repita() — Repetição Fixa',
+    category: 'Laços',
+    desc: 'Repete bloco N vezes. Exemplo com desenho de padrão.',
+    code: `# Padrão com repita
+repita(4):
+  mostre "****"
+mostre "Fim do padrão"
+# Com variável
+vezes = 3
+repita(vezes):
+  mostre "Olá, Willog!"`
+  },
+  {
+    id: 'lacos-para',
+    title: 'para cada / para x em — Processamento de Lista',
+    category: 'Laços',
+    desc: 'Percorre coleções: listas, textos e intervalos. "cada" é opcional.',
+    code: `# Processamento de lista de alunos
+alunos = ["Ana", "Bruno", "Carla", "Daniel"]
+para cada aluno em alunos:
+  nota = aleatório(5, 10)
+  mostre "{aluno}: {nota}"
+# Intervalo com passo
+mostre "Pares:"
+para n em intervalo(2, 10, 2):
+  mostre n
+# Texto
+para letra em ("Willog"):
+  mostre letra`
+  },
+  {
+    id: 'pare-continue',
+    title: 'pare / continue — Controle de Fluxo',
+    category: 'Laços',
+    desc: 'Interrompe laço ou pula iteração. Exemplo com busca e filtro.',
+    code: `# Busca com pare
+numeros = [3, 7, 12, 5, 9]
+procurado = 12
+para n em numeros:
+  se n == procurado:
+    mostre "Encontrado: {n}"
+    pare
+mostre "Busca finalizada"
+# Filtro com continue
+mostre "Ímpares de 1 a 6:"
+para n em intervalo(1, 6):
+  se n == 3:
+    continue
+  mostre n`
+  },
+  {
+    id: 'va-para',
+    title: 'vá para / :rótulo — Menu com GOTO',
+    category: 'Laços',
+    desc: 'Salto incondicional para rótulo. Útil para menus e validações.',
+    code: `# Validação com vá para
+:inicio
+idade = 20
+se idade < 18:
+  mostre "Menor de idade"
+  vá para fim
+mostre "Maior de idade - Acesso liberado"
+:fim
+mostre "Fim do programa"`
+  },
+  {
+    id: 'definir-funcao',
+    title: 'definir função — Biblioteca Matemática',
+    category: 'Laços',
+    desc: 'Cria funções reutilizáveis com parâmetros e retorno múltiplo.',
+    code: `# Biblioteca de funções
+definir função fatorial(n):
+  se n <= 1:
+    retorne 1
+  retorne n * fatorial(n - 1)
+
+definir função media(a, b, c):
+  retorne (a + b + c) / 3
+
+mostre "Fatorial de 5 = {fatorial(5)}"
+mostre "Média 7,8,9 = {media(7,8,9)}"
+# Retorno múltiplo
+definir função minMax(lista):
+  retorne lista.mínimo, lista.máximo
+
+mn, mx = minMax([3,1,4,1,5])
+mostre "Min: {mn}, Max: {mx}"`
+  },
+  {
+    id: 'selecionar-opcao',
+    title: 'selecionar opção — Menu Profissional',
+    category: 'Laços',
+    desc: 'Menu interativo com teclas. Cada opção executa um bloco.',
+    code: `# Menu principal
+selecionar opção:
+  <1> "Ver saldo":
+    mostre "Seu saldo é R$ 1.250,75"
+  <2> "Depositar":
+    valor = 100
+    mostre "Depósito de R$ {valor} realizado"
+  <3> "Sair":
+    mostre "Até logo!"`
+  },
+  {
+    id: 'pausa-regressiva',
+    title: 'pausa() / regressiva() — Temporização',
+    category: 'Laços',
+    desc: 'Pausa bloqueante vs contagem não-bloqueante. Para jogos e animações.',
+    code: `# Jogo com temporização
+mostre "Preparar..."
+pausa(1)
+mostre "Já!"
+regressiva(5):
+  mostre "Tempo esgotado!"
+mostre "Jogo em andamento..."
+pausa(1)
+mostre "1 segundo se passou"`
+  },
+  {
+    id: 'operadores-aritmeticos',
+    title: 'Operadores Aritméticos — Financeiro',
+    category: 'Operadores',
+    desc: '+ - * / // \\ mod % ** () com listas e textos.',
+    code: `# Cálculo financeiro completo
+preco = 200
+desconto = 15
+# Porcentagem
+valorDesconto = %(desconto, preco)
+mostre "Desconto: R$ {valorDesconto}"
+precoFinal = preco - valorDesconto
+mostre "Final: R$ {precoFinal}"
+# Divisão inteira e resto
+mostre "10 // 3 = {10 // 3} | 10 \\ 3 = {10 \\ 3}"
+# Potência
+mostre "2 ** 10 = {2 ** 10}"
+# Texto repetido
+mostre "Alerta: " + "!!!" * 3`
+  },
+  {
+    id: 'operadores-comparacao',
+    title: 'Comparações — Validação',
+    category: 'Operadores',
+    desc: 'Compara valores com > < >= <= == != =.',
+    code: `# Validação de acesso
+idade = 22
+altura = 1.75
+se idade >= 18 e altura >= 1.60:
+  mostre "Acesso liberado"
+senão:
+  mostre "Acesso negado"
+mostre "5 > 3? {5 > 3}"
+mostre "10 != 10? {10 != 10}"`
+  },
+  {
+    id: 'interpolacao',
+    title: 'Interpolação — Template Profissional',
+    category: 'Operadores',
+    desc: 'Usa {expressão} dentro de " " para inserir valores. Aspas simples são literais.',
+    code: `# Template de relatório
+nome = "Carlos"
+idade = 30
+cidade = "São Paulo"
+mostre "Cliente: {nome} ({idade} anos) - {cidade}"
+mostre "Em 5 anos: {idade + 5} anos"
+mostre "Média: {(8 + 7 + 9)/3}"
+# Aspas simples não interpolam
+mostre '{nome} não substitui'
+mostre "Valor: {raizq(81)}"`
+  },
+  {
+    id: 'listas-criacao',
+    title: 'Listas — Criação e Acesso',
+    category: 'Listas',
+    desc: '[a,b], lista(i), variável(índice), selecionar(), fatiar.',
+    code: `# Gerenciamento de estoque
+produtos = ["Mouse", "Teclado", "Monitor"]
+mostre "Primeiro: {produtos(0)}"
+mostre "Último: {produtos.ultimo}"
+# Índice estilo BASIC
+estoque = 0
+estoque(1) = 15
+estoque(2) = 30
+mostre "Estoque 1: {estoque(1)}"
+# Fatiar e selecionar
+mostre "Fatiado: {produtos.fatiar(0,1)}"
+mostre selecionar("Willog", 0, 2)`
+  },
+  {
+    id: 'listas-propriedades',
+    title: 'Listas — Propriedades Avançadas',
+    category: 'Listas',
+    desc: 'Todas as propriedades: ordenada, soma, distintos, mínimo, invertida, contar, etc.',
+    code: `# Análise de vendas
+vendas = [150, 200, 150, 300, 200, 100]
+mostre "Original: {vendas}"
+mostre "Ordenada: {vendas.ordenada}"
+mostre "Soma: {vendas.soma}"
+mostre "Distintos: {vendas.distintos}"
+mostre "Mín: {vendas.mínimo} Máx: {vendas.máximo}"
+mostre "Invertida: {vendas.invertida}"
+mostre "Qtd: {vendas.contar} | Tamanho: {vendas.tamanho}"
+mostre "Primeiro: {vendas.primeiro} Último: {vendas.ultimo}"
+mostre "Fatiar 1-3: {vendas.fatiar(1,3)}"
+mostre "Contar 150: {vendas.contarItem(150)}"
+mostre "Aleatório: {vendas.aleatório}"
+# Texto também
+mostre "banana".distintos
+mostre "Willog".invertida`
+  },
+  {
+    id: 'listas-metodos',
+    title: 'Listas — adicionar / remover / embaralhar',
+    category: 'Listas',
+    desc: 'Modificam a lista in-place. Demonstração profissional.',
+    code: `# Fila de atendimento
+fila = ["Ana", "Bruno"]
+mostre "Fila inicial: {fila}"
+mostre fila.adicionar("Carla", "Daniel")
+mostre "Após adicionar: {fila}"
+mostre fila.remover(0)
+mostre "Após remover 1º: {fila}"
+mostre "Embaralhada: {fila.embaralhar}"
+mostre "Adicionar em texto: {" + "Olá".adicionar("!") + "}"`
+  },
+  {
+    id: 'funcoes-matematicas',
+    title: 'Funções Matemáticas — Calculadora Científica',
+    category: 'Funções',
+    desc: 'raizq, raizc, log, pi, inteiro, decimal, fração, aleatório, etc.',
+    code: `# Calculadora científica
+mostre "raizq(144) = {raizq(144)}"
+mostre "raizc(27) = {raizc(27)}"
+mostre "log(100,10) = {log(100,10)}"
+mostre "logn(10) = {logn(10)}"
+mostre "ln(10) = {ln(10)}"
+mostre "pi() = {pi()} | pi(10) = {pi(10)}"
+mostre "absoluto(-5.7) = {absoluto(-5.7)}"
+mostre "abs(-5.7) = {abs(-5.7)}"
+mostre "arredondar(3.14159,2) = {arredondar(3.14159,2)}"
+mostre "inteiro(9.99) = {inteiro(9.99)}"
+mostre "decimal(9.99) = {decimal(9.99)}"
+mostre "fração(0.5) = {fração(0.5)}"
+mostre "fracao(0.75) = {fracao(0.75)}"
+mostre "aleatório(1,10) = {aleatório(1,10)}"
+mostre "moeda() = {moeda()}"
+mostre "dado() = {dado()}"`
+  },
+  {
+    id: 'trigonometria',
+    title: 'Trigonometria — Cálculo de Ângulos',
+    category: 'Funções',
+    desc: 'sen, cos, tan, arcosen, arcocos, arcotan em radianos.',
+    code: `# Cálculos trigonométricos
+angulo = pi(5) / 4
+mostre "sen(0) = {sen(0)}"
+mostre "cos(0) = {cos(0)}"
+mostre "tan(0) = {tan(0)}"
+mostre "sen(pi/2) ≈ {sen(1.5707)}"
+mostre "arcocos(1) = {arcocos(1)}"
+mostre "arcosen(1) = {arcosen(1)}"
+mostre "arcotan(1) = {arcotan(1)}"`
+  },
+  {
+    id: 'conversao',
+    title: 'Conversão — paraTexto / paraNúmero / paraLista',
+    category: 'Funções',
+    desc: 'Converte entre tipos. Útil para entrada de usuário.',
+    code: `# Conversão de tipos
+num = 42
+txt = paraTexto(num)
+mostre "Número {num} como texto: {txt} ({tipo(txt)})"
+strNum = "3.14"
+n = paraNúmero(strNum)
+mostre "{strNum} * 2 = {n * 2}"
+lista = paraLista([1,2,3])
+mostre "Cópia: {lista}"
+mostre paraLista("a,b,c")`
+  },
+  {
+    id: 'texto-funcoes',
+    title: 'Texto — Processamento Completo',
+    category: 'Texto',
+    desc: 'maiúsculo, minúsculo, substitua, divida, junte, contém, posição, etc.',
+    code: `# Processamento de texto profissional
+frase = "  Olá, Mundo Willog!  "
+mostre "Original: '{frase}'"
+mostre "Aparar: '{aparar(frase)}'"
+mostre "Maiúsculo: {maiúsculo('willog')}"
+mostre "Minúsculo: {minúsculo('WILLOG')}"
+mostre "Substituir: {substitua('Olá Mundo', 'Mundo', 'Willog')}"
+palavras = divida("maçã,banana,uva", ",")
+mostre "Dividido: {palavras}"
+mostre "Junto: {junte(palavras, ' | ')}"
+mostre "Contém 'Will'? {contém('Willog IDE', 'Will')}"
+mostre "Posição de 'o' em 'Willog': {posição('Willog', 'o')}"
+mostre "Insira: {insira('Willog', 3, '-')}"
+mostre "Remova: {remova('Willog', 3)}"
+mostre "Em: {posiçãoEm('Willog', 2)}"`
+  },
+  {
+    id: 'fatorial',
+    title: 'fatorial — Cálculo Recursivo',
+    category: 'Funções',
+    desc: 'Calcula fatorial com ! ou fatorial(). Exemplo com lista.',
+    code: `# Fatorial profissional
+mostre "5! = {5!}"
+mostre "fatorial(6) = {fatorial(6)}"
+# Com lista
+nums = [3,4,5]
+mostre "Fatoriais: {fatorial(nums)}"
+# Função recursiva
+definir função fat(n):
+  se n <= 1:
+    retorne 1
+  retorne n * fat(n - 1)
+mostre "fat(4) = {fat(4)}"`
+  },
+  {
+    id: 'data-hora',
+    title: 'Data e Hora — Sistema de Idade',
+    category: 'Data e Hora',
+    desc: 'ano, mês, dia, hora, data, agora, tempo, adicionarDias, diaSemana.',
+    code: `# Sistema de idade e datas
+mostre "Hoje: {data()} às {agora()}"
+mostre "Ano: {ano()} Mês: {mês()} Dia: {dia()} Hora: {hora()}"
+nasc = "15/03/2000"
+hoje = data()
+mostre "Idade desde {nasc}: {tempo(nasc, hoje)}"
+mostre "Daqui 30 dias: {adicionarDias(hoje, 30)}"
+mostre "15/03/2000 foi {diaSemana('15/03/2000')}"`
+  },
+  {
+    id: 'tipo-aparar-extrair',
+    title: 'tipo / aparar / extrair — Validação',
+    category: 'Texto',
+    desc: 'Introspecção e limpeza de texto com regex.',
+    code: `# Validação e extração
+mostre tipo(42)
+mostre tipo("texto")
+mostre tipo(verdadeiro)
+mostre "'  olá  ' aparado: '{aparar('  olá  ')}'"
+codigo = "Pedido #1234 - Valor R$ 99.50"
+numeros = extrair(codigo, "[0-9]")
+mostre "Números extraídos: {numeros}"
+mostre extrair("a1b2c3", "0-9")`
+  },
+  {
+    id: 'filtrar-mapear',
+    title: 'filtrar / mapear — Processamento Funcional',
+    category: 'Texto',
+    desc: 'Filtra e transforma coleções com expressões.',
+    code: `# Processamento funcional
+numeros = [1,2,3,4,5,6,7,8,9,10]
+pares = filtrar(numeros, x > 5)
+mostre "Maiores que 5: {pares}"
+dobrados = mapear([1,2,3], "x*2")
+mostre "Dobrados: {dobrados}"
+# Com texto
+nomes = ["Ana", "Bruno", "Amanda", "Carlos"]
+comA = filtrar(nomes, palavra contém "A")
+mostre "Com A: {comA}"`
+  },
+  {
+    id: 'primo-par-impar',
+    title: 'primo / par / ímpar — Matemática Discreta',
+    category: 'Estatística',
+    desc: 'Verifica primalidade e paridade.',
+    code: `# Verificação matemática
+para n em intervalo(1, 10):
+  se primo(n):
+    mostre "{n} é primo"
+mostre "8 é par? {par(8)}"
+mostre "7 é ímpar? {ímpar(7)}"
+mostre "Primos até 20: {filtrar(intervalo(1,20), primo(x))}"`
+  },
+  {
+    id: 'estatistica',
+    title: 'Estatística — Análise Completa',
+    category: 'Estatística',
+    desc: 'média, mediana, moda, variância, desvioPadrao, produto.',
+    code: `# Análise estatística de notas
+notas = [7.5, 8.0, 9.2, 6.5, 7.8, 8.5]
+mostre "Notas: {notas}"
+mostre "Média: {média(notas)}"
+mostre "Mediana: {mediana(notas)}"
+mostre "Moda: {moda([1,2,2,3,3,3])}"
+mostre "Variância: {variância([2,4,4,4,5,5,7,9])}"
+mostre "Desvio: {desvioPadrao([2,4,4,4,5,5,7,9])}"
+mostre "Produto: {produto([2,3,4])}"`
+  },
+  {
+    id: 'matematica-inteiros',
+    title: 'mmc / mdc / divisores / fatores — Teoria dos Números',
+    category: 'Estatística',
+    desc: 'Cálculos com inteiros para matemática discreta.',
+    code: `# Teoria dos números
+mostre "mmc(4,6) = {mmc(4,6)}"
+mostre "mdc(12,18) = {mdc(12,18)}"
+mostre "divisores(12) = {divisores(12)}"
+mostre "fatores(60) = {fatores(60)}"
+# Aplicação: simplificar fração
+num = 12
+den = 18
+d = mdc(num, den)
+mostre "{num}/{den} simplificado = {num/d}/{den/d}"`
+  },
+  {
+    id: 'visualizacao-janela',
+    title: 'janela / ponto / linha — Desenho Técnico',
+    category: 'Visualização',
+    desc: 'Gráficos vetoriais com janela, ponto, linha, círculo, retângulo, texto.',
+    code: `# Desenho técnico - Casa
+janela(600, 400, branco, "Casa Willog")
+# Ponto decorativo
+ponto(50, 50, vermelho)
+# Chão
+linha(0, 350, 600, 350, preto)
+# Casa
+retângulo(200, 150, 200, 150, preto, amarelo)
+# Telhado
+linha(200, 150, 300, 80, vermelho)
+linha(300, 80, 400, 150, vermelho)
+# Porta
+retângulo(270, 220, 60, 80, marrom, marrom)
+# Janela
+círculo(230, 180, 20, azul, azul)
+texto(250, 320, "Casa Willog", preto, 16)`
+  },
+  {
+    id: 'visualizacao-avancada',
+    title: 'pegar / colocar / limparJanela / corFundo',
+    category: 'Visualização',
+    desc: 'Manipulação avançada de regiões da janela.',
+    code: `# Arte com cópia
+janela(500, 300, preto, "Arte")
+# Desenho original
+círculo(100, 100, 40, vermelho, amarelo)
+retângulo(80, 180, 40, 40, azul, verde)
+# Copia e cola
+pegar(60, 60, 140, 220)
+colocar(300, 60, 380, 220)
+mostre "Arte duplicada!"
+# Muda fundo
+corFundo(azul)
+texto(10, 10, "Fundo azul", branco, 14)
+# Limpa
+pausa(1)
+limparJanela
+texto(150, 150, "Tela limpa!", branco, 20)`
+  },
+  {
+    id: 'som',
+    title: 'bipe / som / toca — Sistema Musical',
+    category: 'Som',
+    desc: 'Gera sons com frequências e notas musicais.',
+    code: `# Sistema musical
+mostre "Tocando escala..."
+toca("C", "D", "E", "F", "G", "A", "B", 0.3)
+pausa(0.5)
+mostre "Acorde"
+som(440, 0.5)
+som(550, 0.5)
+som(660, 0.5)
+mostre "BiPe"
+bipe(0.2)
+bipe(0.2)`
+  }
+];
+
+// ===== Exemplos =====
+var exemplosOverlay = document.getElementById('exemplosOverlay');
+var exemplosList = document.getElementById('exemplosList');
+var exemplosSearch = document.getElementById('exemplosSearch');
+var exemplosFilter = document.getElementById('exemplosFilter');
+var exemplosTabs = document.getElementById('exemplosTabs');
+var exemplosCount = document.getElementById('exemplosCount');
+var exemplosEmpty = document.getElementById('exemplosEmpty');
+var exemplosModal = document.querySelector('#exemplosOverlay .modal');
+var exemplosMaxIcon = document.getElementById('exemplosMaxIcon');
+var exemplosActiveCategory = '';
+
+var EXEMPLOS_CATEGORIAS = ["Todas","Saída e Console","Variáveis e Intervalos","Entrada do Usuário","Persistência","Operadores","Condicionais","Laços","Listas","Funções","Texto","Data e Hora","Estatística","Visualização","Som"];
+
+(function initExemplosCategorias(){
+  if(!exemplosFilter || !exemplosTabs) return;
+  EXEMPLOS_CATEGORIAS.forEach(function(cat){
+    var opt=document.createElement('option');
+    opt.value=cat==="Todas"?"":cat;
+    opt.textContent=cat;
+    exemplosFilter.appendChild(opt);
+  });
+  EXEMPLOS_CATEGORIAS.forEach(function(cat){
+    var btn=document.createElement('button');
+    btn.className='exemplos-tab' + (cat==="Todas" ? ' active' : '');
+    btn.textContent=cat;
+    btn.setAttribute('data-cat', cat==="Todas"?"":cat);
+    btn.addEventListener('click', function(){
+      exemplosActiveCategory=this.getAttribute('data-cat');
+      var tabs=exemplosTabs.querySelectorAll('.exemplos-tab');
+      for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('active');
+      this.classList.add('active');
+      exemplosFilter.value=exemplosActiveCategory;
+      renderExemplos();
+    });
+    exemplosTabs.appendChild(btn);
+  });
+})();
+
+function renderExemplos(){
+  if(!exemplosList) return;
+  var q=(exemplosSearch.value||'').toLowerCase().trim();
+  var cat=exemplosActiveCategory || exemplosFilter.value || '';
+  var filtered=EXEMPLOS.filter(function(ex){
+    var matchCat=!cat || ex.category===cat;
+    if(!matchCat) return false;
+    if(!q) return true;
+    return ex.title.toLowerCase().indexOf(q)>=0 || ex.category.toLowerCase().indexOf(q)>=0 || ex.desc.toLowerCase().indexOf(q)>=0 || ex.code.toLowerCase().indexOf(q)>=0;
+  });
+  filtered.sort(function(a,b){ return a.title.localeCompare(b.title,'pt-BR'); });
+  exemplosList.innerHTML='';
+  for(var i=0;i<filtered.length;i++){
+    (function(ex){
+      var card=document.createElement('div');
+      card.className='exemplos-card';
+      var head=document.createElement('div');
+      head.className='exemplos-card-head';
+      var title=document.createElement('div');
+      title.className='exemplos-card-title';
+      title.textContent=ex.title;
+      var catSpan=document.createElement('span');
+      catSpan.className='exemplos-card-category';
+      catSpan.textContent=ex.category;
+      head.appendChild(title);
+      head.appendChild(catSpan);
+      var desc=document.createElement('div');
+      desc.className='exemplos-card-desc';
+      desc.textContent=ex.desc;
+      var pre=document.createElement('pre');
+      pre.className='exemplos-code';
+      pre.textContent=ex.code;
+      var actions=document.createElement('div');
+      actions.className='exemplos-actions';
+      var btnInsert=document.createElement('button');
+      btnInsert.className='primary';
+      btnInsert.textContent='Inserir no editor';
+      btnInsert.addEventListener('click', function(ev){
+        ev.stopPropagation();
+        editor.value=ex.code;
+        syncAll();
+        saveCode();
+        editor.focus();
+        wmClose('exemplosOverlay');
+      });
+      var btnCopy=document.createElement('button');
+      btnCopy.textContent='Copiar';
+      btnCopy.addEventListener('click', function(ev){
+        ev.stopPropagation();
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ex.code).then(function(){
+            var old=btnCopy.textContent; btnCopy.textContent='Copiado!'; setTimeout(function(){ btnCopy.textContent=old; },1500);
+          });
+        } else {
+          var ta=document.createElement('textarea');
+          ta.value=ex.code; ta.style.position='fixed'; ta.style.opacity='0';
+          document.body.appendChild(ta); ta.select();
+          try{ document.execCommand('copy'); btnCopy.textContent='Copiado!'; setTimeout(function(){ btnCopy.textContent='Copiar'; },1500); }catch(e){}
+          document.body.removeChild(ta);
+        }
+      });
+      var btnRun=document.createElement('button');
+      btnRun.textContent='Executar';
+      btnRun.addEventListener('click', function(ev){
+        ev.stopPropagation();
+        editor.value=ex.code;
+        syncAll();
+        saveCode();
+        wmClose('exemplosOverlay');
+        setTimeout(function(){ run(); }, 100);
+      });
+      actions.appendChild(btnInsert);
+      actions.appendChild(btnCopy);
+      actions.appendChild(btnRun);
+      card.appendChild(head);
+      card.appendChild(desc);
+      card.appendChild(pre);
+      card.appendChild(actions);
+      exemplosList.appendChild(card);
+    })(filtered[i]);
+  }
+  exemplosCount.textContent=filtered.length + ' exemplo(s)';
+  exemplosEmpty.style.display=filtered.length ? 'none' : 'block';
+}
+
+document.getElementById('btnExemplos').addEventListener('click', function(){
+  renderExemplos();
+  wmOpen('exemplosOverlay');
+  exemplosSearch.focus();
+});
+document.getElementById('exemplosClose').addEventListener('click', function(){
+  wmClose('exemplosOverlay');
+});
+exemplosOverlay.addEventListener('click', function(e){
+  if(e.target===exemplosOverlay) wmClose('exemplosOverlay');
+});
+document.getElementById('exemplosMinimize').addEventListener('click', function(){
+  wmMinimize('exemplosOverlay');
+});
+document.getElementById('exemplosMaximize').addEventListener('click', function(){
+  toggleModalMaximize(exemplosModal, 'exemplos-maximized', exemplosMaxIcon);
+});
+exemplosSearch.addEventListener('input', renderExemplos);
+exemplosFilter.addEventListener('change', function(){
+  exemplosActiveCategory=this.value;
+  var tabs=exemplosTabs.querySelectorAll('.exemplos-tab');
+  for(var i=0;i<tabs.length;i++){
+    var cat=tabs[i].getAttribute('data-cat');
+    tabs[i].classList.toggle('active', cat===exemplosActiveCategory);
+  }
+  renderExemplos();
+});
+
 var sobreOverlay = document.getElementById('sobreOverlay');
 document.getElementById('btnSobre').addEventListener('click', function () {
   sobreOverlay.classList.add('open');
@@ -10280,6 +11498,7 @@ document.addEventListener('keydown', function (e) {
     wmClose('janelaOverlay', true);
     wmClose('graficoOverlay', true);
     wmClose('quickRefOverlay', true);
+    wmClose('exemplosOverlay', true);
     sobreOverlay.classList.remove('open');
     closeSelecionar();
     wmClose('emJanelaOverlay', true);
@@ -10373,7 +11592,8 @@ var wmLabels = {
   interpretadorOverlay: 'Interpretador',
   graficoOverlay:    'Gráfico de Funções',
   modalOverlay:      'Manual',
-  quickRefOverlay:   'Ref. Rápida'
+  quickRefOverlay:   'Ref. Rápida',
+  exemplosOverlay:   'Exemplos'
 };
 function wmFindCurrent() {
   var ids = Object.keys(wmLabels);
@@ -10388,7 +11608,8 @@ var _wmMaxMap = {
   interpretadorOverlay:'interp-maximized',
   graficoOverlay:'grafico-maximized',
   janelaOverlay:'janela-maximized',
-  emJanelaOverlay:'emjanela-maximized'
+  emJanelaOverlay:'emjanela-maximized',
+  exemplosOverlay:'exemplos-maximized'
 };
 function wmOpen(overlayId) {
   var el = document.getElementById(overlayId);
