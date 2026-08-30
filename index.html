@@ -498,17 +498,9 @@
   body.light .plot-zoom-btn { background: #f3f3f3; border-color: #c8c8c8; color: #333; }
   body.light .plot-zoom-btn:hover { background: #0078d4; color: #fff; border-color: #0078d4; }
   body.light .plot-zoom-label { color: #555; }
-  #modalOverlay .modal.modal-maximized {
-    width: 100vw; max-width: none; max-height: none; height: 100vh;
-    border-radius: 0; border: none;
-  }
   #manualMinimize:hover { color: #ffb74d; }
   #manualMaximize:hover { color: #81c784; }
 
-  #quickRefOverlay .modal.qr-maximized {
-    width: 100vw; max-width: none; max-height: none; height: 100vh;
-    border-radius: 0; border: none;
-  }
   #quickRefMinimize:hover { color: #ffb74d; }
   #quickRefMaximize:hover { color: #81c784; }
 
@@ -605,9 +597,16 @@
 
   /* ===== Janela de saída (emJanela:) ===== */
   #emJanelaOverlay .modal { width: 640px; max-width: 94vw; height: 58vh; min-height: 220px; }
+  /* ===== Modal maximized comum (consolidado com ID para sobrescrever largura base) ===== */
+  #modalOverlay .modal.modal-maximized,
+  #quickRefOverlay .modal.qr-maximized,
+  #exemplosOverlay .modal.exemplos-maximized,
+  #paletteOverlay .modal.palette-maximized,
+  #interpretadorOverlay .modal.interp-maximized,
+  #graficoOverlay .modal.grafico-maximized,
+  #janelaOverlay .modal.janela-maximized,
   #emJanelaOverlay .modal.emjanela-maximized {
-    width: 100vw; max-width: none; max-height: none; height: 100vh;
-    border-radius: 0; border: none;
+    width: 100vw; max-width: none; max-height: none; height: 100vh; border-radius: 0; border: none;
   }
   .emjanela-body { flex: 1; display: flex; flex-direction: column; min-height: 0; padding: 0; overflow: hidden; }
   .emjanela-output { flex: 1; min-height: 0; font-size: var(--w-font); line-height: var(--w-lh); }
@@ -620,11 +619,7 @@
   }
   #emJanelaOutput.centered .log { width: 100%; }
 
-  /* ===== Janela (janela) – max/min ===== */
-  #janelaOverlay .modal.janela-maximized {
-    width: 100vw; max-width: none; max-height: none; height: 100vh;
-    border-radius: 0; border: none;
-  }
+  /* ===== Janela (janela) – min ===== */
   #janelaMinimize:hover { color: #ffb74d; }
   #janelaMaximize:hover { color: #81c784; }
 
@@ -634,10 +629,6 @@
 
   /* ===== Interpretador ===== */
   #interpretadorOverlay .modal { width: 700px; max-width: 94vw; height: 65vh; min-height: 300px; }
-  #interpretadorOverlay .modal.interp-maximized {
-    width: 100vw; max-width: none; max-height: none; height: 100vh;
-    border-radius: 0; border: none;
-  }
   .interp-body { flex: 1; display: flex; flex-direction: column; min-height: 0; padding: 0; overflow: hidden; }
   .interp-output { flex: 1; min-height: 0; overflow-y: auto; background: #1e1e1e; padding: 8px 12px; font-family: Consolas, 'Courier New', monospace; font-size: var(--w-font); line-height: 1.5; }
   .interp-output .placeholder { color: #6a6a6a; font-style: italic; }
@@ -680,14 +671,6 @@
 
   /* ===== Janela do Modo gráfico (console em canvas) ===== */
   #graficoOverlay .modal { width: 900px; }
-  #graficoOverlay .modal.grafico-maximized {
-    width: 100vw;
-    max-width: none;
-    max-height: none;
-    height: 100vh;
-    border-radius: 0;
-    border: none;
-  }
   .grafico-body {
     padding: 0;
     overflow: auto;
@@ -941,7 +924,6 @@ body.light .sobre-author { color: #0078d4; }
 
   /* ===== Exemplos ===== */
   #exemplosOverlay .modal { width: 860px; max-width: 94vw; height: 80vh; min-height: 400px; }
-  #exemplosOverlay .modal.exemplos-maximized { width: 100vw; max-width: none; max-height: none; height: 100vh; border-radius: 0; border: none; }
   .exemplos-body { padding: 12px 14px; font-size: 14px; display: flex; flex-direction: column; gap: 10px; }
   .exemplos-search { width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #3c3c3c; border-radius: 6px; background: #1e1e1e; color: #e0e0e0; font-size: 14px; outline: none; }
   .exemplos-search:focus { border-color: #0078d4; }
@@ -1069,7 +1051,6 @@ body.light .sobre-author { color: #0078d4; }
 
   /* ===== Palette Selector ===== */
   #paletteOverlay .modal { width: 720px; max-width: 94vw; height: 70vh; min-height: 300px; display: flex; flex-direction: column; }
-  #paletteOverlay .modal.palette-maximized { width: 100vw; max-width: none; max-height: none; height: 100vh; border-radius: 0; border: none; }
   .palette-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg3); border-radius: 10px 10px 0 0; flex: 0 0 auto; }
   .palette-header h2 { font-size: 15px; color: #fff; font-weight: 600; }
   .palette-tabs { display: flex; gap: 2px; padding: 8px 12px 0; background: var(--bg2); border-bottom: 1px solid var(--border); flex: 0 0 auto; }
@@ -7440,10 +7421,15 @@ var WP_PENDING_WINOUT = [];
 var WP_INPUT_CTX = false;
 var WP_INPUT_QUEUE = [];
 var WP_NO_INPUT_DEFER = 0;
-
 function gotoFrameFor(node) {
   if (!WP_GOTO_PATH || WP_GOTO_DEPTH >= WP_GOTO_PATH.length) return -1;
-  if (WP_GOTO_PATH[WP_GOTO_DEPTH].owner !== node) return -1;
+  var frame = WP_GOTO_PATH[WP_GOTO_DEPTH];
+  if (frame.owner) {
+    if (!node || node.lineNo !== frame.owner.lineNo) return -1;
+  } else {
+    var expected = frame.list[frame.idx];
+    if (!expected || !node || node.lineNo !== expected.lineNo) return -1;
+  }
   return WP_GOTO_DEPTH++;
 }
 
@@ -7616,7 +7602,6 @@ function tokenizeHighlight(code) {
 </script>
 <script>
 "use strict";
-"use strict";
 
 // ============================================================
 //  INTERFACE (DOM)
@@ -7633,7 +7618,14 @@ var statusbar = document.getElementById('statusbar');
 var chkAssign = document.getElementById('chkAssign');
 var consolePanel = document.getElementById('consolePanel');
 document.getElementById('headerClose').addEventListener('click', function () {
-  window.close();
+  try {
+    if (nwWin) { nwWin.close(); return; }
+    window.close();
+    // fallback para navegador (window.close bloqueado quando não foi aberto por script)
+    setTimeout(function(){
+      if (!window.closed) showMessageBox('Willog','Feche a aba/janela do navegador para sair.');
+    }, 200);
+  } catch(e) { showMessageBox('Willog','Feche a aba/janela do navegador para sair.'); }
 });
 var nwWin = null;
 try {
@@ -8920,6 +8912,16 @@ var quickRefOverlay = document.getElementById('quickRefOverlay');
 var quickRefList = document.getElementById('quickRefList');
 var quickRefEmpty = document.getElementById('quickRefEmpty');
 var quickRefSearch = document.getElementById('quickRefSearch');
+function renderFilteredList(opts){
+  var q=(opts.filter||'').toLowerCase();
+  var items=opts.data.filter(function(it){ return opts.filterFn(it,q); });
+  if(opts.sortFn) items.sort(opts.sortFn);
+  opts.container.innerHTML='';
+  for(var i=0;i<items.length;i++) opts.createItem(items[i], opts.container, i);
+  if(opts.emptyEl) opts.emptyEl.style.display=items.length?'none':'block';
+  if(opts.countEl) opts.countEl.textContent=items.length+' exemplo(s)';
+  return items;
+}
 function renderQuickRef(filter) {
   var q = (filter || '').toLowerCase();
   var items = QUICK_REF.filter(function (r) {
@@ -9799,18 +9801,8 @@ bipe(0.2)`
   }
 ];
 
-// ===== Exemplos =====
-var exemplosOverlay = document.getElementById('exemplosOverlay');
-var exemplosList = document.getElementById('exemplosList');
-var exemplosSearch = document.getElementById('exemplosSearch');
-var exemplosFilter = document.getElementById('exemplosFilter');
-var exemplosTabs = document.getElementById('exemplosTabs');
-var exemplosCount = document.getElementById('exemplosCount');
-var exemplosEmpty = document.getElementById('exemplosEmpty');
-var exemplosModal = document.querySelector('#exemplosOverlay .modal');
-var exemplosMaxIcon = document.getElementById('exemplosMaxIcon');
+// ===== Exemplos (variáveis de DOM já declaradas acima - evita redundância) =====
 var exemplosActiveCategory = '';
-
 var EXEMPLOS_CATEGORIAS = ["Todas","Saída e Console","Variáveis e Intervalos","Entrada do Usuário","Persistência","Operadores","Condicionais","Laços","Listas","Funções","Texto","Data e Hora","Estatística","Visualização","Som"];
 
 (function initExemplosCategorias(){
@@ -10305,18 +10297,13 @@ function applyPaletteVars(palette, light) {
   r.style.setProperty('--err', palette.err);
   r.style.setProperty('--info', palette.info);
   r.style.setProperty('--ok', palette.ok);
-  document.body.style.background = palette.bg;
-  document.body.style.color = palette.fg;
-  var codePre = document.querySelector('.code-wrap pre');
-  if (codePre) codePre.style.color = palette.fg;
+  // As cores já são aplicadas via CSS vars (--bg etc.); não é necessário estilo inline redundante
 }
 
 function clearPaletteVars() {
   var r = document.documentElement;
   var vars = ['--bg','--bg2','--bg3','--fg','--fg2','--border','--hover','--accent','--accent-hover','--accent-fg','--hl-keyword','--hl-func','--hl-str','--hl-num','--hl-comment','--hl-id','--statusbar-bg','--err','--info','--ok'];
   for (var i = 0; i < vars.length; i++) r.style.removeProperty(vars[i]);
-  document.body.style.background = '';
-  document.body.style.color = '';
 }
 
 var currentPalette = null;
@@ -11328,6 +11315,10 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+// Helpers console dock
+function isDockedBottom(){ try{ return localStorage.getItem('willprogConsoleDock')==='bottom'; }catch(e){ return false; } }
+function getConsolePct(isBottom){ try{ var k=isBottom?'willprogConsoleHeight':'willprogConsoleWidth'; var v=parseFloat(localStorage.getItem(k)); return isFinite(v)?v:null; }catch(e){ return null; } }
+function setConsolePct(isBottom,pct){ try{ var k=isBottom?'willprogConsoleHeight':'willprogConsoleWidth'; localStorage.setItem(k, String(pct)); }catch(e){} }
 var dragging = false;
 splitter.addEventListener('mousedown', function (e) {
   dragging = true;
@@ -11360,13 +11351,11 @@ document.addEventListener('mouseup', function () {
     document.body.classList.remove('dragging');
     document.body.classList.remove('console-docked');
     var rect = mainEl.getBoundingClientRect();
-    if (mainEl.classList.contains('console-docked')) {
-      var pctH = rect.height > 0 ? consolePanel.getBoundingClientRect().height / rect.height * 100 : 32;
-      try { localStorage.setItem('willprogConsoleHeight', String(pctH)); } catch (e) {}
-    } else {
-      var pct = rect.width > 0 ? consolePanel.getBoundingClientRect().width / rect.width * 100 : 42;
-      try { localStorage.setItem('willprogConsoleWidth', String(pct)); } catch (e) {}
-    }
+    var isBottom = mainEl.classList.contains('console-docked');
+    var pct = isBottom
+      ? (rect.height > 0 ? consolePanel.getBoundingClientRect().height / rect.height * 100 : 32)
+      : (rect.width > 0 ? consolePanel.getBoundingClientRect().width / rect.width * 100 : 42);
+    setConsolePct(isBottom, pct);
   }
 });
 
@@ -11381,14 +11370,14 @@ document.addEventListener('mouseup', function () {
     if(docked){
       mainEl.classList.add('console-docked');
       consolePanel.style.flex = '';
-      var hPct=null; try{ hPct=parseFloat(localStorage.getItem('willprogConsoleHeight')); }catch(e){}
+      var hPct=getConsolePct(true);
       if(isFinite(hPct) && hPct>10 && hPct<80) consolePanel.style.flex='0 0 '+hPct+'%';
       if(dockIcon) dockIcon.innerHTML = dockBottomIcon;
       if(btnDock){ btnDock.title='Console na lateral'; btnDock.setAttribute('aria-label','Console na lateral'); }
     } else {
       mainEl.classList.remove('console-docked');
       consolePanel.style.flex = '';
-      var wPct=null; try{ wPct=parseFloat(localStorage.getItem('willprogConsoleWidth')); }catch(e){}
+      var wPct=getConsolePct(false);
       if(isFinite(wPct) && wPct>10 && wPct<90) consolePanel.style.flex='0 0 '+wPct+'%';
       if(dockIcon) dockIcon.innerHTML = dockSideIcon;
       if(btnDock){ btnDock.title='Console embaixo'; btnDock.setAttribute('aria-label','Console embaixo'); }
@@ -11460,7 +11449,8 @@ var wmLabels = {
   graficoOverlay:    'Gráfico de Funções',
   modalOverlay:      'Manual',
   quickRefOverlay:   'Ref. Rápida',
-  exemplosOverlay:   'Exemplos'
+  exemplosOverlay:   'Exemplos',
+  paletteOverlay:    'Paletas'
 };
 function wmFindCurrent() {
   var ids = Object.keys(wmLabels);
@@ -11470,14 +11460,10 @@ function wmFindCurrent() {
   }
   return null;
 }
-var _wmMaxMap = {
-  modalOverlay:'modal-maximized', quickRefOverlay:'qr-maximized',
-  interpretadorOverlay:'interp-maximized',
-  graficoOverlay:'grafico-maximized',
-  janelaOverlay:'janela-maximized',
-  emJanelaOverlay:'emjanela-maximized',
-  exemplosOverlay:'exemplos-maximized'
-};
+var _wmMaxMap = (function(){
+  var _map={janelaOverlay:'janela-maximized',emJanelaOverlay:'emjanela-maximized',interpretadorOverlay:'interp-maximized',graficoOverlay:'grafico-maximized',modalOverlay:'modal-maximized',quickRefOverlay:'qr-maximized',exemplosOverlay:'exemplos-maximized',paletteOverlay:'palette-maximized'};
+  var _out={}; for(var k in wmLabels){ if(_map[k]) _out[k]=_map[k]; } return _out;
+})();
 function wmOpen(overlayId) {
   var el = document.getElementById(overlayId);
   if (!el) { return; }
@@ -11570,10 +11556,8 @@ for (var _wi = 0; _wi < winIds.length; _wi++) {
   }
 }
 
-var _savedDockFinal = null; try { _savedDockFinal = localStorage.getItem('willprogConsoleDock'); } catch(e) {}
-if (_savedDockFinal !== 'bottom') {
-  var savedWidth = null;
-  try { savedWidth = parseFloat(localStorage.getItem('willprogConsoleWidth')); } catch (e) {}
+if (!isDockedBottom()) {
+  var savedWidth = getConsolePct(false);
   if (isFinite(savedWidth) && savedWidth > 0) {
     var wPct = Math.max(10, Math.min(90, savedWidth));
     consolePanel.style.flex = '0 0 ' + wPct + '%';
