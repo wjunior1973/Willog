@@ -145,7 +145,10 @@
 
   /* Main layout */
   .main {
-    flex:1; display:flex; gap:12px; padding:12px; overflow:hidden; min-height:0;
+    flex:1; display:flex; gap:0; padding:12px; overflow:hidden; min-height:0;
+  }
+  .main.layout-bottom {
+    flex-direction: column;
   }
   .pane {
     background: var(--panel);
@@ -155,8 +158,27 @@
     box-shadow: var(--shadow);
     min-width:0;
   }
-  .pane.editor-pane { flex: 1.35; }
-  .pane.console-pane { flex: 0.85; min-width: 320px; }
+  .pane.editor-pane { flex: 1 1 0; min-width:0; min-height:0; }
+  .pane.console-pane { flex: 0 0 38%; min-width:320px; min-height:150px; }
+  .main.layout-bottom .pane.console-pane { flex: 0 0 32%; min-width:unset; min-height:120px; }
+  #splitter {
+    flex: 0 0 10px;
+    background: transparent;
+    position: relative;
+    cursor: col-resize;
+    display:flex; align-items:center; justify-content:center;
+    user-select:none;
+    z-index:5;
+  }
+  #splitter::after {
+    content:'';
+    width:2px; height:48px; background: var(--border); border-radius:2px; transition: all 0.15s;
+  }
+  #splitter:hover::after, #splitter.dragging::after { background: var(--accent); width:3px; height:64px; }
+  .main.layout-bottom #splitter { cursor: row-resize; }
+  .main.layout-bottom #splitter::after { width:48px; height:2px; }
+  .main.layout-bottom #splitter:hover::after, .main.layout-bottom #splitter.dragging::after { width:64px; height:3px; }
+  .pane-header-actions { display:flex; gap:6px; align-items:center; }
   .pane-header {
     background: var(--panel2);
     border-bottom:2px solid var(--border);
@@ -285,7 +307,10 @@
 
   @media (max-width: 900px) {
     .main { flex-direction:column; }
-    .pane.console-pane { min-width:unset; min-height:240px; }
+    .pane.console-pane { min-width:unset; min-height:240px; flex-basis: 40%; }
+    #splitter { cursor: row-resize; }
+    #splitter::after { width:48px; height:2px; }
+    #splitter:hover::after, #splitter.dragging::after { width:64px; height:3px; }
     .header-right .badge { display:none; }
   }
 </style>
@@ -343,10 +368,14 @@
       </div>
     </section>
 
+    <div id="splitter" title="Arraste para redimensionar"></div>
     <section class="pane console-pane">
       <div class="pane-header">
         <span><b>CONSOLE</b> <span class="hint">— saída do programa</span></span>
-        <button class="btn small" id="btnLimpar2" style="padding:3px 8px">Limpar</button>
+        <div class="pane-header-actions">
+          <button class="btn small" id="btnPosConsole" title="Mover console para baixo">⬇ Baixo</button>
+          <button class="btn small" id="btnLimpar2" style="padding:3px 8px">Limpar</button>
+        </div>
       </div>
       <div class="console-output" id="console"></div>
       <div class="console-input-row" style="display:none">
@@ -575,6 +604,127 @@ function updateHighlight(){
   window.addEventListener('beforeunload', saveSession);
   // garantir updateLines + highlight após carregar
   setTimeout(()=>{ updateLines(); updateHighlight(); }, 0);
+})();
+
+// --- Console: posição (lateral/direita ↔ embaixo) e redimensionamento arrastável ---
+(function(){
+  const mainEl = document.querySelector('.main');
+  const splitter = document.getElementById('splitter');
+  const editorPane = document.querySelector('.pane.editor-pane');
+  const consolePane = document.querySelector('.pane.console-pane');
+  const btnPos = document.getElementById('btnPosConsole');
+  const POS_KEY = 'willog-console-pos';
+  const W_KEY = 'willog-console-size-w';
+  const H_KEY = 'willog-console-size-h';
+  let isBottom = localStorage.getItem(POS_KEY) === 'bottom';
+  function applyPos(bottom){
+    isBottom = bottom;
+    mainEl.classList.toggle('layout-bottom', bottom);
+    localStorage.setItem(POS_KEY, bottom ? 'bottom' : 'side');
+    if(btnPos){
+      btnPos.textContent = bottom ? '➡️ Lateral' : '⬇ Baixo';
+      btnPos.title = bottom ? 'Mover console para a lateral direita' : 'Mover console para baixo';
+    }
+    // restaurar tamanho salvo
+    if(bottom){
+      const h = localStorage.getItem(H_KEY);
+      if(h){
+        consolePane.style.flex = '0 0 ' + h + 'px';
+        editorPane.style.flex = '1 1 0';
+      }else{
+        consolePane.style.flex = '';
+        editorPane.style.flex = '';
+      }
+    }else{
+      const w = localStorage.getItem(W_KEY);
+      if(w){
+        const mainW = mainEl.getBoundingClientRect().width || 1000;
+        const editorW = mainW - parseInt(w,10) - 10;
+        if(editorW>200){
+          editorPane.style.flex = '0 0 ' + editorW + 'px';
+          consolePane.style.flex = '0 0 ' + w + 'px';
+        }
+      }else{
+        consolePane.style.flex = '';
+        editorPane.style.flex = '';
+      }
+    }
+  }
+  if(btnPos){
+    btnPos.addEventListener('click', ()=> applyPos(!isBottom));
+  }
+  applyPos(isBottom);
+  // arrastar splitter
+  let dragging=false, startX=0, startY=0, startEditorW=0, startEditorH=0, startConsoleW=0, startConsoleH=0;
+  function onMouseDown(e){
+    e.preventDefault();
+    dragging=true;
+    splitter.classList.add('dragging');
+    document.body.style.userSelect='none';
+    document.body.style.cursor = isBottom ? 'row-resize' : 'col-resize';
+    startX=e.clientX; startY=e.clientY;
+    const er=editorPane.getBoundingClientRect();
+    const cr=consolePane.getBoundingClientRect();
+    startEditorW=er.width; startEditorH=er.height;
+    startConsoleW=cr.width; startConsoleH=cr.height;
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  }
+  function onMouseMove(e){
+    if(!dragging) return;
+    if(isBottom || window.innerWidth<=900){
+      // vertical: arrasta altura
+      const dy=e.clientY - startY;
+      const newEditorH=startEditorH + dy;
+      const newConsoleH=startConsoleH - dy;
+      const minH=120, minEditorH=150;
+      if(newEditorH<minEditorH || newConsoleH<minH) return;
+      editorPane.style.flex='0 0 '+newEditorH+'px';
+      consolePane.style.flex='0 0 '+newConsoleH+'px';
+      localStorage.setItem(H_KEY, newConsoleH);
+    }else{
+      const dx=e.clientX - startX;
+      const newEditorW=startEditorW + dx;
+      const mainW=mainEl.getBoundingClientRect().width;
+      const minW=220;
+      if(newEditorW<minW || newEditorW>mainW-minW-10) return;
+      const newConsoleW=mainW - newEditorW - 10;
+      editorPane.style.flex='0 0 '+newEditorW+'px';
+      consolePane.style.flex='0 0 '+newConsoleW+'px';
+      localStorage.setItem(W_KEY, newConsoleW);
+    }
+  }
+  function onMouseUp(){
+    dragging=false;
+    splitter.classList.remove('dragging');
+    document.body.style.userSelect='';
+    document.body.style.cursor='';
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+  }
+  if(splitter){
+    splitter.addEventListener('mousedown', onMouseDown);
+    // toque mobile
+    splitter.addEventListener('touchstart', (e)=>{
+      const t=e.touches[0];
+      onMouseDown({preventDefault:()=>e.preventDefault(), clientX:t.clientX, clientY:t.clientY});
+    }, {passive:false});
+    window.addEventListener('touchmove', (e)=>{
+      if(!dragging) return;
+      const t=e.touches[0];
+      onMouseMove({clientX:t.clientX, clientY:t.clientY});
+    }, {passive:false});
+    window.addEventListener('touchend', onMouseUp);
+  }
+  // duplo clique no splitter reseta tamanho
+  if(splitter){
+    splitter.addEventListener('dblclick', ()=>{
+      localStorage.removeItem(W_KEY);
+      localStorage.removeItem(H_KEY);
+      editorPane.style.flex='';
+      consolePane.style.flex='';
+    });
+  }
 })();
 
 // --- Linhas ---
