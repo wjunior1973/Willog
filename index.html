@@ -180,12 +180,28 @@
     cursor: col-resize;
     background: var(--border);
     transition: background .15s;
+    position: relative;
+    z-index: 5;
   }
   .splitter:hover, body.dragging .splitter { background: var(--accent); }
   body.dragging { user-select: none; cursor: col-resize; }
-  main.console-docked .splitter { width: 100%; height: 6px; cursor: row-resize; flex: 0 0 auto; }
-  main.console-docked .console-panel { flex: 0 0 32%; min-width: 0; min-height: 140px; border-left: none; border-top: 1px solid var(--border); width: 100%; }
+  main.console-docked .splitter { width: 100%; height: 8px; cursor: row-resize; flex: 0 0 8px; background: var(--border); }
+  main.console-docked .splitter::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 4px;
+    background: var(--fg2);
+    border-radius: 2px;
+    opacity: 0.6;
+  }
+  main.console-docked .splitter:hover::after { background: #fff; opacity: 1; }
+  main.console-docked .console-panel { flex: 0 0 32%; min-width: 0; min-height: 120px; max-height: 80%; border-left: none; border-top: 1px solid var(--border); width: 100%; overflow: hidden; }
   body.dragging.console-docked { cursor: row-resize; }
+  body.dragging.console-docked .splitter { background: var(--accent); }
 
   .editor-wrap { flex: 1; display: flex; min-height: 0; min-width: 0; }
   .line-numbers {
@@ -6175,8 +6191,8 @@ function isParaCada(text) { return /^para\b/.test(text); }
 function isRepita(text) { return /^repita\b/.test(text); }
 function isEnquanto(text) { return /^enquanto\b/.test(text); }
 function isSelecionarOpcao(text) { return /^selecionar\s+op[cç](?:ã|a)o\s*:\s*$/i.test(text); }
-function isEmJanela(text) { return false; }
-function isEmJanelaCentered(text) { return false; }
+function isEmJanela(text) { return /^em\s*janela\s*(?:\(\s*centralizar\s*\))?\s*:\s*$/i.test(text); }
+function isEmJanelaCentered(text) { return /^em\s*janela\s*\(\s*centralizar\s*\)\s*:\s*$/i.test(text); }
 function isEscolha(text){ return /^escolha\b/i.test(text); }
 function isCaso(text){ return /^caso\b/i.test(text); }
 function isPadrao(text){ return /^(padrao|padrão)\s*:/i.test(text); }
@@ -6311,6 +6327,11 @@ function parseBlock(stmts, index, minIndent, stopAtSenao) {
       var rE = parseEscolha(stmts, index);
       nodes.push(rE.node);
       index = rE.index;
+    } else if (isEmJanela(s.text)) {
+      var r7 = parseEmJanela(stmts, index);
+      // emJanela eliminado: executa corpo direto no console (transparente)
+      for (var _ew=0; _ew<r7.node.body.length; _ew++) nodes.push(r7.node.body[_ew]);
+      index = r7.index;
     } else if (isRotulo(s.text)) {
       nodes.push({ type: 'rotulo', name: extractRotulo(s.text), lineNo: s.lineNo });
       index++;
@@ -6447,6 +6468,12 @@ function parseSelecionarOpcao(stmts, index) {
     throw err2;
   }
   return { node: { type: 'select', options: options, lineNo: s.lineNo }, index: idx };
+}
+
+function parseEmJanela(stmts, index) {
+  var s = stmts[index];
+  var r = parseBlock(stmts, index + 1, s.indent, false);
+  return { node: { type: 'window', body: r.nodes, lineNo: s.lineNo, centered: isEmJanelaCentered(s.text) }, index: r.index };
 }
 
 function isDefinirFuncao(text) { return /^definir\s+fun[çc](?:ão|ao)\b/.test(text); }
@@ -6762,7 +6789,6 @@ var CURRENT_ENV = null;
 function callUserFunc(fn, args) {
   var childEnv = Object.create(fn.env);
   for (var i = 0; i < fn.params.length; i++) childEnv[fn.params[i]] = args[i];
-  WP_NO_INPUT_DEFER++;
   try {
     var _gIdx = -1;
     if (WP_GOTO_PATH && WP_GOTO_DEPTH < WP_GOTO_PATH.length) {
@@ -6780,7 +6806,6 @@ function callUserFunc(fn, args) {
     if (e && e.wpContinue) throw new Error("'continue' usado fora de um laço");
     throw e;
   } finally {
-    WP_NO_INPUT_DEFER--;
   }
   return undefined;
 }
@@ -6933,27 +6958,8 @@ function execNodes(nodes, env, out) {
       out.push({ kind: 'select', options: n.options, lineNo: n.lineNo });
     } else if (n.type === 'window') {
       var gfWin = gotoFrameFor(n);
-      var winOut = [];
-      try {
-        if (gfWin >= 0) execNodes(n.body.slice(WP_GOTO_PATH[gfWin].idx), env, winOut);
-        else execNodes(n.body, env, winOut);
-      } catch (ew) {
-        if (ew && ew.wpGoto && winOut.length > 0) {
-          WP_PENDING_WINOUT.push({ kind: 'window', inner: winOut, env: env, lineNo: n.lineNo, centered: !!n.centered });
-        } else if (ew && ew.wpInput) {
-          var hasWin = false;
-          var ow;
-          for (ow = 0; ow < out.length; ow++) { if (out[ow].kind === 'window') { hasWin = true; break; } }
-          if (!hasWin) {
-            for (ow = 0; ow < WP_PENDING_WINOUT.length; ow++) { if (WP_PENDING_WINOUT[ow].kind === 'window') { hasWin = true; break; } }
-          }
-          if (winOut.length > 0 || !hasWin) {
-            WP_PENDING_WINOUT.push({ kind: 'window', inner: winOut, env: env, lineNo: n.lineNo, centered: !!n.centered });
-          }
-        }
-        throw ew;
-      }
-      out.push({ kind: 'window', inner: winOut, env: env, lineNo: n.lineNo, centered: !!n.centered });
+      if (gfWin >= 0) execNodes(n.body.slice(WP_GOTO_PATH[gfWin].idx), env, out);
+      else execNodes(n.body, env, out);
     } else if (n.type === 'escolha') {
       var gfEs = gotoFrameFor(n);
       if (gfEs >= 0) {
@@ -7106,9 +7112,7 @@ function findResumePath(nodes, lineNo) {
 var WP_GOTO_PATH = null;
 var WP_GOTO_DEPTH = 0;
 var WP_PENDING_WINOUT = [];
-var WP_INPUT_CTX = false;
 var WP_INPUT_QUEUE = [];
-var WP_NO_INPUT_DEFER = 0;
 function gotoFrameFor(node) {
   if (!WP_GOTO_PATH || WP_GOTO_DEPTH >= WP_GOTO_PATH.length) return -1;
   var frame = WP_GOTO_PATH[WP_GOTO_DEPTH];
@@ -7601,12 +7605,10 @@ async function run() {
   janelaFechada = false;
 
   WP_INPUT_QUEUE.length = 0;
-  WP_INPUT_CTX = true;
   var records;
   try {
     records = executeProgram(editor.value);
   } finally {
-    WP_INPUT_CTX = false;
   }
   var showAssign = chkAssign.checked;
   var errors = 0;
@@ -7871,11 +7873,9 @@ async function run() {
       }
       WP_INPUT_QUEUE.push(respIn);
       var nrIn;
-      WP_INPUT_CTX = true;
       try {
         nrIn = executeProgram(editor.value, { resumePath: rec.resumePath, resumeEnv: rec.env });
       } finally {
-        WP_INPUT_CTX = false;
       }
       records.splice.apply(records, [i + 1, 0].concat(nrIn));
       continue;
@@ -10275,7 +10275,6 @@ async function selExecuteOption(opt) {
     var out = [];
     selAddLine(opt.key + ' "' + opt.title + '":', 'sel-head');
     var optEnv = Object.create(GLOBAL_ENV || {});
-    WP_NO_INPUT_DEFER++;
     try {
       execNodes(opt.body, optEnv, out);
     } catch (egoto) {
@@ -10285,7 +10284,6 @@ async function selExecuteOption(opt) {
       else if (egoto && egoto.wpGoto) out.push({ kind: 'error', text: "'vá para' não funciona dentro de \"selecionar opção\"", lineNo: opt.lineNo });
       else out.push({ kind: 'error', text: egoto.message || String(egoto), lineNo: opt.lineNo });
     } finally {
-      WP_NO_INPUT_DEFER--;
     }
     var timerCount = 0;
     var playPos = { i: 0 };
@@ -10326,7 +10324,6 @@ async function selExecuteOption(opt) {
       if (rec.kind === 'waitKey') { selAddLine(rec.text, 'sel-info'); await waitKey(rec.key); continue; }
       if (rec.kind === 'rerun') {
         var rr2 = [];
-        WP_NO_INPUT_DEFER++;
         try {
         execStatement(rec.line, rec.lineNo, optEnv, rr2, true);
       } catch (e) {
@@ -10336,7 +10333,6 @@ async function selExecuteOption(opt) {
         else if (e && e.wpGoto) rr2.push({ kind: 'error', text: "'vá para' não funciona dentro de \"selecionar opção\"", lineNo: rec.lineNo });
         else throw e;
       } finally {
-        WP_NO_INPUT_DEFER--;
       }
         out.splice.apply(out, [i + 1, 0].concat(rr2));
         continue;
@@ -10893,10 +10889,12 @@ document.addEventListener('mousemove', function (e) {
   if (mainEl.classList.contains('console-docked')) {
     var height = rect.bottom - e.clientY;
     var minH = 120;
-    var maxH = rect.height - 200;
+    var maxH = rect.height - 140;
     if (height < minH) height = minH;
     if (height > maxH) height = maxH;
     consolePanel.style.flex = '0 0 ' + height + 'px';
+    consolePanel.style.height = height + 'px';
+    e.preventDefault();
   } else {
     var width = rect.right - e.clientX;
     var minW = 180;
@@ -10904,6 +10902,7 @@ document.addEventListener('mousemove', function (e) {
     if (width < minW) width = minW;
     if (width > maxW) width = maxW;
     consolePanel.style.flex = '0 0 ' + width + 'px';
+    e.preventDefault();
   }
 });
 document.addEventListener('mouseup', function () {
