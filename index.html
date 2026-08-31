@@ -595,8 +595,6 @@
   body.light .sel-info { color: #777; }
   .sel-hint { font-size: 11px; color: #888; }
 
-  /* ===== Janela de saída (emJanela:) ===== */
-  #emJanelaOverlay .modal { width: 640px; max-width: 94vw; height: 58vh; min-height: 220px; }
   /* ===== Modal maximized comum (consolidado com ID para sobrescrever largura base) ===== */
   #modalOverlay .modal.modal-maximized,
   #quickRefOverlay .modal.qr-maximized,
@@ -604,20 +602,9 @@
   #paletteOverlay .modal.palette-maximized,
   #interpretadorOverlay .modal.interp-maximized,
   #graficoOverlay .modal.grafico-maximized,
-  #janelaOverlay .modal.janela-maximized,
-  #emJanelaOverlay .modal.emjanela-maximized {
+  #janelaOverlay .modal.janela-maximized {
     width: 100vw; max-width: none; max-height: none; height: 100vh; border-radius: 0; border: none;
   }
-  .emjanela-body { flex: 1; display: flex; flex-direction: column; min-height: 0; padding: 0; overflow: hidden; }
-  .emjanela-output { flex: 1; min-height: 0; font-size: var(--w-font); line-height: var(--w-lh); }
-  #emJanelaOutput.centered {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  #emJanelaOutput.centered .log { width: 100%; }
 
   /* ===== Janela (janela) – min ===== */
   #janelaMinimize:hover { color: #ffb74d; }
@@ -667,7 +654,6 @@
   body.light .interp-output .log.cmd { color: #795e26; }
   body.light .interp-input-wrap { background: #f3f3f3; border-top-color: #d8d8d8; }
   body.light .interp-prompt { color: #00639e; }
-
 
   /* ===== Janela do Modo gráfico (console em canvas) ===== */
   #graficoOverlay .modal { width: 900px; }
@@ -823,7 +809,6 @@
     border-radius: 5px;
     padding: 1px 7px;
   }
-
 
   /* ===== Sobre o Willog ===== */
   #sobreOverlay .modal { width: 460px; }
@@ -1266,29 +1251,6 @@ body.light .editor-tooltip .tt-example { color: #008000; background: rgba(0,0,0,
         </div>
       </div>
 
-      <div class="manual-item">
-        <span class="mi-name">emJanela:</span>
-        <span class="mi-desc">Executa o bloco indentado a seguir em uma janela ao inv&eacute;s do console. Toda a sa&iacute;da (mostre, vari&aacute;veis, erros) vai para a janela. A janela abre sempre <b>maximizada</b> (tela inteira) e pode ser <b>minimizada</b> (s&oacute; a barra de t&iacute;tulo) ou <b>restaurada</b> com os bot&otilde;es da barra de t&iacute;tulo, permanecendo aberta ap&oacute;s o fim do programa at&eacute; ser fechada.</span>
-        <div class="mi-example">
-          <pre class="manual-pre">emJanela:
-  mostre "Olá do janela!"
-  x = 5
-  mostre x + 1</pre>
-          <span class="mi-row"><span>Executar</span><span class="mi-arrow">&rarr;</span><span class="ex">abre a janela com "Olá do janela!" e "6"; o console principal permanece vazio</span></span>
-        </div>
-      </div>
-
-      <div class="manual-item">
-        <span class="mi-name">emJanela(centralizar):</span>
-        <span class="mi-desc">Funciona como <code>emJanela:</code>, mas exibe todo o texto da janela <b>centralizado</b> (horizontalmente).</span>
-        <div class="mi-example">
-          <pre class="manual-pre">emJanela(centralizar):
-  mostre "Título centralizado"
-  mostre "Linha 2"</pre>
-          <span class="mi-row"><span>Executar</span><span class="mi-arrow">&rarr;</span><span class="ex">abre a janela com o texto centralizado</span></span>
-        </div>
-      </div>
-
       <div class="mi-section"><span class="ms-icon">=</span><h4>Vari&aacute;veis e Intervalos</h4></div>
 
       <div class="manual-item">
@@ -1356,7 +1318,7 @@ mostre "{LOCAL}, {PADRÃO}"</pre>
 
       <div class="manual-item">
         <span class="mi-name">&lt;vari&aacute;vel&gt; = leia "mensagem"</span>
-        <span class="mi-desc">Pausa o programa e pede que o usu&aacute;rio digite um valor (n&uacute;mero ou texto), armazenado na vari&aacute;vel. A mensagem entre aspas &eacute; exibida como pergunta. Dentro de um bloco <code>emJanela</code>, a janela abre primeiro e a pergunta &eacute; feita com ela vis&iacute;vel, junto do conte&uacute;do j&aacute; escrito.</span>
+        <span class="mi-desc">Pausa o programa e pede que o usu&aacute;rio digite um valor (n&uacute;mero ou texto), armazenado na vari&aacute;vel. A mensagem entre aspas &eacute; exibida como pergunta.</span>
         <div class="mi-example">
           <span class="mi-row"><span>nome = leia "Nome: "</span></span>
           <span class="mi-row"><span class="mi-arrow">&rarr;</span><span class="ex">abre uma caixa pedindo o valor</span></span>
@@ -1488,7 +1450,7 @@ mostre mensagem</pre>
 
       <div class="manual-item">
         <span class="mi-name">v&aacute; para &lt;r&oacute;tulo&gt;</span>
-        <span class="mi-desc">Salta imediatamente a execu&ccedil;&atilde;o do programa para o ponto marcado pelo r&oacute;tulo, como o GOTO do BASIC. O r&oacute;tulo &eacute; escrito sozinho numa linha como <code>:nome</code> e n&atilde;o executa nada por si s&oacute;. Pode ficar em qualquer parte do c&oacute;digo e ser alvo de um salto vindo de dentro de blocos <code>se</code>/<code>sen&atilde;o</code>, la&ccedil;os ou blocos <code>emJanela</code>. N&atilde;o &eacute; poss&iacute;vel saltar para dentro de fun&ccedil;&otilde;es ou das op&ccedil;&otilde;es do <code>selecionar op&ccedil;&atilde;o</code>.</span>
+        <span class="mi-desc">Salta imediatamente a execu&ccedil;&atilde;o do programa para o ponto marcado pelo r&oacute;tulo, como o GOTO do BASIC. O r&oacute;tulo &eacute; escrito sozinho numa linha como <code>:nome</code> e n&atilde;o executa nada por si s&oacute;. Pode ficar em qualquer parte do c&oacute;digo e ser alvo de um salto vindo de dentro de blocos <code>se</code>/<code>sen&atilde;o</code> ou la&ccedil;os. N&atilde;o &eacute; poss&iacute;vel saltar para dentro de fun&ccedil;&otilde;es ou das op&ccedil;&otilde;es do <code>selecionar op&ccedil;&atilde;o</code>.</span>
         <div class="mi-example">
           <pre class="manual-pre">:início
 x = leia "Valor: "
@@ -2536,83 +2498,7 @@ mostre lista.m&aacute;ximo</pre>
         </div>
       </div>
 
-      <div class="mi-section"><span class="ms-icon">&#9636;</span><h4>Visualiza&ccedil;&atilde;o</h4></div>
-
-      <div class="fn-grid">
-        <div class="manual-item">
-          <span class="mi-name">janela(x, y, cor de fundo, "título")</span>
-          <span class="mi-desc">Abre uma janela gr&aacute;fica com x pixels de largura (horizontal) por y pixels de altura (vertical). A cor de fundo pode ser preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom ou rosa (padr&atilde;o preto). O t&iacute;tulo, se omitido, &eacute; "Janela".</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>janela(500, 300, azul, "Meu Desenho")</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela de 500 x 300 pixels de fundo azul com o t&iacute;tulo "Meu Desenho"</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">ponto(x, y, cor)</span>
-          <span class="mi-desc">Desenha um ponto nas coordenadas (x, y) na janela aberta com o comando <b>janela</b>. A cor pode ser preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom ou rosa (padr&atilde;o branco). Execute <b>janela</b> antes de <b>ponto</b>.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>janela(500, 300); ponto(250, 150, vermelho)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e desenha um ponto vermelho no centro</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">linha(x1, y1, x2, y2, cor)</span>
-          <span class="mi-desc">Tra&ccedil;a uma linha do ponto (x1, y1) ao ponto (x2, y2) na janela aberta com o comando <b>janela</b>. A cor pode ser preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom ou rosa (padr&atilde;o branco). Execute <b>janela</b> antes de <b>linha</b>.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>janela(500, 300); linha(50, 50, 450, 250, azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e tra&ccedil;a uma linha azul entre os dois pontos</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">c&iacute;rculo(x, y, raio, cor da borda, cor de preenchimento)</span>
-          <span class="mi-desc">Desenha um c&iacute;rculo na janela aberta com o comando <b>janela</b>, sendo (x, y) as coordenadas do centro e <b>raio</b> a medida do raio em pixels. A cor da borda &eacute; a cor da linha da circunfer&ecirc;ncia (padr&atilde;o branco) e a cor de preenchimento pinta o interior (se omitida, o c&iacute;rculo n&atilde;o tem preenchimento). Execute <b>janela</b> antes de <b>c&iacute;rculo</b>.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>janela(500, 300); c&iacute;rculo(250, 150, 60, azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e desenha um c&iacute;rculo azul de raio 60 no centro, sem preenchimento</span></span>
-            <span class="mi-row"><span>janela(500, 300); c&iacute;rculo(250, 150, 60, azul, amarelo)</span><span class="mi-arrow">&rarr;</span><span class="ex">o mesmo c&iacute;rculo, agora com interior amarelo</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">ret&acirc;ngulo(x, y, largura, altura, cor da borda, cor de preenchimento)</span>
-          <span class="mi-desc">Desenha um ret&acirc;ngulo na janela aberta com o comando <b>janela</b>, sendo (x, y) as coordenadas do canto superior esquerdo, <b>largura</b> a medida horizontal e <b>altura</b> a medida vertical, em pixels. A cor da borda &eacute; a cor do contorno (padr&atilde;o branco) e a cor de preenchimento pinta o interior (se omitida, o ret&acirc;ngulo n&atilde;o tem preenchimento). Execute <b>janela</b> antes de <b>ret&acirc;ngulo</b>.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>janela(500, 300); ret&acirc;ngulo(50, 50, 200, 100, azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e desenha um ret&acirc;ngulo azul de 200 x 100 pixels a partir do ponto (50, 50), sem preenchimento</span></span>
-            <span class="mi-row"><span>janela(500, 300); ret&acirc;ngulo(50, 50, 200, 100, azul, amarelo)</span><span class="mi-arrow">&rarr;</span><span class="ex">o mesmo ret&acirc;ngulo, agora com interior amarelo</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">texto(x, y, "texto", cor, tamanho da fonte)</span>
-          <span class="mi-desc">Escreve o texto nas coordenadas (x, y) na janela aberta com o comando <b>janela</b>. A cor pode ser preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom ou rosa (padr&atilde;o branco). O tamanho da fonte &eacute; dado em pixels (padr&atilde;o 14). Execute <b>janela</b> antes de <b>texto</b>.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>janela(500, 300); texto(50, 50, "Ol&aacute;, mundo!", amarelo)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e escreve "Ol&aacute;, mundo!" em amarelo a partir do ponto (50, 50)</span></span>
-            <span class="mi-row"><span>janela(500, 300); texto(50, 50, "T&iacute;tulo", branco, 32)</span><span class="mi-arrow">&rarr;</span><span class="ex">escreve o texto com fonte de 32 pixels</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">pegar(x0, y0, x1, y1)</span>
-          <span class="mi-desc">Copia a parte do desenho que est&aacute; dentro do ret&acirc;ngulo (ou quadrado) com cantos em (x0, y0) e (x1, y1) na janela aberta com o comando <b>janela</b>. S&atilde;o copiados os pontos, linhas, c&iacute;rculos e textos cujo ponto de refer&ecirc;ncia (posi&ccedil;&atilde;o do ponto, centro da linha, centro do c&iacute;rculo ou posi&ccedil;&atilde;o do texto) esteja dentro da regi&atilde;o. Execute <b>janela</b> antes de <b>pegar</b>.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>janela(500, 300); linha(50, 50, 100, 100, vermelho); pegar(30, 30, 200, 200)</span><span class="mi-arrow">&rarr;</span><span class="ex">abre uma janela e copia a linha que est&aacute; dentro do ret&acirc;ngulo (30, 30)-(200, 200)</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">colocar(x0, y0, x1, y1)</span>
-          <span class="mi-desc">Coloca a parte copiada com <b>pegar</b> no ret&acirc;ngulo (ou quadrado) com cantos em (x0, y0) e (x1, y1). Se o novo ret&acirc;ngulo tiver tamanho diferente, a parte copiada &eacute; ampliada ou reduzida para se ajustar. Execute <b>janela</b> e <b>pegar</b> antes de <b>colocar</b>.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>janela(500, 300); linha(50, 50, 100, 100, vermelho); pegar(30, 30, 200, 200); colocar(250, 50, 420, 220)</span><span class="mi-arrow">&rarr;</span><span class="ex">coloca uma c&oacute;pia da linha dentro do ret&acirc;ngulo (250, 50)-(420, 220)</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">limparJanela</span>
-          <span class="mi-desc">Limpa a janela criada por <b>janela</b>, apagando pontos, linhas, círculos, retângulos e textos.</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>janela(500,300); ponto(10,10,vermelho); limparJanela</span><span class="mi-arrow">&rarr;</span><span class="ex">janela limpa</span></span>
-          </div>
-        </div>
-        <div class="manual-item">
-          <span class="mi-name">corFundo(cor)</span>
-          <span class="mi-desc">Altera a cor de fundo da janela aberta. Usa as mesmas cores de <code>círculo</code>, <code>retângulo</code> etc. (preto, branco, amarelo, vermelho, azul, verde, roxo, laranja, cinza, marrom, rosa).</span>
-          <div class="mi-example">
-            <span class="mi-row"><span>janela(500,500); corFundo(azul)</span><span class="mi-arrow">&rarr;</span><span class="ex">fundo azul</span></span>
-            <span class="mi-row"><span>janela(500,500); corFundo(vermelho)</span><span class="mi-arrow">&rarr;</span><span class="ex">fundo vermelho</span></span>
-          </div>
-        </div>
+      </div>
       </div>
 
       <div class="mi-section"><span class="ms-icon">&#9835;</span><h4>Som</h4></div>
@@ -2795,8 +2681,6 @@ mostre lista.m&aacute;ximo</pre>
   </div>
 </div>
 
-
-
 <div class="modal-overlay" id="graficoOverlay">
   <div class="modal">
     <div class="modal-head">
@@ -2910,10 +2794,6 @@ mostre lista.m&aacute;ximo</pre>
   <div class="palette-grid" id="palette-light" style="display:none;"></div>
 </div>
 </div>
-
-
-
-
 
 <script>
 // ============================================================
@@ -3612,7 +3492,6 @@ var lightPalettes = {
   }
 };
 
-
 </script>
 <script>
 "use strict";
@@ -3847,8 +3726,6 @@ function serializeValueForSave(v) {
   if (v === undefined || v === null) return '""';
   return '"' + String(v).replace(/"/g, '\\"') + '"';
 }
-
-
 
 function deserializeSaveValue(text) {
   var t = text.trim();
@@ -4917,169 +4794,7 @@ function callFunction(name, args, rawName) {
     }
     return peCh;
   }
-  if (name === 'janela') {
-    if (args.length < 2 || args.length > 4) {
-      throw new Error('janela espera entre 2 e 4 argumentos: janela(x, y, cor de fundo, "título")');
-    }
-    var jx = numVal(args[0]);
-    var jy = numVal(args[1]);
-    if (typeof jx !== 'number' || !isFinite(jx) || typeof jy !== 'number' || !isFinite(jy)) {
-      throw new Error('janela espera números para a largura e a altura');
-    }
-    var jw = Math.round(jx);
-    var jh = Math.round(jy);
-    if (jw <= 0 || jh <= 0) throw new Error('janela: as dimensões devem ser positivas');
-    if (jw > 20000 || jh > 20000) throw new Error('janela: dimensões muito grandes (máx. 20000 px)');
-    var bg = janelaCor(args[2], '#000000');
-    var titulo = args.length >= 4 ? args[3] : 'Janela';
-    if (typeof titulo !== 'string') throw new Error('janela: o título deve ser um texto');
-    openJanela(jw, jh, bg, titulo);
-    return 'janela aberta';
-  }
-  if (name === 'ponto') {
-    if (args.length < 2 || args.length > 3) {
-      throw new Error('ponto espera 2 ou 3 argumentos: ponto(x, y, cor)');
-    }
-    var px = numVal(args[0]);
-    var py = numVal(args[1]);
-    if (typeof px !== 'number' || !isFinite(px) || typeof py !== 'number' || !isFinite(py)) {
-      throw new Error('ponto espera números para as coordenadas x e y');
-    }
-    if (!lastJanela) {
-      throw new Error('ponto: execute janela(largura, altura) antes de usar ponto');
-    }
-    if (px < 0 || px > lastJanela.w || py < 0 || py > lastJanela.h) {
-      throw new Error('ponto: coordenada fora da janela (largura ' + lastJanela.w + ', altura ' + lastJanela.h + ')');
-    }
-    var pc = janelaCor(args[2], '#ffffff');
-    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
-      CURRENT_OUT.push({kind:'ponto', x:px, y:py, c:pc, lineNo: null});
-    } else {
-      lastJanela.points.push({ x: px, y: py, c: pc });
-    janelaDirty = true;
-    }
-    return 'ponto desenhado';
-  }
-  if (name === 'linha') {
-    if (args.length < 4 || args.length > 5) {
-      throw new Error('linha espera 4 ou 5 argumentos: linha(x1, y1, x2, y2, cor)');
-    }
-    var lx1 = numVal(args[0]);
-    var ly1 = numVal(args[1]);
-    var lx2 = numVal(args[2]);
-    var ly2 = numVal(args[3]);
-    if (typeof lx1 !== 'number' || !isFinite(lx1) || typeof ly1 !== 'number' || !isFinite(ly1) ||
-        typeof lx2 !== 'number' || !isFinite(lx2) || typeof ly2 !== 'number' || !isFinite(ly2)) {
-      throw new Error('linha espera números para as coordenadas x1, y1, x2 e y2');
-    }
-    if (!lastJanela) {
-      throw new Error('linha: execute janela(largura, altura) antes de usar linha');
-    }
-    if (lx1 < 0 || lx1 > lastJanela.w || ly1 < 0 || ly1 > lastJanela.h ||
-        lx2 < 0 || lx2 > lastJanela.w || ly2 < 0 || ly2 > lastJanela.h) {
-      throw new Error('linha: coordenada fora da janela (largura ' + lastJanela.w + ', altura ' + lastJanela.h + ')');
-    }
-    var lc = janelaCor(args[4], '#ffffff');
-    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
-      CURRENT_OUT.push({kind:'linha', x1:lx1, y1:ly1, x2:lx2, y2:ly2, c:lc, lineNo: null});
-    } else {
-      lastJanela.lines.push({ x1: lx1, y1: ly1, x2: lx2, y2: ly2, c: lc });
-    janelaDirty = true;
-    }
-    return 'linha desenhada';
-  }
-  if (name === 'círculo') {
-    if (args.length < 3 || args.length > 5) {
-      throw new Error('círculo espera 3, 4 ou 5 argumentos: círculo(x, y, raio, cor da borda, cor de preenchimento)');
-    }
-    var cx = numVal(args[0]);
-    var cy = numVal(args[1]);
-    var cr = numVal(args[2]);
-    if (typeof cx !== 'number' || !isFinite(cx) || typeof cy !== 'number' || !isFinite(cy) ||
-        typeof cr !== 'number' || !isFinite(cr)) {
-      throw new Error('círculo espera números para as coordenadas x, y e o raio');
-    }
-    if (cr < 0) {
-      throw new Error('círculo: o raio deve ser um número positivo');
-    }
-    if (!lastJanela) {
-      throw new Error('círculo: execute janela(largura, altura) antes de usar círculo');
-    }
-    if (cx - cr < 0 || cx + cr > lastJanela.w || cy - cr < 0 || cy + cr > lastJanela.h) {
-      throw new Error('círculo: círculo fora da janela (largura ' + lastJanela.w + ', altura ' + lastJanela.h + ')');
-    }
-    var cc = janelaCor(args[3], '#ffffff');
-    var cf = janelaCor(args[4], null);
-    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
-      CURRENT_OUT.push({kind:'circulo', x:cx, y:cy, r:cr, c:cc, fill:cf, lineNo: null});
-    } else {
-      lastJanela.circles.push({ x: cx, y: cy, r: cr, c: cc, fill: cf });
-    janelaDirty = true;
-    }
-    return 'círculo desenhado';
-  }
-  if (name === 'retângulo') {
-    if (args.length < 4 || args.length > 6) {
-      throw new Error('retângulo espera 4, 5 ou 6 argumentos: retângulo(x, y, largura, altura, cor da borda, cor de preenchimento)');
-    }
-    var rx = numVal(args[0]);
-    var ry = numVal(args[1]);
-    var rw = numVal(args[2]);
-    var rh = numVal(args[3]);
-    if (typeof rx !== 'number' || !isFinite(rx) || typeof ry !== 'number' || !isFinite(ry) ||
-        typeof rw !== 'number' || !isFinite(rw) || typeof rh !== 'number' || !isFinite(rh)) {
-      throw new Error('retângulo espera números para as coordenadas x, y, a largura e a altura');
-    }
-    if (rw <= 0 || rh <= 0) {
-      throw new Error('retângulo: a largura e a altura devem ser números positivos');
-    }
-    if (!lastJanela) {
-      throw new Error('retângulo: execute janela(largura, altura) antes de usar retângulo');
-    }
-    if (rx < 0 || ry < 0 || rx + rw > lastJanela.w || ry + rh > lastJanela.h) {
-      throw new Error('retângulo: retângulo fora da janela (largura ' + lastJanela.w + ', altura ' + lastJanela.h + ')');
-    }
-    var rc = janelaCor(args[4], '#ffffff');
-    var rf = janelaCor(args[5], null);
-    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
-      CURRENT_OUT.push({kind:'retangulo', x:rx, y:ry, w:rw, h:rh, c:rc, fill:rf, lineNo: null});
-    } else {
-      lastJanela.rects.push({ x: rx, y: ry, w: rw, h: rh, c: rc, fill: rf });
-    janelaDirty = true;
-    }
-    return 'retângulo desenhado';
-  }
-  if (name === 'texto') {
-    if (args.length < 3 || args.length > 5) {
-      throw new Error('texto espera de 3 a 5 argumentos: texto(x, y, "texto", cor, tamanho da fonte)');
-    }
-    var tx = numVal(args[0]);
-    var ty = numVal(args[1]);
-    if (typeof tx !== 'number' || !isFinite(tx) || typeof ty !== 'number' || !isFinite(ty)) {
-      throw new Error('texto espera números para as coordenadas x e y');
-    }
-    if (typeof args[2] !== 'string') {
-      throw new Error('texto: o conteúdo deve ser um texto entre aspas');
-    }
-    if (!lastJanela) {
-      throw new Error('texto: execute janela(largura, altura) antes de usar texto');
-    }
-    if (tx < 0 || tx > lastJanela.w || ty < 0 || ty > lastJanela.h) {
-      throw new Error('texto: coordenada fora da janela (largura ' + lastJanela.w + ', altura ' + lastJanela.h + ')');
-    }
-    var tc = janelaCor(args[3], '#ffffff');
-    var tfs = args.length >= 5 ? numVal(args[4]) : 14;
-    if (typeof tfs !== 'number' || !isFinite(tfs) || tfs <= 0) {
-      throw new Error('texto: o tamanho da fonte deve ser um número positivo (em pixels)');
-    }
-    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
-      CURRENT_OUT.push({kind:'texto', x:tx, y:ty, t:args[2], c:tc, s:tfs, lineNo: null});
-    } else {
-      lastJanela.texts.push({ x: tx, y: ty, t: args[2], c: tc, s: tfs });
-    janelaDirty = true;
-    }
-    return 'texto desenhado';
-  }
+
   if (name === 'pegar') {
     if (args.length !== 4) {
       throw new Error('pegar espera 4 argumentos: pegar(x0, y0, x1, y1)');
@@ -5093,7 +4808,7 @@ function callFunction(name, args, rawName) {
       throw new Error('pegar espera números para as coordenadas x0, y0, x1 e y1');
     }
     if (!lastJanela) {
-      throw new Error('pegar: execute janela(largura, altura) antes de usar pegar');
+      throw new Error('pegar: comando janela() removido');
     }
     var pgMinX = Math.min(pgX0, pgX1);
     var pgMaxX = Math.max(pgX0, pgX1);
@@ -5162,7 +4877,7 @@ function callFunction(name, args, rawName) {
       throw new Error('colocar espera números para as coordenadas x0, y0, x1 e y1');
     }
     if (!lastJanela) {
-      throw new Error('colocar: execute janela(largura, altura) antes de usar colocar');
+      throw new Error('colocar: comando janela() removido');
     }
     if (!lastJanelaCopy && !(typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT)) {
       throw new Error('colocar: execute pegar(x0, y0, x1, y1) antes de usar colocar');
@@ -5228,7 +4943,7 @@ function callFunction(name, args, rawName) {
   }
   if (name === 'limparJanela') {
     if (args.length !== 0) throw new Error('limparJanela não espera argumentos: use limparJanela ou limparJanela()');
-    if (!lastJanela) throw new Error('limparJanela: execute janela(largura, altura) antes de usar limparJanela');
+    if (!lastJanela) throw new Error('limparJanela: comando janela() removido');
     if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
       CURRENT_OUT.push({kind:'clearJanela', lineNo: null});
     } else {
@@ -5242,19 +4957,7 @@ function callFunction(name, args, rawName) {
     }
     return 'janela limpa';
   }
-  if (name === 'corFundo') {
-    if (args.length !== 1) throw new Error('corFundo espera 1 argumento: corFundo(cor)');
-    if (!lastJanela) throw new Error('corFundo: execute janela(largura, altura) antes de usar corFundo');
-    var bg = janelaCor(args[0], null);
-    if (!bg) throw new Error('corFundo: cor inválida');
-    if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
-      CURRENT_OUT.push({kind:'corFundo', bg:bg, lineNo: null});
-    } else {
-      lastJanela.bg = bg;
-      janelaDirty = true;
-    }
-    return 'cor de fundo alterada';
-  }
+  
   if (name === 'paraNúmero') {
     if (args.length !== 1) throw new Error('paraNúmero espera 1 argumento');
     var ns = String(numVal(args[0])).trim();
@@ -5809,7 +5512,7 @@ function parse(input, env) {
           }
         }
         expectOp(')');
-        if (t.name === 'selecionar' || t.name === 'comprimento' || t.name === 'captureTecla' || t.name === 'absoluto' || t.name === 'abs' || t.name === 'fatorial'  || t.name === 'variáveis' || t.name === 'variaveis' || t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi'    || t.name === 'inteiro' || t.name === 'decimal' || t.name === 'fração' || t.name === 'fracao'     || t.name === 'paraLista'  || t.name === 'paraTexto' || t.name === 'paraNúmero'       || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'dado' || t.name === 'moeda'   || t.name === 'janela' || t.name === 'ponto' || t.name === 'linha' || t.name === 'círculo' || t.name === 'retângulo' || t.name === 'texto' || t.name === 'intervalo' || t.name === 'log' || t.name === 'logn' || t.name === 'ln' || t.name === 'arredondar' || t.name === 'arred' || t.name === 'ano' || t.name === 'mês' || t.name === 'dia' || t.name === 'hora' || t.name === 'data' || t.name === 'agora' || t.name === 'tempo' || t.name === 'adicionarDias' || t.name === 'diaSemana'     || t.name === 'bipe' || t.name === 'som' || t.name === 'toca' || t.name === 'mensagem' || t.name === 'pegar' || t.name === 'colocar' || t.name === 'limparJanela' || t.name === 'corFundo' || t.name === 'aparar' || t.name === 'extrair' || t.name === 'filtrar' || t.name === 'mapear' || t.name === 'tipo' || t.name === 'primo' || t.name === 'par' || t.name === 'ímpar' || t.name === 'impar' || t.name === 'maiúsculo' || t.name === 'minúsculo' || t.name === 'substitua' || t.name === 'divida' || t.name === 'junte' || t.name === 'contém' || t.name === 'posição' || t.name === 'insira' || t.name === 'remova' || t.name === 'posiçãoEm' || t.name === 'mmc' || t.name === 'mdc' || t.name === 'divisores' || t.name === 'fatores' || t.name === 'média' || t.name === 'media' || t.name === 'mediana' || t.name === 'moda' || t.name === 'variância' || t.name === 'variancia' || t.name === 'desvioPadrao' || t.name === 'desvioPadrão' || t.name === 'produto'  ) {
+        if (t.name === 'selecionar' || t.name === 'comprimento' || t.name === 'captureTecla' || t.name === 'absoluto' || t.name === 'abs' || t.name === 'fatorial'  || t.name === 'variáveis' || t.name === 'variaveis' || t.name === 'raizq' || t.name === 'raizc' || t.name === 'pi'    || t.name === 'inteiro' || t.name === 'decimal' || t.name === 'fração' || t.name === 'fracao'     || t.name === 'paraLista'  || t.name === 'paraTexto' || t.name === 'paraNúmero'       || t.name === 'cos' || t.name === 'sen' || t.name === 'tan' || t.name === 'arcocos' || t.name === 'arcosen' || t.name === 'arcotan' || t.name === 'aleatório' || t.name === 'dado' || t.name === 'moeda'    || t.name === 'intervalo' || t.name === 'log' || t.name === 'logn' || t.name === 'ln' || t.name === 'arredondar' || t.name === 'arred' || t.name === 'ano' || t.name === 'mês' || t.name === 'dia' || t.name === 'hora' || t.name === 'data' || t.name === 'agora' || t.name === 'tempo' || t.name === 'adicionarDias' || t.name === 'diaSemana'     || t.name === 'bipe' || t.name === 'som' || t.name === 'toca' || t.name === 'mensagem' || t.name === 'pegar' || t.name === 'colocar' || t.name === 'limparJanela' || t.name === 'aparar' || t.name === 'extrair' || t.name === 'filtrar' || t.name === 'mapear' || t.name === 'tipo' || t.name === 'primo' || t.name === 'par' || t.name === 'ímpar' || t.name === 'impar' || t.name === 'maiúsculo' || t.name === 'minúsculo' || t.name === 'substitua' || t.name === 'divida' || t.name === 'junte' || t.name === 'contém' || t.name === 'posição' || t.name === 'insira' || t.name === 'remova' || t.name === 'posiçãoEm' || t.name === 'mmc' || t.name === 'mdc' || t.name === 'divisores' || t.name === 'fatores' || t.name === 'média' || t.name === 'media' || t.name === 'mediana' || t.name === 'moda' || t.name === 'variância' || t.name === 'variancia' || t.name === 'desvioPadrao' || t.name === 'desvioPadrão' || t.name === 'produto'  ) {
           return callFunction(t.name, args);
         }
         var _k0 = findVarKey(t.name);
@@ -6472,8 +6175,8 @@ function isParaCada(text) { return /^para\b/.test(text); }
 function isRepita(text) { return /^repita\b/.test(text); }
 function isEnquanto(text) { return /^enquanto\b/.test(text); }
 function isSelecionarOpcao(text) { return /^selecionar\s+op[cç](?:ã|a)o\s*:\s*$/i.test(text); }
-function isEmJanela(text) { return /^em\s*janela\s*(?:\(\s*centralizar\s*\))?\s*:\s*$/i.test(text); }
-function isEmJanelaCentered(text) { return /^em\s*janela\s*\(\s*centralizar\s*\)\s*:\s*$/i.test(text); }
+function isEmJanela(text) { return false; }
+function isEmJanelaCentered(text) { return false; }
 function isEscolha(text){ return /^escolha\b/i.test(text); }
 function isCaso(text){ return /^caso\b/i.test(text); }
 function isPadrao(text){ return /^(padrao|padrão)\s*:/i.test(text); }
@@ -6608,27 +6311,10 @@ function parseBlock(stmts, index, minIndent, stopAtSenao) {
       var rE = parseEscolha(stmts, index);
       nodes.push(rE.node);
       index = rE.index;
-    } else if (isEmJanela(s.text)) {
-      var r7 = parseEmJanela(stmts, index);
-      nodes.push(r7.node);
-      index = r7.index;
     } else if (isRotulo(s.text)) {
       nodes.push({ type: 'rotulo', name: extractRotulo(s.text), lineNo: s.lineNo });
       index++;
     } else {
-      if (/^em\s*janela\s*\(/i.test(s.text)) {
-        var emArg = s.text.match(/^em\s*janela\s*\(\s*([^)]*)\s*\)/i);
-        var emInner = emArg ? emArg[1].trim() : '';
-        if (!emInner) {
-          throw new Error('Sintaxe inválida: use "emJanela:" ou "emJanela(centralizar):" (com o bloco indentado)');
-        }
-        if (!/^centralizar$/i.test(emInner)) {
-          throw new Error('Sintaxe inválida: o argumento de emJanela deve ser "centralizar", ex.: emJanela(centralizar):');
-        }
-        if (!/:\s*$/.test(s.text)) {
-          throw new Error('Sintaxe inválida: use "emJanela(centralizar):" seguido do bloco indentado');
-        }
-      }
       nodes.push({ type: 'stmt', text: s.text, lineNo: s.lineNo });
       index++;
     }
@@ -6761,12 +6447,6 @@ function parseSelecionarOpcao(stmts, index) {
     throw err2;
   }
   return { node: { type: 'select', options: options, lineNo: s.lineNo }, index: idx };
-}
-
-function parseEmJanela(stmts, index) {
-  var s = stmts[index];
-  var r = parseBlock(stmts, index + 1, s.indent, false);
-  return { node: { type: 'window', body: r.nodes, lineNo: s.lineNo, centered: isEmJanelaCentered(s.text) }, index: r.index };
 }
 
 function isDefinirFuncao(text) { return /^definir\s+fun[çc](?:ão|ao)\b/.test(text); }
@@ -7048,13 +6728,13 @@ out.push({ kind: 'pause', text: '', silent: true, secs: pauseSecs, lineNo: lineN
               env[m[1]] = val;
               out.push({ kind: 'assign', text: m[1] + ' = ' + formatValue(val), lineNo: lineNo });
             } else if (/^limparJanela\s*(\(\s*\))?\s*$/.test(line)) {
-              if (!lastJanela) throw new Error('limparJanela: execute janela(largura, altura) antes de usar limparJanela');
+              if (!lastJanela) throw new Error('limparJanela: comando janela() removido');
               if (typeof CURRENT_OUT !== 'undefined' && CURRENT_OUT) {
                 CURRENT_OUT.push({kind:'clearJanela', lineNo: lineNo});
               } else {
                 lastJanela.points=[]; lastJanela.lines=[]; lastJanela.circles=[]; lastJanela.rects=[]; lastJanela.texts=[]; lastJanelaCopy=null; janelaDirty=true;
               }
-            } else if (/^(janela|ponto|linha|círculo|retângulo|texto|pegar|colocar|limparJanela|corFundo)\s*\(/.test(line)) {
+            } else if (/^(pegar|colocar|limparJanela)\s*\(/.test(line)) {
               parse(line, env);
             } else {
               var exprVal = parse(line, env);
@@ -7524,7 +7204,6 @@ function executeProgram(code, opts) {
   return out;
 }
 
-
 </script>
 <script>
 "use strict";
@@ -7590,11 +7269,11 @@ function tokenizeHighlight(code) {
           word === 'pare' || word === 'continue' || word === 'vá' ||
           word === 'para' || word === 'cada' || word === 'em' ||
           word === 'definir' || word === 'função' || word === 'funcao' || word === 'retorne' || word === 'retornar' ||
-          word === 'emJanela' || word === 'centralizar' ||
+          
           (word === 'e' && code[j4] !== '(') || word === 'ou' || word === 'não' || word === 'existe' ||
           word === 'mod' ||
           word === 'verdadeiro' || word === 'falso' || word === 'true' || word === 'false') tokens.push({ type: 'keyword', text: word });
-      else if ((word === 'selecionar' || word === 'comprimento' || word === 'absoluto' || word === 'abs' || word === 'fatorial'  || word === 'variáveis' || word === 'variaveis' || word === 'raizq' || word === 'raizc'  || word === 'pi'   || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'fracao'        || word === 'paraLista'  || word === 'paraTexto' || word === 'paraNúmero'           || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'dado' || word === 'moeda'   || word === 'janela' || word === 'ponto' || word === 'linha' || word === 'círculo' || word === 'retângulo' || word === 'texto' || word === 'intervalo' || word === 'log' || word === 'logn' || word === 'ln' || word === 'arredondar' || word === 'arred' || word === 'salvar' || word === 'carregar'   || word === 'ano' || word === 'mês' || word === 'dia' || word === 'hora' || word === 'data' || word === 'agora' || word === 'tempo' || word === 'adicionarDias' || word === 'diaSemana'     || word === 'bipe' || word === 'pausa' || word === 'regressiva' || word === 'som' || word === 'toca' || word === 'mensagem' || word === 'aguardeTecla' || word === 'captureTecla' || word === 'pegar' || word === 'colocar' || word === 'limparJanela' || word === 'corFundo' || word === 'aparar' || word === 'extrair' || word === 'filtrar' || word === 'mapear' || word === 'tipo' || word === 'primo' || word === 'par' || word === 'ímpar' || word === 'impar' || word === 'maiúsculo' || word === 'minúsculo' || word === 'substitua' || word === 'divida' || word === 'junte' || word === 'contém' || word === 'posição' || word === 'insira' || word === 'remova' || word === 'posiçãoEm' || word === 'mmc' || word === 'mdc' || word === 'divisores' || word === 'fatores' || word === 'média' || word === 'media' || word === 'mediana' || word === 'moda' || word === 'variância' || word === 'variancia' || word === 'desvioPadrao' || word === 'desvioPadrão' || word === 'produto'  ) && code[j4] === '(') tokens.push({ type: 'function', text: word });
+      else if ((word === 'selecionar' || word === 'comprimento' || word === 'absoluto' || word === 'abs' || word === 'fatorial'  || word === 'variáveis' || word === 'variaveis' || word === 'raizq' || word === 'raizc'  || word === 'pi'   || word === 'inteiro' || word === 'decimal' || word === 'fração' || word === 'fracao'        || word === 'paraLista'  || word === 'paraTexto' || word === 'paraNúmero'           || word === 'cos' || word === 'sen' || word === 'tan' || word === 'arcocos' || word === 'arcosen' || word === 'arcotan' || word === 'aleatório' || word === 'dado' || word === 'moeda'   ||       word === 'intervalo' || word === 'log' || word === 'logn' || word === 'ln' || word === 'arredondar' || word === 'arred' || word === 'salvar' || word === 'carregar'   || word === 'ano' || word === 'mês' || word === 'dia' || word === 'hora' || word === 'data' || word === 'agora' || word === 'tempo' || word === 'adicionarDias' || word === 'diaSemana'     || word === 'bipe' || word === 'pausa' || word === 'regressiva' || word === 'som' || word === 'toca' || word === 'mensagem' || word === 'aguardeTecla' || word === 'captureTecla' || word === 'pegar' || word === 'colocar' || word === 'limparJanela' || word === 'aparar' || word === 'extrair' || word === 'filtrar' || word === 'mapear' || word === 'tipo' || word === 'primo' || word === 'par' || word === 'ímpar' || word === 'impar' || word === 'maiúsculo' || word === 'minúsculo' || word === 'substitua' || word === 'divida' || word === 'junte' || word === 'contém' || word === 'posição' || word === 'insira' || word === 'remova' || word === 'posiçãoEm' || word === 'mmc' || word === 'mdc' || word === 'divisores' || word === 'fatores' || word === 'média' || word === 'media' || word === 'mediana' || word === 'moda' || word === 'variância' || word === 'variancia' || word === 'desvioPadrao' || word === 'desvioPadrão' || word === 'produto'  ) && code[j4] === '(') tokens.push({ type: 'function', text: word });
       else tokens.push({ type: 'identifier', text: word });
       i = j4;
     } else {
@@ -7605,7 +7284,6 @@ function tokenizeHighlight(code) {
   }
   return tokens;
 }
-
 
 </script>
 <script>
@@ -8117,19 +7795,7 @@ async function run() {
         janelaDirty = false;
       }
       continue;
-    }
-    if (rec.kind === 'corFundo') {
-      if (lastJanela) {
-        lastJanela.bg = rec.bg;
-        janelaDirty = true;
-      }
-      if (!(janelaUsada && janelaFechada)) {
-        janelaVis = { p: lastJanela ? lastJanela.points.length : 0, l: lastJanela ? lastJanela.lines.length : 0, c: lastJanela ? lastJanela.circles.length : 0, r: lastJanela ? lastJanela.rects.length : 0, t: lastJanela ? lastJanela.texts.length : 0 };
-        renderJanela();
-      }
-      continue;
-    }
-    if (rec.kind === 'timer') {
+    }    if (rec.kind === 'timer') {
       timerCount++;
       (function (tRec) {
         setTimeout(function () {
@@ -8246,7 +7912,6 @@ function insertAtCursor(text, insideParens) {
   editor.focus();
 }
 
-
 // ============================================================
 //  AUTOCOMPLETAR (SUGESTÕES ENQUANTO DIGITA)
 // ============================================================
@@ -8272,15 +7937,10 @@ var AC_ALL = (function () {
   add('mensagem', 'mensagem()', true, 'Saída', 'Abre uma caixa de mensagem com título e texto');
   add('pegar', 'pegar()', true, 'Visualização', 'Copia a parte do desenho dentro do retângulo (x0, y0)-(x1, y1)');
   add('colocar', 'colocar()', true, 'Visualização', 'Coloca a parte copiada com pegar no retângulo (x0, y0)-(x1, y1)');
-  add('limparJanela', 'limparJanela', true, 'Visualização', 'Limpa a janela criada por janela(x,y)');
-  add('corFundo', 'corFundo()', true, 'Visualização', 'Altera a cor de fundo da janela: corFundo(azul)');
-  add('se', 'se ', false, 'Controle', 'Executa um bloco se a condição for verdadeira');
+  add('limparJanela', 'limparJanela', true, 'Visualização', 'Limpa a janela criada por janela(x,y)');  add('se', 'se ', false, 'Controle', 'Executa um bloco se a condição for verdadeira');
   add('senão', 'senão:', false, 'Controle', 'Executa um bloco quando a condição do se é falsa');
   add('enquanto', 'enquanto ', false, 'Controle', 'Repete enquanto a condição for verdadeira');
-  add('selecionar opção', 'selecionar opção:', false, 'Controle', 'Abre uma janela com um menu de opções executáveis pelo teclado');
-  add('emJanela', 'emJanela:', false, 'Janela', 'Executa o bloco indentado em uma janela maximizada ao invés do console');
-  add('emJanela(centralizar)', 'emJanela(centralizar):', false, 'Janela', 'Como emJanela:, mas com o texto centralizado na janela');
-  add('repita', 'repita()', true, 'Controle', 'Repete o bloco um número fixo de vezes');
+  add('selecionar opção', 'selecionar opção:', false, 'Controle', 'Abre uma janela com um menu de opções executáveis pelo teclado');  add('repita', 'repita()', true, 'Controle', 'Repete o bloco um número fixo de vezes');
   add('para cada', 'para cada ', false, 'Controle', 'Percorre os itens de uma coleção');
   add('para x em', 'para x em ', false, 'Controle', 'Percorre os itens de uma coleção (sem "cada")');
   add('pare', 'pare', false, 'Controle', 'Interrompe imediatamente o laço atual');
@@ -8352,13 +8012,8 @@ var AC_ALL = (function () {
     ['insira', 'Texto', 'Insere um valor depois da posição informada em um texto, número ou lista'],
     ['remova', 'Texto', 'Remove o caractere ou elemento na posição informada de um texto, número ou lista'],
     ['posiçãoEm', 'Texto', 'Devolve o caractere ou elemento que está na posição informada'],
-    ['paraNúmero', 'Conversão', 'Converte texto numérico em valor'],
-    ['janela', 'Gráficos', 'Abre uma janela gráfica (janela(larg, alt, cor, título))'],
-    ['ponto', 'Gráficos', 'Desenha um ponto na janela'],
-    ['linha', 'Gráficos', 'Traça uma linha na janela'],
-    ['círculo', 'Gráficos', 'Desenha um círculo na janela'],
-    ['retângulo', 'Gráficos', 'Desenha um retângulo na janela'],
-    ['texto', 'Gráficos', 'Escreve um texto na janela'],
+    ['paraNúmero', 'Conversão', 'Converte texto numérico em valor'],    ['ponto', 'Gráficos', 'Desenha um ponto na janela'],
+    ['linha', 'Gráficos', 'Traça uma linha na janela'],    ['texto', 'Gráficos', 'Escreve um texto na janela'],
     ['ano', 'Data e Hora', 'Ano atual (yyyy)'],
     ['mês', 'Data e Hora', 'Mês atual (mm)'],
     ['dia', 'Data e Hora', 'Dia atual (dd)'],
@@ -8435,10 +8090,7 @@ var QUICK_REF = (function () {
   qr('senão', 'Comando', 'Bloco executado quando a condição do se é falsa', 'nota = 6\nse nota >= 6:\n  mostre "Aprovado"\nsenão:\n  mostre "Recuperação"');
   qr('enquanto', 'Comando', 'Repete enquanto a condição for verdadeira', 'n = 5\nenquanto n > 0:\n  mostre n\n  n = n - 1');
   qr('repita', 'Comando', 'Repete o bloco um número fixo de vezes', 'repita(4):\n  mostre "batida"');
-  qr('selecionar opção', 'Comando', 'Abre uma janela com um menu de opções executáveis pelo teclado', 'selecionar opção:\n  <1> "Mostrar mensagem":\n    mostre "Opção 1"\n  <2> "Calcular quadrado":\n    mostre 5**2\n  <3> "Contar até 3":\n    para x em (1,3):\n      mostre x');
-  qr('emJanela', 'Comando', 'Executa o bloco indentado em uma janela maximizada ao invés do console', 'emJanela:\n  mostre "Olá do janela!"\n  x = 5\n  mostre x + 1');
-  qr('emJanela(centralizar)', 'Comando', 'Como emJanela:, mas com o texto centralizado na janela', 'emJanela(centralizar):\n  mostre "Título centralizado"\n  mostre "Linha 2"');
-  qr('para cada', 'Comando', 'Percorre os itens de uma coleção', 'frutas = ["maçã", "banana", "uva"]\npara cada fruta em frutas:\n  mostre fruta');
+  qr('selecionar opção', 'Comando', 'Abre uma janela com um menu de opções executáveis pelo teclado', 'selecionar opção:\n  <1> "Mostrar mensagem":\n    mostre "Opção 1"\n  <2> "Calcular quadrado":\n    mostre 5**2\n  <3> "Contar até 3":\n    para x em (1,3):\n      mostre x');  qr('para cada', 'Comando', 'Percorre os itens de uma coleção', 'frutas = ["maçã", "banana", "uva"]\npara cada fruta em frutas:\n  mostre fruta');
   qr('pare', 'Comando', 'Interrompe imediatamente o laço atual', 'n = 1\nenquanto verdadeiro:\n  mostre n\n  n = n + 1\n  se n > 3:\n    pare');
   qr('continue', 'Comando', 'Pula para a próxima iteração do laço', 'para n em intervalo(1, 6):\n  se n == 3:\n    continue\n  mostre n');
   qr('vá para', 'Comando', 'Salta a execução do programa para um rótulo definido com ":nome" (como o GOTO do BASIC)', ':início\nx = leia "Valor: "\nse x >= 10:\n  mostre "Muito alto! Tente novamente!"\n  vá para início\nsenão:\n  mostre "Valor aceito!"');
@@ -8528,14 +8180,7 @@ var QUICK_REF = (function () {
   qr('insira', 'Função', 'Insere um valor depois da posição informada', 'mostre insira("banana", 3, "olo")\nmostre insira(1234567, 4, 9)');
   qr('remova', 'Função', 'Remove o caractere ou elemento na posição informada (a partir de 0)', 'mostre remova(12345, 3)\nmostre remova("banana", 2)\nmostre remova([5,6,7,8,9], 4)');
   qr('posiçãoEm', 'Função', 'Devolve o caractere ou elemento que está na posição informada (a partir de 0)', 'mostre posiçãoEm("banana", 2)\nmostre posiçãoEm(12444, 3)\nmostre posiçãoEm([1,2,3,4,5,6,7], 4)');
-  qr('paraNúmero', 'Função', 'Converte texto numérico em valor', 'mostre paraNúmero("3.14") + 1');
-  qr('janela', 'Função', 'Abre uma janela gráfica', 'janela(400, 300, preto, "Meu desenho")');
-  qr('ponto', 'Função', 'Desenha um ponto na janela', 'janela(400, 300)\nponto(200, 150, azul)');
-  qr('linha', 'Função', 'Traça uma linha na janela', 'janela(400, 300)\nlinha(100, 100, 300, 200, verde)');
-  qr('círculo', 'Função', 'Desenha um círculo na janela', 'janela(400, 300)\ncírculo(200, 150, 80, verde, branco)');
-  qr('retângulo', 'Função', 'Desenha um retângulo na janela a partir do canto (x, y), com largura e altura em pixels', 'janela(400, 300)\nretângulo(50, 50, 300, 200, verde, branco)');
-  qr('texto', 'Função', 'Escreve um texto na janela (cor e tamanho da fonte opcionais)', 'janela(400, 300)\ntexto(50, 50, "Olá, mundo!", branco, 28)');
-  qr('ano', 'Função', 'Ano atual (yyyy)', 'mostre ano()');
+  qr('paraNúmero', 'Função', 'Converte texto numérico em valor', 'mostre paraNúmero("3.14") + 1');  qr('ano', 'Função', 'Ano atual (yyyy)', 'mostre ano()');
   qr('mês', 'Função', 'Mês atual (mm)', 'mostre mês()');
   qr('dia', 'Função', 'Dia atual (dd)', 'mostre dia()');
   qr('hora', 'Função', 'Hora atual', 'mostre hora()');
@@ -8552,9 +8197,7 @@ var QUICK_REF = (function () {
   qr('mensagem', 'Comando', 'Abre uma caixa de mensagem com título e texto', 'mensagem("Olá", "Bem-vindo ao Willog!")');
   qr('pegar', 'Comando', 'Copia a parte do desenho dentro do retângulo (x0, y0)-(x1, y1)', 'janela(500, 300)\nlinha(50, 50, 100, 100, vermelho)\npegar(30, 30, 200, 200)');
   qr('colocar', 'Comando', 'Coloca a parte copiada com pegar no retângulo (x0, y0)-(x1, y1)', 'janela(500, 300)\nlinha(50, 50, 100, 100, vermelho)\npegar(30, 30, 200, 200)\ncolocar(250, 50, 420, 220)');
-  qr('limparJanela', 'Comando', 'Limpa a janela criada por janela(x,y)', 'janela(500,300)\nponto(10,10,vermelho)\nlimparJanela');
-  qr('corFundo', 'Comando', 'Altera a cor de fundo da janela', 'janela(500,500)\ncorFundo(azul)');
-  qr('ordenada', 'Propriedade', 'Retorna a lista em ordem crescente', 'notas = [7, 3, 9, 5]\nmostre notas.ordenada');
+  qr('limparJanela', 'Comando', 'Limpa a janela criada por janela(x,y)', 'janela(500,300)\nponto(10,10,vermelho)\nlimparJanela');  qr('ordenada', 'Propriedade', 'Retorna a lista em ordem crescente', 'notas = [7, 3, 9, 5]\nmostre notas.ordenada');
   qr('mínimo', 'Propriedade', 'Retorna o menor valor numérico da lista', 'lista = [-2, -1, 0, 1, 2]\nmostre lista.mínimo');
   qr('invertida', 'Propriedade', 'Retorna a lista ou o texto com a ordem dos itens invertida', 'mostre [1,2,3,4].invertida\nmostre "banana".invertida');
   qr('contar', 'Propriedade', 'Retorna a quantidade de itens de uma lista ou de caracteres de um texto', 'mostre "escola".contar\nmostre [1,2,3,4,5,6,7,8].contar');
@@ -8774,7 +8417,6 @@ acEl.addEventListener('mousedown', function (e) {
   AC_INDEX = Number(item.getAttribute('data-index'));
   acAccept();
 });
-
 
 // ============================================================
 //  BARRA DE MENUS
@@ -9048,42 +8690,6 @@ horario = hora()
 saudacao = "Bom dia" se horario < 12 senão "Boa tarde" se horario < 18 senão "Boa noite"
 mensagem(saudacao, "Bem-vinda, {nome}!\\nSeja bem-vinda ao Willog IDE.")
 mensagem("Dica", "Use Ctrl+Enter para executar seu código rapidamente.")`
-  },
-  {
-    id: 'emJanela',
-    title: 'emJanela — Relatório em Janela',
-    category: 'Saída e Console',
-    desc: 'Executa bloco em janela maximizada. Ideal para relatórios que não cabem no console.',
-    code: `# Relatório em janela
-emJanela:
-  mostre "===== RELATÓRIO FINANCEIRO ====="
-  receitas = [5000, 6200, 4800, 7500]
-  despesas = [3200, 4100, 2900, 3800]
-  lucro = receitas.soma - despesas.soma
-  mostre "Receita total: R$ {receitas.soma}"
-  mostre "Despesa total: R$ {despesas.soma}"
-  mostre "Lucro: R$ {lucro}"
-  se lucro > 5000:
-    mostre "Resultado: EXCELENTE"
-  senão:
-    mostre "Resultado: Dentro da meta"`
-  },
-  {
-    id: 'emJanela-centralizar',
-    title: 'emJanela(centralizar) — Certificado',
-    category: 'Saída e Console',
-    desc: 'Mesmo que emJanela, mas com texto centralizado para certificados e títulos.',
-    code: `# Certificado centralizado
-emJanela(centralizar):
-  mostre "================================"
-  mostre "CERTIFICADO DE CONCLUSÃO"
-  mostre "================================"
-  mostre ""
-  mostre "Concedido a: João Silva"
-  mostre "Curso: Willog Básico"
-  mostre "Data: {data()}"
-  mostre ""
-  mostre "Parabéns!"`
   },
   {
     id: 'variavel-atribuicao',
@@ -9747,50 +9353,6 @@ d = mdc(num, den)
 mostre "{num}/{den} simplificado = {num/d}/{den/d}"`
   },
   {
-    id: 'visualizacao-janela',
-    title: 'janela / ponto / linha — Desenho Técnico',
-    category: 'Visualização',
-    desc: 'Gráficos vetoriais com janela, ponto, linha, círculo, retângulo, texto.',
-    code: `# Desenho técnico - Casa
-janela(600, 400, branco, "Casa Willog")
-# Ponto decorativo
-ponto(50, 50, vermelho)
-# Chão
-linha(0, 350, 600, 350, preto)
-# Casa
-retângulo(200, 150, 200, 150, preto, amarelo)
-# Telhado
-linha(200, 150, 300, 80, vermelho)
-linha(300, 80, 400, 150, vermelho)
-# Porta
-retângulo(270, 220, 60, 80, marrom, marrom)
-# Janela
-círculo(230, 180, 20, azul, azul)
-texto(250, 320, "Casa Willog", preto, 16)`
-  },
-  {
-    id: 'visualizacao-avancada',
-    title: 'pegar / colocar / limparJanela / corFundo',
-    category: 'Visualização',
-    desc: 'Manipulação avançada de regiões da janela.',
-    code: `# Arte com cópia
-janela(500, 300, preto, "Arte")
-# Desenho original
-círculo(100, 100, 40, vermelho, amarelo)
-retângulo(80, 180, 40, 40, azul, verde)
-# Copia e cola
-pegar(60, 60, 140, 220)
-colocar(300, 60, 380, 220)
-mostre "Arte duplicada!"
-# Muda fundo
-corFundo(azul)
-texto(10, 10, "Fundo azul", branco, 14)
-# Limpa
-pausa(1)
-limparJanela
-texto(150, 150, "Tela limpa!", branco, 20)`
-  },
-  {
     id: 'som',
     title: 'bipe / som / toca — Sistema Musical',
     category: 'Som',
@@ -9811,7 +9373,7 @@ bipe(0.2)`
 
 // ===== Exemplos (variáveis de DOM já declaradas acima - evita redundância) =====
 var exemplosActiveCategory = '';
-var EXEMPLOS_CATEGORIAS = ["Todas","Saída e Console","Variáveis e Intervalos","Entrada do Usuário","Persistência","Operadores","Condicionais","Laços","Listas","Funções","Texto","Data e Hora","Estatística","Visualização","Som"];
+var EXEMPLOS_CATEGORIAS = ["Todas","Saída e Console","Variáveis e Intervalos","Entrada do Usuário","Persistência","Operadores","Condicionais","Laços","Listas","Funções","Texto","Data e Hora","Estatística","Som"];
 
 (function initExemplosCategorias(){
   if(!exemplosFilter || !exemplosTabs) return;
@@ -10072,12 +9634,6 @@ function comentarComando(text) {
   if (isSelecionarOpcao(t)) {
     return 'O "selecionar opção" abre um menu de escolhas na tela. O programa para e espera você apertar uma tecla pra escolher uma opção.';
   }
-  if (isEmJanela(t)) {
-    if (isEmJanelaCentered(t)) {
-      return 'O "emJanela(centralizar)" mostra o resultado numa janela bonita no centro da tela, em vez do console. A janela abre cheia e você pode minimizar ou restaurar com os botões.';
-    }
-    return 'O "emJanela" mostra o resultado numa janela grande em vez do console. A janela abre cheia e você pode minimizar ou restaurar com os botões.';
-  }
   if (/^aguarde\s*tecla\s*\(/i.test(t)) {
     return 'O "aguardeTecla" faz o programa esperar você apertar uma tecla. Tipo um "Pressione qualquer tecla pra continuar". Se colocar uma letra entre aspas (tipo "Z"), só essa tecla funciona.';
   }
@@ -10278,7 +9834,6 @@ var paletteOverlay = document.getElementById('paletteOverlay');
 
 var paletteDarkGrid = document.getElementById('palette-dark');
 var paletteLightGrid = document.getElementById('palette-light');
-
 
 // ============================================================
 //  APLICAÇÃO DE PALETA
@@ -11144,8 +10699,6 @@ document.getElementById('interpMinimize').addEventListener('click', function () 
 });
 document.getElementById('interpMaximize').addEventListener('click', function () { toggleModalMaximize(interpModal, 'interp-maximized', interpMaxIcon); });
 
-
-
 var graficoOverlay = document.getElementById('graficoOverlay');
 function graficoWrap(ctx, text, maxWidth) {
   var lines = [];
@@ -11452,7 +11005,7 @@ editor.addEventListener('blur', acClose);
 var wmStack = [];
 var wmLabels = {
   janelaOverlay:     'Janela',
-  emJanelaOverlay:   'emJanela',
+  
   interpretadorOverlay: 'Interpretador',
   graficoOverlay:    'Gráfico de Funções',
   modalOverlay:      'Manual',
@@ -11469,7 +11022,7 @@ function wmFindCurrent() {
   return null;
 }
 var _wmMaxMap = (function(){
-  var _map={janelaOverlay:'janela-maximized',emJanelaOverlay:'emjanela-maximized',interpretadorOverlay:'interp-maximized',graficoOverlay:'grafico-maximized',modalOverlay:'modal-maximized',quickRefOverlay:'qr-maximized',exemplosOverlay:'exemplos-maximized',paletteOverlay:'palette-maximized'};
+  var _map={janelaOverlay:'janela-maximized',interpretadorOverlay:'interp-maximized',graficoOverlay:'grafico-maximized',modalOverlay:'modal-maximized',quickRefOverlay:'qr-maximized',exemplosOverlay:'exemplos-maximized',paletteOverlay:'palette-maximized'};
   var _out={}; for(var k in wmLabels){ if(_map[k]) _out[k]=_map[k]; } return _out;
 })();
 function wmOpen(overlayId) {
@@ -11572,7 +11125,6 @@ if (!isDockedBottom()) {
   }
 }
 
-
 // ============================================================
 // ============================================================
 //  EDITOR TOOLTIP (hover sobre comandos/funções)
@@ -11584,9 +11136,7 @@ if (!isDockedBottom()) {
   var TOOLTIPS = {
     'mostre': { cat: 'Comando', desc: 'Exibe o valor de uma expressão no console', ex: 'mostre 2 + 3' },
     'limpe':  { cat: 'Comando', desc: 'Apaga todo o conteúdo do console' },
-    'mensagem': { cat: 'Comando', desc: 'Abre uma caixa de mensagem com título e texto', ex: 'mensagem("Título", "Corpo")' },
-    'emJanela': { cat: 'Comando', desc: 'Executa o bloco em uma janela ao invés do console' },
-    'leia': { cat: 'Comando', desc: 'Pede que o usuário digite um valor', ex: 'nome = leia "Nome: "' },
+    'mensagem': { cat: 'Comando', desc: 'Abre uma caixa de mensagem com título e texto', ex: 'mensagem("Título", "Corpo")' },    'leia': { cat: 'Comando', desc: 'Pede que o usuário digite um valor', ex: 'nome = leia "Nome: "' },
     'aguardeTecla': { cat: 'Comando', desc: 'Pausa até o usuário pressionar uma tecla', ex: 'aguardeTecla("Z")' },
     'captureTecla': { cat: 'Função', desc: 'Retorna a tecla pressionada no último aguardeTecla()' },
     'se': { cat: 'Comando', desc: 'Executa o bloco se a condição for verdadeira', ex: 'se x > 5:\n  mostre "grande"' },
@@ -11688,18 +11238,10 @@ if (!isDockedBottom()) {
     'som': { cat: 'Função', desc: 'Emite um som com frequência em Hz', ex: 'som(440, 1)' },
     'toca': { cat: 'Função', desc: 'Toca notas musicais (C, D, E...)', ex: 'toca("C", "D", "E", 0.3)' },
     'pausa': { cat: 'Comando', desc: 'Pausa a execução por s segundos', ex: 'pausa(2)' },
-    'regressiva': { cat: 'Comando', desc: 'Contagem regressiva sem parar o programa' },
-    'janela': { cat: 'Função', desc: 'Abre janela gráfica com x×y pixels', ex: 'janela(500, 300, azul)' },
-    'ponto': { cat: 'Função', desc: 'Desenha um ponto na janela' },
-    'linha': { cat: 'Função', desc: 'Traça uma linha entre dois pontos' },
-    'círculo': { cat: 'Função', desc: 'Desenha um círculo na janela' },
-    'retângulo': { cat: 'Função', desc: 'Desenha um retângulo na janela' },
-    'texto': { cat: 'Função', desc: 'Escreve texto na janela gráfica' },
-    'pegar': { cat: 'Função', desc: 'Copia uma região da janela' },
+    'regressiva': { cat: 'Comando', desc: 'Contagem regressiva sem parar o programa' },    'ponto': { cat: 'Função', desc: 'Desenha um ponto na janela' },
+    'linha': { cat: 'Função', desc: 'Traça uma linha entre dois pontos' },    'pegar': { cat: 'Função', desc: 'Copia uma região da janela' },
     'colocar': { cat: 'Função', desc: 'Cola região copiada na janela' },
-    'limparJanela': { cat: 'Comando', desc: 'Limpa toda a janela gráfica' },
-    'corFundo': { cat: 'Função', desc: 'Altera a cor de fundo da janela' },
-    'salvar': { cat: 'Função', desc: 'Salva variáveis em arquivo de texto' },
+    'limparJanela': { cat: 'Comando', desc: 'Limpa toda a janela gráfica' },    'salvar': { cat: 'Função', desc: 'Salva variáveis em arquivo de texto' },
     'carregar': { cat: 'Função', desc: 'Lê variáveis de arquivo de texto' },
     'ordenada': { cat: 'Propriedade', desc: 'Retorna a lista em ordem crescente', ex: 'lista.ordenada' },
     'invertida': { cat: 'Propriedade', desc: 'Retorna a lista invertida', ex: 'lista.invertida' },
