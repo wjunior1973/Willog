@@ -6967,12 +6967,8 @@ out.push({ kind: 'pause', text: '', silent: true, secs: pauseSecs, lineNo: lineN
         if (isConstant(readM[1])) throw new Error('Não é possível alterar constante "'+readM[1]+'"');
         var readMsg = readM[2].trim() ? String(formatValue(parse(readM[2].trim(), env))) : '';
         var raw = null;
-        if (WP_INPUT_CTX && !WP_NO_INPUT_DEFER) {
-          if (!WP_INPUT_QUEUE.length) throw { wpInput: true, name: readM[1], msg: readMsg, lineNo: lineNo };
-          raw = WP_INPUT_QUEUE.shift();
-        } else {
-          raw = window.prompt(readMsg);
-        }
+        if (WP_INPUT_QUEUE.length) raw = WP_INPUT_QUEUE.shift();
+        else throw { wpInput: true, name: readM[1], msg: readMsg, lineNo: lineNo };
         if (raw === null) throw new Error('Entrada cancelada');
         var trimmed = raw.trim();
         var numTxt = trimmed;
@@ -6997,12 +6993,8 @@ out.push({ kind: 'pause', text: '', silent: true, secs: pauseSecs, lineNo: lineN
               var readRest = idxAssign.expr.trim().replace(/^leia\b/, '').trim();
               var readMsg2 = readRest ? String(formatValue(parse(readRest, env))) : '';
               var raw2 = null;
-              if (WP_INPUT_CTX && !WP_NO_INPUT_DEFER) {
-                if (!WP_INPUT_QUEUE.length) throw { wpInput: true, name: idxAssign.name, msg: readMsg2, lineNo: lineNo };
-                raw2 = WP_INPUT_QUEUE.shift();
-              } else {
-                raw2 = window.prompt(readMsg2);
-              }
+              if (WP_INPUT_QUEUE.length) raw2 = WP_INPUT_QUEUE.shift();
+              else throw { wpInput: true, name: idxAssign.name, msg: readMsg2, lineNo: lineNo };
               if (raw2 === null) throw new Error('Entrada cancelada');
               var trimmed2 = raw2.trim();
               var numTxt2 = trimmed2;
@@ -7092,7 +7084,16 @@ function callUserFunc(fn, args) {
   for (var i = 0; i < fn.params.length; i++) childEnv[fn.params[i]] = args[i];
   WP_NO_INPUT_DEFER++;
   try {
-    execNodes(fn.body, childEnv, CURRENT_OUT || []);
+    var _gIdx = -1;
+    if (WP_GOTO_PATH && WP_GOTO_DEPTH < WP_GOTO_PATH.length) {
+      var _fr = WP_GOTO_PATH[WP_GOTO_DEPTH];
+      if (_fr.owner && fn.lineNo && _fr.owner.lineNo === fn.lineNo) {
+        _gIdx = _fr.idx;
+        WP_GOTO_DEPTH++;
+      }
+    }
+    if (_gIdx >= 0) execNodes(fn.body.slice(_gIdx), childEnv, CURRENT_OUT || []);
+    else execNodes(fn.body, childEnv, CURRENT_OUT || []);
   } catch (e) {
     if (e && e.wpReturn) return e.value;
     if (e && e.wpPare) throw new Error("'pare' usado fora de um laço");
@@ -7247,7 +7248,7 @@ function execNodes(nodes, env, out) {
       }
       out.push({ kind: 'timer', secs: rgSecs, inner: rgOut, lineNo: n.lineNo });
     } else if (n.type === 'func') {
-      env[n.name] = { wpFunc: true, name: n.name, params: n.params, body: n.body, env: env };
+      env[n.name] = { wpFunc: true, name: n.name, params: n.params, body: n.body, env: env, lineNo: n.lineNo };
     } else if (n.type === 'select') {
       out.push({ kind: 'select', options: n.options, lineNo: n.lineNo });
     } else if (n.type === 'window') {
@@ -7401,6 +7402,13 @@ function findResumePath(nodes, lineNo) {
         }
         if (nd.padrao) {
           sub = walk(nd.padrao.body, nd, -1);
+          if (sub) { sub.unshift({ owner: owner || null, branch: branch === undefined ? null : branch, list: list, idx: i }); return sub; }
+        }
+      } else if (nd.type === 'func') {
+        sub = walk(nd.body, nd, null);
+      } else if (nd.type === 'select') {
+        for (var sq = 0; sq < nd.options.length; sq++) {
+          sub = walk(nd.options[sq].body, nd, sq);
           if (sub) { sub.unshift({ owner: owner || null, branch: branch === undefined ? null : branch, list: list, idx: i }); return sub; }
         }
       }
@@ -10856,7 +10864,6 @@ function openEmJanela(title, centered) {
   document.getElementById('emJanelaTitle').textContent = title;
   emJanelaOutput.classList.toggle('centered', !!centered);
   wmOpen('emJanelaOverlay');
-  emJanelaClearOutput();
 }
 function closeEmJanela() {
   wmClose('emJanelaOverlay');
@@ -10870,8 +10877,9 @@ function makeEmjSinkOverlay(centered) {
   };
 }
 async function processEmJanela(records, centered) {
+  var wasOpen = document.getElementById('emJanelaOverlay').classList.contains('open');
   var sink = makeEmjSinkOverlay(centered);
-  sink.clear();
+  if (!wasOpen) sink.clear();
   var lastOut = -1;
   for (var li = 0; li < records.length; li++) {
     if (records[li].kind === 'out' || records[li].kind === 'return') lastOut = li;
