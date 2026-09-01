@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -347,14 +347,7 @@
   .menu-dropdown button.primary { background:var(--accent); color:white; }
   .menu-dropdown button.primary:hover { background:var(--accent-hover); }
   .menu-sep-dropdown { height:1px; background:var(--border); margin:4px 0; }
-  .modal-manual-box {
-    background: var(--panel); color: var(--text); border:2px solid var(--border); border-radius:12px; padding:0; width:96vw; height:94vh; max-width:96vw; max-height:94vh; min-width:96vw; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,0.25); position:relative; display:flex; flex-direction:column; overflow:hidden;
-  }
-  .modal-manual-header {
-    padding:16px 20px; border-bottom:2px solid var(--border); background:var(--panel2); display:flex; align-items:center; justify-content:space-between;
-  }
-  .modal-manual-header b { font-family:''Inter'',sans-serif; font-size:15px; }
-  .modal-manual-body {
+.modal-manual-body {
     padding:20px 22px; overflow:auto; font-family:'Inter',sans-serif; font-size:17px; line-height:1.6; color:var(--text);
   }
   .modal-manual-body h3 { margin:18px 0 10px; font-size:17px; color:var(--accent); border-bottom:1px solid var(--border); padding-bottom:5px; }
@@ -364,17 +357,36 @@
   .modal-manual-body table { width:100%; border-collapse:collapse; margin:10px 0; font-size:14px; }
   .modal-manual-body th, .modal-manual-body td { border:1px solid var(--border); padding:6px 8px; text-align:left; }
   .modal-manual-body th { background:var(--panel2); font-weight:600; }
-  .manual-tabs { display:flex; gap:6px; padding:0 20px; border-bottom:2px solid var(--border); background:var(--panel2); }
-  .manual-tab {
-    font-family:''Inter'',sans-serif; font-size:12px; font-weight:600; padding:8px 14px; border:none; background:transparent; color:var(--text-dim); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px;
+
+  .modal-manual-box {
+    background: var(--panel); color: var(--text); border:2px solid var(--border); border-radius:12px; padding:0; width:96vw; height:94vh; max-width:96vw; max-height:94vh; min-width:96vw; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,0.25); position:relative; display:flex; flex-direction:column; overflow:hidden;
   }
-  .manual-tab.active { color:var(--accent); border-bottom-color:var(--accent); background:var(--panel); border-radius:6px 6px 0 0; }
-  .manual-pane { display:none; }
-  .manual-pane.active { display:block; }
+  .modal-manual-header {
+    display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border); background:var(--panel2);
+  }
+  .modal-manual-header b { font-family:'Inter',sans-serif; font-size:17px; }
+  .modal-manual-tabs { display:flex; gap:6px; padding:0 20px; border-bottom:2px solid var(--border); background:var(--panel2); flex-shrink:0; }
+  .manual-tabs { display:flex; gap:6px; padding:0 20px; border-bottom:2px solid var(--border); background:var(--panel2); flex-shrink:0; }
+  .manual-tab {
+    font-family:'Inter',sans-serif; font-size:13px; font-weight:600; padding:10px 16px; border:none; background:transparent; color:var(--text-dim); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; border-radius:6px 6px 0 0; transition:.15s;
+  }
+  .manual-tab:hover { background:var(--panel); color:var(--text); }
+  .manual-tab.active { color:var(--accent); border-bottom-color:var(--accent); background:var(--panel); }
+.manual-pane { display:none; flex:1; overflow:auto; padding:22px 22px 16px; font-family:'Inter',sans-serif; font-size:14px; line-height:1.6; color:var(--text); }
+  .manual-pane.active { display:block; background:var(--panel); }
+.manual-pane h3 { margin:18px 0 10px; font-size:16px; font-weight:700; color:var(--accent); border-bottom:1px solid var(--border); padding-bottom:5px; line-height:1.3; }
+  .manual-pane h3:first-child { margin-top:4px; }
+  .manual-pane p { margin:8px 0; }
+  .manual-pane code { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--panel2); border:1px solid var(--border); padding:1px 5px; border-radius:4px; }
+  .manual-pane pre { background:var(--panel2); border:1px solid var(--border); border-radius:6px; padding:12px 14px; overflow:auto; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.6; white-space:pre-wrap; margin:8px 0; }
+  .manual-pane table { width:100%; border-collapse:collapse; margin:10px 0; font-size:13px; }
+  .manual-pane th, .manual-pane td { border:1px solid var(--border); padding:8px 10px; text-align:left; }
+  .manual-pane th { background:var(--panel2); font-weight:600; }
   .syntax { color:var(--hl-keyword); font-weight:600; }
   .example { color:var(--hl-string); }
   .saida { color:var(--hl-number); font-style:italic; }
-  .code-label { font-family:''Inter'',sans-serif; font-size:11px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; margin:10px 0 4px; }</style>
+  .code-label { font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.6px; margin:14px 0 6px; }
+</style>
 </head>
 <body data-theme="light">
   <header class="header">
@@ -414,7 +426,7 @@
   <div class="menu" id="menuAjuda">
     <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Ajuda ▾</button>
     <div class="menu-dropdown">
-      <button id="btnManual">📖 Manual</button>
+      <button id="btnReferencia">📖 Referência rápida</button>
       <div class="menu-sep-dropdown"></div>
       <button id="btnSobre">ℹ️ Sobre</button>
     </div>
@@ -460,203 +472,237 @@
     <span class="status" id="statusBar">Pronto • Willog 1.0</span>
   </div>
 
-      <div id="modalManual" class="modal-overlay" style="display:none">
+            <div id="modalReferencia" class="modal-overlay" style="display:none">
     <div class="modal-manual-box">
       <div class="modal-manual-header">
-        <b>Manual Willog</b>
-        <button class="modal-close" id="btnFecharManual" title="Fechar">✕</button>
+        <b>Referência rápida</b>
+        <button class="modal-close" id="btnFecharReferencia" title="Fechar">✕</button>
       </div>
-      <div class="modal-manual-body">
-        <p style="text-align:center; color:var(--text-dim); font-size:12px; margin:0 0 10px;">Willog 1.0 — <span class="syntax">Sintaxe</span> • <span class="example">Exemplo</span> • <span class="saida">Saída</span></p>
-        <div class="manual-tabs">
-          <button class="manual-tab active" data-tab="comandos">Comandos</button>
-          <button class="manual-tab" data-tab="funcoes">Funções</button>
-          <button class="manual-tab" data-tab="operadores">Operadores</button>
-          <button class="manual-tab" data-tab="propriedades">Propriedades</button>
-        </div>
+      <div class="manual-tabs">
+        <button class="manual-tab active" data-tab="comandos">Comandos</button>
+        <button class="manual-tab" data-tab="funcoes">Funções</button>
+        <button class="manual-tab" data-tab="operadores">Operadores</button>
+        <button class="manual-tab" data-tab="propriedades">Propriedades</button>
+      </div>
+      <div class="manual-pane active" id="pane-comandos">
+        <h3>enquanto</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">enquanto</span> <span class="example">&lt;condição&gt;:</span>
+<span class="example">    &lt;comandos&gt;</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">n=0
+enquanto n<10:
+    n=n+1
+mostre n</span>
+<span class="saida">-> 10</span>
 
-        <div class="manual-pane active" id="pane-comandos">
-          <h3>mostre</h3>
-          <p class="code-label">Sintaxe</p>
-          <pre><span class="syntax">mostre</span> <span class="example">&lt;valor&gt; [, &lt;valor&gt; ...]</span></pre>
-          <p class="code-label">Exemplos</p>
-          <pre><span class="example">mostre "Olá, mundo!"</span>
+<span class="example">n=0
+enquanto n<10:
+    n=n+1
+mostre "n = {n}. Fim!"</span>
+<span class="saida">-> n = 10. Fim!</span></pre>
+                <h3>intervalo</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">(</span><span class="example">início..fim</span><span class="syntax">)</span>
+<span class="syntax">(</span><span class="example">início..fim,passo</span><span class="syntax">)</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">x=(1..5)
+mostre x</span>
+<span class="saida">-> 1,2,3,4,5</span>
+
+<span class="example">intervalo=(-5..5,2)
+mostre intervalo</span>
+<span class="saida">-> -5,-3,-1,1,3,5</span></pre>
+                <h3>leia</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">&lt;variável&gt; = leia</span>
+<span class="syntax">&lt;variável&gt; = leia</span> <span class="example">"mensagem"</span>
+<span class="syntax">&lt;variável&gt; = leia</span><span class="example">("mensagem")</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">nome = leia "Digite seu nome:"
+mostre "Olá, {nome}!"</span>
+<span class="saida">-> Digite seu nome: Wilson
+-> Olá, Wilson!</span>
+
+<span class="example">idade = leia("Digite sua idade:")
+mostre idade</span>
+<span class="saida">-> Digite sua idade: 25
+-> 25</span></pre>
+                <h3>mostre</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">mostre</span> <span class="example">&lt;valor&gt; [, &lt;valor&gt; ...]</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">mostre "Olá, mundo!"</span>
 <span class="saida">-> Olá, mundo!</span>
 
 <span class="example">nome="Wilson"
-idade=53
-mostre "Olá, {nome}! Você tem {idade} anos."</span>
-<span class="saida">-> Olá, Wilson! Você tem 53 anos.</span>
+mostre "Olá, {nome}!"</span>
+<span class="saida">-> Olá, Wilson!</span>
 
 <span class="example">m=n=o=5
-mostre m,n,o</span>          <span class="saida">-> 5,5,5</span>
+mostre m,n,o</span>          <span class="saida">-> 5, 5, 5</span>
 <span class="example">mostre m+n+o</span>         <span class="saida">-> 15</span>
-<span class="example">mostre m&n&o</span>         <span class="saida">-> 555</span>
-<span class="example">mostre "\n",m,"\n",n</span>  <span class="saida">-> (quebras)
-5
-5</span></pre>
-
-          <h3>mostre { … }</h3>
-          <p class="code-label">Sintaxe</p>
-          <pre><span class="syntax">mostre {</span>
+<span class="example">mostre m&n&o</span>         <span class="saida">-> 555</span></pre>
+        <h3>mostre { … }</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">mostre {</span>
 <span class="example">    &lt;expressão&gt;</span>
-<span class="example">    &lt;expressão&gt;</span>
+<span class="example">    &lt;expressão&gt; ...</span>
 <span class="syntax">}</span></pre>
-          <p class="code-label">Exemplo</p>
-          <pre><span class="example">A=[1,2,3,4]
-B=[3,4,5,6]
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">A=[1,2,3]
 mostre {
-    A+B
-    A união B
-    A intersecção B
-    A-B
-    B-A
+A
+"A é uma lista"
 }</span>
-<span class="saida">-> 1,2,3,4,3,4,5,6
--> 1,2,3,4,5,6
--> 3,4
--> 1,2
--> 5,6</span></pre>
+<span class="saida">-> 1, 2, 3
+-> A é uma lista</span></pre>
+        <h3>para cada</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">para cada</span> <span class="example">&lt;variável&gt; entre &lt;início&gt; e &lt;fim&gt; [pulando &lt;passo&gt;]:</span>
+<span class="example">    &lt;comandos&gt;</span>
 
-          <h3>se … senão</h3>
-          <p class="code-label">Sintaxe</p>
-          <pre><span class="syntax">se</span> <span class="example">&lt;condição&gt;:</span>
+<span class="syntax">para cada</span> <span class="example">&lt;variável&gt; em &lt;lista&gt;:</span>
+<span class="example">    &lt;comandos&gt;</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">para cada x entre 1 e 5:
+    mostre x</span>
+<span class="saida">-> 1  2  3  4  5</span>
+
+<span class="example">para cada n entre 2 e 10 pulando 2:
+    mostre n</span>
+<span class="saida">-> 2  4  6  8  10</span>
+
+<span class="example">para cada letra em "willog":
+    mostre letra</span>
+<span class="saida">-> w  i  l  l  o  g</span></pre>
+        <h3>repetir</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">repetir</span><span class="example">(&lt;n&gt;):</span>
+<span class="example">    &lt;comandos&gt;</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">repetir(4):
+    mostre "Olá!"</span>
+<span class="saida">-> Olá!
+-> Olá!
+-> Olá!
+-> Olá!</span></pre>
+        <h3>se … senão</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">se</span> <span class="example">&lt;condição&gt;:</span>
 <span class="example">    &lt;comandos&gt;</span>
 <span class="syntax">senão:</span>
 <span class="example">    &lt;comandos&gt;</span></pre>
-          <p class="code-label">Exemplos</p>
-          <pre><span class="example">a=5
-b=10
-se a>=b:
-    mostre "a é maior ou igual a b"
-senão:
-    mostre "a é menor que b"</span>
-<span class="saida">-> a é menor que b</span>
-
-<span class="example">nota=8
-frequência=90
-se nota>=7 e frequência>=75:
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">nota=8
+se nota >= 7:
     mostre "Aprovado"
 senão:
     mostre "Reprovado"</span>
 <span class="saida">-> Aprovado</span></pre>
-
-          <h3>verificar … caso … padrão</h3>
-          <p class="code-label">Sintaxe</p>
-          <pre><span class="syntax">verificar</span> <span class="example">&lt;valor&gt;:</span>
-<span class="example">    caso &lt;valor&gt;: &lt;expressão&gt;</span>
+        <h3>verificar … caso … padrão</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">verificar</span> <span class="example">&lt;valor&gt;:</span>
 <span class="example">    caso &lt;valor&gt;: &lt;expressão&gt;</span>
 <span class="example">    padrão: &lt;expressão&gt;</span></pre>
-          <p class="code-label">Exemplo</p>
-          <pre><span class="example">nota=9
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">nota=9
 verificar nota:
-    caso 10: "Parabéns! Excelente!"
+    caso 10: "Excelente!"
     caso 9: "Ótimo!"
-    caso 8: "Muito bom!"
     padrão: "Estude mais!"</span>
-<span class="saida">-> Ótimo!</span>
-
-<span class="example">valor=500
-verificar valor:
-    caso 100: "Muito pouco!"
-    caso 200: "Pouco!"
-    padrão: "Muito!"</span>
-<span class="saida">-> Muito!</span></pre>
-
-          <h3>para cada</h3>
-          <p class="code-label">Sintaxe</p>
-          <pre><span class="syntax">para cada</span> <span class="example">&lt;var&gt; entre &lt;ini&gt; e &lt;fim&gt; [pulando &lt;passo&gt;]:</span>
-<span class="example">    &lt;comandos&gt;</span>
-
-<span class="syntax">para cada</span> <span class="example">&lt;var&gt; em &lt;lista/texto&gt;:</span>
-<span class="example">    &lt;comandos&gt;</span></pre>
-          <p class="code-label">Exemplos</p>
-          <pre><span class="example">para cada x entre 1 e 5:
-    mostre x</span>
-<span class="saida">-> 1
--> 2
--> 3
--> 4
--> 5</span>
-
-<span class="example">para cada número entre 2 e 10 pulando 2:
-    mostre número</span>
-<span class="saida">-> 2
--> 4
--> 6
--> 8
--> 10</span>
-
-<span class="example">para cada letra em "willog":
-    mostre letra</span>
-<span class="saida">-> w
--> i
--> l
--> l
--> o
--> g</span>
-
-<span class="example">a=[1,2,3,4,5,6]
-para cada item em a:
-    mostre item</span>
-<span class="saida">-> 1
--> 2
--> 3
--> 4
--> 5
--> 6</span></pre>
-        </div>
-
-        <div class="manual-pane" id="pane-funcoes">
-          <h3>Funções — Sintaxe, Exemplo e Saída</h3>
-          <table>
-            <tr><th>Sintaxe</th><th>Exemplo</th><th>Saída</th></tr>
-            <tr><td><code class="syntax">raizq(&lt;x&gt;)</code></td><td><code class="example">mostre raizq(16)</code><br><code class="example">mostre raizq([1,4,16,25])</code></td><td><code class="saida">4</code><br><code class="saida">1,2,4,5</code></td></tr>
-            <tr><td><code class="syntax">raizc(&lt;x&gt;)</code></td><td><code class="example">mostre raizc(27)</code></td><td><code class="saida">3</code></td></tr>
-            <tr><td><code class="syntax">inteiro(&lt;x&gt;)</code></td><td><code class="example">mostre inteiro(2.5)</code></td><td><code class="saida">2</code></td></tr>
-            <tr><td><code class="syntax">decimal(&lt;x&gt;)</code></td><td><code class="example">mostre decimal(2.5)</code></td><td><code class="saida">0.5</code></td></tr>
-            <tr><td><code class="syntax">fração(&lt;x&gt;)</code></td><td><code class="example">mostre fração(0.3333)</code></td><td><code class="saida">1/3</code></td></tr>
-            <tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td><code class="example">mostre aleatório()</code><br><code class="example">mostre aleatório(6)</code><br><code class="example">mostre aleatório(3,12)</code></td><td><code class="saida">0.73 (0-1)</code><br><code class="saida">1..6</code><br><code class="saida">3..12</code></td></tr>
-            <tr><td><code class="syntax">ordenar(&lt;lista&gt;)</code></td><td><code class="example">mostre ordenar([1,3,2])</code><br><code class="example">mostre [1,3,2,5,4].ordenar</code></td><td><code class="saida">1,2,3</code></td></tr>
-            <tr><td><code class="syntax">inverter(&lt;lista&gt;)</code></td><td><code class="example">mostre inverter([1,2,3])</code><br><code class="example">a=[1,2,3,4,5]; mostre a.inverter</code></td><td><code class="saida">3,2,1</code><br><code class="saida">5,4,3,2,1</code></td></tr>
-          </table>
-          <p style="margin-top:8px; font-size:13px; color:var(--text-dim);">Todas vetorizadas: <code class="example">mostre raizq([1,4,16])</code> → <code class="saida">1,2,4</code></p>
-        </div>
-
-        <div class="manual-pane" id="pane-operadores">
-          <h3>Operadores — Sintaxe, Exemplo e Saída</h3>
-          <table>
-            <tr><th>Sintaxe</th><th>Descrição</th><th>Exemplo → Saída</th></tr>
-            <tr><td><code class="syntax">+</code></td><td>Adição; concatenação de listas</td><td><code class="example">mostre 2+3</code> <span class="saida">→5</span><br><code class="example">mostre [1,2]+[3,4]</code> <span class="saida">→1,2,3,4</span></td></tr>
-            <tr><td><code class="syntax">- * / % ** // \</code></td><td><code>*</code> multiplica e repete texto <code>"casa"*2</code>; <code>**</code> potência; <code>//</code> inteira; <code>\</code> fracionária; vetorizados</td><td><code class="example">mostre "casa"*2</code> <span class="saida">→casacasa</span><br><code class="example">mostre [1,2,3]*3</code> <span class="saida">→3,6,9</span><br><code class="example">mostre 2**3</code> <span class="saida">→8</span><br><code class="example">mostre 5//2</code> <span class="saida">→2</span> <code class="example">mostre 5\2</code> <span class="saida">→0.5</span></td></tr>
-            <tr><td><code class="syntax">&</code></td><td>Concatenação como texto</td><td><code class="example">mostre "a"&"b"</code> <span class="saida">→ab</span></td></tr>
-            <tr><td><code class="syntax">> &lt; >= &lt;= == !=</code></td><td>Comparação → <code>Verdadeiro</code>/<code>Falso</code></td><td><code class="example">mostre 10>5</code> <span class="saida">→Verdadeiro</span></td></tr>
-            <tr><td><code class="syntax">e</code> <code class="syntax">ou</code> <code class="syntax">não</code></td><td>Conjunção, disjunção, negação</td><td><code class="example">se 10>5 e 20&lt;30:</code> <span class="saida">→verdadeiro</span></td></tr>
-            <tr><td><code class="syntax">união</code> <code class="syntax">intersecção</code> <code class="syntax">-</code> <code class="syntax">existe … em …</code></td><td>Conjuntos: união, intersecção, diferença, contém</td><td><code class="example">mostre [1,2,3] união [2,3,4]</code> <span class="saida">→1,2,3,4</span><br><code class="example">mostre [1,2,3] intersecção [2,3,4]</code> <span class="saida">→2,3</span><br><code class="example">a=[1,2,3,4,5,6]; b=[3,4,5,6]; mostre a-b</code> <span class="saida">→1,2</span> / <code>b-a</code> <span class="saida">→Ø</span><br><code class="example">se existe "a" em "planeta":</code> <span class="saida">→verdadeiro</span></td></tr>
-          </table>
-        </div>
-
-        <div class="manual-pane" id="pane-propriedades">
-          <h3>Propriedades e Métodos — Sintaxe com ponto</h3>
-          <table>
-            <tr><th>Sintaxe</th><th>O que faz</th><th>Exemplo → Saída</th></tr>
-            <tr><td><code class="syntax">lista.ordenar</code></td><td>Cópia ordenada</td><td><code class="example">[1,3,2,5,4].ordenar</code> <span class="saida">→1,2,3,4,5</span></td></tr>
-            <tr><td><code class="syntax">lista.inverter</code></td><td>Inverte</td><td><code class="example">[1,2,3].inverter</code> <span class="saida">→3,2,1</span></td></tr>
-            <tr><td><code class="syntax">lista.aleatório</code></td><td>Item aleatório da lista</td><td><code class="example">[1,3,5,7,9].aleatório</code> <span class="saida">→3</span></td></tr>
-            <tr><td><code class="syntax">lista.primeiro</code></td><td>Primeiro</td><td><code class="example">["a","b"].primeiro</code> <span class="saida">→a</span></td></tr>
-            <tr><td><code class="syntax">lista.último</code></td><td>Último</td><td><code class="example">["a","b"].último</code> <span class="saida">→b</span></td></tr>
-            <tr><td><code class="syntax">lista.tamanho</code></td><td>Quantidade</td><td><code class="example">[1,2,3].tamanho</code> <span class="saida">→3</span> / <code class="example">"willog".tamanho</code> <span class="saida">→6</span></td></tr>
-            <tr><td><code class="syntax">lista.posição(i)</code></td><td>Índice <code>i</code> (0 é o primeiro)</td><td><code class="example">a=[1,2,3,4,5]; mostre a.posição(3)</code> <span class="saida">→4</span></td></tr>
-            <tr><td><code class="syntax">lista.fatiar(ini,fim)</code></td><td>Fatia inclusiva</td><td><code class="example">mostre a.fatiar(2,4)</code> <span class="saida">→3,4,5</span></td></tr>
-            <tr><td><code class="syntax">lista.adicionar[4,5]</code></td><td>Acrescenta (altera a lista)</td><td><code class="example">a=[1,2,3]; a.adicionar[4,5]; mostre a</code> <span class="saida">→1,2,3,4,5</span></td></tr>
-            <tr><td><code class="syntax">aluno.nome</code> <code class="syntax">aluno.curso="Willog"</code></td><td>Acesso e atribuição em dicionário <code>{"nome":"Ana"}</code></td><td><code class="example">aluno={"nome":"Ana","idade":20}; mostre aluno.nome</code> <span class="saida">→Ana</span></td></tr>
-          </table>
-          <p style="margin-top:10px;"><span class="syntax">Literais:</span> <code class="example">10</code>, <code class="example">2.5</code>, <code class="example">"texto {var}"</code> com <code>\n</code>, listas <code class="example">[1,2,3]</code>, dicionários <code class="example">{"chave": valor}</code>. <span class="saida">Vazio → Ø</span></p>
-        </div>
-
-        </div>
+<span class="saida">-> Ótimo!</span></pre>
+      </div>
+      <div class="manual-pane" id="pane-funcoes">
+        <h3>Funções — ordem alfabética</h3>
+        <table>
+          <tr><th>Sintaxe</th><th>Descrição</th><th>Exemplo → Saída</th></tr>
+          <tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr>
+          <tr><td><code class="syntax">arredondar(x, casas)</code></td><td>Arredonda para n casas decimais</td><td><code class="example">arredondar(5.33333,2)</code> <span class="saida">→ 5.33</span><br><code class="example">arredondar(1.66666,3)</code> <span class="saida">→ 1.667</span></td></tr>
+          <tr><td><code class="syntax">decimal(x)</code></td><td>Parte decimal</td><td><code class="example">decimal(2.5)</code> <span class="saida">→ 0.5</span></td></tr>
+          <tr><td><code class="syntax">fração(x)</code></td><td>Converte para fração</td><td><code class="example">fração(0.333)</code> <span class="saida">→ 1/3</span></td></tr>
+          <tr><td><code class="syntax">inteiro(x)</code></td><td>Parte inteira</td><td><code class="example">inteiro(2.7)</code> <span class="saida">→ 2</span></td></tr>
+          <tr><td><code class="syntax">paraNúmero(x)</code></td><td>Converte texto para número</td><td><code class="example">paraNúmero("12.5")</code> <span class="saida">→ 12.5</span><br><code class="example">paraNúmero("12,5")*2</code> <span class="saida">→ 25</span></td></tr>
+          <tr><td><code class="syntax">paraTexto(x)</code></td><td>Converte número para texto</td><td><code class="example">paraTexto(8)</code> <span class="saida">→ "8"</span><br><code class="example">paraTexto(8)*3</code> <span class="saida">→ 888</span></td></tr>
+          <tr><td><code class="syntax">piso(x)</code></td><td>Arredonda para baixo (floor)</td><td><code class="example">piso(2.3)</code> <span class="saida">→ 2</span><br><code class="example">piso(2.9)</code> <span class="saida">→ 2</span></td></tr>
+          <tr><td><code class="syntax">raizc(x)</code></td><td>Raiz cúbica — vetorizada</td><td><code class="example">raizc(27)</code> <span class="saida">→ 3</span></td></tr>
+          <tr><td><code class="syntax">raizq(x)</code></td><td>Raiz quadrada — vetorizada</td><td><code class="example">raizq(16)</code> <span class="saida">→ 4</span><br><code class="example">raizq([1,4,9])</code> <span class="saida">→ 1, 2, 3</span></td></tr>
+          <tr><td><code class="syntax">teto(x)</code></td><td>Arredonda para cima (ceil)</td><td><code class="example">teto(2.3)</code> <span class="saida">→ 3</span><br><code class="example">teto(2.9)</code> <span class="saida">→ 3</span></td></tr>
+          <tr><td><code class="syntax">tipo(x)</code></td><td>Retorna tipo: número, texto, booleano ou lista</td><td><code class="example">tipo(7)</code> <span class="saida">→ número</span><br><code class="example">tipo("Olá!")</code> <span class="saida">→ texto</span><br><code class="example">tipo(4>5)</code> <span class="saida">→ booleano</span><br><code class="example">tipo([1,2,3])</code> <span class="saida">→ lista</span></td></tr>
+        </table>
+        <p style="margin-top:8px; font-size:12px; color:var(--text-dim);">Vetorizadas: <code class="example">raizq([1,4,16])</code> <span class="saida">→ 1, 2, 4</span> &nbsp;|&nbsp; Vazio: <code class="saida">Ø</code></p>
+      </div>
+      <div class="manual-pane" id="pane-operadores">
+        <h3>Operadores — ordem alfabética</h3>
+        <table>
+          <tr><th>Sintaxe</th><th>Descrição</th><th>Exemplo → Saída</th></tr>
+          <tr><td><code class="syntax">(início..fim)</code><br><code class="syntax">(início..fim,passo)</code></td><td>Intervalo — cria lista de a até b</td><td><code class="example">x=(1..5)</code> <span class="saida">→ 1,2,3,4,5</span><br><code class="example">(-5..5,2)</code> <span class="saida">→ -5,-3,-1,1,3,5</span></td></tr>
+          <tr><td><code class="syntax">+</code> <code class="syntax">&</code></td><td>Adição e concatenação; com listas une</td><td><code class="example">2+3</code> <span class="saida">→ 5</span> &nbsp; <code class="example">[1,2]+[3]</code> <span class="saida">→ 1, 2, 3</span></td></tr>
+          <tr><td><code class="syntax">-</code></td><td>Subtração; diferença de conjuntos</td><td><code class="example">5-2</code> <span class="saida">→ 3</span> &nbsp; <code class="example">[1,2,3]-[2]</code> <span class="saida">→ 1, 3</span></td></tr>
+          <tr><td><code class="syntax">*</code> <code class="syntax">/</code> <code class="syntax">//</code> <code class="syntax">\</code> <code class="syntax">%</code> <code class="syntax">**</code></td><td>Multiplicação, divisão, inteira, quociente fracionário, módulo, potência — vetorizados</td><td><code class="example">2**3</code> <span class="saida">→ 8</span> &nbsp; <code class="example">5//2</code> <span class="saida">→ 2</span> &nbsp; <code class="example">5</code> <span class="saida">→ 0.5</span></td></tr>
+          <tr><td><code class="syntax">> &lt; >= &lt;= == !=</code></td><td>Comparação → <code>Verdadeiro</code>/<code>Falso</code></td><td><code class="example">10>5</code> <span class="saida">→ Verdadeiro</span></td></tr>
+          <tr><td><code class="syntax">e</code></td><td>Conjunção lógica</td><td><code class="example">5>3 e 2<4</code> <span class="saida">→ Verdadeiro</span></td></tr>
+          <tr><td><code class="syntax">existe … em …</code></td><td>Pertinência em texto/lista</td><td><code class="example">existe "a" em "casa"</code> <span class="saida">→ Verdadeiro</span></td></tr>
+          <tr><td><code class="syntax">intersecção</code></td><td>Intersecção de conjuntos</td><td><code class="example">[1,2] intersecção [2,3]</code> <span class="saida">→ 2</span></td></tr>
+          <tr><td><code class="syntax">não</code></td><td>Negação</td><td><code class="example">não falso</code> <span class="saida">→ Verdadeiro</span></td></tr>
+          <tr><td><code class="syntax">ou</code></td><td>Disjunção lógica</td><td><code class="example">5<3 ou 6>=3</code> <span class="saida">→ Verdadeiro</span></td></tr>
+          <tr><td><code class="syntax">união</code></td><td>União de conjuntos</td><td><code class="example">[1] união [2]</code> <span class="saida">→ 1, 2</span></td></tr>
+        </table>
+      </div>
+      <div class="manual-pane" id="pane-propriedades">
+        <h3>Propriedades — ordem alfabética</h3>
+        <table>
+          <tr><th>Sintaxe</th><th>O que faz</th><th>Exemplo → Saída</th></tr>
+          <tr><td><code class="syntax">lista.adicionar[4,5]</code></td><td>Acrescenta itens (altera a lista)</td><td><code class="example">a=[1,2]; a.adicionar[3]; mostre a</code> <span class="saida">→ 1, 2, 3</span></td></tr>
+          <tr><td><code class="syntax">lista.aleatório</code></td><td>Item aleatório</td><td><code class="example">[1,2,3].aleatório</code> <span class="saida">→ 2</span></td></tr>
+          <tr><td><code class="syntax">lista.fatiar(início,fim)</code></td><td>Fatia inclusiva</td><td><code class="example">[1,2,3,4].fatiar(1,2)</code> <span class="saida">→ 2, 3</span></td></tr>
+          <tr><td><code class="syntax">lista.inverter</code></td><td>Inverte ordem</td><td><code class="example">[1,2,3].inverter</code> <span class="saida">→ 3, 2, 1</span></td></tr>
+          <tr><td><code class="syntax">lista.ordenar</code></td><td>Cópia ordenada</td><td><code class="example">[3,1,2].ordenar</code> <span class="saida">→ 1, 2, 3</span></td></tr>
+          <tr><td><code class="syntax">lista.posição(i)</code></td><td>Elemento no índice i (0 = primeiro)</td><td><code class="example">[10,20,30].posição(1)</code> <span class="saida">→ 20</span></td></tr>
+          <tr><td><code class="syntax">lista.primeiro</code></td><td>Primeiro elemento</td><td><code class="example">[5,6].primeiro</code> <span class="saida">→ 5</span></td></tr>
+          <tr><td><code class="syntax">lista.tamanho</code></td><td>Quantidade de itens/caracteres</td><td><code class="example">[1,2,3].tamanho</code> <span class="saida">→ 3</span> &nbsp; <code class="example">"willog".tamanho</code> <span class="saida">→ 6</span></td></tr>
+          <tr><td><code class="syntax">lista.último</code></td><td>Último elemento</td><td><code class="example">[5,6].último</code> <span class="saida">→ 6</span></td></tr>
+        </table>
+        <p style="margin-top:10px; font-size:12px; color:var(--text-dim);"><span class="syntax">Literais:</span> <code class="example">10</code>, <code class="example">2.5</code>, <code class="example">"texto {var}"</code> com <code>
+</code>, <code class="example">[1,2,3]</code>, <code class="example">{"chave": valor}</code> &nbsp;|&nbsp; <span class="saida">Vazio → Ø</span></p>
+      </div>
     </div>
-  </div><script>
+  </div>
+  <div id="modalSobre" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <div class="modal-header">
+        <button class="modal-close" id="btnFecharSobre" title="Fechar">✕</button>
+      </div>
+      <div class="modal-body" style="padding:24px 28px; text-align:center; font-family:'Inter',sans-serif; line-height:1.7;">
+        <p style="margin:0; font-size:22px; font-weight:700; color:var(--text);">Willog</p>
+        <p style="margin:4px 0 14px; font-size:14px; color:var(--text-dim);">Linguagem de programação em português</p>
+        <p style="margin:12px 0 4px; font-size:13px; color:var(--text);">Desenvolvido por:</p>
+        <p style="margin:0; font-size:14px; font-weight:600; color:var(--text);">Wilson José Andriolli Junior</p>
+        <p style="margin:2px 0 12px; font-size:13px; color:var(--accent);">wjunior1973@gmail.com</p>
+        <p style="margin:0; font-size:13px; color:var(--text-dim);">2026</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalLeia" class="modal-overlay" style="display:none">
+    <div class="modal-box" style="min-width:400px; max-width:480px; height:auto; max-height:400px; overflow:auto;">
+      <div class="modal-header" style="padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+        <b>Entrada</b>
+        <button class="modal-close" id="btnFecharLeia" type="button" title="Fechar">✕</button>
+      </div>
+      <div class="modal-body" style="padding:20px;">
+        <p id="leiaPrompt" style="margin:0 0 12px; font-family:'Inter',sans-serif; font-size:14px; color:var(--text); white-space:pre-wrap;"></p>
+        <input id="leiaInput" type="text" style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:6px; background:var(--panel2); color:var(--text); font-family:'JetBrains Mono',monospace; font-size:14px; outline:none;" placeholder="">
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:16px;">
+          <button class="btn" id="btnLeiaCancelar" type="button" style="padding:8px 16px;">Cancelar</button>
+          <button class="btn primary" id="btnLeiaOk" type="button" style="padding:8px 16px;">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+﻿
 const editor = document.getElementById('editor');
 const lineNumbers = document.getElementById('lineNumbers');
 const consoleEl = document.getElementById('console');
@@ -735,7 +781,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   while(i<len){
@@ -1147,7 +1193,7 @@ function willogDisplay(v){
 function formatWillogNumber(v, argStr){
   if(typeof v!=='number' || !isFinite(v)) return willogDisplay(v);
   if(Number.isInteger(v) && /\d+\.\d+/.test(argStr)){
-    if(/^\s*(inteiro|raizq|raizc)\s*\(/i.test(argStr)) return String(v);
+    if(/^\s*(inteiro|raizq|raizc|teto|piso|arredondar)\s*\(/i.test(argStr)) return String(v);
     return v.toFixed(1);
   }
   if(!Number.isInteger(v)){
@@ -1348,9 +1394,66 @@ function preprocessExiste(expr){
   return expr;
 }
 // Tokenização e avaliação de expressão
+
+let leiaResolver = null;
+function parseLeiaPrompt(expr){
+  const m = expr.match(/^\s*leia\s*(?:\(\s*"([^"]*)"\s*\)|\(\s*'([^']*)'\s*\)|\s+"([^"]*)"|\s+'([^']*)'|\s*)$/i);
+  if(!m) return '';
+  return m[1] ?? m[2] ?? m[3] ?? m[4] ?? '';
+}
+function showLeia(promptText){
+  return new Promise(resolve=>{
+    leiaResolver = resolve;
+    document.getElementById('leiaPrompt').textContent = promptText || '';
+    const inp = document.getElementById('leiaInput');
+    inp.value = '';
+    document.getElementById('modalLeia').style.display='grid';
+    setTimeout(()=> inp.focus(), 50);
+  });
+}
+function hideLeia(result){
+  document.getElementById('modalLeia').style.display='none';
+  if(leiaResolver){ const r=leiaResolver; leiaResolver=null; r(result ?? ''); }
+}
 function evaluateExpression(expr, env){
   expr = expr.trim();
   if(expr==='') return '';
+  // Intervalo (a..b) e (a..b,passo) -> array
+  let mInterval = expr.match(/^\s*\(\s*(.+?)\s*\.\.\s*(.+?)\s*(?:,\s*(.+?)\s*)?\)\s*$/);
+  if(mInterval){
+    const startExpr = mInterval[1].trim();
+    const endExpr = mInterval[2].trim();
+    const stepExpr = mInterval[3] ? mInterval[3].trim() : null;
+    let s = Number(evaluateExpression(startExpr, env));
+    let e = Number(evaluateExpression(endExpr, env));
+    let step = stepExpr !== null ? Number(evaluateExpression(stepExpr, env)) : (s <= e ? 1 : -1);
+    if(isNaN(step) || step===0) step=1;
+    let arr=[];
+    if(step>0){
+      for(let v=s; v<=e; v+=step){
+        let val = Number.isInteger(s) && Number.isInteger(e) && Number.isInteger(step) ? Math.round(v) : Number(v.toFixed(10));
+        // corrigir floating
+        if(!Number.isInteger(step) || !Number.isInteger(s) || !Number.isInteger(e)){
+          val = Number(val.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+        }
+        arr.push(val);
+        if(arr.length>10000) break;
+        // evitar loop infinito por floating
+        if(v>e) break;
+      }
+    } else {
+      for(let v=s; v>=e; v+=step){
+        let val = Number.isInteger(s) && Number.isInteger(e) && Number.isInteger(step) ? Math.round(v) : Number(v.toFixed(10));
+        if(!Number.isInteger(step) || !Number.isInteger(s) || !Number.isInteger(e)){
+          val = Number(val.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+        }
+        arr.push(val);
+        if(arr.length>10000) break;
+        if(v<e) break;
+      }
+    }
+    return arr;
+  }
   expr = preprocessMethods(expr);
   expr = preprocessObjects(expr, env);
   expr = preprocessArrays(expr, env);
@@ -1448,7 +1551,7 @@ function tokenize(expr, env){
       // verificar se é chamada de função (ident seguido de '(')
       let j=i;
       while(j<len && /\s/.test(expr[j])) j++;
-      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter'];
+      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso'];
       const lower = id.toLowerCase();
       // se for propriedade após '.', tratar como string literal da chave
       if(tokens.length>0 && tokens[tokens.length-1].type==='OP' && tokens[tokens.length-1].value==='.'){
@@ -1779,6 +1882,30 @@ function evalRPN(rpn, env){
           res = [];
         }
         stack.push(res);
+      } else if(fn==='arredondar'){
+        const dec = stack.pop();
+        const val = stack.pop();
+        const d = Number(dec);
+        const n = Number(val);
+        const toRound = (x)=>{
+          let num=Number(x);
+          if(isNaN(num)) return 0;
+          let decimals = Number.isInteger(d) ? d : Math.trunc(d);
+          if(decimals<0) decimals=0;
+          let f=Math.pow(10, decimals);
+          let r=Math.round(num*f)/f;
+          if(!Number.isInteger(r)){
+            r=Number(r.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+          }
+          return r;
+        };
+        let res;
+        if(Array.isArray(val)){
+          res = val.map(toRound);
+        } else {
+          res = toRound(val);
+        }
+        stack.push(res);
       } else if(fn==='adicionar'){
         const bVal = stack.pop();
         const aVal = stack.pop();
@@ -1865,13 +1992,40 @@ function evalRPN(rpn, env){
               if(typeof val==='string') return val.split('').reverse().join('');
               return val;
             }
+            case 'teto': return Math.ceil(Number(val));
+            case 'piso': return Math.floor(Number(val));
+            case 'paranumero':
+            case 'paranúmero': {
+              const toNum = (x)=>{
+                if(typeof x==='number') return x;
+                let s=String(x).trim().replace(',', '.');
+                let n=Number(s);
+                return isNaN(n) ? 0 : n;
+              };
+              if(Array.isArray(val)) return val.map(toNum);
+              return toNum(val);
+            }
+            case 'paratexto': {
+              const toStr = (x)=> String(x);
+              if(Array.isArray(val)) return val.map(toStr);
+              return toStr(val);
+            }
+            case 'tipo': {
+              if(Array.isArray(val)) return 'lista';
+              if(typeof val==='string') return 'texto';
+              if(typeof val==='number') return 'número';
+              if(typeof val==='boolean') return 'booleano';
+              if(val && typeof val==='object') return 'dicionário';
+              if(val===null || val===undefined) return 'nulo';
+              return typeof val;
+            }
             default: return val;
           }
         };
         let res;
         if(Array.isArray(a)){
           // para funções que já tratam array como um todo (ordenar, aleatorio, etc) não mapear elemento a elemento
-          if(['ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','inverter'].includes(fn)){
+          if(['ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','inverter','tipo','teto','piso','arredondar'].includes(fn)){
             res = execSingle(a);
           }else{
             res = a.map(x=> {
@@ -2121,6 +2275,14 @@ function parseRepetir(line){
   if(m) return {expr:m[1].trim(), after:m[2].trim()};
   return {expr:'', after:''};
 }
+function isEnquantoLine(line){
+  return /^\s*enquanto\b.*:/i.test(line);
+}
+function parseEnquanto(line){
+  const m=line.match(/^\s*enquanto\s+(.*?)\s*:\s*(.*)$/i);
+  if(m) return {cond:m[1].trim(), after:m[2].trim()};
+  return {cond:'', after:''};
+}
 function parseVerificar(line){
   const m=line.match(/^\s*verificar\s+(.*?):\s*$/i);
   if(m) return {expr:m[1].trim()};
@@ -2172,7 +2334,7 @@ function findBlockEnd(lines, start, parentIndent){
   }
   return i;
 }
-function execSingleStatement(stmt, env, lineNo, hasOutputRef){
+async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
   stmt=stmt.trim();
   if(stmt==='') return;
   if(stmt.startsWith('#') || stmt.startsWith('//')) return;
@@ -2186,7 +2348,7 @@ function execSingleStatement(stmt, env, lineNo, hasOutputRef){
           hasOutputRef.value=true;
         }else{
           const args=splitMostreArgs(rest);
-          const vals=args.map(a=>{ const v=evaluateExpression(a.trim(), env); return {v, arg:a.trim()}; });
+          const vals=[]; for(let a of args){ const t=a.trim(); let v; if(/^\s*leia\b/i.test(t)){ const pr=parseLeiaPrompt(t); v=await showLeia(pr); } else { v=evaluateExpression(t, env); } vals.push({v, arg:t}); }
           const displayVals=vals.map(({v,arg})=>{
             if(typeof v==='number') return formatWillogNumber(v, arg);
             return willogDisplay(v);
@@ -2223,7 +2385,7 @@ function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       const rhs=parts[parts.length-1].trim();
       if(rhs==='') return;
       try{
-        const val=evaluateExpression(rhs, env);
+        let val; if(/^\s*leia\b/i.test(rhs)){ const pr=parseLeiaPrompt(rhs); val=await showLeia(pr); } else { val=evaluateExpression(rhs, env); }
         for(let i=0;i<parts.length-1;i++){
           const varPath=parts[i].trim();
           if(varPath==='') continue;
@@ -2273,7 +2435,7 @@ function evaluateCondition(condStr, env){
     return false;
   }
 }
-function runWillog(){
+async function runWillog(){
   clearConsole();
   const src=editor.value;
   const env={};
@@ -2322,7 +2484,7 @@ function runWillog(){
     }
   }
   // execução recursiva por índice
-  function execBlock(start, end, baseIndent){
+  async function execBlock(start, end, baseIndent){
     let i=start;
     while(i<end){
       const entry=lines[i];
@@ -2420,13 +2582,13 @@ function runWillog(){
             elseAfter=p.after;
           }
           if(condVal){
-            execSingleStatement(afterSe, env, lineNo, hasOutputRef);
+            await execSingleStatement(afterSe, env, lineNo, hasOutputRef);
           }else if(hasElse){
             if(elseAfter && elseAfter.trim()!==''){
-              execSingleStatement(elseAfter, env, lines[elseIdx].lineNo, hasOutputRef);
+              await execSingleStatement(elseAfter, env, lines[elseIdx].lineNo, hasOutputRef);
             }else{
               const es=findBlockEnd(lines, elseIdx+1, seIndent);
-              execBlock(elseIdx+1, es, seIndent+1);
+              await execBlock(elseIdx+1, es, seIndent+1);
             }
           }
           i = hasElse ? (elseAfter && elseAfter.trim()!=='' ? elseIdx+1 : findBlockEnd(lines, elseIdx+1, seIndent)) : i+1;
@@ -2451,17 +2613,42 @@ function runWillog(){
             }
           }
           if(condVal){
-            execBlock(trueStart, trueEnd, seIndent+1);
+            await execBlock(trueStart, trueEnd, seIndent+1);
           }else if(hasElse){
             if(elseAfter && elseAfter.trim()!==''){
-              execSingleStatement(elseAfter, env, lines[elseIdx].lineNo, hasOutputRef);
+              await execSingleStatement(elseAfter, env, lines[elseIdx].lineNo, hasOutputRef);
             }else{
-              execBlock(elseIdx+1, elseEnd, seIndent+1);
+              await execBlock(elseIdx+1, elseEnd, seIndent+1);
             }
           }
           i = hasElse ? elseEnd : trueEnd;
           continue;
         }
+      }else if(isEnquantoLine(raw)){
+        const eIndent=getIndent(raw);
+        const parsedE=parseEnquanto(raw);
+        const afterE=parsedE.after;
+        const isSingleE=afterE && afterE.trim()!=='';
+        let eBlockStart, eBlockEnd;
+        if(!isSingleE){
+          eBlockStart=i+1;
+          eBlockEnd=findBlockEnd(lines, eBlockStart, eIndent);
+        }
+        let iter=0; const maxIter=100000;
+        if(isSingleE){
+          while(evaluateCondition(parsedE.cond, env) && iter<maxIter){
+            await execSingleStatement(afterE, env, lineNo, hasOutputRef);
+            iter++;
+          }
+        }else{
+          while(evaluateCondition(parsedE.cond, env) && iter<maxIter){
+            await execBlock(eBlockStart, eBlockEnd, eIndent+1);
+            iter++;
+          }
+        }
+        if(iter>=maxIter) logToConsole('Erro: loop enquanto excedeu limite', 'error');
+        i = isSingleE ? i+1 : eBlockEnd;
+        continue;
       }else if(isParaCadaLine(raw)){
         const pcIndent=indent;
         const parsed=parseParaCada(raw);
@@ -2484,12 +2671,12 @@ function runWillog(){
             if(stepVal>0){
               for(let v=sVal; v<=eVal; v+=stepVal){
                 env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
-                execSingleStatement(afterPara, env, lineNo, hasOutputRef);
+                await execSingleStatement(afterPara, env, lineNo, hasOutputRef);
               }
             }else{
               for(let v=sVal; v>=eVal; v+=stepVal){
                 env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
-                execSingleStatement(afterPara, env, lineNo, hasOutputRef);
+                await execSingleStatement(afterPara, env, lineNo, hasOutputRef);
               }
             }
             i=i+1;
@@ -2497,12 +2684,12 @@ function runWillog(){
             if(stepVal>0){
               for(let v=sVal; v<=eVal; v+=stepVal){
                 env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
-                execBlock(pBlockStart, pBlockEnd, pcIndent+1);
+                await execBlock(pBlockStart, pBlockEnd, pcIndent+1);
               }
             }else{
               for(let v=sVal; v>=eVal; v+=stepVal){
                 env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
-                execBlock(pBlockStart, pBlockEnd, pcIndent+1);
+                await execBlock(pBlockStart, pBlockEnd, pcIndent+1);
               }
             }
             i=pBlockEnd;
@@ -2517,13 +2704,13 @@ function runWillog(){
           if(isSinglePara){
             for(let it of iterable){
               env[varName]=it;
-              execSingleStatement(afterPara, env, lineNo, hasOutputRef);
+              await execSingleStatement(afterPara, env, lineNo, hasOutputRef);
             }
             i=i+1;
           }else{
             for(let it of iterable){
               env[varName]=it;
-              execBlock(pBlockStart, pBlockEnd, pcIndent+1);
+              await execBlock(pBlockStart, pBlockEnd, pcIndent+1);
             }
             i=pBlockEnd;
           }
@@ -2545,9 +2732,9 @@ function runWillog(){
           rBlockEnd=findBlockEnd(lines, rBlockStart, rIndent);
         }
         if(isSingleRep){
-          for(let k=0;k<n;k++) execSingleStatement(afterRep, env, lineNo, hasOutputRef);
+          for(let k=0;k<n;k++) await execSingleStatement(afterRep, env, lineNo, hasOutputRef);
         }else{
-          for(let k=0;k<n;k++) execBlock(rBlockStart, rBlockEnd, rIndent+1);
+          for(let k=0;k<n;k++) await execBlock(rBlockStart, rBlockEnd, rIndent+1);
         }
         i = isSingleRep ? i+1 : rBlockEnd;
         continue;
@@ -2574,7 +2761,7 @@ function runWillog(){
               const after=p.after;
               if(after!==''){
                 if(after.trim().startsWith('mostre')){
-                  execSingleStatement(after, env, lines[k].lineNo, hasOutputRef);
+                  await execSingleStatement(after, env, lines[k].lineNo, hasOutputRef);
                 }else{
                   try{
                     const v=evaluateExpression(after, env);
@@ -2590,7 +2777,7 @@ function runWillog(){
                 }
               }else{
                 const cBlockEnd=findBlockEnd(lines, k+1, getIndent(lraw));
-                execBlock(k+1, cBlockEnd, getIndent(lraw)+1);
+                await execBlock(k+1, cBlockEnd, getIndent(lraw)+1);
                 hasOutputRef.value=true;
               }
               matched=true;
@@ -2606,7 +2793,7 @@ function runWillog(){
               const after=p.after;
               if(after!==''){
                 if(after.trim().startsWith('mostre')){
-                  execSingleStatement(after, env, lines[k].lineNo, hasOutputRef);
+                  await execSingleStatement(after, env, lines[k].lineNo, hasOutputRef);
                 }else{
                   try{
                     const v=evaluateExpression(after, env);
@@ -2622,7 +2809,7 @@ function runWillog(){
                 }
               }else{
                 const pBlockEnd=findBlockEnd(lines, k+1, getIndent(lraw));
-                execBlock(k+1, pBlockEnd, getIndent(lraw)+1);
+                await execBlock(k+1, pBlockEnd, getIndent(lraw)+1);
                 hasOutputRef.value=true;
               }
               break;
@@ -2644,13 +2831,13 @@ function runWillog(){
         i=blockEnd;
         continue;
       }else{
-        execSingleStatement(raw, env, lineNo, hasOutputRef);
+        await execSingleStatement(raw, env, lineNo, hasOutputRef);
         i++;
       }
     }
     return i;
   }
-  execBlock(0, lines.length, 0);
+  await execBlock(0, lines.length, 0);
   if(!hasOutputRef.value){
     logToConsole('> programa executado — sem saída.','info');
   }
@@ -2681,15 +2868,15 @@ document.getElementById('btnExecutar').addEventListener('click', runWillog);
       btn.addEventListener("click", ()=> setTimeout(closeAll, 150));
     });
   })();
-document.getElementById('btnManual').addEventListener('click', ()=>{
-  document.getElementById('modalManual').style.display='grid';
+document.getElementById('btnReferencia').addEventListener('click', ()=>{
+  document.getElementById('modalReferencia').style.display='grid';
 });
-document.getElementById('btnFecharManual').addEventListener('click', ()=>{
-  document.getElementById('modalManual').style.display='none';
+document.getElementById('btnFecharReferencia').addEventListener('click', ()=>{
+  document.getElementById('modalReferencia').style.display='none';
 });
-document.getElementById('modalManual').addEventListener('click', (e)=>{
-  if(e.target.id==='modalManual') document.getElementById('modalManual').style.display='none';
-});  // Abas do manual
+document.getElementById('modalReferencia').addEventListener('click', (e)=>{
+  if(e.target.id==='modalReferencia') document.getElementById('modalReferencia').style.display='none';
+});
   document.querySelectorAll(".manual-tab").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       document.querySelectorAll(".manual-tab").forEach(b=>b.classList.remove("active"));
@@ -2698,7 +2885,9 @@ document.getElementById('modalManual').addEventListener('click', (e)=>{
       const pane=document.getElementById("pane-"+btn.dataset.tab);
       if(pane) pane.classList.add("active");
     });
-  });// Sobre modal
+  });
+
+// Sobre modal
 document.getElementById('btnSobre').addEventListener('click', ()=>{
   document.getElementById('modalSobre').style.display='grid';
 });
@@ -2711,32 +2900,21 @@ document.getElementById('modalSobre').addEventListener('click', (e)=>{
 document.addEventListener('keydown', (e)=>{
   if(e.key==='Escape') document.getElementById('modalSobre').style.display='none';
 });
+document.getElementById('btnLeiaOk').addEventListener('click', ()=> hideLeia(document.getElementById('leiaInput').value));
+document.getElementById('btnLeiaCancelar').addEventListener('click', ()=> hideLeia(''));
+document.getElementById('btnFecharLeia').addEventListener('click', ()=> hideLeia(''));
+document.getElementById('modalLeia').addEventListener('click', (e)=>{ if(e.target.id==='modalLeia') hideLeia(''); });
+document.getElementById('leiaInput').addEventListener('keydown', (e)=>{
+  if(e.key==='Enter'){ e.preventDefault(); hideLeia(e.target.value); }
+  if(e.key==='Escape'){ e.preventDefault(); hideLeia(''); }
+});
 // Atalho global F5
 document.addEventListener('keydown', (e)=>{
   if(e.key==='F5'){ e.preventDefault(); runWillog(); }
 });
 
 
+
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
