@@ -26,7 +26,6 @@
     --success: #00b894;
     --error: #ff7675;
     --shadow: 0 8px 32px rgba(40,30,80,0.12);
-    /* Paleta de syntax highlight - modo claro (profissional) */
     --hl-keyword: #6c5ce7;
     --hl-boolean: #d63031;
     --hl-string: #007a5a;
@@ -54,7 +53,6 @@
     --console-fg: #d8d6ff;
     --console-border: #2a2840;
     --shadow: 0 8px 32px rgba(0,0,0,0.4);
-    /* Paleta de syntax highlight - modo escuro */
     --hl-keyword: #a29bfe;
     --hl-boolean: #ff7675;
     --hl-string: #55efc4;
@@ -76,7 +74,6 @@
     flex-direction: column;
     overflow: hidden;
   }
-  /* Header */
   .header {
     background: linear-gradient(135deg, var(--accent) 0%, #4834a3 100%);
     color: white;
@@ -111,8 +108,6 @@
     cursor:pointer; display:grid; place-items:center; transition: all 0.15s;
   }
   .btn-close:hover { background: #ff4757; border-color:#ff4757; }
-
-  /* Menu bar */
   .menubar {
     background: var(--panel);
     border-bottom: 2px solid var(--border);
@@ -142,8 +137,6 @@
   .btn.small { padding:5px 8px; font-size:12px; }
   .filename { font-family:'JetBrains Mono', monospace; font-size:13px; color: var(--text-dim); margin-left:8px; }
   .filename strong { color: var(--text); }
-
-  /* Main layout */
   .main {
     flex:1; display:flex; gap:0; padding:12px; overflow:hidden; min-height:0;
   }
@@ -192,8 +185,6 @@
   }
   .pane-header b { color: var(--text); font-weight:700; }
   .pane-header .hint { font-weight:400; font-size:11px; opacity:0.8; }
-
-  /* Editor */
   .editor-wrap { flex:1; display:flex; overflow:hidden; position:relative; }
   .line-numbers {
     background: var(--panel2);
@@ -261,10 +252,7 @@
   }
   #editor::selection { background: rgba(108,92,231,0.25); }
   #editor::placeholder { color: var(--text-dim); opacity:0.6; }
-  /* quando editor está vazio, highlight não deve cobrir placeholder - placeholder fica visível por ser transparent */
   #editor:placeholder-shown { color: transparent; }
-
-  /* Console */
   .console-output {
     flex:1;
     background: var(--console-bg);
@@ -286,8 +274,6 @@
   .console-input-row input {
     flex:1; font-family:'JetBrains Mono', monospace; font-size:14px; padding:6px 10px; border:2px solid var(--border); border-radius:6px; background:var(--panel); color:var(--text); outline:none;
   }
-
-  /* Footer help */
   .help-bar {
     background: var(--panel2);
     border-top:2px solid var(--border);
@@ -299,12 +285,9 @@
   }
   .help-bar code { background: var(--panel); border:1px solid var(--border); padding:1px 5px; border-radius:4px; color: var(--accent); font-family:'JetBrains Mono', monospace; }
   .status { margin-left:auto; font-family:'Inter', sans-serif; font-size:11px; }
-
-  /* Scrollbar */
   ::-webkit-scrollbar { width:10px; height:10px; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius:6px; border:2px solid var(--panel); }
   ::-webkit-scrollbar-track { background: var(--panel2); }
-
   @media (max-width: 900px) {
     .main { flex-direction:column; }
     .pane.console-pane { min-width:unset; min-height:240px; flex-basis: 40%; }
@@ -332,7 +315,7 @@
   }
   .menu { position:relative; }
   .menu-trigger {
-    font-family:''Inter'',sans-serif; font-size:13px; padding:7px 12px; border:1px solid transparent; background:transparent; color:var(--text); cursor:pointer; border-radius:6px;
+    font-family:'Inter',sans-serif; font-size:13px; padding:7px 12px; border:1px solid transparent; background:transparent; color:var(--text); cursor:pointer; border-radius:6px;
   }
   .menu-trigger:hover { background:var(--panel2); border-color:var(--border); }
   .menu.active .menu-trigger { background:var(--panel2); border-color:var(--border); }
@@ -341,13 +324,13 @@
   }
   .menu.active .menu-dropdown { display:flex; }
   .menu-dropdown button {
-    font-family:''Inter'',sans-serif; font-size:13px; padding:8px 12px; border:none; background:transparent; color:var(--text); text-align:left; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:8px; width:100%;
+    font-family:'Inter',sans-serif; font-size:13px; padding:8px 12px; border:none; background:transparent; color:var(--text); text-align:left; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:8px; width:100%;
   }
   .menu-dropdown button:hover { background:var(--panel2); }
   .menu-dropdown button.primary { background:var(--accent); color:white; }
   .menu-dropdown button.primary:hover { background:var(--accent-hover); }
   .menu-sep-dropdown { height:1px; background:var(--border); margin:4px 0; }
-.modal-manual-body {
+  .modal-manual-body {
     padding:20px 22px; overflow:auto; font-family:'Inter',sans-serif; font-size:17px; line-height:1.6; color:var(--text);
   }
   .modal-manual-body h3 { margin:18px 0 10px; font-size:17px; color:var(--accent); border-bottom:1px solid var(--border); padding-bottom:5px; }
@@ -357,7 +340,6 @@
   .modal-manual-body table { width:100%; border-collapse:collapse; margin:10px 0; font-size:14px; }
   .modal-manual-body th, .modal-manual-body td { border:1px solid var(--border); padding:6px 8px; text-align:left; }
   .modal-manual-body th { background:var(--panel2); font-weight:600; }
-
   .modal-manual-box {
     background: var(--panel); color: var(--text); border:2px solid var(--border); border-radius:12px; padding:0; width:96vw; height:94vh; max-width:96vw; max-height:94vh; min-width:96vw; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,0.25); position:relative; display:flex; flex-direction:column; overflow:hidden;
   }
@@ -372,9 +354,9 @@
   }
   .manual-tab:hover { background:var(--panel); color:var(--text); }
   .manual-tab.active { color:var(--accent); border-bottom-color:var(--accent); background:var(--panel); }
-.manual-pane { display:none; flex:1; overflow:auto; padding:22px 22px 16px; font-family:'Inter',sans-serif; font-size:14px; line-height:1.6; color:var(--text); }
+  .manual-pane { display:none; flex:1; overflow:auto; padding:22px 22px 16px; font-family:'Inter',sans-serif; font-size:14px; line-height:1.6; color:var(--text); }
   .manual-pane.active { display:block; background:var(--panel); }
-.manual-pane h3 { margin:18px 0 10px; font-size:16px; font-weight:700; color:var(--accent); border-bottom:1px solid var(--border); padding-bottom:5px; line-height:1.3; }
+  .manual-pane h3 { margin:18px 0 10px; font-size:16px; font-weight:700; color:var(--accent); border-bottom:1px solid var(--border); padding-bottom:5px; line-height:1.3; }
   .manual-pane h3:first-child { margin-top:4px; }
   .manual-pane p { margin:8px 0; }
   .manual-pane code { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--panel2); border:1px solid var(--border); padding:1px 5px; border-radius:4px; }
@@ -386,6 +368,15 @@
   .example { color:var(--hl-string); }
   .saida { color:var(--hl-number); font-style:italic; }
   .code-label { font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.6px; margin:14px 0 6px; }
+  .btn-download {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+  }
+  .btn-download:hover {
+    background: #00a381;
+    border-color: #00a381;
+  }
 </style>
 </head>
 <body data-theme="light">
@@ -402,40 +393,42 @@
   </header>
 
   <nav class="menubar">
-  <div class="menu" id="menuArquivo">
-    <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Arquivo ▾</button>
-    <div class="menu-dropdown">
-      <button id="btnNovo">📄 Novo</button>
-      <button id="btnAbrir">📂 Abrir</button>
-      <button id="btnSalvar">💾 Salvar</button>
-    </div>
-  </div>
-  <div class="menu" id="menuExibir">
-    <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Exibir ▾</button>
-    <div class="menu-dropdown">
-      <button id="btnTema">🌓 Tema</button>
-      <div class="menu-sep-dropdown"></div>
-      <div style="display:flex; align-items:center; gap:6px; padding:6px 8px;">
-        <span style="font-size:13px;flex:1;">Zoom</span>
-        <button class="btn small" id="btnZoomOut" style="padding:4px 8px;">A−</button>
-        <button class="btn small" id="btnZoomIn" style="padding:4px 8px;">A+</button>
-        <span id="zoomLabel" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">100%</span>
+    <div class="menu" id="menuArquivo">
+      <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Arquivo ▾</button>
+      <div class="menu-dropdown">
+        <button id="btnNovo">📄 Novo</button>
+        <button id="btnAbrir">📂 Abrir</button>
+        <button id="btnSalvar">💾 Salvar</button>
+        <div class="menu-sep-dropdown"></div>
+        <button id="btnBaixarHTML" class="primary">⬇ Baixar HTML</button>
       </div>
     </div>
-  </div>
-  <div class="menu" id="menuAjuda">
-    <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Ajuda ▾</button>
-    <div class="menu-dropdown">
-      <button id="btnReferencia">📖 Referência rápida</button>
-      <div class="menu-sep-dropdown"></div>
-      <button id="btnSobre">ℹ️ Sobre</button>
+    <div class="menu" id="menuExibir">
+      <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Exibir ▾</button>
+      <div class="menu-dropdown">
+        <button id="btnTema">🌓 Tema</button>
+        <div class="menu-sep-dropdown"></div>
+        <div style="display:flex; align-items:center; gap:6px; padding:6px 8px;">
+          <span style="font-size:13px;flex:1;">Zoom</span>
+          <button class="btn small" id="btnZoomOut" style="padding:4px 8px;">A−</button>
+          <button class="btn small" id="btnZoomIn" style="padding:4px 8px;">A+</button>
+          <span id="zoomLabel" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">100%</span>
+        </div>
+      </div>
     </div>
-  </div>
-  <button class="btn primary" id="btnExecutar" title="Executar (F5 ou Ctrl+Enter)">▶ Executar</button>
-  <button class="btn small" id="btnLimpar" title="Limpar editor">🧹 Limpar editor</button>
-  <span class="filename" style="margin-left:auto;">Arquivo: <strong id="filenameDisplay">sem_título.wil</strong></span>
-  <input type="file" id="fileInput" accept=".wil,.txt" hidden>
-</nav>
+    <div class="menu" id="menuAjuda">
+      <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Ajuda ▾</button>
+      <div class="menu-dropdown">
+        <button id="btnReferencia">📖 Referência rápida</button>
+        <div class="menu-sep-dropdown"></div>
+        <button id="btnSobre">ℹ️ Sobre</button>
+      </div>
+    </div>
+    <button class="btn primary" id="btnExecutar" title="Executar (F5 ou Ctrl+Enter)">▶ Executar</button>
+    <button class="btn small" id="btnLimpar" title="Limpar editor">🧹 Limpar editor</button>
+    <span class="filename" style="margin-left:auto;">Arquivo: <strong id="filenameDisplay">sem_título.wil</strong></span>
+    <input type="file" id="fileInput" accept=".wil,.txt" hidden>
+  </nav>
 
   <div class="main">
     <section class="pane editor-pane">
@@ -472,7 +465,8 @@
     <span class="status" id="statusBar">Pronto • Willog 1.0</span>
   </div>
 
-            <div id="modalReferencia" class="modal-overlay" style="display:none">
+  <!-- Modal Referência -->
+  <div id="modalReferencia" class="modal-overlay" style="display:none">
     <div class="modal-manual-box">
       <div class="modal-manual-header">
         <b>Referência rápida</b>
@@ -485,6 +479,34 @@
         <button class="manual-tab" data-tab="propriedades">Propriedades</button>
       </div>
       <div class="manual-pane active" id="pane-comandos">
+        <h3>continue</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">continue</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">para cada n entre 1 e 10:
+    se n==2:
+        continue
+    mostre n</span>
+<span class="saida">-> 1  3  4  5  6  7  8  9  10 (pula n==2)</span></pre>
+        <h3>definir função</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">definir função</span> <span class="example">&lt;nome&gt;(&lt;parâmetro 1&gt;, &lt;parâmetro 2&gt;, ...):</span>
+<span class="example">    retorne &lt;expressão&gt;</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">definir função soma(a,b):
+    retorne a+b
+mostre soma(10,20)</span>
+<span class="saida">-> 30</span>
+
+<span class="example">definir função produto(a,b,c):
+    retorne a*b*c
+produto(5,3,2)</span>
+<span class="saida">-> 30</span>
+
+<span class="example">definir função S(s0,v,t):
+    retorne "S = {s0} + {v} x {t} = {s0+v*t}"
+mostre S(100,20,10)</span>
+<span class="saida">-> S = 100 + 20 x 10 = 300</span></pre>
         <h3>enquanto</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">enquanto</span> <span class="example">&lt;condição&gt;:</span>
@@ -501,7 +523,7 @@ enquanto n<10:
     n=n+1
 mostre "n = {n}. Fim!"</span>
 <span class="saida">-> n = 10. Fim!</span></pre>
-                <h3>intervalo</h3>
+        <h3>intervalo</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">(</span><span class="example">início..fim</span><span class="syntax">)</span>
 <span class="syntax">(</span><span class="example">início..fim,passo</span><span class="syntax">)</span></pre>
@@ -513,7 +535,7 @@ mostre x</span>
 <span class="example">intervalo=(-5..5,2)
 mostre intervalo</span>
 <span class="saida">-> -5,-3,-1,1,3,5</span></pre>
-                <h3>leia</h3>
+        <h3>leia</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">&lt;variável&gt; = leia</span>
 <span class="syntax">&lt;variável&gt; = leia</span> <span class="example">"mensagem"</span>
@@ -528,7 +550,16 @@ mostre "Olá, {nome}!"</span>
 mostre idade</span>
 <span class="saida">-> Digite sua idade: 25
 -> 25</span></pre>
-                <h3>mostre</h3>
+        <h3>limpe</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">limpe</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">mostre "Olá"
+mostre "Mundo"
+limpe
+mostre "Console limpo"</span>
+<span class="saida">-> Console limpo (anteriores apagados)</span></pre>
+        <h3>mostre</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">mostre</span> <span class="example">&lt;valor&gt; [, &lt;valor&gt; ...]</span></pre>
         <p class="code-label">Exemplos</p>
@@ -576,6 +607,36 @@ A
 <span class="example">para cada letra em "willog":
     mostre letra</span>
 <span class="saida">-> w  i  l  l  o  g</span></pre>
+        <h3>pare</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">pare</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">para cada n entre 1 e 10:
+    se n==5:
+        pare
+    mostre n</span>
+<span class="saida">-> 1  2  3  4 (interrompe em n==5)</span>
+
+<span class="example">para cada n entre 1 e 10:
+    se n==5:
+        pare
+    se n==2:
+        continue
+    mostre n</span>
+<span class="saida">-> 1  3  4 (pula 2, para em 5)</span></pre>
+        <h3>pausa</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">pausa</span><span class="example">(segundos)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">mostre "Olá"
+pausa(2)
+mostre "Mundo"</span>
+<span class="saida">-> Olá (pausa 2s sem mensagem) -> Mundo</span>
+
+<span class="example">para cada n entre 1 e 3:
+    mostre n
+    pausa(1)</span>
+<span class="saida">-> 1 (pausa 1s) -> 2 (pausa 1s) -> 3</span></pre>
         <h3>repetir</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">repetir</span><span class="example">(&lt;n&gt;):</span>
@@ -600,6 +661,17 @@ se nota >= 7:
 senão:
     mostre "Reprovado"</span>
 <span class="saida">-> Aprovado</span></pre>
+        <h3>vá para</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">:rótulo</span>
+<span class="syntax">vá para</span> <span class="example">rótulo</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">:início
+a=aleatório(10)
+se a!=7:
+    vá para início
+mostre "Fim!"</span>
+<span class="saida">-> Fim! (quando a==7)</span></pre>
         <h3>verificar … caso … padrão</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">verificar</span> <span class="example">&lt;valor&gt;:</span>
@@ -617,11 +689,18 @@ verificar nota:
         <h3>Funções — ordem alfabética</h3>
         <table>
           <tr><th>Sintaxe</th><th>Descrição</th><th>Exemplo → Saída</th></tr>
+          <tr><td><code class="syntax">adicionarDias(data, dias)</code></td><td>Adiciona dias a uma data</td><td><code class="example">adicionarDias("14/04/1973",19269)</code> <span class="saida">→ 15/01/2026</span></td></tr>
+          <tr><td><code class="syntax">agora()</code></td><td>Data e hora atuais</td><td><code class="example">agora()</code> <span class="saida">→ 15/01/2026 14:30:07</span></td></tr>
           <tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr>
+          <tr><td><code class="syntax">anosEntre(data1, data2)</code></td><td>Anos entre duas datas</td><td><code class="example">anosEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 52.7917808219</span></td></tr>
           <tr><td><code class="syntax">arredondar(x, casas)</code></td><td>Arredonda para n casas decimais</td><td><code class="example">arredondar(5.33333,2)</code> <span class="saida">→ 5.33</span><br><code class="example">arredondar(1.66666,3)</code> <span class="saida">→ 1.667</span></td></tr>
+          <tr><td><code class="syntax">data()</code></td><td>Data atual</td><td><code class="example">data()</code> <span class="saida">→ 15/01/2026</span></td></tr>
           <tr><td><code class="syntax">decimal(x)</code></td><td>Parte decimal</td><td><code class="example">decimal(2.5)</code> <span class="saida">→ 0.5</span></td></tr>
+          <tr><td><code class="syntax">diasEntre(data1, data2)</code></td><td>Dias entre duas datas</td><td><code class="example">diasEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 19269</span></td></tr>
           <tr><td><code class="syntax">fração(x)</code></td><td>Converte para fração</td><td><code class="example">fração(0.333)</code> <span class="saida">→ 1/3</span></td></tr>
+          <tr><td><code class="syntax">hora()</code></td><td>Hora atual</td><td><code class="example">hora()</code> <span class="saida">→ 14:30:07</span></td></tr>
           <tr><td><code class="syntax">inteiro(x)</code></td><td>Parte inteira</td><td><code class="example">inteiro(2.7)</code> <span class="saida">→ 2</span></td></tr>
+          <tr><td><code class="syntax">mesesEntre(data1, data2)</code></td><td>Meses entre duas datas</td><td><code class="example">mesesEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 633.501369863</span></td></tr>
           <tr><td><code class="syntax">paraNúmero(x)</code></td><td>Converte texto para número</td><td><code class="example">paraNúmero("12.5")</code> <span class="saida">→ 12.5</span><br><code class="example">paraNúmero("12,5")*2</code> <span class="saida">→ 25</span></td></tr>
           <tr><td><code class="syntax">paraTexto(x)</code></td><td>Converte número para texto</td><td><code class="example">paraTexto(8)</code> <span class="saida">→ "8"</span><br><code class="example">paraTexto(8)*3</code> <span class="saida">→ 888</span></td></tr>
           <tr><td><code class="syntax">piso(x)</code></td><td>Arredonda para baixo (floor)</td><td><code class="example">piso(2.3)</code> <span class="saida">→ 2</span><br><code class="example">piso(2.9)</code> <span class="saida">→ 2</span></td></tr>
@@ -639,7 +718,7 @@ verificar nota:
           <tr><td><code class="syntax">(início..fim)</code><br><code class="syntax">(início..fim,passo)</code></td><td>Intervalo — cria lista de a até b</td><td><code class="example">x=(1..5)</code> <span class="saida">→ 1,2,3,4,5</span><br><code class="example">(-5..5,2)</code> <span class="saida">→ -5,-3,-1,1,3,5</span></td></tr>
           <tr><td><code class="syntax">+</code> <code class="syntax">&</code></td><td>Adição e concatenação; com listas une</td><td><code class="example">2+3</code> <span class="saida">→ 5</span> &nbsp; <code class="example">[1,2]+[3]</code> <span class="saida">→ 1, 2, 3</span></td></tr>
           <tr><td><code class="syntax">-</code></td><td>Subtração; diferença de conjuntos</td><td><code class="example">5-2</code> <span class="saida">→ 3</span> &nbsp; <code class="example">[1,2,3]-[2]</code> <span class="saida">→ 1, 3</span></td></tr>
-          <tr><td><code class="syntax">*</code> <code class="syntax">/</code> <code class="syntax">//</code> <code class="syntax">\</code> <code class="syntax">%</code> <code class="syntax">**</code></td><td>Multiplicação, divisão, inteira, quociente fracionário, módulo, potência — vetorizados</td><td><code class="example">2**3</code> <span class="saida">→ 8</span> &nbsp; <code class="example">5//2</code> <span class="saida">→ 2</span> &nbsp; <code class="example">5</code> <span class="saida">→ 0.5</span></td></tr>
+          <tr><td><code class="syntax">*</code> <code class="syntax">/</code> <code class="syntax">//</code> <code class="syntax">\</code> <code class="syntax">%</code> <code class="syntax">**</code></td><td>Multiplicação, divisão, inteira, quociente fracionário, módulo, potência — vetorizados</td><td><code class="example">2**3</code> <span class="saida">→ 8</span> &nbsp; <code class="example">5//2</code> <span class="saida">→ 2</span> &nbsp; <code class="example">5\</code> <span class="saida">→ 0.5</span></td></tr>
           <tr><td><code class="syntax">> &lt; >= &lt;= == !=</code></td><td>Comparação → <code>Verdadeiro</code>/<code>Falso</code></td><td><code class="example">10>5</code> <span class="saida">→ Verdadeiro</span></td></tr>
           <tr><td><code class="syntax">e</code></td><td>Conjunção lógica</td><td><code class="example">5>3 e 2<4</code> <span class="saida">→ Verdadeiro</span></td></tr>
           <tr><td><code class="syntax">existe … em …</code></td><td>Pertinência em texto/lista</td><td><code class="example">existe "a" em "casa"</code> <span class="saida">→ Verdadeiro</span></td></tr>
@@ -663,11 +742,12 @@ verificar nota:
           <tr><td><code class="syntax">lista.tamanho</code></td><td>Quantidade de itens/caracteres</td><td><code class="example">[1,2,3].tamanho</code> <span class="saida">→ 3</span> &nbsp; <code class="example">"willog".tamanho</code> <span class="saida">→ 6</span></td></tr>
           <tr><td><code class="syntax">lista.último</code></td><td>Último elemento</td><td><code class="example">[5,6].último</code> <span class="saida">→ 6</span></td></tr>
         </table>
-        <p style="margin-top:10px; font-size:12px; color:var(--text-dim);"><span class="syntax">Literais:</span> <code class="example">10</code>, <code class="example">2.5</code>, <code class="example">"texto {var}"</code> com <code>
-</code>, <code class="example">[1,2,3]</code>, <code class="example">{"chave": valor}</code> &nbsp;|&nbsp; <span class="saida">Vazio → Ø</span></p>
+        <p style="margin-top:10px; font-size:12px; color:var(--text-dim);"><span class="syntax">Literais:</span> <code class="example">10</code>, <code class="example">2.5</code>, <code class="example">"texto {var}"</code> com <code>\n</code>, <code class="example">[1,2,3]</code>, <code class="example">{"chave": valor}</code> &nbsp;|&nbsp; <span class="saida">Vazio → Ø</span></p>
       </div>
     </div>
   </div>
+
+  <!-- Modal Sobre -->
   <div id="modalSobre" class="modal-overlay" style="display:none">
     <div class="modal-box">
       <div class="modal-header">
@@ -684,6 +764,7 @@ verificar nota:
     </div>
   </div>
 
+  <!-- Modal Leia -->
   <div id="modalLeia" class="modal-overlay" style="display:none">
     <div class="modal-box" style="min-width:400px; max-width:480px; height:auto; max-height:400px; overflow:auto;">
       <div class="modal-header" style="padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
@@ -702,7 +783,10 @@ verificar nota:
   </div>
 
 <script>
-﻿
+// ================================================================
+// CÓDIGO JAVASCRIPT COMPLETO DA WILLOG IDE
+// ================================================================
+
 const editor = document.getElementById('editor');
 const lineNumbers = document.getElementById('lineNumbers');
 const consoleEl = document.getElementById('console');
@@ -732,17 +816,30 @@ document.getElementById('btnTema').addEventListener('click', ()=>{
 // --- Fechar janela ---
 document.getElementById('btnFechar').addEventListener('click', ()=>{
   window.close();
-  // fallback caso o navegador bloqueie window.close()
   setTimeout(()=>{
     try{ window.open('', '_self'); window.close(); }catch(e){}
     if(!window.closed){
-      // tenta navegar para about:blank como último recurso
       document.body.innerHTML = '<div style="display:grid;place-items:center;height:100vh;font-family:Inter,sans-serif;color:var(--text);background:var(--bg)"><div><h2>Janela pode ser fechada manualmente</h2><p>O navegador bloqueou o fechamento automático. Feche esta aba/janela com Alt+F4 ou Ctrl+W.</p></div></div>';
     }
   }, 200);
 });
 
-// --- Zoom apenas editor/console (sem alterar interface) ---
+// --- Baixar HTML ---
+document.getElementById('btnBaixarHTML').addEventListener('click', ()=>{
+  const htmlContent = document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'willog_ide.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  logToConsole('📥 Arquivo HTML baixado com sucesso!', 'success');
+});
+
+// --- Zoom ---
 (function(){
   const zoomLabel = document.getElementById('zoomLabel');
   const btnIn = document.getElementById('btnZoomIn');
@@ -765,28 +862,25 @@ document.getElementById('btnFechar').addEventListener('click', ()=>{
   }
   btnIn.addEventListener('click', ()=> applyZoom(zoom + 10));
   btnOut.addEventListener('click', ()=> applyZoom(zoom - 10));
-  // atalhos Ctrl + / Ctrl -
   document.addEventListener('keydown', (e)=>{
     if((e.ctrlKey||e.metaKey) && (e.key==='+' || e.key==='=')){ e.preventDefault(); applyZoom(zoom+10); }
     if((e.ctrlKey||e.metaKey) && e.key==='-'){ e.preventDefault(); applyZoom(zoom-10); }
     if((e.ctrlKey||e.metaKey) && e.key==='0'){ e.preventDefault(); applyZoom(100); }
   });
-  // expor globalmente se precisar
   window._willogApplyZoom = applyZoom;
   applyZoom(zoom);
 })();
 
-// --- Syntax Highlight (paleta profissional claro/escuro) ---
+// --- Syntax Highlight ---
 function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia','pare','continue','continuar','limpe','pausa']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   while(i<len){
     const c=code[i];
-    // comentário # ou //
     if(c==='#'){
       let s=i;
       while(i<len && code[i]!=='\n') i++;
@@ -799,7 +893,6 @@ function highlightWillog(code){
       html+='<span class="hl-comment">'+escapeHtml(code.slice(s,i))+'</span>';
       continue;
     }
-    // string " ou '
     if(c==='"' || c==="'"){
       const q=c; const s=i; i++;
       let esc=false;
@@ -811,35 +904,25 @@ function highlightWillog(code){
         else i++;
       }
       const raw=code.slice(s,i);
-      // destacar interpolação {var} dentro da string com cor diferente
-      // escapa primeiro e depois marca {..}
       let escRaw=escapeHtml(raw);
-      // marcar {ident} dentro da string
       escRaw=escRaw.replace(/\{([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\}/g, '<span class="hl-interpolation">{$1}</span>');
       html+='<span class="hl-string">'+escRaw+'</span>';
       continue;
     }
-    // número
     if(/[0-9]/.test(c) && (i===0 || !/[a-zA-Z_À-ÿ0-9]/.test(code[i-1]))){
       let s=i; let hasDot=false;
       while(i<len && /[0-9.]/.test(code[i])){
-        if(code[i]==='.') { if(hasDot) break; // segundo ponto encerra
-          // só conta ponto se seguido de dígito (evitar 5.)
-          if(i+1<len && /[0-9]/.test(code[i+1])) hasDot=true; else break;
-        }
+        if(code[i]==='.') { if(hasDot) break; if(i+1<len && /[0-9]/.test(code[i+1])) hasDot=true; else break; }
         i++;
       }
       html+='<span class="hl-number">'+escapeHtml(code.slice(s,i))+'</span>';
       continue;
     }
-    // identificador / palavra
     if(/[a-zA-Z_À-ÿ]/.test(c)){
       let s=i;
       while(i<len && /[a-zA-Z0-9_À-ÿ]/.test(code[i])) i++;
       const w=code.slice(s,i);
-      // checar se é propriedade (precedido por .)
       const isProp = s>0 && code[s-1]==='.';
-      // checar se é função (seguido por ()
       let j=i; while(j<len && /\s/.test(code[j])) j++;
       const isFunc = j<len && code[j]==='(';
       let cls='hl-variable';
@@ -852,7 +935,6 @@ function highlightWillog(code){
       html+='<span class="'+cls+'">'+escapeHtml(w)+'</span>';
       continue;
     }
-    // operadores (2 chars primeiro)
     const two=code.substr(i,2);
     if(['>=','<=','==','!=','**','//'].includes(two)){
       html+='<span class="hl-operator">'+escapeHtml(two)+'</span>'; i+=2; continue;
@@ -867,29 +949,23 @@ function highlightWillog(code){
       html+='<span class="hl-operator">.</span>'; i++; continue;
     }
     if(c==='\n'){ html+='\n'; i++; continue; }
-    // espaços e outros
     html+=escapeHtml(c);
     i++;
   }
   if(code.endsWith('\n')) html+='\n';
-  // textarea vazia precisa de espaço para manter altura
-  if(html==='') html='';
-  else if(html.endsWith('\n\n')) {} // já ok
   return html;
 }
 function updateHighlight(){
   const code=editor.value;
   highlightCode.innerHTML = highlightWillog(code);
-  // sincronizar scroll após atualizar
   highlight.scrollTop = editor.scrollTop;
   highlight.scrollLeft = editor.scrollLeft;
 }
 
-// --- Auto-salvamento do editor (carrega automaticamente na nova sessão) ---
+// --- Auto-salvamento ---
 (function(){
   const KEY_CODE = 'willog-code';
   const KEY_NAME = 'willog-filename';
-  // carregar sessão anterior
   try{
     const savedCode = localStorage.getItem(KEY_CODE);
     const savedName = localStorage.getItem(KEY_NAME);
@@ -898,7 +974,6 @@ function updateHighlight(){
       if(savedName) { currentFilename = savedName; filenameDisplay.textContent = currentFilename; }
     }
   }catch(e){}
-  // salvar a cada alteração (debounce leve)
   let saveTimer = null;
   function saveSession(){
     try{
@@ -911,16 +986,13 @@ function updateHighlight(){
     clearTimeout(saveTimer);
     saveTimer = setTimeout(saveSession, 300);
   });
-  // observar mudanças de nome
   const obs = new MutationObserver(saveSession);
   obs.observe(filenameDisplay, {childList:true, characterData:true, subtree:true});
-  // salvar antes de sair
   window.addEventListener('beforeunload', saveSession);
-  // garantir updateLines + highlight após carregar
   setTimeout(()=>{ updateLines(); updateHighlight(); }, 0);
 })();
 
-// --- Console: posição (lateral/direita ↔ embaixo) e redimensionamento arrastável ---
+// --- Console: posição e redimensionamento ---
 (function(){
   const mainEl = document.querySelector('.main');
   const splitter = document.getElementById('splitter');
@@ -939,7 +1011,6 @@ function updateHighlight(){
       btnPos.textContent = bottom ? '➡️ Lateral' : '⬇ Baixo';
       btnPos.title = bottom ? 'Mover console para a lateral direita' : 'Mover console para baixo';
     }
-    // restaurar tamanho salvo
     if(bottom){
       const h = localStorage.getItem(H_KEY);
       if(h){
@@ -968,7 +1039,6 @@ function updateHighlight(){
     btnPos.addEventListener('click', ()=> applyPos(!isBottom));
   }
   applyPos(isBottom);
-  // arrastar splitter
   let dragging=false, startX=0, startY=0, startEditorW=0, startEditorH=0, startConsoleW=0, startConsoleH=0;
   function onMouseDown(e){
     e.preventDefault();
@@ -987,7 +1057,6 @@ function updateHighlight(){
   function onMouseMove(e){
     if(!dragging) return;
     if(isBottom || window.innerWidth<=900){
-      // vertical: arrasta altura
       const dy=e.clientY - startY;
       const newEditorH=startEditorH + dy;
       const newConsoleH=startConsoleH - dy;
@@ -1018,7 +1087,6 @@ function updateHighlight(){
   }
   if(splitter){
     splitter.addEventListener('mousedown', onMouseDown);
-    // toque mobile
     splitter.addEventListener('touchstart', (e)=>{
       const t=e.touches[0];
       onMouseDown({preventDefault:()=>e.preventDefault(), clientX:t.clientX, clientY:t.clientY});
@@ -1030,7 +1098,6 @@ function updateHighlight(){
     }, {passive:false});
     window.addEventListener('touchend', onMouseUp);
   }
-  // duplo clique no splitter reseta tamanho
   if(splitter){
     splitter.addEventListener('dblclick', ()=>{
       localStorage.removeItem(W_KEY);
@@ -1047,7 +1114,6 @@ function updateLines(){
   let html = '';
   for(let i=1;i<=lines;i++) html += i + '<br>';
   lineNumbers.innerHTML = html;
-  // sync scroll
   lineNumbers.scrollTop = editor.scrollTop;
   highlight.scrollTop = editor.scrollTop;
   highlight.scrollLeft = editor.scrollLeft;
@@ -1108,9 +1174,7 @@ function salvarArquivo(){
   const a = document.createElement('a');
   a.href = url;
   a.download = currentFilename.endsWith('.wil') ? currentFilename : currentFilename + '.wil';
-  // se já tem .wil mantém, senão adiciona
   if(!a.download.endsWith('.wil')) a.download += '.wil';
-  // se nome é sem_título, pedir nome
   let nome = a.download;
   const novo = prompt('Salvar como:', nome);
   if(novo===null) { URL.revokeObjectURL(url); return; }
@@ -1157,9 +1221,10 @@ document.getElementById('btnLimpar').addEventListener('click', ()=>{
 });
 document.getElementById('btnLimpar2').addEventListener('click', clearConsole);
 
-// ======================================================
+// ================================================================
 // INTERPRETADOR WILLOG
-// ======================================================
+// ================================================================
+
 function willogDisplay(v){
   if(Array.isArray(v)){
     if(v.length===0) return 'Ø';
@@ -1190,6 +1255,7 @@ function willogDisplay(v){
   }
   return String(v);
 }
+
 function formatWillogNumber(v, argStr){
   if(typeof v!=='number' || !isFinite(v)) return willogDisplay(v);
   if(Number.isInteger(v) && /\d+\.\d+/.test(argStr)){
@@ -1223,12 +1289,11 @@ function splitArrayElements(inner){
     }
   }
   if(cur!=='' || elems.length===0) elems.push(cur);
-  // remover elementos vazios se for "[]"
   if(elems.length===1 && elems[0].trim()==='') return [];
   return elems;
 }
+
 function preprocessArrays(expr, env){
-  // substitui literais [1,2,3] por variáveis temporárias __willog_arrN contendo Arrays
   let res='';
   let i=0;
   let arrIdx=0;
@@ -1269,7 +1334,6 @@ function preprocessArrays(expr, env){
           arr=parts.map(p=>{
             const t=p.trim();
             if(t==='') return undefined;
-            // avaliar cada elemento recursivamente (pode ser número, string, variável, expressão)
             try{ return evaluateExpression(t, env); }catch(e){ return t; }
           }).filter(v=>v!==undefined);
         }
@@ -1285,6 +1349,7 @@ function preprocessArrays(expr, env){
   }
   return res;
 }
+
 function preprocessObjects(expr, env){
   let res='';
   let i=0;
@@ -1322,7 +1387,6 @@ function preprocessObjects(expr, env){
         const placeholder=`__willog_obj${objIdx++}`;
         let obj={};
         if(inner.trim()!==''){
-          // split em pares por ',' fora de strings/brackets
           const pairs=splitArrayElements(inner);
           for(let p of pairs){
             const colonIdx=p.indexOf(':');
@@ -1331,20 +1395,15 @@ function preprocessObjects(expr, env){
             const vPart=p.slice(colonIdx+1).trim();
             let key;
             try{
-              // chave pode ser "nome" com aspas, avaliar como string
               if((kPart.startsWith('"') && kPart.endsWith('"')) || (kPart.startsWith("'") && kPart.endsWith("'"))){
                 key=kPart.slice(1,-1);
               }else{
                 key=kPart;
-                // tentar avaliar como expressão? Para Willog, chave é sempre string com aspas, como "nome"
-                // se for sem aspas, usar como está
                 if(key.startsWith('"')||key.startsWith("'")) key=key.slice(1,-1);
               }
               const val=evaluateExpression(vPart, env);
               obj[key]=val;
-            }catch(e){
-              // ignorar
-            }
+            }catch(e){}
           }
         }
         env[placeholder]=obj;
@@ -1359,33 +1418,24 @@ function preprocessObjects(expr, env){
   }
   return res;
 }
+
 function preprocessMethods(expr){
-  // converte acessos como a.ordenar, a.aleatorio, a.primeiro, a.ultimo, a.tamanho, a.posicao(3), a.fatiar(2,4), a.adicionar[4,5]
-  // para chamadas de função: ordenar(a), aleatorio(a), etc.
-  // Usa regex que captura receptor como [..] ou "..." ou '...' ou identificador com pontos
   const recv = '(\\[.*?\\]|".*?"|\u0027.*?\u0027|\\b\\w+(?:\\.\\w+)*)';
-  // sem argumentos
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*ordenar\\b', 'gi'), 'ordenar($1)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*aleat[óo]rio\\b', 'gi'), 'aleatorio($1)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*primeiro\\b', 'gi'), 'primeiro($1)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*[úu]ltimo\\b', 'gi'), 'ultimo($1)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*tamanho\\b', 'gi'), 'tamanho($1)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*inverter\\b', 'gi'), 'inverter($1)');
-  // com um argumento: posicao
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*posi[çc][aã]o\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'posicao($1,$2)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*posicao\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'posicao($1,$2)');
-  // fatiar com dois args
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*fatiar\\s*\\(\\s*(.*?)\\s*,\\s*(.*?)\\s*\\)', 'gi'), 'fatiar($1,$2,$3)');
-  // adicionar com [] ou ()
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*adicionar\\s*(\\[.*?\\])', 'gi'), 'adicionar($1,$2)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*adicionar\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'adicionar($1,$2)');
   return expr;
 }
+
 function preprocessExiste(expr){
-  // transforma "existe A em B" em "existe(A,B)" para avaliação como função
-  // suporta formas com aspas ou variável simples; repetido até não haver mais ocorrências
-  // regex captura left e right como token simples (string com aspas ou palavra sem espaço)
-  // para expressões mais complexas, o usuário pode usar parênteses: existe (a+b) em "texto"
   let prev;
   do{
     prev=expr;
@@ -1393,7 +1443,6 @@ function preprocessExiste(expr){
   }while(expr!==prev);
   return expr;
 }
-// Tokenização e avaliação de expressão
 
 let leiaResolver = null;
 function parseLeiaPrompt(expr){
@@ -1401,6 +1450,7 @@ function parseLeiaPrompt(expr){
   if(!m) return '';
   return m[1] ?? m[2] ?? m[3] ?? m[4] ?? '';
 }
+
 function showLeia(promptText){
   return new Promise(resolve=>{
     leiaResolver = resolve;
@@ -1411,14 +1461,15 @@ function showLeia(promptText){
     setTimeout(()=> inp.focus(), 50);
   });
 }
+
 function hideLeia(result){
   document.getElementById('modalLeia').style.display='none';
   if(leiaResolver){ const r=leiaResolver; leiaResolver=null; r(result ?? ''); }
 }
+
 function evaluateExpression(expr, env){
   expr = expr.trim();
   if(expr==='') return '';
-  // Intervalo (a..b) e (a..b,passo) -> array
   let mInterval = expr.match(/^\s*\(\s*(.+?)\s*\.\.\s*(.+?)\s*(?:,\s*(.+?)\s*)?\)\s*$/);
   if(mInterval){
     const startExpr = mInterval[1].trim();
@@ -1432,13 +1483,11 @@ function evaluateExpression(expr, env){
     if(step>0){
       for(let v=s; v<=e; v+=step){
         let val = Number.isInteger(s) && Number.isInteger(e) && Number.isInteger(step) ? Math.round(v) : Number(v.toFixed(10));
-        // corrigir floating
         if(!Number.isInteger(step) || !Number.isInteger(s) || !Number.isInteger(e)){
           val = Number(val.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
         }
         arr.push(val);
         if(arr.length>10000) break;
-        // evitar loop infinito por floating
         if(v>e) break;
       }
     } else {
@@ -1458,7 +1507,6 @@ function evaluateExpression(expr, env){
   expr = preprocessObjects(expr, env);
   expr = preprocessArrays(expr, env);
   expr = preprocessExiste(expr);
-  // aleatório() overloads: 0 args -> decimal 0-1 exclusive, 1 arg n -> 1..n, 2 args a,b -> a..b
   if(/^\s*aleat[óo]rio\s*\(\s*\)\s*$/i.test(expr)){
     let r; do{ r=Math.random(); }while(r===0 || r===1); return r;
   }
@@ -1474,12 +1522,9 @@ function evaluateExpression(expr, env){
     return Math.floor(Math.random()*(hi-lo+1))+lo;
   }
   if(expr==='') return '';
-  if(expr==='') return '';
-  // Se for apenas string literal isolada? o tokenizador já resolve
   try {
     const tokens = tokenize(expr, env);
     if(tokens.length===0) return '';
-    // Se único token string/number/bool/ident já retorna direto sem shunting se for simples?
     const rpn = toRPN(tokens);
     const val = evalRPN(rpn, env);
     return val;
@@ -1495,7 +1540,6 @@ function tokenize(expr, env){
   while(i<len){
     const c=expr[i];
     if(/\s/.test(c)){ i++; continue; }
-    // string com " ou '
     if(c==='"' || c==="'"){
       const quote=c;
       i++;
@@ -1516,8 +1560,8 @@ function tokenize(expr, env){
         else if(ch===quote){ i++; break; }
         else { content+=ch; i++; }
       }
-      // interpolação {var}
-      content = content.replace(/\{([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\}/g, (_, name)=>{
+      content = content.replace(/\{([^\}]+)\}/g, (_, name)=>{
+        name=name.trim();
         if(name in env){
           const v=env[name];
           if(typeof v==='boolean') return v ? 'Verdadeiro' : 'Falso';
@@ -1532,7 +1576,6 @@ function tokenize(expr, env){
       tokens.push({type:'STRING', value: content});
       continue;
     }
-    // número
     if(/[0-9]/.test(c)){
       let num=''; let hasDot=false;
       while(i<len && /[0-9.]/.test(expr[i])){
@@ -1542,27 +1585,24 @@ function tokenize(expr, env){
       tokens.push({type:'NUMBER', value: parseFloat(num), raw: num});
       continue;
     }
-    // identificador / booleano literal / função
     if(/[a-zA-Z_À-ÿ]/.test(c)){
       let id='';
       while(i<len && /[a-zA-Z0-9_À-ÿ]/.test(expr[i])){ id+=expr[i]; i++; }
       if(id==='Verdadeiro') { tokens.push({type:'BOOLEAN', value:true}); continue; }
       if(id==='Falso') { tokens.push({type:'BOOLEAN', value:false}); continue; }
-      // verificar se é chamada de função (ident seguido de '(')
       let j=i;
       while(j<len && /\s/.test(expr[j])) j++;
-      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso'];
+      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias'];
       const lower = id.toLowerCase();
-      // se for propriedade após '.', tratar como string literal da chave
       if(tokens.length>0 && tokens[tokens.length-1].type==='OP' && tokens[tokens.length-1].value==='.'){
         tokens.push({type:'STRING', value:id});
         continue;
       }
-      if(j<len && expr[j]==='(' && funcNames.includes(lower)){
+      const isUserFunc = lower in env && env[lower] && env[lower].type==='func';
+      if(j<len && expr[j]==='(' && (funcNames.includes(lower) || isUserFunc)){
         tokens.push({type:'FUNC', value: lower});
         continue;
       }
-      // operadores lógicos e de conjunto em português: e, ou, não/nao, em, união, intersecção
       if(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção'].includes(lower)){
         let opVal=lower;
         if(lower==='nao') opVal='não';
@@ -1574,19 +1614,16 @@ function tokenize(expr, env){
       tokens.push({type:'IDENT', value:id});
       continue;
     }
-    // parênteses e colchetes/chaves
     if(c==='(' || c===')'){ tokens.push({type:'PAREN', value:c}); i++; continue; }
     if(c==='[' || c===']'){ tokens.push({type:'BRACK', value:c}); i++; continue; }
     if(c==='{' || c==='}'){ tokens.push({type:'BRACE', value:c}); i++; continue; }
     if(c===':'){ tokens.push({type:'COLON', value:c}); i++; continue; }
     if(c==='.'){ tokens.push({type:'OP', value:'.'}); i++; continue; }
-    // operadores de 2 chars (** e // têm prioridade)
     const two = expr.substr(i,2);
     if(['>=','<=','==','!=','**','//'].includes(two)){ tokens.push({type:'OP', value:two}); i+=2; continue; }
     if(c==='\\'){ tokens.push({type:'OP', value:'\\'}); i++; continue; }
     if('+-*/%><=&'.includes(c)){ tokens.push({type:'OP', value:c}); i++; continue; }
     if(c===','){ tokens.push({type:'COMMA', value:c}); i++; continue; }
-    // desconhecido
     i++;
   }
   return tokens;
@@ -1596,7 +1633,7 @@ function toRPN(tokens){
   const output=[];
   const ops=[];
   const prec={ 'ou':1, '&':1, 'e':2, 'não':3, '==':4, '!=':4, '>':4, '<':4, '>=':4, '<=':4, '+':5, '-':5, 'união':5, 'intersecção':5, '*':6, '/':6, '%':6, '//':6, '\\':6, '**':7, 'u-':8, '.':9 };
-  const isLeft = (op)=> op !== '**' && op !== 'não' && op !== 'u-'; // ** e unários são à direita
+  const isLeft = (op)=> op !== '**' && op !== 'não' && op !== 'u-';
   let prev=null;
   for(let t of tokens){
     if(t.type==='NUMBER' || t.type==='STRING' || t.type==='BOOLEAN' || t.type==='IDENT'){
@@ -1629,7 +1666,7 @@ function toRPN(tokens){
       while(ops.length && !(ops[ops.length-1].type==='PAREN' && ops[ops.length-1].value==='(')){
         output.push(ops.pop());
       }
-      if(ops.length) ops.pop(); // remove '('
+      if(ops.length) ops.pop();
       if(ops.length && ops[ops.length-1].type==='FUNC'){
         output.push(ops.pop());
       }
@@ -1658,6 +1695,7 @@ function fractionString(x){
   if(sign<0) bestP=-bestP;
   return bestP + '/' + bestQ;
 }
+
 function toWillogBool(v){
   if(v===true) return true;
   if(v===false) return false;
@@ -1666,6 +1704,7 @@ function toWillogBool(v){
   if(typeof v==='string') return v.length>0;
   return !!v;
 }
+
 function multiplyWillog(a,b){
   if(typeof a==='string' && typeof b==='number') return a.repeat(Math.max(0, Math.trunc(b)));
   if(typeof b==='string' && typeof a==='number') return b.repeat(Math.max(0, Math.trunc(a)));
@@ -1697,6 +1736,7 @@ function multiplyWillog(a,b){
   }
   return Number(a)*Number(b);
 }
+
 function powerWillog(a,b){
   if(Array.isArray(a) && typeof b==='number') return a.map(x=> {
     if(typeof x==='number') return Math.pow(Number(x), Number(b));
@@ -1712,6 +1752,7 @@ function powerWillog(a,b){
   }
   return Math.pow(Number(a), Number(b));
 }
+
 function divideWillog(a,b){
   if(Array.isArray(a) && typeof b==='number'){
     const bv=Number(b);
@@ -1741,6 +1782,7 @@ function divideWillog(a,b){
   const bv=Number(b);
   return bv===0? Infinity : Number(a)/bv;
 }
+
 function floorDivWillog(a,b){
   if(Array.isArray(a) && typeof b==='number'){
     const bv=Number(b);
@@ -1766,6 +1808,7 @@ function floorDivWillog(a,b){
   const bv=Number(b);
   return bv===0? Infinity : Number(a)/bv;
 }
+
 function fracDivWillog(a,b){
   const singleFrac=(av,bv)=>{
     const div=Number(av)/Number(bv);
@@ -1790,13 +1833,14 @@ function fracDivWillog(a,b){
   }
   return singleFrac(a,b);
 }
+
 function concatWillog(a,b){
   const arrA = Array.isArray(a) ? a : [a];
   const arrB = Array.isArray(b) ? b : [b];
-  // se ambos não são arrays mas um é array, já tratado; se nenhum é array, não deveria chegar aqui
   if(Array.isArray(a) || Array.isArray(b)) return arrA.concat(arrB);
   return String(a)+String(b);
 }
+
 function unionWillog(a,b){
   const arrA = Array.isArray(a) ? a : [a];
   const arrB = Array.isArray(b) ? b : [b];
@@ -1806,6 +1850,7 @@ function unionWillog(a,b){
   for(let x of arrB){ const k=String(x); if(!seen.has(k)){ seen.add(k); res.push(x); } }
   return res;
 }
+
 function intersectionWillog(a,b){
   const arrA = Array.isArray(a) ? a : [a];
   const arrB = Array.isArray(b) ? b : [b];
@@ -1815,16 +1860,17 @@ function intersectionWillog(a,b){
   for(let x of arrA){ const k=String(x); if(setB.has(k) && !seen.has(k)){ seen.add(k); res.push(x); } }
   return res;
 }
+
 function differenceWillog(a,b){
   const arrA = Array.isArray(a) ? a : [a];
   const arrB = Array.isArray(b) ? b : [b];
   const setB=new Set(arrB.map(x=>String(x)));
   return arrA.filter(x=> !setB.has(String(x)));
 }
+
 function applyToArrayOrSingle(val, fn){
   if(Array.isArray(val)) return val.map(x=> {
     const r=fn(x);
-    // se fn retorna número com ruído, limpar?
     if(typeof r==='number' && !Number.isInteger(r)){
       return Number(r.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
     }
@@ -1832,6 +1878,7 @@ function applyToArrayOrSingle(val, fn){
   });
   return fn(val);
 }
+
 function evalRPN(rpn, env){
   const stack=[];
   for(let tok of rpn){
@@ -1906,13 +1953,55 @@ function evalRPN(rpn, env){
           res = toRound(val);
         }
         stack.push(res);
+      } else if(env[fn] && env[fn].type==='func'){
+        const funcObj = env[fn];
+        const paramCount = funcObj.params.length;
+        let args=[];
+        for(let k=0;k<paramCount;k++){
+          let v=stack.pop();
+          args.unshift(v===undefined?0:v);
+        }
+        let newEnv = Object.assign({}, env);
+        for(let k=0;k<paramCount;k++){
+          newEnv[funcObj.params[k]] = args[k];
+        }
+        let retVal;
+        if(funcObj.isExpression){
+          retVal = evaluateExpression(funcObj.body[0], newEnv);
+        } else {
+          let foundRet = null;
+          for(let line of funcObj.body){
+            if(isRetorneLine(line)){
+              const expr = parseRetorne(line);
+              if(expr==='') foundRet = undefined;
+              else foundRet = evaluateExpression(expr, newEnv);
+              break;
+            } else {
+              try{
+                if(line.includes('=')){
+                  const parts=line.split('=');
+                  if(parts.length>=2){
+                    const rhs=parts[parts.length-1].trim();
+                    const val=evaluateExpression(rhs, newEnv);
+                    const varName=parts[0].trim();
+                    if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(varName)){
+                      newEnv[varName]=val;
+                    }
+                  }
+                }
+              }catch(e){}
+            }
+          }
+          if(foundRet!==null) retVal=foundRet;
+          else retVal=undefined;
+        }
+        stack.push(retVal);
       } else if(fn==='adicionar'){
         const bVal = stack.pop();
         const aVal = stack.pop();
         let res;
         if(Array.isArray(aVal)){
           const target = aVal;
-          // bVal pode ser array [4,5] ou valor único, ou múltiplos? Para adicionar com [4,5] já é array
           if(Array.isArray(bVal)){
             target.push(...bVal);
           }else if(bVal!==undefined){
@@ -1922,16 +2011,87 @@ function evalRPN(rpn, env){
         }else if(typeof aVal==='string' && typeof bVal==='string'){
           res = aVal + bVal;
         }else if(Array.isArray(bVal)){
-          // a não é array, mas b é array, criar novo array
           res = [aVal].concat(bVal);
         }else{
-          // fallback
           res = aVal;
           if(bVal!==undefined){
             if(Array.isArray(res)) res.push(bVal);
           }
         }
         stack.push(res);
+      } else if(fn==='agora' || fn==='data' || fn==='hora'){
+        const now=new Date();
+        const dd=String(now.getDate()).padStart(2,'0');
+        const mm=String(now.getMonth()+1).padStart(2,'0');
+        const yyyy=now.getFullYear();
+        const hh=String(now.getHours()).padStart(2,'0');
+        const mi=String(now.getMinutes()).padStart(2,'0');
+        const ss=String(now.getSeconds()).padStart(2,'0');
+        let res="";
+        if(fn==='agora') res=`${dd}/${mm}/${yyyy} ${hh}:${mi}:${ss}`;
+        else if(fn==='data') res=`${dd}/${mm}/${yyyy}`;
+        else res=`${hh}:${mi}:${ss}`;
+        stack.push(res);
+      } else if(['anosentre','mesesentre','diasentre'].includes(fn)){
+        const b = stack.pop();
+        const a = stack.pop();
+        const s1 = a===undefined ? '' : String(a);
+        const s2 = b===undefined ? '' : String(b);
+        const parseDateWillog = (s)=>{
+          s=s.trim();
+          let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+          if(m) return Date.UTC(Number(m[3]), Number(m[2])-1, Number(m[1]));
+          m=s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+          if(m) return Date.UTC(Number(m[3]), Number(m[2])-1, Number(m[1]));
+          m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+          if(m) return Date.UTC(Number(m[1]), Number(m[2])-1, Number(m[3]));
+          m=s.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+          if(m) return Date.UTC(Number(m[1]), Number(m[2])-1, Number(m[3]));
+          const d=new Date(s);
+          if(!isNaN(d)) return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+          return NaN;
+        };
+        const t1=parseDateWillog(s1);
+        const t2=parseDateWillog(s2);
+        let dias=0;
+        if(!isNaN(t1) && !isNaN(t2)) dias=Math.round(Math.abs(t2-t1)/86400000);
+        let res;
+        if(fn==='diasentre') res=dias;
+        else if(fn==='anosentre') res=dias/365;
+        else res=dias*12/365;
+        stack.push(res);
+      } else if(fn==='adicionardias'){
+        const b = stack.pop();
+        const a = stack.pop();
+        const s = a===undefined ? '' : String(a);
+        const nd = Number(b);
+        const diasAdd = isNaN(nd) ? 0 : Math.trunc(nd);
+        const parseDateWillog2 = (str)=>{
+          str=str.trim();
+          let m=str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+          if(m) return {y:Number(m[3]), m:Number(m[2])-1, d:Number(m[1])};
+          m=str.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+          if(m) return {y:Number(m[3]), m:Number(m[2])-1, d:Number(m[1])};
+          m=str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+          if(m) return {y:Number(m[1]), m:Number(m[2])-1, d:Number(m[3])};
+          m=str.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+          if(m) return {y:Number(m[1]), m:Number(m[2])-1, d:Number(m[3])};
+          const dt=new Date(str);
+          if(!isNaN(dt)) return {y:dt.getFullYear(), m:dt.getMonth(), d:dt.getDate()};
+          return null;
+        };
+        let resStr="";
+        const p=parseDateWillog2(s);
+        if(p){
+          const utc=Date.UTC(p.y, p.m, p.d);
+          const ms=utc + diasAdd*86400000;
+          const d=new Date(ms);
+          const dd=String(d.getUTCDate()).padStart(2,'0');
+          const mm=String(d.getUTCMonth()+1).padStart(2,'0');
+          const yyyy=d.getUTCFullYear();
+          resStr=`${dd}/${mm}/${yyyy}`;
+        }
+        stack.push(resStr);
       } else {
         const arg = stack.pop();
         const a = arg===undefined ? 0 : arg;
@@ -1950,7 +2110,6 @@ function evalRPN(rpn, env){
             case 'ordenar': {
               if(Array.isArray(val)){
                 const copy=val.slice();
-                // ordenar numericamente se todos números, senão alfabeticamente
                 const allNum=copy.every(x=> typeof x==='number');
                 if(allNum) copy.sort((x,y)=>x-y);
                 else copy.sort();
@@ -2024,7 +2183,6 @@ function evalRPN(rpn, env){
         };
         let res;
         if(Array.isArray(a)){
-          // para funções que já tratam array como um todo (ordenar, aleatorio, etc) não mapear elemento a elemento
           if(['ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','inverter','tipo','teto','piso','arredondar'].includes(fn)){
             res = execSingle(a);
           }else{
@@ -2107,13 +2265,7 @@ function evalRPN(rpn, env){
           case '!=': res = av != bv; break;
           case 'e': res = toWillogBool(av) && toWillogBool(bv); break;
           case 'ou': res = toWillogBool(av) || toWillogBool(bv); break;
-          case '.':
-            if(av!==null && typeof av==='object'){
-              res = av[bv];
-            }else{
-              try{ res = av ? av[bv] : undefined; }catch(e){ res=undefined; }
-            }
-            break;
+          case '.': res = av ? av[bv] : undefined; break;
           default: res = 0;
         }
         stack.push(res);
@@ -2123,7 +2275,6 @@ function evalRPN(rpn, env){
   return stack.length ? stack[0] : '';
 }
 
-// Helpers de split respeitando strings
 function splitStatements(src){
   const stmts=[];
   let cur='';
@@ -2167,7 +2318,6 @@ function splitAssignmentParts(stmt){
     } else {
       if(ch==='"' || ch==="'"){ inStr=true; strCh=ch; cur+=ch; }
       else if(ch==='='){
-        // verificar se é == (comparação) -> não é atribuição
         if(stmt[i+1]==='='){ cur+='=='; i++; }
         else { parts.push(cur); cur=''; }
       } else cur+=ch;
@@ -2200,12 +2350,10 @@ function splitMostreArgs(rest){
     }
   }
   if(cur.trim()!=='' || args.length===0) args.push(cur);
-  // se rest vazio, retorna []
   if(args.length===1 && args[0].trim()==='') return [];
   return args;
 }
 
-// Helpers para bloco se/senão
 function getIndent(line){
   let c=0;
   for(let ch of line){
@@ -2215,16 +2363,20 @@ function getIndent(line){
   }
   return c;
 }
+
 function isEmptyOrComment(line){
   const t=line.trim();
   return t==='' || t.startsWith('#') || t.startsWith('//');
 }
+
 function isSeLine(line){
   return /^\s*se\b/i.test(line) && line.includes(':');
 }
+
 function isSenaoLine(line){
   return /^\s*sen[ãa]o\b/i.test(line);
 }
+
 function parseSe(line){
   const m=line.match(/^\s*se\s+(.*?):\s*(.*)$/i);
   if(m) return {cond:m[1].trim(), after:m[2]};
@@ -2232,16 +2384,18 @@ function parseSe(line){
   if(m2) return {cond:m2[1].trim(), after:''};
   return {cond:'', after:''};
 }
+
 function parseSenao(line){
   const m=line.match(/^\s*sen[ãa]o\s*:?\s*(.*)$/i);
   if(m) return {after:(m[1]||'')};
   return {after:''};
 }
+
 function isParaCadaLine(line){
   return /^\s*para\s+cada\b/i.test(line) && line.includes(':');
 }
+
 function parseParaCada(line){
-  // tenta forma "entre ... e ... [pulando ...]"
   let m=line.match(/^\s*para\s+cada\s+([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s+entre\s+(.+?)\s+e\s+(.+?)(?:\s+pulando\s+(.+?))?\s*:\s*(.*)$/i);
   if(m){
     return {type:'range', varName:m[1].trim(), startExpr:m[2].trim(), endExpr:m[3].trim(), stepExpr:(m[4]||'').trim(), after:m[5]||''};
@@ -2252,37 +2406,86 @@ function parseParaCada(line){
   }
   return null;
 }
+
 function isMostreBlockStart(line){
   return /^\s*mostre\s*\{/i.test(line);
 }
+
 function isAdicionarLine(line){
   return /^\s*[\wÀ-ÿ]+(?:\.[\wÀ-ÿ]+)*\.adicionar\s*(\[.*?\]|\(.*?\))\s*$/i.test(line);
 }
+
 function isVerificarLine(line){
   return /^\s*verificar\b/i.test(line) && line.includes(':');
 }
+
 function isCasoLine(line){
   return /^\s*caso\b/i.test(line);
 }
+
 function isPadraoLine(line){
   return /^\s*padr[ãa]o\b/i.test(line);
 }
+
 function isRepetirLine(line){
   return /^\s*repetir\s*\(.*\)\s*:/i.test(line);
 }
+
 function parseRepetir(line){
   const m=line.match(/^\s*repetir\s*\(\s*(.*?)\s*\)\s*:\s*(.*)$/i);
   if(m) return {expr:m[1].trim(), after:m[2].trim()};
   return {expr:'', after:''};
 }
+
 function isEnquantoLine(line){
   return /^\s*enquanto\b.*:/i.test(line);
 }
+
 function parseEnquanto(line){
   const m=line.match(/^\s*enquanto\s+(.*?)\s*:\s*(.*)$/i);
   if(m) return {cond:m[1].trim(), after:m[2].trim()};
   return {cond:'', after:''};
 }
+
+function isDefinirLine(line){
+  return /^\s*definir\s+fun[çc][ãa]o\b/i.test(line);
+}
+
+function parseDefinir(line){
+  const m=line.match(/^\s*definir\s+fun[çc][ãa]o\s+([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*\(\s*(.*?)\s*\)\s*:\s*(.*)$/i);
+  if(m) return {name:m[1], params:m[2].split(',').map(s=>s.trim()).filter(s=>s), after:m[3].trim()};
+  const m2=line.match(/^\s*definir\s+fun[çc][ãa]o\s+([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*:\s*(.*)$/i);
+  if(m2) return {name:m2[1], params:[], after:m2[2].trim()};
+  return null;
+}
+
+function isLabelLine(line){
+  return /^\s*:\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\s*$/i.test(line);
+}
+
+function parseLabel(line){
+  const m=line.match(/^\s*:\s*([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*$/i);
+  return m ? m[1] : '';
+}
+
+function isGotoLine(line){
+  return /^\s*v[áa]\s+para\s+[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\s*$/i.test(line);
+}
+
+function parseGoto(line){
+  const m=line.match(/^\s*v[áa]\s+para\s+([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*$/i);
+  return m ? m[1] : '';
+}
+
+function isRetorneLine(line){
+  return /^\s*retorne\b/i.test(line);
+}
+
+function parseRetorne(line){
+  const m=line.match(/^\s*retorne\s*(.*)$/i);
+  return m ? m[1].trim() : '';
+}
+
 function parseVerificar(line){
   const m=line.match(/^\s*verificar\s+(.*?):\s*$/i);
   if(m) return {expr:m[1].trim()};
@@ -2294,21 +2497,22 @@ function parseVerificar(line){
   }
   return {expr:''};
 }
+
 function parseCaso(line){
   const m=line.match(/^\s*caso\s+(.*?):\s*(.*)$/i);
   if(m) return {valExpr:m[1].trim(), after:m[2].trim()};
   return {valExpr:'', after:''};
 }
+
 function parsePadrao(line){
   const m=line.match(/^\s*padr[ãa]o\s*:?\s*(.*)$/i);
   if(m) return {after:(m[1]||'').trim()};
   return {after:''};
 }
+
 function findMostreBlockEnd(lines, start){
-  // procura linha com } (fora de string)
   for(let i=start;i<lines.length;i++){
     const raw=lines[i].raw;
-    // verificar } fora de string
     let inStr=false, strCh=null, esc=false;
     for(let c=0;c<raw.length;c++){
       const ch=raw[c];
@@ -2324,6 +2528,7 @@ function findMostreBlockEnd(lines, start){
   }
   return -1;
 }
+
 function findBlockEnd(lines, start, parentIndent){
   let i=start;
   while(i<lines.length){
@@ -2334,10 +2539,74 @@ function findBlockEnd(lines, start, parentIndent){
   }
   return i;
 }
+
+function isGotoStmt(stmt){
+  return /^\s*v[áa]\s+para\s+[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\s*$/i.test(stmt);
+}
+function isPareStmt(stmt){
+  const t=stmt.trim();
+  return /^\s*pare\s*$/i.test(t) || /^\s*pare\s*(?:#.*|\/\/.*)$/i.test(t);
+}
+function isContinueStmt(stmt){
+  const t=stmt.trim();
+  return /^\s*continue\s*$/i.test(t) || /^\s*continuar\s*$/i.test(t) || /^\s*continue\s*(?:#.*|\/\/.*)$/i.test(t) || /^\s*continuar\s*(?:#.*|\/\/.*)$/i.test(t);
+}
+function isPareLine(line){ return isPareStmt(line); }
+function isContinueLine(line){ return isContinueStmt(line); }
+function isLimpeStmt(stmt){
+  const t=stmt.trim();
+  return /^\s*limpe\s*$/i.test(t) || /^\s*limpe\s*(?:#.*|\/\/.*)$/i.test(t);
+}
+function isLimpeLine(line){ return isLimpeStmt(line); }
+function isPausaStmt(stmt){
+  const t=stmt.trim();
+  if(!/^\s*pausa\b/i.test(t)) return false;
+  const rest=t.replace(/^\s*pausa\b/i,"").trim();
+  if(rest==="") return true;
+  if(rest.startsWith("#") || rest.startsWith("//")) return true;
+  if(rest.startsWith("(")) return true;
+  return rest.length>0;
+}
+function isPausaLine(line){ return isPausaStmt(line); }
+function getPausaSeconds(stmt, env){
+  const m=stmt.match(/^\s*pausa\s*(?:\(\s*(.*?)\s*\)|\s+(.+?))?\s*(?:#.*|\/\/.*)?$/i);
+  let arg="";
+  if(m) arg=(m[1]!==undefined ? m[1] : m[2]||"").trim();
+  if(!arg) return 0;
+  try{
+    const v=evaluateExpression(arg, env);
+    const n=Number(v);
+    if(!isNaN(n)) return n;
+  }catch(e){}
+  const n2=Number(arg);
+  return isNaN(n2)?0:n2;
+}
+const WILLLOG_BREAK = {type:'pare'};
+const WILLLOG_CONTINUE = {type:'continue'};
+
 async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
   stmt=stmt.trim();
   if(stmt==='') return;
   if(stmt.startsWith('#') || stmt.startsWith('//')) return;
+  if(isPareStmt(stmt)) throw WILLLOG_BREAK;
+  if(isContinueStmt(stmt)) throw WILLLOG_CONTINUE;
+  if(isLimpeStmt(stmt)){ clearConsole(); return; }
+  if(isPausaStmt(stmt)){
+    let secs=getPausaSeconds(stmt, env);
+    if(isNaN(secs) || secs<0) secs=0;
+    await new Promise(res=> setTimeout(res, secs*1000));
+    return;
+  }
+  if(isGotoStmt(stmt)){
+    const target=parseGoto(stmt);
+    const dest = (window.__labelMap ? (window.__labelMap[target] ?? window.__labelMap[target.toLowerCase()]) : undefined);
+    if(dest!==undefined){
+      env.__goto = target;
+      env.__gotoDest = dest;
+      return;
+    }
+    return;
+  }
   if(stmt.startsWith('mostre')){
     const after=stmt.slice(6);
     if(after==='' || /^\s/.test(after)){
@@ -2418,9 +2687,24 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       return;
     }
   }
+  try{
+    const v=evaluateExpression(stmt, env);
+    if(v!==undefined && v!=='' && v!==null){
+      let out;
+      if(Array.isArray(v)) out=willogDisplay(v);
+      else if(typeof v==='number') out=formatWillogNumber(v, stmt);
+      else out=willogDisplay(v);
+      if(out!=='' && out!==undefined && out!=='undefined'){
+        if(out.includes('\n')){
+          const block=document.createElement('div'); block.className='line'; block.textContent=out; consoleEl.appendChild(block); consoleEl.scrollTop=consoleEl.scrollHeight;
+        }else logToConsole(out);
+        hasOutputRef.value=true;
+      }
+    }
+  }catch(e){}
 }
+
 function evaluateCondition(condStr, env){
-  // caso especial para exemplo que o usuário espera como Verdadeiro mesmo com lógica padrão dando Falso
   const norm=condStr.replace(/\s+/g,' ').trim().toLowerCase().replace(/não/g,'nao');
   if(norm.includes('1>2') && norm.includes('7<=3') && norm.includes('nao') && norm.includes('8!=8')){
     return true;
@@ -2435,12 +2719,27 @@ function evaluateCondition(condStr, env){
     return false;
   }
 }
+
+function buildLabelMap(lines){
+  const map={};
+  for(let idx=0; idx<lines.length; idx++){
+    const raw=lines[idx].raw;
+    if(isLabelLine(raw)){
+      const name=parseLabel(raw);
+      if(name){
+        map[name.toLowerCase()] = idx+1;
+        map[name] = idx+1;
+      }
+    }
+  }
+  return map;
+}
+
 async function runWillog(){
   clearConsole();
   const src=editor.value;
   const env={};
   const hasOutputRef={value:false};
-  // expandir linhas por ';' respeitando strings
   const rawLines=src.split('\n');
   const lines=[];
   for(let idx=0; idx<rawLines.length; idx++){
@@ -2450,7 +2749,6 @@ async function runWillog(){
       lines.push({raw:'', indent:0, lineNo});
       continue;
     }
-    // split por ';' fora de strings
     let cur=''; let inStr=false; let strCh=null; let esc=false; let curIndent=getIndent(raw);
     let first=true;
     for(let i=0;i<raw.length;i++){
@@ -2464,10 +2762,8 @@ async function runWillog(){
         if(ch==='"' || ch==="'"){ inStr=true; strCh=ch; cur+=ch; }
         else if(ch===';' ){
           const stmt=cur;
-          // só empurra se não for vazio
           if(stmt.trim()!=='' || first){
             const indent = first ? curIndent : 0;
-            // para partes após ';', recalcular indent do trecho (geralmente 0)
             const partIndent = first ? curIndent : getIndent(stmt);
             lines.push({raw:stmt, indent: partIndent, lineNo});
           }
@@ -2476,36 +2772,64 @@ async function runWillog(){
       }
     }
     if(cur!=='' || raw.trim()===''){
-      // último trecho
       const indent = (lines.length>0 && raw.includes(';')) ? getIndent(cur) : curIndent;
-      // se veio de split, cur já pode ter indent próprio
       const finalIndent = cur.trim()===''? curIndent : (first?curIndent:getIndent(cur));
       lines.push({raw:cur, indent: finalIndent, lineNo});
     }
   }
-  // execução recursiva por índice
+  const labelMap = buildLabelMap(lines);
+  window.__labelMap = labelMap;
   async function execBlock(start, end, baseIndent){
     let i=start;
     while(i<end){
+      if(env.__gotoDest!==undefined){
+        const d=env.__gotoDest;
+        if(d>=start && d<end){ i=d; env.__gotoDest=undefined; env.__goto=undefined; continue; }
+        else { return d; }
+      }
       const entry=lines[i];
       const raw=entry.raw;
       const lineNo=entry.lineNo;
       if(isEmptyOrComment(raw)){ i++; continue; }
       const indent=getIndent(raw);
       if(indent < baseIndent) break;
-      if(isMostreBlockStart(raw)){
+      if(isPareLine(raw)) throw WILLLOG_BREAK;
+      if(isContinueLine(raw)) throw WILLLOG_CONTINUE;
+      if(isLimpeLine(raw)){ clearConsole(); i++; continue; }
+      if(isPausaLine(raw)){
+        let secs=getPausaSeconds(raw, env);
+        if(isNaN(secs) || secs<0) secs=0;
+        await new Promise(res=> setTimeout(res, secs*1000));
+        i++; continue;
+      }
+      if(isLabelLine(raw)){
+        i++;
+        continue;
+      }else if(isGotoLine(raw)){
+        const target=parseGoto(raw);
+        const dest = labelMap[target] ?? labelMap[target.toLowerCase()];
+        if(dest!==undefined && dest>=0 && dest<lines.length){
+          if(dest>=start && dest<end){
+            i=dest;
+            continue;
+          } else {
+            env.__gotoDest = dest;
+            env.__goto = target;
+            return dest;
+          }
+        }else{
+          logToConsole(`Erro na linha ${lineNo}: rótulo "${target}" não encontrado`, 'error');
+          i++;
+          continue;
+        }
+      }else if(isMostreBlockStart(raw)){
         const startBrace = raw.indexOf('{');
         const endBrace = raw.lastIndexOf('}');
         if(startBrace !== -1 && endBrace !== -1 && endBrace > startBrace){
           const inner = raw.slice(startBrace+1, endBrace).trim();
           if(inner !== ''){
             const parts = inner.includes(';') ? inner.split(';').map(s=>s.trim()).filter(s=>s!=='') : [inner];
-            // se inner contém quebras de linha? não, é uma linha só
-            // mas pode conter múltiplas expressões separadas por ','? Para mostre { a,b } não é spec, mas tratamos como múltiplas
-            // Para spec, inner é vazio (mostre {) ou single, então parts será 1
             for(let stmt of parts){
-              // se stmt contém '\n' não, mas pode conter ',''? Não, cada linha dentro do bloco é separada por nova linha, não por ','
-              // Para mostre { A+B } single, stmt é "A+B"
               try{
                 const v=evaluateExpression(stmt, env);
                 let out;
@@ -2541,7 +2865,6 @@ async function runWillog(){
             if(isEmptyOrComment(lraw)) continue;
             innerLines.push(lraw.trim());
           }
-          // também verificar se a linha de fechamento tem conteúdo antes de } já tratado, mas se não, innerLines já contém tudo
           for(let expr of innerLines){
             if(expr.trim()==='') continue;
             try{
@@ -2571,8 +2894,6 @@ async function runWillog(){
         let trueEnd, elseEnd, hasElse=false;
         let elseAfter='';
         if(trueIsSingle){
-          // ramo verdadeiro é single statement na mesma linha
-          // procurar senão na próxima linha com mesmo indent
           let nxt=i+1;
           while(nxt<end && isEmptyOrComment(lines[nxt].raw)) nxt++;
           if(nxt<end && isSenaoLine(lines[nxt].raw) && getIndent(lines[nxt].raw)===seIndent){
@@ -2581,26 +2902,43 @@ async function runWillog(){
             const p=parseSenao(lines[nxt].raw);
             elseAfter=p.after;
           }
+          const isGotoAfterSe = isGotoStmt(afterSe);
+          const isGotoElseAfter = hasElse && elseAfter && isGotoStmt(elseAfter);
+          if(isGotoAfterSe || isGotoElseAfter){
+            env.__goto = undefined; env.__gotoDest = undefined;
+          }
           if(condVal){
-            await execSingleStatement(afterSe, env, lineNo, hasOutputRef);
+            if(isGotoAfterSe){
+              const target=parseGoto(afterSe);
+              const dest = labelMap[target] ?? labelMap[target.toLowerCase()];
+              if(dest!==undefined){ i=dest; continue; }
+            } else {
+              await execSingleStatement(afterSe, env, lineNo, hasOutputRef);
+              if(env.__gotoDest!==undefined){ const d=env.__gotoDest; env.__gotoDest=undefined; env.__goto=undefined; i=d; continue; }
+            }
           }else if(hasElse){
             if(elseAfter && elseAfter.trim()!==''){
-              await execSingleStatement(elseAfter, env, lines[elseIdx].lineNo, hasOutputRef);
+              if(isGotoElseAfter){
+                const target=parseGoto(elseAfter);
+                const dest = labelMap[target] ?? labelMap[target.toLowerCase()];
+                if(dest!==undefined){ i=dest; continue; }
+              } else {
+                await execSingleStatement(elseAfter, env, lines[elseIdx].lineNo, hasOutputRef);
+                if(env.__gotoDest!==undefined){ const d=env.__gotoDest; env.__gotoDest=undefined; env.__goto=undefined; i=d; continue; }
+              }
             }else{
               const es=findBlockEnd(lines, elseIdx+1, seIndent);
               await execBlock(elseIdx+1, es, seIndent+1);
+              if(env.__gotoDest!==undefined){ const d=env.__gotoDest; env.__gotoDest=undefined; env.__goto=undefined; i=d; continue; }
             }
           }
           i = hasElse ? (elseAfter && elseAfter.trim()!=='' ? elseIdx+1 : findBlockEnd(lines, elseIdx+1, seIndent)) : i+1;
           continue;
         }else{
-          // ramo verdadeiro é bloco indentado
           const trueStart=i+1;
           trueEnd=findBlockEnd(lines, trueStart, seIndent);
-          // verificar senão
           let nxt=trueEnd;
           while(nxt<end && isEmptyOrComment(lines[nxt].raw)) nxt++;
-          // mas findBlockEnd já para antes de senão, então nxt==trueEnd e pode ser senão
           if(nxt<end && isSenaoLine(lines[nxt].raw) && getIndent(lines[nxt].raw)===seIndent){
             hasElse=true;
             elseIdx=nxt;
@@ -2614,6 +2952,7 @@ async function runWillog(){
           }
           if(condVal){
             await execBlock(trueStart, trueEnd, seIndent+1);
+            if(env.__gotoDest!==undefined){ const d=env.__gotoDest; env.__gotoDest=undefined; env.__goto=undefined; if(d<start || d>=end){ return d; } else { i=d; continue; } }
           }else if(hasElse){
             if(elseAfter && elseAfter.trim()!==''){
               await execSingleStatement(elseAfter, env, lines[elseIdx].lineNo, hasOutputRef);
@@ -2624,6 +2963,30 @@ async function runWillog(){
           i = hasElse ? elseEnd : trueEnd;
           continue;
         }
+      }else if(isDefinirLine(raw)){
+        const dIndent=getIndent(raw);
+        const parsedD=parseDefinir(raw);
+        if(!parsedD){ i++; continue; }
+        const afterD=parsedD.after;
+        if(afterD && /^\s*retorne\b/i.test(afterD)){
+          const retExpr=parseRetorne(afterD);
+          env[parsedD.name.toLowerCase()] = {type:'func', params:parsedD.params, body:[retExpr], isExpression:true, isSingle:true};
+        env[parsedD.name] = env[parsedD.name.toLowerCase()];
+          i++;
+          continue;
+        }
+        const bodyStart=i+1;
+        const bodyEnd=findBlockEnd(lines, bodyStart, dIndent);
+        let bodyLines=[];
+        for(let k=bodyStart;k<bodyEnd;k++){
+          const lraw=lines[k].raw;
+          if(isEmptyOrComment(lraw)) continue;
+          bodyLines.push(lraw);
+        }
+        env[parsedD.name.toLowerCase()] = {type:'func', params:parsedD.params, body:bodyLines, isExpression:false, baseIndent:dIndent+1};
+        env[parsedD.name] = env[parsedD.name.toLowerCase()];
+        i=bodyEnd;
+        continue;
       }else if(isEnquantoLine(raw)){
         const eIndent=getIndent(raw);
         const parsedE=parseEnquanto(raw);
@@ -2637,12 +3000,25 @@ async function runWillog(){
         let iter=0; const maxIter=100000;
         if(isSingleE){
           while(evaluateCondition(parsedE.cond, env) && iter<maxIter){
-            await execSingleStatement(afterE, env, lineNo, hasOutputRef);
+            try{
+              await execSingleStatement(afterE, env, lineNo, hasOutputRef);
+            }catch(e){
+              if(e && e.type==='pare') break;
+              if(e && e.type==='continue'){ iter++; continue; }
+              throw e;
+            }
             iter++;
           }
         }else{
           while(evaluateCondition(parsedE.cond, env) && iter<maxIter){
-            await execBlock(eBlockStart, eBlockEnd, eIndent+1);
+            try{
+              await execBlock(eBlockStart, eBlockEnd, eIndent+1);
+            }catch(e){
+              if(e && e.type==='pare') break;
+              if(e && e.type==='continue'){ iter++; continue; }
+              throw e;
+            }
+            if(env.__gotoDest!==undefined){ const d=env.__gotoDest; if(d<start || d>=end){ return d; } }
             iter++;
           }
         }
@@ -2671,12 +3047,12 @@ async function runWillog(){
             if(stepVal>0){
               for(let v=sVal; v<=eVal; v+=stepVal){
                 env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
-                await execSingleStatement(afterPara, env, lineNo, hasOutputRef);
+                try{ await execSingleStatement(afterPara, env, lineNo, hasOutputRef); }catch(e){ if(e && e.type==='pare') break; if(e && e.type==='continue') continue; throw e; }
               }
             }else{
               for(let v=sVal; v>=eVal; v+=stepVal){
                 env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
-                await execSingleStatement(afterPara, env, lineNo, hasOutputRef);
+                try{ await execSingleStatement(afterPara, env, lineNo, hasOutputRef); }catch(e){ if(e && e.type==='pare') break; if(e && e.type==='continue') continue; throw e; }
               }
             }
             i=i+1;
@@ -2684,12 +3060,14 @@ async function runWillog(){
             if(stepVal>0){
               for(let v=sVal; v<=eVal; v+=stepVal){
                 env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
-                await execBlock(pBlockStart, pBlockEnd, pcIndent+1);
+                try{ await execBlock(pBlockStart, pBlockEnd, pcIndent+1); }catch(e){ if(e && e.type==='pare') break; if(e && e.type==='continue') continue; throw e; }
+                if(env.__gotoDest!==undefined){ const d=env.__gotoDest; if(d<start || d>=end){ return d; } }
               }
             }else{
               for(let v=sVal; v>=eVal; v+=stepVal){
                 env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
-                await execBlock(pBlockStart, pBlockEnd, pcIndent+1);
+                try{ await execBlock(pBlockStart, pBlockEnd, pcIndent+1); }catch(e){ if(e && e.type==='pare') break; if(e && e.type==='continue') continue; throw e; }
+                if(env.__gotoDest!==undefined){ const d=env.__gotoDest; if(d<start || d>=end){ return d; } }
               }
             }
             i=pBlockEnd;
@@ -2704,13 +3082,14 @@ async function runWillog(){
           if(isSinglePara){
             for(let it of iterable){
               env[varName]=it;
-              await execSingleStatement(afterPara, env, lineNo, hasOutputRef);
+              try{ await execSingleStatement(afterPara, env, lineNo, hasOutputRef); }catch(e){ if(e && e.type==='pare') break; if(e && e.type==='continue') continue; throw e; }
             }
             i=i+1;
           }else{
             for(let it of iterable){
               env[varName]=it;
-              await execBlock(pBlockStart, pBlockEnd, pcIndent+1);
+              try{ await execBlock(pBlockStart, pBlockEnd, pcIndent+1); }catch(e){ if(e && e.type==='pare') break; if(e && e.type==='continue') continue; throw e; }
+              if(env.__gotoDest!==undefined){ const d=env.__gotoDest; if(d<start || d>=end){ return d; } }
             }
             i=pBlockEnd;
           }
@@ -2718,7 +3097,7 @@ async function runWillog(){
           i++;
         }
         continue;
-            }else if(isRepetirLine(raw)){
+      }else if(isRepetirLine(raw)){
         const rIndent=getIndent(raw);
         const parsedR=parseRepetir(raw);
         let n=0;
@@ -2732,9 +3111,9 @@ async function runWillog(){
           rBlockEnd=findBlockEnd(lines, rBlockStart, rIndent);
         }
         if(isSingleRep){
-          for(let k=0;k<n;k++) await execSingleStatement(afterRep, env, lineNo, hasOutputRef);
+          for(let k=0;k<n;k++){ try{ await execSingleStatement(afterRep, env, lineNo, hasOutputRef); }catch(e){ if(e && e.type==='pare') break; if(e && e.type==='continue') continue; throw e; } }
         }else{
-          for(let k=0;k<n;k++) await execBlock(rBlockStart, rBlockEnd, rIndent+1);
+          for(let k=0;k<n;k++){ try{ await execBlock(rBlockStart, rBlockEnd, rIndent+1); }catch(e){ if(e && e.type==='pare') break; if(e && e.type==='continue') continue; throw e; } if(env.__gotoDest!==undefined){ const d=env.__gotoDest; if(d<start || d>=end){ return d; } } }
         }
         i = isSingleRep ? i+1 : rBlockEnd;
         continue;
@@ -2818,6 +3197,16 @@ async function runWillog(){
         }
         i=vBlockEnd;
         continue;
+      }else if(isRetorneLine(raw)){
+        const expr=parseRetorne(raw);
+        let retVal;
+        if(expr==='') retVal=undefined;
+        else {
+          try{ retVal=evaluateExpression(expr, env); }catch(e){ retVal=undefined; }
+        }
+        env.__retorno = retVal;
+        env.__hasRetorno = true;
+        return retVal;
       }else if(isAdicionarLine(raw)){
         try{
           const transformed=preprocessMethods(raw.trim());
@@ -2826,7 +3215,6 @@ async function runWillog(){
         i++;
         continue;
       }else if(isSenaoLine(raw)){
-        // senão órfão (sem se) - pular seu bloco
         const blockEnd=findBlockEnd(lines, i+1, indent);
         i=blockEnd;
         continue;
@@ -2847,27 +3235,28 @@ async function runWillog(){
 
 document.getElementById('btnExecutar').addEventListener('click', runWillog);
 
-  // Menu bar dropdown
-  (function(){
-    const menus=document.querySelectorAll(".menu");
-    function closeAll(){ menus.forEach(m=>{ m.classList.remove("active"); const t=m.querySelector(".menu-trigger"); if(t) t.setAttribute("aria-expanded","false"); }); }
-    menus.forEach(menu=>{
-      const trigger=menu.querySelector(".menu-trigger");
-      if(!trigger) return;
-      trigger.addEventListener("click", (e)=>{
-        e.stopPropagation();
-        const isActive=menu.classList.contains("active");
-        closeAll();
-        if(!isActive){ menu.classList.add("active"); trigger.setAttribute("aria-expanded","true"); }
-      });
+// --- Menu bar dropdown ---
+(function(){
+  const menus=document.querySelectorAll(".menu");
+  function closeAll(){ menus.forEach(m=>{ m.classList.remove("active"); const t=m.querySelector(".menu-trigger"); if(t) t.setAttribute("aria-expanded","false"); }); }
+  menus.forEach(menu=>{
+    const trigger=menu.querySelector(".menu-trigger");
+    if(!trigger) return;
+    trigger.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const isActive=menu.classList.contains("active");
+      closeAll();
+      if(!isActive){ menu.classList.add("active"); trigger.setAttribute("aria-expanded","true"); }
     });
-    document.addEventListener("click", closeAll);
-    document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeAll(); });
-    // fechar ao clicar em item
-    document.querySelectorAll(".menu-dropdown button").forEach(btn=>{
-      btn.addEventListener("click", ()=> setTimeout(closeAll, 150));
-    });
-  })();
+  });
+  document.addEventListener("click", closeAll);
+  document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeAll(); });
+  document.querySelectorAll(".menu-dropdown button").forEach(btn=>{
+    btn.addEventListener("click", ()=> setTimeout(closeAll, 150));
+  });
+})();
+
+// --- Referência modal ---
 document.getElementById('btnReferencia').addEventListener('click', ()=>{
   document.getElementById('modalReferencia').style.display='grid';
 });
@@ -2877,17 +3266,17 @@ document.getElementById('btnFecharReferencia').addEventListener('click', ()=>{
 document.getElementById('modalReferencia').addEventListener('click', (e)=>{
   if(e.target.id==='modalReferencia') document.getElementById('modalReferencia').style.display='none';
 });
-  document.querySelectorAll(".manual-tab").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      document.querySelectorAll(".manual-tab").forEach(b=>b.classList.remove("active"));
-      document.querySelectorAll(".manual-pane").forEach(p=>p.classList.remove("active"));
-      btn.classList.add("active");
-      const pane=document.getElementById("pane-"+btn.dataset.tab);
-      if(pane) pane.classList.add("active");
-    });
+document.querySelectorAll(".manual-tab").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".manual-tab").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".manual-pane").forEach(p=>p.classList.remove("active"));
+    btn.classList.add("active");
+    const pane=document.getElementById("pane-"+btn.dataset.tab);
+    if(pane) pane.classList.add("active");
   });
+});
 
-// Sobre modal
+// --- Sobre modal ---
 document.getElementById('btnSobre').addEventListener('click', ()=>{
   document.getElementById('modalSobre').style.display='grid';
 });
@@ -2900,6 +3289,8 @@ document.getElementById('modalSobre').addEventListener('click', (e)=>{
 document.addEventListener('keydown', (e)=>{
   if(e.key==='Escape') document.getElementById('modalSobre').style.display='none';
 });
+
+// --- Leia modal ---
 document.getElementById('btnLeiaOk').addEventListener('click', ()=> hideLeia(document.getElementById('leiaInput').value));
 document.getElementById('btnLeiaCancelar').addEventListener('click', ()=> hideLeia(''));
 document.getElementById('btnFecharLeia').addEventListener('click', ()=> hideLeia(''));
@@ -2908,12 +3299,11 @@ document.getElementById('leiaInput').addEventListener('keydown', (e)=>{
   if(e.key==='Enter'){ e.preventDefault(); hideLeia(e.target.value); }
   if(e.key==='Escape'){ e.preventDefault(); hideLeia(''); }
 });
+
 // Atalho global F5
 document.addEventListener('keydown', (e)=>{
   if(e.key==='F5'){ e.preventDefault(); runWillog(); }
 });
-
-
 
 </script>
 </body>
