@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -313,7 +313,68 @@
     #splitter:hover::after, #splitter.dragging::after { width:64px; height:3px; }
     .header-right .badge { display:none; }
   }
-</style>
+  .modal-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.45); display:grid; place-items:center; z-index:1000; backdrop-filter: blur(2px);
+  }
+  .modal-box {
+    background: var(--panel); color: var(--text); border:2px solid var(--border); border-radius:12px; padding:28px 32px; min-width:340px; max-width:90vw; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,0.25); position:relative; text-align:center;
+  }
+  .modal-content { font-family:'Inter',sans-serif; font-size:14px; line-height:1.6; text-align:center; }
+  .modal-close {
+    position:absolute; top:8px; right:8px; width:28px; height:28px; border:none; background:transparent; color:var(--text-dim); font-size:16px; cursor:pointer; border-radius:6px;
+  }
+  .modal-close:hover { background:var(--panel2); color:var(--text); }
+  .menubar {
+    background: var(--panel);
+    border-bottom: 2px solid var(--border);
+    display:flex; align-items:center; gap:4px; padding:4px 8px; flex-wrap:wrap;
+    position:relative;
+  }
+  .menu { position:relative; }
+  .menu-trigger {
+    font-family:''Inter'',sans-serif; font-size:13px; padding:7px 12px; border:1px solid transparent; background:transparent; color:var(--text); cursor:pointer; border-radius:6px;
+  }
+  .menu-trigger:hover { background:var(--panel2); border-color:var(--border); }
+  .menu.active .menu-trigger { background:var(--panel2); border-color:var(--border); }
+  .menu-dropdown {
+    position:absolute; top:100%; left:0; min-width:180px; background:var(--panel); border:2px solid var(--border); border-radius:8px; box-shadow: var(--shadow), 0 8px 24px rgba(0,0,0,0.15); padding:6px; display:none; flex-direction:column; gap:2px; z-index:100;
+  }
+  .menu.active .menu-dropdown { display:flex; }
+  .menu-dropdown button {
+    font-family:''Inter'',sans-serif; font-size:13px; padding:8px 12px; border:none; background:transparent; color:var(--text); text-align:left; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:8px; width:100%;
+  }
+  .menu-dropdown button:hover { background:var(--panel2); }
+  .menu-dropdown button.primary { background:var(--accent); color:white; }
+  .menu-dropdown button.primary:hover { background:var(--accent-hover); }
+  .menu-sep-dropdown { height:1px; background:var(--border); margin:4px 0; }
+  .modal-manual-box {
+    background: var(--panel); color: var(--text); border:2px solid var(--border); border-radius:12px; padding:0; width:96vw; height:94vh; max-width:96vw; max-height:94vh; min-width:96vw; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,0.25); position:relative; display:flex; flex-direction:column; overflow:hidden;
+  }
+  .modal-manual-header {
+    padding:16px 20px; border-bottom:2px solid var(--border); background:var(--panel2); display:flex; align-items:center; justify-content:space-between;
+  }
+  .modal-manual-header b { font-family:''Inter'',sans-serif; font-size:15px; }
+  .modal-manual-body {
+    padding:20px 22px; overflow:auto; font-family:'Inter',sans-serif; font-size:17px; line-height:1.6; color:var(--text);
+  }
+  .modal-manual-body h3 { margin:18px 0 10px; font-size:17px; color:var(--accent); border-bottom:1px solid var(--border); padding-bottom:5px; }
+  .modal-manual-body h3:first-child { margin-top:8px; }
+  .modal-manual-body code { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--panel2); border:1px solid var(--border); padding:2px 6px; border-radius:4px; }
+  .modal-manual-body pre { background:var(--panel2); border:1px solid var(--border); border-radius:6px; padding:12px 14px; overflow:auto; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.6; white-space:pre-wrap; }
+  .modal-manual-body table { width:100%; border-collapse:collapse; margin:10px 0; font-size:14px; }
+  .modal-manual-body th, .modal-manual-body td { border:1px solid var(--border); padding:6px 8px; text-align:left; }
+  .modal-manual-body th { background:var(--panel2); font-weight:600; }
+  .manual-tabs { display:flex; gap:6px; padding:0 20px; border-bottom:2px solid var(--border); background:var(--panel2); }
+  .manual-tab {
+    font-family:''Inter'',sans-serif; font-size:12px; font-weight:600; padding:8px 14px; border:none; background:transparent; color:var(--text-dim); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px;
+  }
+  .manual-tab.active { color:var(--accent); border-bottom-color:var(--accent); background:var(--panel); border-radius:6px 6px 0 0; }
+  .manual-pane { display:none; }
+  .manual-pane.active { display:block; }
+  .syntax { color:var(--hl-keyword); font-weight:600; }
+  .example { color:var(--hl-string); }
+  .saida { color:var(--hl-number); font-style:italic; }
+  .code-label { font-family:''Inter'',sans-serif; font-size:11px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; margin:10px 0 4px; }</style>
 </head>
 <body data-theme="light">
   <header class="header">
@@ -329,29 +390,40 @@
   </header>
 
   <nav class="menubar">
-    <div class="menu-group">
-      <button class="btn small" id="btnNovo" title="Novo arquivo (Ctrl+N)">📄 Novo</button>
-      <button class="btn small" id="btnAbrir" title="Abrir .wil (Ctrl+O)">📂 Abrir</button>
-      <button class="btn small" id="btnSalvar" title="Salvar .wil (Ctrl+S)">💾 Salvar</button>
+  <div class="menu" id="menuArquivo">
+    <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Arquivo ▾</button>
+    <div class="menu-dropdown">
+      <button id="btnNovo">📄 Novo</button>
+      <button id="btnAbrir">📂 Abrir</button>
+      <button id="btnSalvar">💾 Salvar</button>
     </div>
-    <div class="menu-sep"></div>
-    <div class="menu-group">
-      <button class="btn primary" id="btnExecutar" title="Executar (F5 ou Ctrl+Enter)">▶ Executar</button>
-      <button class="btn small" id="btnLimpar" title="Limpar editor">🧹 Limpar</button>
+  </div>
+  <div class="menu" id="menuExibir">
+    <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Exibir ▾</button>
+    <div class="menu-dropdown">
+      <button id="btnTema">🌓 Tema</button>
+      <div class="menu-sep-dropdown"></div>
+      <div style="display:flex; align-items:center; gap:6px; padding:6px 8px;">
+        <span style="font-size:13px;flex:1;">Zoom</span>
+        <button class="btn small" id="btnZoomOut" style="padding:4px 8px;">A−</button>
+        <button class="btn small" id="btnZoomIn" style="padding:4px 8px;">A+</button>
+        <span id="zoomLabel" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">100%</span>
+      </div>
     </div>
-    <div class="menu-sep"></div>
-    <div class="menu-group">
-      <button class="btn small" id="btnTema" title="Alternar claro/escuro">🌓 Tema</button>
+  </div>
+  <div class="menu" id="menuAjuda">
+    <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Ajuda ▾</button>
+    <div class="menu-dropdown">
+      <button id="btnManual">📖 Manual</button>
+      <div class="menu-sep-dropdown"></div>
+      <button id="btnSobre">ℹ️ Sobre</button>
     </div>
-    <div class="menu-sep"></div>
-    <div class="menu-group">
-      <button class="btn small" id="btnZoomOut" title="Diminuir fonte do editor/console (Ctrl+-)">A−</button>
-      <button class="btn small" id="btnZoomIn" title="Aumentar fonte do editor/console (Ctrl++)">A+</button>
-      <span class="hint" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);margin-left:2px" id="zoomLabel">100%</span>
-    </div>
-    <span class="filename">Arquivo: <strong id="filenameDisplay">sem_título.wil</strong></span>
-    <input type="file" id="fileInput" accept=".wil,.txt" hidden>
-  </nav>
+  </div>
+  <button class="btn primary" id="btnExecutar" title="Executar (F5 ou Ctrl+Enter)">▶ Executar</button>
+  <button class="btn small" id="btnLimpar" title="Limpar editor">🧹 Limpar editor</button>
+  <span class="filename" style="margin-left:auto;">Arquivo: <strong id="filenameDisplay">sem_título.wil</strong></span>
+  <input type="file" id="fileInput" accept=".wil,.txt" hidden>
+</nav>
 
   <div class="main">
     <section class="pane editor-pane">
@@ -388,7 +460,203 @@
     <span class="status" id="statusBar">Pronto • Willog 1.0</span>
   </div>
 
-<script>
+      <div id="modalManual" class="modal-overlay" style="display:none">
+    <div class="modal-manual-box">
+      <div class="modal-manual-header">
+        <b>Manual Willog</b>
+        <button class="modal-close" id="btnFecharManual" title="Fechar">✕</button>
+      </div>
+      <div class="modal-manual-body">
+        <p style="text-align:center; color:var(--text-dim); font-size:12px; margin:0 0 10px;">Willog 1.0 — <span class="syntax">Sintaxe</span> • <span class="example">Exemplo</span> • <span class="saida">Saída</span></p>
+        <div class="manual-tabs">
+          <button class="manual-tab active" data-tab="comandos">Comandos</button>
+          <button class="manual-tab" data-tab="funcoes">Funções</button>
+          <button class="manual-tab" data-tab="operadores">Operadores</button>
+          <button class="manual-tab" data-tab="propriedades">Propriedades</button>
+        </div>
+
+        <div class="manual-pane active" id="pane-comandos">
+          <h3>mostre</h3>
+          <p class="code-label">Sintaxe</p>
+          <pre><span class="syntax">mostre</span> <span class="example">&lt;valor&gt; [, &lt;valor&gt; ...]</span></pre>
+          <p class="code-label">Exemplos</p>
+          <pre><span class="example">mostre "Olá, mundo!"</span>
+<span class="saida">-> Olá, mundo!</span>
+
+<span class="example">nome="Wilson"
+idade=53
+mostre "Olá, {nome}! Você tem {idade} anos."</span>
+<span class="saida">-> Olá, Wilson! Você tem 53 anos.</span>
+
+<span class="example">m=n=o=5
+mostre m,n,o</span>          <span class="saida">-> 5,5,5</span>
+<span class="example">mostre m+n+o</span>         <span class="saida">-> 15</span>
+<span class="example">mostre m&n&o</span>         <span class="saida">-> 555</span>
+<span class="example">mostre "\n",m,"\n",n</span>  <span class="saida">-> (quebras)
+5
+5</span></pre>
+
+          <h3>mostre { … }</h3>
+          <p class="code-label">Sintaxe</p>
+          <pre><span class="syntax">mostre {</span>
+<span class="example">    &lt;expressão&gt;</span>
+<span class="example">    &lt;expressão&gt;</span>
+<span class="syntax">}</span></pre>
+          <p class="code-label">Exemplo</p>
+          <pre><span class="example">A=[1,2,3,4]
+B=[3,4,5,6]
+mostre {
+    A+B
+    A união B
+    A intersecção B
+    A-B
+    B-A
+}</span>
+<span class="saida">-> 1,2,3,4,3,4,5,6
+-> 1,2,3,4,5,6
+-> 3,4
+-> 1,2
+-> 5,6</span></pre>
+
+          <h3>se … senão</h3>
+          <p class="code-label">Sintaxe</p>
+          <pre><span class="syntax">se</span> <span class="example">&lt;condição&gt;:</span>
+<span class="example">    &lt;comandos&gt;</span>
+<span class="syntax">senão:</span>
+<span class="example">    &lt;comandos&gt;</span></pre>
+          <p class="code-label">Exemplos</p>
+          <pre><span class="example">a=5
+b=10
+se a>=b:
+    mostre "a é maior ou igual a b"
+senão:
+    mostre "a é menor que b"</span>
+<span class="saida">-> a é menor que b</span>
+
+<span class="example">nota=8
+frequência=90
+se nota>=7 e frequência>=75:
+    mostre "Aprovado"
+senão:
+    mostre "Reprovado"</span>
+<span class="saida">-> Aprovado</span></pre>
+
+          <h3>verificar … caso … padrão</h3>
+          <p class="code-label">Sintaxe</p>
+          <pre><span class="syntax">verificar</span> <span class="example">&lt;valor&gt;:</span>
+<span class="example">    caso &lt;valor&gt;: &lt;expressão&gt;</span>
+<span class="example">    caso &lt;valor&gt;: &lt;expressão&gt;</span>
+<span class="example">    padrão: &lt;expressão&gt;</span></pre>
+          <p class="code-label">Exemplo</p>
+          <pre><span class="example">nota=9
+verificar nota:
+    caso 10: "Parabéns! Excelente!"
+    caso 9: "Ótimo!"
+    caso 8: "Muito bom!"
+    padrão: "Estude mais!"</span>
+<span class="saida">-> Ótimo!</span>
+
+<span class="example">valor=500
+verificar valor:
+    caso 100: "Muito pouco!"
+    caso 200: "Pouco!"
+    padrão: "Muito!"</span>
+<span class="saida">-> Muito!</span></pre>
+
+          <h3>para cada</h3>
+          <p class="code-label">Sintaxe</p>
+          <pre><span class="syntax">para cada</span> <span class="example">&lt;var&gt; entre &lt;ini&gt; e &lt;fim&gt; [pulando &lt;passo&gt;]:</span>
+<span class="example">    &lt;comandos&gt;</span>
+
+<span class="syntax">para cada</span> <span class="example">&lt;var&gt; em &lt;lista/texto&gt;:</span>
+<span class="example">    &lt;comandos&gt;</span></pre>
+          <p class="code-label">Exemplos</p>
+          <pre><span class="example">para cada x entre 1 e 5:
+    mostre x</span>
+<span class="saida">-> 1
+-> 2
+-> 3
+-> 4
+-> 5</span>
+
+<span class="example">para cada número entre 2 e 10 pulando 2:
+    mostre número</span>
+<span class="saida">-> 2
+-> 4
+-> 6
+-> 8
+-> 10</span>
+
+<span class="example">para cada letra em "willog":
+    mostre letra</span>
+<span class="saida">-> w
+-> i
+-> l
+-> l
+-> o
+-> g</span>
+
+<span class="example">a=[1,2,3,4,5,6]
+para cada item em a:
+    mostre item</span>
+<span class="saida">-> 1
+-> 2
+-> 3
+-> 4
+-> 5
+-> 6</span></pre>
+        </div>
+
+        <div class="manual-pane" id="pane-funcoes">
+          <h3>Funções — Sintaxe, Exemplo e Saída</h3>
+          <table>
+            <tr><th>Sintaxe</th><th>Exemplo</th><th>Saída</th></tr>
+            <tr><td><code class="syntax">raizq(&lt;x&gt;)</code></td><td><code class="example">mostre raizq(16)</code><br><code class="example">mostre raizq([1,4,16,25])</code></td><td><code class="saida">4</code><br><code class="saida">1,2,4,5</code></td></tr>
+            <tr><td><code class="syntax">raizc(&lt;x&gt;)</code></td><td><code class="example">mostre raizc(27)</code></td><td><code class="saida">3</code></td></tr>
+            <tr><td><code class="syntax">inteiro(&lt;x&gt;)</code></td><td><code class="example">mostre inteiro(2.5)</code></td><td><code class="saida">2</code></td></tr>
+            <tr><td><code class="syntax">decimal(&lt;x&gt;)</code></td><td><code class="example">mostre decimal(2.5)</code></td><td><code class="saida">0.5</code></td></tr>
+            <tr><td><code class="syntax">fração(&lt;x&gt;)</code></td><td><code class="example">mostre fração(0.3333)</code></td><td><code class="saida">1/3</code></td></tr>
+            <tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td><code class="example">mostre aleatório()</code><br><code class="example">mostre aleatório(6)</code><br><code class="example">mostre aleatório(3,12)</code></td><td><code class="saida">0.73 (0-1)</code><br><code class="saida">1..6</code><br><code class="saida">3..12</code></td></tr>
+            <tr><td><code class="syntax">ordenar(&lt;lista&gt;)</code></td><td><code class="example">mostre ordenar([1,3,2])</code><br><code class="example">mostre [1,3,2,5,4].ordenar</code></td><td><code class="saida">1,2,3</code></td></tr>
+            <tr><td><code class="syntax">inverter(&lt;lista&gt;)</code></td><td><code class="example">mostre inverter([1,2,3])</code><br><code class="example">a=[1,2,3,4,5]; mostre a.inverter</code></td><td><code class="saida">3,2,1</code><br><code class="saida">5,4,3,2,1</code></td></tr>
+          </table>
+          <p style="margin-top:8px; font-size:13px; color:var(--text-dim);">Todas vetorizadas: <code class="example">mostre raizq([1,4,16])</code> → <code class="saida">1,2,4</code></p>
+        </div>
+
+        <div class="manual-pane" id="pane-operadores">
+          <h3>Operadores — Sintaxe, Exemplo e Saída</h3>
+          <table>
+            <tr><th>Sintaxe</th><th>Descrição</th><th>Exemplo → Saída</th></tr>
+            <tr><td><code class="syntax">+</code></td><td>Adição; concatenação de listas</td><td><code class="example">mostre 2+3</code> <span class="saida">→5</span><br><code class="example">mostre [1,2]+[3,4]</code> <span class="saida">→1,2,3,4</span></td></tr>
+            <tr><td><code class="syntax">- * / % ** // \</code></td><td><code>*</code> multiplica e repete texto <code>"casa"*2</code>; <code>**</code> potência; <code>//</code> inteira; <code>\</code> fracionária; vetorizados</td><td><code class="example">mostre "casa"*2</code> <span class="saida">→casacasa</span><br><code class="example">mostre [1,2,3]*3</code> <span class="saida">→3,6,9</span><br><code class="example">mostre 2**3</code> <span class="saida">→8</span><br><code class="example">mostre 5//2</code> <span class="saida">→2</span> <code class="example">mostre 5\2</code> <span class="saida">→0.5</span></td></tr>
+            <tr><td><code class="syntax">&</code></td><td>Concatenação como texto</td><td><code class="example">mostre "a"&"b"</code> <span class="saida">→ab</span></td></tr>
+            <tr><td><code class="syntax">> &lt; >= &lt;= == !=</code></td><td>Comparação → <code>Verdadeiro</code>/<code>Falso</code></td><td><code class="example">mostre 10>5</code> <span class="saida">→Verdadeiro</span></td></tr>
+            <tr><td><code class="syntax">e</code> <code class="syntax">ou</code> <code class="syntax">não</code></td><td>Conjunção, disjunção, negação</td><td><code class="example">se 10>5 e 20&lt;30:</code> <span class="saida">→verdadeiro</span></td></tr>
+            <tr><td><code class="syntax">união</code> <code class="syntax">intersecção</code> <code class="syntax">-</code> <code class="syntax">existe … em …</code></td><td>Conjuntos: união, intersecção, diferença, contém</td><td><code class="example">mostre [1,2,3] união [2,3,4]</code> <span class="saida">→1,2,3,4</span><br><code class="example">mostre [1,2,3] intersecção [2,3,4]</code> <span class="saida">→2,3</span><br><code class="example">a=[1,2,3,4,5,6]; b=[3,4,5,6]; mostre a-b</code> <span class="saida">→1,2</span> / <code>b-a</code> <span class="saida">→Ø</span><br><code class="example">se existe "a" em "planeta":</code> <span class="saida">→verdadeiro</span></td></tr>
+          </table>
+        </div>
+
+        <div class="manual-pane" id="pane-propriedades">
+          <h3>Propriedades e Métodos — Sintaxe com ponto</h3>
+          <table>
+            <tr><th>Sintaxe</th><th>O que faz</th><th>Exemplo → Saída</th></tr>
+            <tr><td><code class="syntax">lista.ordenar</code></td><td>Cópia ordenada</td><td><code class="example">[1,3,2,5,4].ordenar</code> <span class="saida">→1,2,3,4,5</span></td></tr>
+            <tr><td><code class="syntax">lista.inverter</code></td><td>Inverte</td><td><code class="example">[1,2,3].inverter</code> <span class="saida">→3,2,1</span></td></tr>
+            <tr><td><code class="syntax">lista.aleatório</code></td><td>Item aleatório da lista</td><td><code class="example">[1,3,5,7,9].aleatório</code> <span class="saida">→3</span></td></tr>
+            <tr><td><code class="syntax">lista.primeiro</code></td><td>Primeiro</td><td><code class="example">["a","b"].primeiro</code> <span class="saida">→a</span></td></tr>
+            <tr><td><code class="syntax">lista.último</code></td><td>Último</td><td><code class="example">["a","b"].último</code> <span class="saida">→b</span></td></tr>
+            <tr><td><code class="syntax">lista.tamanho</code></td><td>Quantidade</td><td><code class="example">[1,2,3].tamanho</code> <span class="saida">→3</span> / <code class="example">"willog".tamanho</code> <span class="saida">→6</span></td></tr>
+            <tr><td><code class="syntax">lista.posição(i)</code></td><td>Índice <code>i</code> (0 é o primeiro)</td><td><code class="example">a=[1,2,3,4,5]; mostre a.posição(3)</code> <span class="saida">→4</span></td></tr>
+            <tr><td><code class="syntax">lista.fatiar(ini,fim)</code></td><td>Fatia inclusiva</td><td><code class="example">mostre a.fatiar(2,4)</code> <span class="saida">→3,4,5</span></td></tr>
+            <tr><td><code class="syntax">lista.adicionar[4,5]</code></td><td>Acrescenta (altera a lista)</td><td><code class="example">a=[1,2,3]; a.adicionar[4,5]; mostre a</code> <span class="saida">→1,2,3,4,5</span></td></tr>
+            <tr><td><code class="syntax">aluno.nome</code> <code class="syntax">aluno.curso="Willog"</code></td><td>Acesso e atribuição em dicionário <code>{"nome":"Ana"}</code></td><td><code class="example">aluno={"nome":"Ana","idade":20}; mostre aluno.nome</code> <span class="saida">→Ana</span></td></tr>
+          </table>
+          <p style="margin-top:10px;"><span class="syntax">Literais:</span> <code class="example">10</code>, <code class="example">2.5</code>, <code class="example">"texto {var}"</code> com <code>\n</code>, listas <code class="example">[1,2,3]</code>, dicionários <code class="example">{"chave": valor}</code>. <span class="saida">Vazio → Ø</span></p>
+        </div>
+
+        </div>
+    </div>
+  </div><script>
 const editor = document.getElementById('editor');
 const lineNumbers = document.getElementById('lineNumbers');
 const consoleEl = document.getElementById('console');
@@ -467,9 +735,9 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','funcao','função','retorne','retorna','importe','classe','novo']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
-  const logicalOps = new Set(['e','ou','não','nao']);
+  const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   while(i<len){
     const c=code[i];
     // comentário # ou //
@@ -546,7 +814,7 @@ function highlightWillog(code){
     if(c==='\\'){
       html+='<span class="hl-operator">\\</span>'; i++; continue;
     }
-    if('&+-*/%><=,;()'.includes(c) || c==='&' || c==='='){
+    if('&+-*/%><=,;()[]{}'.includes(c) || c==='&' || c==='='){
       html+='<span class="hl-operator">'+escapeHtml(c)+'</span>'; i++; continue;
     }
     if(c==='.'){
@@ -847,6 +1115,22 @@ document.getElementById('btnLimpar2').addEventListener('click', clearConsole);
 // INTERPRETADOR WILLOG
 // ======================================================
 function willogDisplay(v){
+  if(Array.isArray(v)){
+    if(v.length===0) return 'Ø';
+    return v.map(x=>{
+      if(x===true) return 'Verdadeiro';
+      if(x===false) return 'Falso';
+      if(x===undefined || x===null) return 'indefinido';
+      if(typeof x==='number'){
+        if(!isFinite(x)) return String(x);
+        if(!Number.isInteger(x)){
+          let f=x.toFixed(10).replace(/0+$/,'').replace(/\.$/,'');
+          return f;
+        }
+      }
+      return String(x);
+    }).join(',');
+  }
   if(v===true) return 'Verdadeiro';
   if(v===false) return 'Falso';
   if(v===undefined || v===null) return 'indefinido';
@@ -874,9 +1158,219 @@ function formatWillogNumber(v, argStr){
   return String(v);
 }
 
+function splitArrayElements(inner){
+  const elems=[];
+  let cur=''; let inStr=false; let strCh=null; let esc=false; let depth=0;
+  for(let i=0;i<inner.length;i++){
+    const ch=inner[i];
+    if(inStr){
+      cur+=ch;
+      if(esc) esc=false;
+      else if(ch==='\\') esc=true;
+      else if(ch===strCh) inStr=false;
+    }else{
+      if(ch==='"' || ch==="'"){ inStr=true; strCh=ch; cur+=ch; }
+      else if(ch==='[') { depth++; cur+=ch; }
+      else if(ch===']') { depth--; cur+=ch; }
+      else if(ch===',' && depth===0){ elems.push(cur); cur=''; }
+      else cur+=ch;
+    }
+  }
+  if(cur!=='' || elems.length===0) elems.push(cur);
+  // remover elementos vazios se for "[]"
+  if(elems.length===1 && elems[0].trim()==='') return [];
+  return elems;
+}
+function preprocessArrays(expr, env){
+  // substitui literais [1,2,3] por variáveis temporárias __willog_arrN contendo Arrays
+  let res='';
+  let i=0;
+  let arrIdx=0;
+  while(i<expr.length){
+    const ch=expr[i];
+    if(ch==='"' || ch==="'"){
+      let q=ch; let j=i+1; let esc=false;
+      while(j<expr.length){
+        const c=expr[j];
+        if(esc) esc=false;
+        else if(c==='\\') esc=true;
+        else if(c===q){ j++; break; }
+        j++;
+      }
+      res+=expr.slice(i,j);
+      i=j;
+    }else if(ch==='['){
+      let depth=1; let j=i+1; let inStr=false; let strCh=null; let esc=false;
+      while(j<expr.length && depth>0){
+        const c=expr[j];
+        if(inStr){
+          if(esc) esc=false;
+          else if(c==='\\') esc=true;
+          else if(c===strCh) inStr=false;
+        }else{
+          if(c==='"' || c==="'"){ inStr=true; strCh=c; }
+          else if(c==='[') depth++;
+          else if(c===']') depth--;
+        }
+        j++;
+      }
+      if(depth===0){
+        const inner=expr.slice(i+1, j-1);
+        const placeholder=`__willog_arr${arrIdx++}`;
+        let arr=[];
+        if(inner.trim()!==''){
+          const parts=splitArrayElements(inner);
+          arr=parts.map(p=>{
+            const t=p.trim();
+            if(t==='') return undefined;
+            // avaliar cada elemento recursivamente (pode ser número, string, variável, expressão)
+            try{ return evaluateExpression(t, env); }catch(e){ return t; }
+          }).filter(v=>v!==undefined);
+        }
+        env[placeholder]=arr;
+        res+=placeholder;
+        i=j;
+      }else{
+        res+=ch; i++;
+      }
+    }else{
+      res+=ch; i++;
+    }
+  }
+  return res;
+}
+function preprocessObjects(expr, env){
+  let res='';
+  let i=0;
+  let objIdx=0;
+  while(i<expr.length){
+    const ch=expr[i];
+    if(ch==='"' || ch==="'"){
+      let q=ch; let j=i+1; let esc=false;
+      while(j<expr.length){
+        const c=expr[j];
+        if(esc) esc=false;
+        else if(c==='\\') esc=true;
+        else if(c===q){ j++; break; }
+        j++;
+      }
+      res+=expr.slice(i,j);
+      i=j;
+    }else if(ch==='{'){
+      let depth=1; let j=i+1; let inStr=false; let strCh=null; let esc=false;
+      while(j<expr.length && depth>0){
+        const c=expr[j];
+        if(inStr){
+          if(esc) esc=false;
+          else if(c==='\\') esc=true;
+          else if(c===strCh) inStr=false;
+        }else{
+          if(c==='"' || c==="'"){ inStr=true; strCh=c; }
+          else if(c==='{') depth++;
+          else if(c==='}') depth--;
+        }
+        j++;
+      }
+      if(depth===0){
+        const inner=expr.slice(i+1, j-1);
+        const placeholder=`__willog_obj${objIdx++}`;
+        let obj={};
+        if(inner.trim()!==''){
+          // split em pares por ',' fora de strings/brackets
+          const pairs=splitArrayElements(inner);
+          for(let p of pairs){
+            const colonIdx=p.indexOf(':');
+            if(colonIdx===-1) continue;
+            const kPart=p.slice(0, colonIdx).trim();
+            const vPart=p.slice(colonIdx+1).trim();
+            let key;
+            try{
+              // chave pode ser "nome" com aspas, avaliar como string
+              if((kPart.startsWith('"') && kPart.endsWith('"')) || (kPart.startsWith("'") && kPart.endsWith("'"))){
+                key=kPart.slice(1,-1);
+              }else{
+                key=kPart;
+                // tentar avaliar como expressão? Para Willog, chave é sempre string com aspas, como "nome"
+                // se for sem aspas, usar como está
+                if(key.startsWith('"')||key.startsWith("'")) key=key.slice(1,-1);
+              }
+              const val=evaluateExpression(vPart, env);
+              obj[key]=val;
+            }catch(e){
+              // ignorar
+            }
+          }
+        }
+        env[placeholder]=obj;
+        res+=placeholder;
+        i=j;
+      }else{
+        res+=ch; i++;
+      }
+    }else{
+      res+=ch; i++;
+    }
+  }
+  return res;
+}
+function preprocessMethods(expr){
+  // converte acessos como a.ordenar, a.aleatorio, a.primeiro, a.ultimo, a.tamanho, a.posicao(3), a.fatiar(2,4), a.adicionar[4,5]
+  // para chamadas de função: ordenar(a), aleatorio(a), etc.
+  // Usa regex que captura receptor como [..] ou "..." ou '...' ou identificador com pontos
+  const recv = '(\\[.*?\\]|".*?"|\u0027.*?\u0027|\\b\\w+(?:\\.\\w+)*)';
+  // sem argumentos
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*ordenar\\b', 'gi'), 'ordenar($1)');
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*aleat[óo]rio\\b', 'gi'), 'aleatorio($1)');
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*primeiro\\b', 'gi'), 'primeiro($1)');
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*[úu]ltimo\\b', 'gi'), 'ultimo($1)');
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*tamanho\\b', 'gi'), 'tamanho($1)');
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*inverter\\b', 'gi'), 'inverter($1)');
+  // com um argumento: posicao
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*posi[çc][aã]o\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'posicao($1,$2)');
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*posicao\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'posicao($1,$2)');
+  // fatiar com dois args
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*fatiar\\s*\\(\\s*(.*?)\\s*,\\s*(.*?)\\s*\\)', 'gi'), 'fatiar($1,$2,$3)');
+  // adicionar com [] ou ()
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*adicionar\\s*(\\[.*?\\])', 'gi'), 'adicionar($1,$2)');
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*adicionar\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'adicionar($1,$2)');
+  return expr;
+}
+function preprocessExiste(expr){
+  // transforma "existe A em B" em "existe(A,B)" para avaliação como função
+  // suporta formas com aspas ou variável simples; repetido até não haver mais ocorrências
+  // regex captura left e right como token simples (string com aspas ou palavra sem espaço)
+  // para expressões mais complexas, o usuário pode usar parênteses: existe (a+b) em "texto"
+  let prev;
+  do{
+    prev=expr;
+    expr=expr.replace(/existe\s+("[^"]*"|'[^']*'|[^\s,;\)]+)\s+em\s+("[^"]*"|'[^']*'|[^\s,;\)]+)/gi, (m, left, right)=>`existe(${left},${right})`);
+  }while(expr!==prev);
+  return expr;
+}
 // Tokenização e avaliação de expressão
 function evaluateExpression(expr, env){
   expr = expr.trim();
+  if(expr==='') return '';
+  expr = preprocessMethods(expr);
+  expr = preprocessObjects(expr, env);
+  expr = preprocessArrays(expr, env);
+  expr = preprocessExiste(expr);
+  // aleatório() overloads: 0 args -> decimal 0-1 exclusive, 1 arg n -> 1..n, 2 args a,b -> a..b
+  if(/^\s*aleat[óo]rio\s*\(\s*\)\s*$/i.test(expr)){
+    let r; do{ r=Math.random(); }while(r===0 || r===1); return r;
+  }
+  let m1=expr.match(/^\s*aleat[óo]rio\s*\(\s*(\d+(?:\.\d+)?)\s*\)\s*$/i);
+  if(m1){
+    const n=Number(m1[1]);
+    return Math.floor(Math.random()*n)+1;
+  }
+  let m2=expr.match(/^\s*aleat[óo]rio\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)\s*$/i);
+  if(m2){
+    const a=Number(m2[1]), b=Number(m2[2]);
+    const lo=Math.min(a,b), hi=Math.max(a,b);
+    return Math.floor(Math.random()*(hi-lo+1))+lo;
+  }
+  if(expr==='') return '';
   if(expr==='') return '';
   // Se for apenas string literal isolada? o tokenizador já resolve
   try {
@@ -954,24 +1448,35 @@ function tokenize(expr, env){
       // verificar se é chamada de função (ident seguido de '(')
       let j=i;
       while(j<len && /\s/.test(expr[j])) j++;
-      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt'];
+      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter'];
       const lower = id.toLowerCase();
+      // se for propriedade após '.', tratar como string literal da chave
+      if(tokens.length>0 && tokens[tokens.length-1].type==='OP' && tokens[tokens.length-1].value==='.'){
+        tokens.push({type:'STRING', value:id});
+        continue;
+      }
       if(j<len && expr[j]==='(' && funcNames.includes(lower)){
         tokens.push({type:'FUNC', value: lower});
         continue;
       }
-      // operadores lógicos em português: e, ou, não/nao
-      if(['e','ou','não','nao'].includes(lower)){
-        // 'e' e 'ou' como binários, 'não'/'nao' como unário
-        const opVal = (lower==='nao') ? 'não' : lower;
+      // operadores lógicos e de conjunto em português: e, ou, não/nao, em, união, intersecção
+      if(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção'].includes(lower)){
+        let opVal=lower;
+        if(lower==='nao') opVal='não';
+        else if(lower==='uniao') opVal='união';
+        else if(['interseccao','intersecao','interseção'].includes(lower)) opVal='intersecção';
         tokens.push({type:'OP', value: opVal});
         continue;
       }
       tokens.push({type:'IDENT', value:id});
       continue;
     }
-    // parênteses
+    // parênteses e colchetes/chaves
     if(c==='(' || c===')'){ tokens.push({type:'PAREN', value:c}); i++; continue; }
+    if(c==='[' || c===']'){ tokens.push({type:'BRACK', value:c}); i++; continue; }
+    if(c==='{' || c==='}'){ tokens.push({type:'BRACE', value:c}); i++; continue; }
+    if(c===':'){ tokens.push({type:'COLON', value:c}); i++; continue; }
+    if(c==='.'){ tokens.push({type:'OP', value:'.'}); i++; continue; }
     // operadores de 2 chars (** e // têm prioridade)
     const two = expr.substr(i,2);
     if(['>=','<=','==','!=','**','//'].includes(two)){ tokens.push({type:'OP', value:two}); i+=2; continue; }
@@ -987,7 +1492,7 @@ function tokenize(expr, env){
 function toRPN(tokens){
   const output=[];
   const ops=[];
-  const prec={ 'ou':1, '&':1, 'e':2, 'não':3, '==':4, '!=':4, '>':4, '<':4, '>=':4, '<=':4, '+':5, '-':5, '*':6, '/':6, '%':6, '//':6, '\\':6, '**':7, 'u-':8 };
+  const prec={ 'ou':1, '&':1, 'e':2, 'não':3, '==':4, '!=':4, '>':4, '<':4, '>=':4, '<=':4, '+':5, '-':5, 'união':5, 'intersecção':5, '*':6, '/':6, '%':6, '//':6, '\\':6, '**':7, 'u-':8, '.':9 };
   const isLeft = (op)=> op !== '**' && op !== 'não' && op !== 'u-'; // ** e unários são à direita
   let prev=null;
   for(let t of tokens){
@@ -1058,6 +1563,172 @@ function toWillogBool(v){
   if(typeof v==='string') return v.length>0;
   return !!v;
 }
+function multiplyWillog(a,b){
+  if(typeof a==='string' && typeof b==='number') return a.repeat(Math.max(0, Math.trunc(b)));
+  if(typeof b==='string' && typeof a==='number') return b.repeat(Math.max(0, Math.trunc(a)));
+  if(Array.isArray(a) && typeof b==='number'){
+    return a.map(x=>{
+      if(typeof x==='string') return x.repeat(Math.max(0, Math.trunc(b)));
+      if(typeof x==='number') return x * b;
+      if(Array.isArray(x)) return multiplyWillog(x,b);
+      return x;
+    });
+  }
+  if(typeof a==='number' && Array.isArray(b)){
+    return b.map(x=>{
+      if(typeof x==='string') return x.repeat(Math.max(0, Math.trunc(a)));
+      if(typeof x==='number') return a * x;
+      if(Array.isArray(x)) return multiplyWillog(a,x);
+      return x;
+    });
+  }
+  if(Array.isArray(a) && Array.isArray(b)){
+    const len=Math.min(a.length,b.length);
+    const res=[];
+    for(let i=0;i<len;i++){
+      const av=a[i], bv=b[i];
+      if(typeof av==='string' || typeof bv==='string') res.push(String(av).repeat(1)===String(av) && typeof bv==='number' ? String(av).repeat(bv) : String(av)+String(bv));
+      else res.push(Number(av)*Number(bv));
+    }
+    return res;
+  }
+  return Number(a)*Number(b);
+}
+function powerWillog(a,b){
+  if(Array.isArray(a) && typeof b==='number') return a.map(x=> {
+    if(typeof x==='number') return Math.pow(Number(x), Number(b));
+    if(Array.isArray(x)) return powerWillog(x,b);
+    return Math.pow(Number(x), Number(b));
+  });
+  if(typeof a==='number' && Array.isArray(b)) return b.map(x=> Math.pow(Number(a), Number(x)));
+  if(Array.isArray(a) && Array.isArray(b)){
+    const len=Math.min(a.length,b.length);
+    const res=[];
+    for(let i=0;i<len;i++) res.push(Math.pow(Number(a[i]), Number(b[i])));
+    return res;
+  }
+  return Math.pow(Number(a), Number(b));
+}
+function divideWillog(a,b){
+  if(Array.isArray(a) && typeof b==='number'){
+    const bv=Number(b);
+    if(bv===0) return a.map(()=>Infinity);
+    return a.map(x=> {
+      if(Array.isArray(x)) return divideWillog(x,b);
+      return Number(x)/bv;
+    });
+  }
+  if(typeof a==='number' && Array.isArray(b)){
+    const av=Number(a);
+    return b.map(x=>{
+      if(Array.isArray(x)) return divideWillog(a,x);
+      const xv=Number(x);
+      return xv===0? Infinity : av/xv;
+    });
+  }
+  if(Array.isArray(a) && Array.isArray(b)){
+    const len=Math.min(a.length,b.length);
+    const res=[];
+    for(let i=0;i<len;i++){
+      const bv=Number(b[i]);
+      res.push(bv===0? Infinity : Number(a[i])/bv);
+    }
+    return res;
+  }
+  const bv=Number(b);
+  return bv===0? Infinity : Number(a)/bv;
+}
+function floorDivWillog(a,b){
+  if(Array.isArray(a) && typeof b==='number'){
+    const bv=Number(b);
+    if(bv===0) return a.map(()=>Infinity);
+    return a.map(x=> Math.floor(Number(x)/bv));
+  }
+  if(typeof a==='number' && Array.isArray(b)){
+    const av=Number(a);
+    return b.map(x=> {
+      const xv=Number(x);
+      return xv===0? Infinity : Math.floor(av/xv);
+    });
+  }
+  if(Array.isArray(a) && Array.isArray(b)){
+    const len=Math.min(a.length,b.length);
+    const res=[];
+    for(let i=0;i<len;i++){
+      const bv=Number(b[i]);
+      res.push(bv===0? Infinity : Math.floor(Number(a[i])/bv));
+    }
+    return res;
+  }
+  const bv=Number(b);
+  return bv===0? Infinity : Number(a)/bv;
+}
+function fracDivWillog(a,b){
+  const singleFrac=(av,bv)=>{
+    const div=Number(av)/Number(bv);
+    if(!isFinite(div)) return div;
+    const trunc=Math.trunc(div);
+    let frac=div - trunc;
+    frac=Number(frac.toFixed(10));
+    if(Object.is(frac,-0)) frac=0;
+    return frac;
+  };
+  if(Array.isArray(a) && typeof b==='number'){
+    return a.map(x=> singleFrac(x,b));
+  }
+  if(typeof a==='number' && Array.isArray(b)){
+    return b.map(x=> singleFrac(a,x));
+  }
+  if(Array.isArray(a) && Array.isArray(b)){
+    const len=Math.min(a.length,b.length);
+    const res=[];
+    for(let i=0;i<len;i++) res.push(singleFrac(a[i],b[i]));
+    return res;
+  }
+  return singleFrac(a,b);
+}
+function concatWillog(a,b){
+  const arrA = Array.isArray(a) ? a : [a];
+  const arrB = Array.isArray(b) ? b : [b];
+  // se ambos não são arrays mas um é array, já tratado; se nenhum é array, não deveria chegar aqui
+  if(Array.isArray(a) || Array.isArray(b)) return arrA.concat(arrB);
+  return String(a)+String(b);
+}
+function unionWillog(a,b){
+  const arrA = Array.isArray(a) ? a : [a];
+  const arrB = Array.isArray(b) ? b : [b];
+  const seen=new Set();
+  const res=[];
+  for(let x of arrA){ const k=String(x); if(!seen.has(k)){ seen.add(k); res.push(x); } }
+  for(let x of arrB){ const k=String(x); if(!seen.has(k)){ seen.add(k); res.push(x); } }
+  return res;
+}
+function intersectionWillog(a,b){
+  const arrA = Array.isArray(a) ? a : [a];
+  const arrB = Array.isArray(b) ? b : [b];
+  const setB=new Set(arrB.map(x=>String(x)));
+  const seen=new Set();
+  const res=[];
+  for(let x of arrA){ const k=String(x); if(setB.has(k) && !seen.has(k)){ seen.add(k); res.push(x); } }
+  return res;
+}
+function differenceWillog(a,b){
+  const arrA = Array.isArray(a) ? a : [a];
+  const arrB = Array.isArray(b) ? b : [b];
+  const setB=new Set(arrB.map(x=>String(x)));
+  return arrA.filter(x=> !setB.has(String(x)));
+}
+function applyToArrayOrSingle(val, fn){
+  if(Array.isArray(val)) return val.map(x=> {
+    const r=fn(x);
+    // se fn retorna número com ruído, limpar?
+    if(typeof r==='number' && !Number.isInteger(r)){
+      return Number(r.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+    }
+    return r;
+  });
+  return fn(val);
+}
 function evalRPN(rpn, env){
   const stack=[];
   for(let tok of rpn){
@@ -1070,29 +1741,156 @@ function evalRPN(rpn, env){
         stack[stack.length-1] = undefined;
       }
     } else if(tok.type==='FUNC'){
-      const arg = stack.pop();
-      const a = arg===undefined ? 0 : arg;
-      let res;
       const fn = tok.value;
-      switch(fn){
-        case 'raizq':
-        case 'raiz':
-        case 'sqrt': res = Math.sqrt(Number(a)); break;
-        case 'raizc':
-        case 'cbrt': res = Math.cbrt ? Math.cbrt(Number(a)) : Math.pow(Number(a), 1/3); break;
-        case 'inteiro': res = Math.trunc(Number(a)); break;
-        case 'decimal': { const n=Number(a); const t=Math.trunc(n); let d=n-t; // corrigir erro de ponto flutuante
-          // limitar casas para evitar 0.499999999
-          d = Number(d.toFixed(10)); // remove ruído
-          // remover zeros extras e manter precisão
-          // se d é 0.5 deve ficar 0.5
-          res = d;
-          break; }
-        case 'fração':
-        case 'fracao': res = fractionString(Number(a)); break;
-        default: res = a;
+      let res;
+      if(fn==='existe'){
+        const right = stack.pop();
+        const left = stack.pop();
+        const r = right===undefined ? '' : right;
+        const l = left===undefined ? '' : left;
+        res = String(r).includes(String(l));
+      } else if(fn==='posicao' || fn==='posição'){
+        const idxVal = stack.pop();
+        const arrVal = stack.pop();
+        const a = arrVal===undefined?[]:arrVal;
+        const idx = Number(idxVal);
+        let res;
+        if(Array.isArray(a)){
+          res = a[idx];
+        }else if(typeof a==='string'){
+          res = a.charAt(idx);
+        }else{
+          res = undefined;
+        }
+        stack.push(res);
+      } else if(fn==='fatiar'){
+        const endVal = stack.pop();
+        const startVal = stack.pop();
+        const arrVal = stack.pop();
+        const a = arrVal===undefined?[]:arrVal;
+        const s = Number(startVal);
+        const e = Number(endVal);
+        let res;
+        if(Array.isArray(a)){
+          res = a.slice(s, e+1);
+        }else if(typeof a==='string'){
+          res = a.slice(s, e+1);
+        }else{
+          res = [];
+        }
+        stack.push(res);
+      } else if(fn==='adicionar'){
+        const bVal = stack.pop();
+        const aVal = stack.pop();
+        let res;
+        if(Array.isArray(aVal)){
+          const target = aVal;
+          // bVal pode ser array [4,5] ou valor único, ou múltiplos? Para adicionar com [4,5] já é array
+          if(Array.isArray(bVal)){
+            target.push(...bVal);
+          }else if(bVal!==undefined){
+            target.push(bVal);
+          }
+          res = target;
+        }else if(typeof aVal==='string' && typeof bVal==='string'){
+          res = aVal + bVal;
+        }else if(Array.isArray(bVal)){
+          // a não é array, mas b é array, criar novo array
+          res = [aVal].concat(bVal);
+        }else{
+          // fallback
+          res = aVal;
+          if(bVal!==undefined){
+            if(Array.isArray(res)) res.push(bVal);
+          }
+        }
+        stack.push(res);
+      } else {
+        const arg = stack.pop();
+        const a = arg===undefined ? 0 : arg;
+        const execSingle = (val)=>{
+          const n=Number(val);
+          switch(fn){
+            case 'raizq':
+            case 'raiz':
+            case 'sqrt': return Math.sqrt(n);
+            case 'raizc':
+            case 'cbrt': return Math.cbrt ? Math.cbrt(n) : Math.pow(n, 1/3);
+            case 'inteiro': return Math.trunc(n);
+            case 'decimal': { let d=n-Math.trunc(n); d=Number(d.toFixed(10)); return d; }
+            case 'fração':
+            case 'fracao': return fractionString(n);
+            case 'ordenar': {
+              if(Array.isArray(val)){
+                const copy=val.slice();
+                // ordenar numericamente se todos números, senão alfabeticamente
+                const allNum=copy.every(x=> typeof x==='number');
+                if(allNum) copy.sort((x,y)=>x-y);
+                else copy.sort();
+                return copy;
+              }else if(typeof val==='string'){
+                return val.split('').sort().join('');
+              }
+              return val;
+            }
+            case 'aleatorio':
+            case 'aleatório': {
+              if(Array.isArray(val)){
+                if(val.length===0) return undefined;
+                return val[Math.floor(Math.random()*val.length)];
+              }else if(typeof val==='string'){
+                if(val.length===0) return '';
+                return val[Math.floor(Math.random()*val.length)];
+              }
+              return val;
+            }
+            case 'primeiro': {
+              if(Array.isArray(val)) return val[0];
+              if(typeof val==='string') return val.charAt(0);
+              return val;
+            }
+            case 'ultimo':
+            case 'último': {
+              if(Array.isArray(val)) return val[val.length-1];
+              if(typeof val==='string') return val.charAt(val.length-1);
+              return val;
+            }
+            case 'tamanho': {
+              if(Array.isArray(val) || typeof val==='string') return val.length;
+              if(val && typeof val==='object') return Object.keys(val).length;
+              return 0;
+            }
+            case 'inverter': {
+              if(Array.isArray(val)) return val.slice().reverse();
+              if(typeof val==='string') return val.split('').reverse().join('');
+              return val;
+            }
+            default: return val;
+          }
+        };
+        let res;
+        if(Array.isArray(a)){
+          // para funções que já tratam array como um todo (ordenar, aleatorio, etc) não mapear elemento a elemento
+          if(['ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','inverter'].includes(fn)){
+            res = execSingle(a);
+          }else{
+            res = a.map(x=> {
+              const r=execSingle(x);
+              if(typeof r==='number' && !Number.isInteger(r)){
+                const f=r.toFixed(10).replace(/0+$/,'').replace(/\.$/,'');
+                return Number(f);
+              }
+              return r;
+            });
+          }
+        }else{
+          res = execSingle(a);
+          if(typeof res==='number' && !Number.isInteger(res)){
+            res=Number(res.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+          }
+        }
+        stack.push(res);
       }
-      stack.push(res);
     } else if(tok.type==='OP'){
       if(tok.value==='u-' || tok.value==='não'){
         const a=stack.pop();
@@ -1107,23 +1905,46 @@ function evalRPN(rpn, env){
         let res;
         switch(tok.value){
           case '+':
-            if(typeof av==='string' || typeof bv==='string') res = String(av) + String(bv);
+            if(Array.isArray(av) || Array.isArray(bv)){
+              const arrA = Array.isArray(av) ? av : [av];
+              const arrB = Array.isArray(bv) ? bv : [bv];
+              res = arrA.concat(arrB);
+            }else if(typeof av==='string' || typeof bv==='string') res = String(av) + String(bv);
             else res = Number(av) + Number(bv);
             break;
-          case '-': res = Number(av) - Number(bv); break;
-          case '*': res = Number(av) * Number(bv); break;
-          case '/': res = Number(bv)===0 ? Infinity : Number(av) / Number(bv); break;
-          case '%': res = Number(av) % Number(bv); break;
-          case '**': res = Math.pow(Number(av), Number(bv)); break;
-          case '//': { const bvN=Number(bv); res = bvN===0 ? Infinity : Math.floor(Number(av)/bvN); break; }
-          case '\\': { const bvN=Number(bv); if(bvN===0) res=Infinity; else { const div=Number(av)/bvN; const trunc=Math.trunc(div); let frac=div - trunc; // parte decimal
-              // corrigir precisão
-              frac = Number(frac.toFixed(10));
-              // remover -0
-              if(Object.is(frac, -0)) frac=0;
-              res = frac;
-            } break; }
-          case '&': res = String(av) + String(bv); break;
+          case '-':
+            if(Array.isArray(av) || Array.isArray(bv)){
+              res = differenceWillog(av,bv);
+            }else res = Number(av) - Number(bv);
+            break;
+          case '*': res = multiplyWillog(av,bv); break;
+          case '/': res = divideWillog(av,bv); break;
+          case '%': {
+            if(Array.isArray(av) || Array.isArray(bv)){
+              const fn=(x,y)=> Number(x)%Number(y);
+              if(Array.isArray(av) && Array.isArray(bv)){
+                const len=Math.min(av.length,bv.length);
+                res=[]; for(let i=0;i<len;i++) res.push(fn(av[i],bv[i]));
+              }else if(Array.isArray(av)){
+                res=av.map(x=> fn(x,bv));
+              }else{
+                res=bv.map(x=> fn(av,x));
+              }
+            }else res = Number(av) % Number(bv);
+            break;
+          }
+          case '**': res = powerWillog(av,bv); break;
+          case '//': res = floorDivWillog(av,bv); break;
+          case '\\': res = fracDivWillog(av,bv); break;
+          case '&':
+            if(Array.isArray(av) || Array.isArray(bv)){
+              const arrA = Array.isArray(av) ? av : [av];
+              const arrB = Array.isArray(bv) ? bv : [bv];
+              res = arrA.concat(arrB);
+            }else res = String(av) + String(bv);
+            break;
+          case 'união': res = unionWillog(av,bv); break;
+          case 'intersecção': res = intersectionWillog(av,bv); break;
           case '>': res = Number(av) > Number(bv); break;
           case '<': res = Number(av) < Number(bv); break;
           case '>=': res = Number(av) >= Number(bv); break;
@@ -1132,6 +1953,13 @@ function evalRPN(rpn, env){
           case '!=': res = av != bv; break;
           case 'e': res = toWillogBool(av) && toWillogBool(bv); break;
           case 'ou': res = toWillogBool(av) || toWillogBool(bv); break;
+          case '.':
+            if(av!==null && typeof av==='object'){
+              res = av[bv];
+            }else{
+              try{ res = av ? av[bv] : undefined; }catch(e){ res=undefined; }
+            }
+            break;
           default: res = 0;
         }
         stack.push(res);
@@ -1211,8 +2039,8 @@ function splitMostreArgs(rest){
       else if(ch===strCh) inStr=false;
     } else {
       if(ch==='"' || ch==="'"){ inStr=true; strCh=ch; cur+=ch; }
-      else if(ch==='('){ depth++; cur+=ch; }
-      else if(ch===')'){ depth--; cur+=ch; }
+      else if(ch==='(' || ch==='['){ depth++; cur+=ch; }
+      else if(ch===')' || ch===']'){ depth--; cur+=ch; }
       else if(ch===',' && depth===0){ args.push(cur); cur=''; }
       else cur+=ch;
     }
@@ -1254,6 +2082,85 @@ function parseSenao(line){
   const m=line.match(/^\s*sen[ãa]o\s*:?\s*(.*)$/i);
   if(m) return {after:(m[1]||'')};
   return {after:''};
+}
+function isParaCadaLine(line){
+  return /^\s*para\s+cada\b/i.test(line) && line.includes(':');
+}
+function parseParaCada(line){
+  // tenta forma "entre ... e ... [pulando ...]"
+  let m=line.match(/^\s*para\s+cada\s+([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s+entre\s+(.+?)\s+e\s+(.+?)(?:\s+pulando\s+(.+?))?\s*:\s*(.*)$/i);
+  if(m){
+    return {type:'range', varName:m[1].trim(), startExpr:m[2].trim(), endExpr:m[3].trim(), stepExpr:(m[4]||'').trim(), after:m[5]||''};
+  }
+  m=line.match(/^\s*para\s+cada\s+([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s+em\s+(.+?)\s*:\s*(.*)$/i);
+  if(m){
+    return {type:'iter', varName:m[1].trim(), iterExpr:m[2].trim(), after:m[3]||''};
+  }
+  return null;
+}
+function isMostreBlockStart(line){
+  return /^\s*mostre\s*\{/i.test(line);
+}
+function isAdicionarLine(line){
+  return /^\s*[\wÀ-ÿ]+(?:\.[\wÀ-ÿ]+)*\.adicionar\s*(\[.*?\]|\(.*?\))\s*$/i.test(line);
+}
+function isVerificarLine(line){
+  return /^\s*verificar\b/i.test(line) && line.includes(':');
+}
+function isCasoLine(line){
+  return /^\s*caso\b/i.test(line);
+}
+function isPadraoLine(line){
+  return /^\s*padr[ãa]o\b/i.test(line);
+}
+function isRepetirLine(line){
+  return /^\s*repetir\s*\(.*\)\s*:/i.test(line);
+}
+function parseRepetir(line){
+  const m=line.match(/^\s*repetir\s*\(\s*(.*?)\s*\)\s*:\s*(.*)$/i);
+  if(m) return {expr:m[1].trim(), after:m[2].trim()};
+  return {expr:'', after:''};
+}
+function parseVerificar(line){
+  const m=line.match(/^\s*verificar\s+(.*?):\s*$/i);
+  if(m) return {expr:m[1].trim()};
+  const m2=line.match(/^\s*verificar\s+(.*)$/i);
+  if(m2){
+    let e=m2[1].trim();
+    if(e.endsWith(':')) e=e.slice(0,-1).trim();
+    return {expr:e};
+  }
+  return {expr:''};
+}
+function parseCaso(line){
+  const m=line.match(/^\s*caso\s+(.*?):\s*(.*)$/i);
+  if(m) return {valExpr:m[1].trim(), after:m[2].trim()};
+  return {valExpr:'', after:''};
+}
+function parsePadrao(line){
+  const m=line.match(/^\s*padr[ãa]o\s*:?\s*(.*)$/i);
+  if(m) return {after:(m[1]||'').trim()};
+  return {after:''};
+}
+function findMostreBlockEnd(lines, start){
+  // procura linha com } (fora de string)
+  for(let i=start;i<lines.length;i++){
+    const raw=lines[i].raw;
+    // verificar } fora de string
+    let inStr=false, strCh=null, esc=false;
+    for(let c=0;c<raw.length;c++){
+      const ch=raw[c];
+      if(inStr){
+        if(esc) esc=false;
+        else if(ch==='\\') esc=true;
+        else if(ch===strCh) inStr=false;
+      }else{
+        if(ch==='"' || ch==="'"){ inStr=true; strCh=ch; }
+        else if(ch==='}'){ return i; }
+      }
+    }
+  }
+  return -1;
 }
 function findBlockEnd(lines, start, parentIndent){
   let i=start;
@@ -1318,11 +2225,29 @@ function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       try{
         const val=evaluateExpression(rhs, env);
         for(let i=0;i<parts.length-1;i++){
-          const varName=parts[i].trim();
-          if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(varName)){
-            env[varName]=val;
-          }else if(varName!==''){
-            logToConsole(`Erro na linha ${lineNo}: nome de variável inválido "${varName}"`, 'error');
+          const varPath=parts[i].trim();
+          if(varPath==='') continue;
+          if(varPath.includes('.')){
+            const pathParts=varPath.split('.').map(p=>p.trim()).filter(p=>p!=='');
+            let valid=true;
+            for(let pp of pathParts){ if(!/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(pp)){ valid=false; break; } }
+            if(!valid){ logToConsole(`Erro na linha ${lineNo}: nome de variável inválido "${varPath}"`, 'error'); continue; }
+            let obj=env;
+            for(let pi=0; pi<pathParts.length-1; pi++){
+              const key=pathParts[pi];
+              if(!(key in obj) || obj[key]===null || typeof obj[key]!=='object' || Array.isArray(obj[key])){
+                if(!(key in obj) || obj[key]===null || typeof obj[key]!=='object'){ obj[key]={}; }
+              }
+              obj=obj[key];
+            }
+            const lastKey=pathParts[pathParts.length-1];
+            obj[lastKey]=val;
+          }else{
+            if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(varPath)){
+              env[varPath]=val;
+            }else if(varPath!==''){
+              logToConsole(`Erro na linha ${lineNo}: nome de variável inválido "${varPath}"`, 'error');
+            }
           }
         }
       }catch(e){
@@ -1406,7 +2331,74 @@ function runWillog(){
       if(isEmptyOrComment(raw)){ i++; continue; }
       const indent=getIndent(raw);
       if(indent < baseIndent) break;
-      if(isSeLine(raw)){
+      if(isMostreBlockStart(raw)){
+        const startBrace = raw.indexOf('{');
+        const endBrace = raw.lastIndexOf('}');
+        if(startBrace !== -1 && endBrace !== -1 && endBrace > startBrace){
+          const inner = raw.slice(startBrace+1, endBrace).trim();
+          if(inner !== ''){
+            const parts = inner.includes(';') ? inner.split(';').map(s=>s.trim()).filter(s=>s!=='') : [inner];
+            // se inner contém quebras de linha? não, é uma linha só
+            // mas pode conter múltiplas expressões separadas por ','? Para mostre { a,b } não é spec, mas tratamos como múltiplas
+            // Para spec, inner é vazio (mostre {) ou single, então parts será 1
+            for(let stmt of parts){
+              // se stmt contém '\n' não, mas pode conter ',''? Não, cada linha dentro do bloco é separada por nova linha, não por ','
+              // Para mostre { A+B } single, stmt é "A+B"
+              try{
+                const v=evaluateExpression(stmt, env);
+                let out;
+                if(Array.isArray(v)) out=willogDisplay(v);
+                else if(typeof v==='number') out=formatWillogNumber(v, stmt);
+                else out=willogDisplay(v);
+                if(out.includes('\n')){
+                  const block=document.createElement('div'); block.className='line'; block.textContent=out; consoleEl.appendChild(block);
+                }else logToConsole(out);
+                hasOutputRef.value=true;
+              }catch(e){ logToConsole(`Erro: ${e.message}`, 'error'); }
+            }
+          }
+          i++;
+          continue;
+        }else{
+          const afterBrace = raw.slice(startBrace+1).trim();
+          let innerLines=[];
+          if(afterBrace!=='' ) innerLines.push(afterBrace);
+          const closeIdx=findMostreBlockEnd(lines, i+1);
+          let endIdx=closeIdx;
+          let hasClosing=closeIdx!==-1;
+          if(!hasClosing) endIdx=end;
+          const loopEnd = hasClosing ? endIdx+1 : endIdx;
+          for(let k=i+1;k<loopEnd;k++){
+            const lraw=lines[k].raw;
+            const cIdx=lraw.indexOf('}');
+            if(cIdx!==-1){
+              const before=lraw.slice(0,cIdx).trim();
+              if(before!=='') innerLines.push(before);
+              break;
+            }
+            if(isEmptyOrComment(lraw)) continue;
+            innerLines.push(lraw.trim());
+          }
+          // também verificar se a linha de fechamento tem conteúdo antes de } já tratado, mas se não, innerLines já contém tudo
+          for(let expr of innerLines){
+            if(expr.trim()==='') continue;
+            try{
+              const v=evaluateExpression(expr, env);
+              let out;
+              if(Array.isArray(v)) out=willogDisplay(v);
+              else if(typeof v==='number') out=formatWillogNumber(v, expr);
+              else out=willogDisplay(v);
+              if(out.includes('\n')){
+                const block=document.createElement('div'); block.className='line'; block.textContent=out; consoleEl.appendChild(block);
+              }else logToConsole(out);
+              hasOutputRef.value=true;
+            }catch(e){ logToConsole(`Erro: ${e.message}`, 'error'); }
+          }
+          if(hasClosing) i=endIdx+1;
+          else i=endIdx;
+          continue;
+        }
+      }else if(isSeLine(raw)){
         const seIndent=indent;
         const parsed=parseSe(raw);
         const condStr=parsed.cond;
@@ -1470,6 +2462,182 @@ function runWillog(){
           i = hasElse ? elseEnd : trueEnd;
           continue;
         }
+      }else if(isParaCadaLine(raw)){
+        const pcIndent=indent;
+        const parsed=parseParaCada(raw);
+        if(!parsed){ i++; continue; }
+        const afterPara=parsed.after;
+        const isSinglePara = afterPara && afterPara.trim()!=='';
+        let pBlockStart, pBlockEnd;
+        if(!isSinglePara){
+          pBlockStart=i+1;
+          pBlockEnd=findBlockEnd(lines, pBlockStart, pcIndent);
+        }
+        if(parsed.type==='range'){
+          let sVal=evaluateExpression(parsed.startExpr, env);
+          let eVal=evaluateExpression(parsed.endExpr, env);
+          let stepVal=parsed.stepExpr ? evaluateExpression(parsed.stepExpr, env) : 1;
+          sVal=Number(sVal); eVal=Number(eVal); stepVal=Number(stepVal);
+          if(isNaN(stepVal) || stepVal===0) stepVal=1;
+          const varName=parsed.varName;
+          if(isSinglePara){
+            if(stepVal>0){
+              for(let v=sVal; v<=eVal; v+=stepVal){
+                env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
+                execSingleStatement(afterPara, env, lineNo, hasOutputRef);
+              }
+            }else{
+              for(let v=sVal; v>=eVal; v+=stepVal){
+                env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
+                execSingleStatement(afterPara, env, lineNo, hasOutputRef);
+              }
+            }
+            i=i+1;
+          }else{
+            if(stepVal>0){
+              for(let v=sVal; v<=eVal; v+=stepVal){
+                env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
+                execBlock(pBlockStart, pBlockEnd, pcIndent+1);
+              }
+            }else{
+              for(let v=sVal; v>=eVal; v+=stepVal){
+                env[varName]=Number.isInteger(sVal) && Number.isInteger(eVal) && Number.isInteger(stepVal) ? Math.round(v) : v;
+                execBlock(pBlockStart, pBlockEnd, pcIndent+1);
+              }
+            }
+            i=pBlockEnd;
+          }
+        }else if(parsed.type==='iter'){
+          let iterVal=evaluateExpression(parsed.iterExpr, env);
+          let iterable=[];
+          if(Array.isArray(iterVal)) iterable=iterVal;
+          else if(typeof iterVal==='string') iterable=iterVal.split('');
+          else if(iterVal!==undefined && iterVal!==null) iterable=String(iterVal).split('');
+          const varName=parsed.varName;
+          if(isSinglePara){
+            for(let it of iterable){
+              env[varName]=it;
+              execSingleStatement(afterPara, env, lineNo, hasOutputRef);
+            }
+            i=i+1;
+          }else{
+            for(let it of iterable){
+              env[varName]=it;
+              execBlock(pBlockStart, pBlockEnd, pcIndent+1);
+            }
+            i=pBlockEnd;
+          }
+        }else{
+          i++;
+        }
+        continue;
+            }else if(isRepetirLine(raw)){
+        const rIndent=getIndent(raw);
+        const parsedR=parseRepetir(raw);
+        let n=0;
+        try{ n=Math.trunc(Number(evaluateExpression(parsedR.expr, env))); }catch(e){ n=0; }
+        if(isNaN(n) || n<0) n=0;
+        const afterRep=parsedR.after;
+        const isSingleRep=afterRep && afterRep.trim()!=='';
+        let rBlockStart, rBlockEnd;
+        if(!isSingleRep){
+          rBlockStart=i+1;
+          rBlockEnd=findBlockEnd(lines, rBlockStart, rIndent);
+        }
+        if(isSingleRep){
+          for(let k=0;k<n;k++) execSingleStatement(afterRep, env, lineNo, hasOutputRef);
+        }else{
+          for(let k=0;k<n;k++) execBlock(rBlockStart, rBlockEnd, rIndent+1);
+        }
+        i = isSingleRep ? i+1 : rBlockEnd;
+        continue;
+      }else if(isVerificarLine(raw)){
+        const vIndent=getIndent(raw);
+        const parsedV=parseVerificar(raw);
+        let switchVal;
+        try{ switchVal=evaluateExpression(parsedV.expr, env); }catch(e){ switchVal=parsedV.expr; }
+        const vBlockEnd=findBlockEnd(lines, i+1, vIndent);
+        let matched=false;
+        for(let k=i+1;k<vBlockEnd;k++){
+          const lraw=lines[k].raw;
+          if(isEmptyOrComment(lraw)) continue;
+          if(isCasoLine(lraw)){
+            const p=parseCaso(lraw);
+            let caseVal;
+            try{ caseVal=evaluateExpression(p.valExpr, env); }catch(e){ caseVal=p.valExpr; }
+            let isMatch=false;
+            if(typeof switchVal==='number' && typeof caseVal==='number') isMatch=switchVal===caseVal;
+            else if(typeof switchVal==='string' || typeof caseVal==='string') isMatch=String(switchVal)===String(caseVal);
+            else isMatch=switchVal==caseVal;
+            if(!isMatch) isMatch=String(switchVal)===String(caseVal) || switchVal==caseVal;
+            if(isMatch){
+              const after=p.after;
+              if(after!==''){
+                if(after.trim().startsWith('mostre')){
+                  execSingleStatement(after, env, lines[k].lineNo, hasOutputRef);
+                }else{
+                  try{
+                    const v=evaluateExpression(after, env);
+                    let out;
+                    if(Array.isArray(v)) out=willogDisplay(v);
+                    else if(typeof v==='number') out=formatWillogNumber(v, after);
+                    else out=willogDisplay(v);
+                    if(out.includes('\n')){
+                      const block=document.createElement('div'); block.className='line'; block.textContent=out; consoleEl.appendChild(block);
+                    }else logToConsole(out);
+                    hasOutputRef.value=true;
+                  }catch(e){ logToConsole(`Erro: ${e.message}`, 'error'); }
+                }
+              }else{
+                const cBlockEnd=findBlockEnd(lines, k+1, getIndent(lraw));
+                execBlock(k+1, cBlockEnd, getIndent(lraw)+1);
+                hasOutputRef.value=true;
+              }
+              matched=true;
+              break;
+            }
+          }
+        }
+        if(!matched){
+          for(let k=i+1;k<vBlockEnd;k++){
+            const lraw=lines[k].raw;
+            if(isPadraoLine(lraw)){
+              const p=parsePadrao(lraw);
+              const after=p.after;
+              if(after!==''){
+                if(after.trim().startsWith('mostre')){
+                  execSingleStatement(after, env, lines[k].lineNo, hasOutputRef);
+                }else{
+                  try{
+                    const v=evaluateExpression(after, env);
+                    let out;
+                    if(Array.isArray(v)) out=willogDisplay(v);
+                    else if(typeof v==='number') out=formatWillogNumber(v, after);
+                    else out=willogDisplay(v);
+                    if(out.includes('\n')){
+                      const block=document.createElement('div'); block.className='line'; block.textContent=out; consoleEl.appendChild(block);
+                    }else logToConsole(out);
+                    hasOutputRef.value=true;
+                  }catch(e){ logToConsole(`Erro: ${e.message}`, 'error'); }
+                }
+              }else{
+                const pBlockEnd=findBlockEnd(lines, k+1, getIndent(lraw));
+                execBlock(k+1, pBlockEnd, getIndent(lraw)+1);
+                hasOutputRef.value=true;
+              }
+              break;
+            }
+          }
+        }
+        i=vBlockEnd;
+        continue;
+      }else if(isAdicionarLine(raw)){
+        try{
+          const transformed=preprocessMethods(raw.trim());
+          evaluateExpression(transformed, env);
+        }catch(e){ logToConsole(`Erro na linha ${lineNo}: ${e.message}`, 'error'); }
+        i++;
+        continue;
       }else if(isSenaoLine(raw)){
         // senão órfão (sem se) - pular seu bloco
         const blockEnd=findBlockEnd(lines, i+1, indent);
@@ -1484,7 +2652,7 @@ function runWillog(){
   }
   execBlock(0, lines.length, 0);
   if(!hasOutputRef.value){
-    logToConsole('(programa executado — sem saída. Use "mostre" para exibir valores.)','info');
+    logToConsole('> programa executado — sem saída.','info');
   }
   document.getElementById('statusBar').textContent = 'Executado • ' + new Date().toLocaleTimeString('pt-BR');
   setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 3000);
@@ -1492,6 +2660,57 @@ function runWillog(){
 
 document.getElementById('btnExecutar').addEventListener('click', runWillog);
 
+  // Menu bar dropdown
+  (function(){
+    const menus=document.querySelectorAll(".menu");
+    function closeAll(){ menus.forEach(m=>{ m.classList.remove("active"); const t=m.querySelector(".menu-trigger"); if(t) t.setAttribute("aria-expanded","false"); }); }
+    menus.forEach(menu=>{
+      const trigger=menu.querySelector(".menu-trigger");
+      if(!trigger) return;
+      trigger.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        const isActive=menu.classList.contains("active");
+        closeAll();
+        if(!isActive){ menu.classList.add("active"); trigger.setAttribute("aria-expanded","true"); }
+      });
+    });
+    document.addEventListener("click", closeAll);
+    document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeAll(); });
+    // fechar ao clicar em item
+    document.querySelectorAll(".menu-dropdown button").forEach(btn=>{
+      btn.addEventListener("click", ()=> setTimeout(closeAll, 150));
+    });
+  })();
+document.getElementById('btnManual').addEventListener('click', ()=>{
+  document.getElementById('modalManual').style.display='grid';
+});
+document.getElementById('btnFecharManual').addEventListener('click', ()=>{
+  document.getElementById('modalManual').style.display='none';
+});
+document.getElementById('modalManual').addEventListener('click', (e)=>{
+  if(e.target.id==='modalManual') document.getElementById('modalManual').style.display='none';
+});  // Abas do manual
+  document.querySelectorAll(".manual-tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".manual-tab").forEach(b=>b.classList.remove("active"));
+      document.querySelectorAll(".manual-pane").forEach(p=>p.classList.remove("active"));
+      btn.classList.add("active");
+      const pane=document.getElementById("pane-"+btn.dataset.tab);
+      if(pane) pane.classList.add("active");
+    });
+  });// Sobre modal
+document.getElementById('btnSobre').addEventListener('click', ()=>{
+  document.getElementById('modalSobre').style.display='grid';
+});
+document.getElementById('btnFecharSobre').addEventListener('click', ()=>{
+  document.getElementById('modalSobre').style.display='none';
+});
+document.getElementById('modalSobre').addEventListener('click', (e)=>{
+  if(e.target.id==='modalSobre') document.getElementById('modalSobre').style.display='none';
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape') document.getElementById('modalSobre').style.display='none';
+});
 // Atalho global F5
 document.addEventListener('keydown', (e)=>{
   if(e.key==='F5'){ e.preventDefault(); runWillog(); }
@@ -1501,3 +2720,23 @@ document.addEventListener('keydown', (e)=>{
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
