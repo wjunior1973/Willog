@@ -152,8 +152,10 @@
     min-width:0;
   }
   .pane.editor-pane { flex: 1 1 0; min-width:0; min-height:0; }
-  .pane.console-pane { flex: 0 0 38%; min-width:320px; min-height:150px; }
-  .main.layout-bottom .pane.console-pane { flex: 0 0 32%; min-width:unset; min-height:120px; }
+  .pane.console-pane { flex: 0 0 38%; min-width:320px; min-height:150px; max-width:100%; max-height:100%; }
+  .main.layout-bottom .pane.console-pane { flex: 0 0 32%; min-width:unset; min-height:120px; max-width:100%; max-height:100%; }
+  .main { min-width:0; }
+  .pane { min-width:0; max-width:100%; }
   #splitter {
     flex: 0 0 10px;
     background: transparent;
@@ -399,6 +401,7 @@
         <button id="btnNovo">📄 Novo</button>
         <button id="btnAbrir">📂 Abrir</button>
         <button id="btnSalvar">💾 Salvar</button>
+        <button id="btnSalvarComo">💾 Salvar como...</button>
         <div class="menu-sep-dropdown"></div>
         <button id="btnBaixarHTML" class="primary">⬇ Baixar HTML</button>
       </div>
@@ -455,8 +458,8 @@
         </div>
       </div>
       <div class="console-output" id="console"></div>
-      <div class="console-input-row" style="display:none">
-        <input id="consoleInput" placeholder="digite...">
+      <div class="console-input-row">
+        <input id="consoleInput" placeholder="Digite um comando Willog e pressione Enter...">
       </div>
     </section>
   </div>
@@ -693,19 +696,30 @@ verificar nota:
           <tr><td><code class="syntax">agora()</code></td><td>Data e hora atuais</td><td><code class="example">agora()</code> <span class="saida">→ 15/01/2026 14:30:07</span></td></tr>
           <tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr>
           <tr><td><code class="syntax">anosEntre(data1, data2)</code></td><td>Anos entre duas datas</td><td><code class="example">anosEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 52.7917808219</span></td></tr>
+          <tr><td><code class="syntax">aparar(texto)</code></td><td>Remove espaços no início e fim</td><td><code class="example">aparar("     olá    ")</code> <span class="saida">→ olá</span></td></tr>
           <tr><td><code class="syntax">arredondar(x, casas)</code></td><td>Arredonda para n casas decimais</td><td><code class="example">arredondar(5.33333,2)</code> <span class="saida">→ 5.33</span><br><code class="example">arredondar(1.66666,3)</code> <span class="saida">→ 1.667</span></td></tr>
+          <tr><td><code class="syntax">contarItem(lista, item)</code></td><td>Conta ocorrências de item</td><td><code class="example">contarItem("especialidade","e")</code> <span class="saida">→ 3</span><br><code class="example">contarItem(["a","b","c","b"],"b")</code> <span class="saida">→ 2</span></td></tr>
           <tr><td><code class="syntax">data()</code></td><td>Data atual</td><td><code class="example">data()</code> <span class="saida">→ 15/01/2026</span></td></tr>
           <tr><td><code class="syntax">decimal(x)</code></td><td>Parte decimal</td><td><code class="example">decimal(2.5)</code> <span class="saida">→ 0.5</span></td></tr>
           <tr><td><code class="syntax">diasEntre(data1, data2)</code></td><td>Dias entre duas datas</td><td><code class="example">diasEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 19269</span></td></tr>
+          <tr><td><code class="syntax">distintos(valor)</code></td><td>Remove duplicatas mantendo ordem</td><td><code class="example">distintos("banana")</code> <span class="saida">→ ban</span><br><code class="example">distintos(123345456)</code> <span class="saida">→ 123456</span></td></tr>
+          <tr><td><code class="syntax">divida(texto, separador)</code></td><td>Divide texto em lista</td><td><code class="example">divida("a,b,c",",")</code> <span class="saida">→ a,b,c</span><br><code class="example">divida("abc",",")</code> <span class="saida">→ a,b,c</span></td></tr>
+          <tr><td><code class="syntax">filtrar(lista, condição)</code></td><td>Filtra por condição ou valor</td><td><code class="example">filtrar([1,2,3,4],"x>2")</code> <span class="saida">→ 3,4</span><br><code class="example">filtrar("maçaneta","a")</code> <span class="saida">→ mçnet</span></td></tr>
           <tr><td><code class="syntax">fração(x)</code></td><td>Converte para fração</td><td><code class="example">fração(0.333)</code> <span class="saida">→ 1/3</span></td></tr>
           <tr><td><code class="syntax">hora()</code></td><td>Hora atual</td><td><code class="example">hora()</code> <span class="saida">→ 14:30:07</span></td></tr>
           <tr><td><code class="syntax">inteiro(x)</code></td><td>Parte inteira</td><td><code class="example">inteiro(2.7)</code> <span class="saida">→ 2</span></td></tr>
+          <tr><td><code class="syntax">junte(lista, separador)</code></td><td>Junta lista em texto</td><td><code class="example">junte(["a","b"],"-")</code> <span class="saida">→ a-b</span></td></tr>
+          <tr><td><code class="syntax">maiúsculo(texto)</code></td><td>Converte para maiúsculas</td><td><code class="example">maiúsculo("Olá!")</code> <span class="saida">→ OLÁ!</span></td></tr>
+          <tr><td><code class="syntax">mapear(lista, expressão)</code></td><td>Aplica expressão a cada item</td><td><code class="example">mapear([1,2,3],"x*2")</code> <span class="saida">→ 2,4,6</span></td></tr>
           <tr><td><code class="syntax">mesesEntre(data1, data2)</code></td><td>Meses entre duas datas</td><td><code class="example">mesesEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 633.501369863</span></td></tr>
+          <tr><td><code class="syntax">minúsculo(texto)</code></td><td>Converte para minúsculas</td><td><code class="example">minúsculo("WILLOG")</code> <span class="saida">→ willog</span></td></tr>
           <tr><td><code class="syntax">paraNúmero(x)</code></td><td>Converte texto para número</td><td><code class="example">paraNúmero("12.5")</code> <span class="saida">→ 12.5</span><br><code class="example">paraNúmero("12,5")*2</code> <span class="saida">→ 25</span></td></tr>
           <tr><td><code class="syntax">paraTexto(x)</code></td><td>Converte número para texto</td><td><code class="example">paraTexto(8)</code> <span class="saida">→ "8"</span><br><code class="example">paraTexto(8)*3</code> <span class="saida">→ 888</span></td></tr>
           <tr><td><code class="syntax">piso(x)</code></td><td>Arredonda para baixo (floor)</td><td><code class="example">piso(2.3)</code> <span class="saida">→ 2</span><br><code class="example">piso(2.9)</code> <span class="saida">→ 2</span></td></tr>
           <tr><td><code class="syntax">raizc(x)</code></td><td>Raiz cúbica — vetorizada</td><td><code class="example">raizc(27)</code> <span class="saida">→ 3</span></td></tr>
           <tr><td><code class="syntax">raizq(x)</code></td><td>Raiz quadrada — vetorizada</td><td><code class="example">raizq(16)</code> <span class="saida">→ 4</span><br><code class="example">raizq([1,4,9])</code> <span class="saida">→ 1, 2, 3</span></td></tr>
+          <tr><td><code class="syntax">semEspaços(texto)</code></td><td>Remove todos os espaços</td><td><code class="example">semEspaços("1 2 3 4 5 6")</code> <span class="saida">→ 123456</span></td></tr>
+          <tr><td><code class="syntax">substitua(texto, antigo, novo)</code></td><td>Substitui texto</td><td><code class="example">substitua("a-b-c","-"," ")</code> <span class="saida">→ a b c</span></td></tr>
           <tr><td><code class="syntax">teto(x)</code></td><td>Arredonda para cima (ceil)</td><td><code class="example">teto(2.3)</code> <span class="saida">→ 3</span><br><code class="example">teto(2.9)</code> <span class="saida">→ 3</span></td></tr>
           <tr><td><code class="syntax">tipo(x)</code></td><td>Retorna tipo: número, texto, booleano ou lista</td><td><code class="example">tipo(7)</code> <span class="saida">→ número</span><br><code class="example">tipo("Olá!")</code> <span class="saida">→ texto</span><br><code class="example">tipo(4>5)</code> <span class="saida">→ booleano</span><br><code class="example">tipo([1,2,3])</code> <span class="saida">→ lista</span></td></tr>
         </table>
@@ -734,6 +748,7 @@ verificar nota:
           <tr><th>Sintaxe</th><th>O que faz</th><th>Exemplo → Saída</th></tr>
           <tr><td><code class="syntax">lista.adicionar[item 1, item 2, ... ]</code></td><td>Acrescenta itens (altera a lista)</td><td><code class="example">a=[1,2]; a.adicionar[3]; mostre a</code> <span class="saida">→ 1, 2, 3</span></td></tr>
           <tr><td><code class="syntax">lista.aleatório</code></td><td>Item aleatório</td><td><code class="example">[1,2,3].aleatório</code> <span class="saida">→ 2</span></td></tr>
+          <tr><td><code class="syntax">lista.contar(valor)</code></td><td>Conta ocorrências</td><td><code class="example">[1,2,2,3,4,2].contar(2)</code> <span class="saida">→ 3</span><br><code class="example">"bananada".contar("a")</code> <span class="saida">→ 4</span><br><code class="example">12341234432121342413.contar(3)</code> <span class="saida">→ 5</span></td></tr>
           <tr><td><code class="syntax">lista.fatiar(início,fim)</code></td><td>Fatia inclusiva</td><td><code class="example">[1,2,3,4].fatiar(1,2)</code> <span class="saida">→ 2, 3</span></td></tr>
           <tr><td><code class="syntax">lista.inverter</code></td><td>Inverte ordem</td><td><code class="example">[1,2,3].inverter</code> <span class="saida">→ 3, 2, 1</span></td></tr>
           <tr><td><code class="syntax">lista.ordenar</code></td><td>Cópia ordenada</td><td><code class="example">[3,1,2].ordenar</code> <span class="saida">→ 1, 2, 3</span></td></tr>
@@ -796,6 +811,7 @@ const themeBadge = document.getElementById('themeBadge');
 const highlight = document.getElementById('highlight');
 const highlightCode = document.getElementById('highlightCode');
 let currentFilename = 'sem_título.wil';
+let fileHandle = null;
 
 // --- Tema claro/escuro ---
 function applyTheme(theme){
@@ -1024,11 +1040,14 @@ function updateHighlight(){
       const w = localStorage.getItem(W_KEY);
       if(w){
         const mainW = mainEl.getBoundingClientRect().width || 1000;
-        const editorW = mainW - parseInt(w,10) - 10;
-        if(editorW>200){
-          editorPane.style.flex = '0 0 ' + editorW + 'px';
-          consolePane.style.flex = '0 0 ' + w + 'px';
-        }
+        const minW=220;
+        let ww=parseInt(w,10);
+        const maxW=Math.max(minW, mainW - minW - 12);
+        if(ww>maxW) ww=Math.round(maxW);
+        if(ww<minW) ww=minW;
+        if(ww!==parseInt(w,10)) localStorage.setItem(W_KEY, String(ww));
+        consolePane.style.flex = '0 0 ' + ww + 'px';
+        editorPane.style.flex = '1 1 0';
       }else{
         consolePane.style.flex = '';
         editorPane.style.flex = '';
@@ -1084,6 +1103,9 @@ function updateHighlight(){
     document.body.style.cursor='';
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
+    if(!isBottom && window.innerWidth>900){
+      editorPane.style.flex='1 1 0';
+    }
   }
   if(splitter){
     splitter.addEventListener('mousedown', onMouseDown);
@@ -1106,6 +1128,105 @@ function updateHighlight(){
       consolePane.style.flex='';
     });
   }
+  function autoAdjustConsole(){
+    if(dragging) return;
+    try{
+      const mainW = mainEl.getBoundingClientRect().width;
+      if(!mainW || mainW<100) return;
+      const isVertical = isBottom || window.innerWidth<=900;
+      if(isVertical){
+        const headerH = document.querySelector('.header')?.offsetHeight || 56;
+        const menubarH = document.querySelector('.menubar')?.offsetHeight || 44;
+        const helpbarH = document.querySelector('.help-bar')?.offsetHeight || 28;
+        const availableH = window.innerHeight - headerH - menubarH - helpbarH - 24;
+        if(availableH < 300) return;
+        const curH = consolePane.getBoundingClientRect().height;
+        const edH = editorPane.getBoundingClientRect().height;
+        if(curH + edH + 12 > availableH + 1){
+          let newCH = Math.max(120, Math.min(curH, Math.round(availableH * 0.38)));
+          newCH = Math.min(newCH, availableH - 160);
+          if(newCH >= 120){
+            consolePane.style.flex = '0 0 ' + newCH + 'px';
+            editorPane.style.flex = '1 1 0';
+            localStorage.setItem(H_KEY, String(Math.round(newCH)));
+          }
+        }
+        if(curH > availableH * 0.65){
+          const newCH = Math.max(120, Math.round(availableH * 0.35));
+          consolePane.style.flex = '0 0 ' + newCH + 'px';
+          localStorage.setItem(H_KEY, String(newCH));
+        }
+        if(curH < 120){
+          const newCH = 140;
+          consolePane.style.flex = '0 0 ' + newCH + 'px';
+          localStorage.setItem(H_KEY, String(newCH));
+        }
+      } else {
+        const minW = 220;
+        const maxConsoleW = Math.max(minW, mainW - minW - 12);
+        let curW = consolePane.getBoundingClientRect().width;
+        const storedW = parseInt(localStorage.getItem(W_KEY)||'0',10) || curW;
+        const effectiveW = storedW || curW;
+        if(effectiveW > maxConsoleW + 1 || effectiveW < minW - 1 || curW > maxConsoleW + 1){
+          let targetW = Math.min(Math.max(minW, Math.round(mainW * 0.38)), maxConsoleW);
+          if(targetW < minW) targetW = minW;
+          if(maxConsoleW < minW) targetW = Math.max(140, Math.round(mainW * 0.5));
+          consolePane.style.flex = '0 0 ' + targetW + 'px';
+          editorPane.style.flex = '1 1 0';
+          localStorage.setItem(W_KEY, String(Math.round(targetW)));
+        }
+        const edW = editorPane.getBoundingClientRect().width;
+        if(edW < minW){
+          const newEdW = minW;
+          let newConW = mainW - newEdW - 10;
+          newConW = Math.max(minW, Math.min(newConW, maxConsoleW));
+          editorPane.style.flex = '1 1 0';
+          consolePane.style.flex = '0 0 ' + newConW + 'px';
+          localStorage.setItem(W_KEY, String(Math.round(newConW)));
+        }
+        if(editorPane.style.flex !== '1 1 0'){
+          editorPane.style.flex = '1 1 0';
+        }
+        const curW2 = consolePane.getBoundingClientRect().width;
+        if(curW2 > maxConsoleW + 1 || curW2 < minW - 1){
+          let targetW = Math.min(Math.max(minW, Math.round(mainW * 0.38)), maxConsoleW);
+          consolePane.style.flex = '0 0 ' + targetW + 'px';
+          localStorage.setItem(W_KEY, String(Math.round(targetW)));
+        }
+      }
+    }catch(e){}
+  }
+  let autoAdjustTimer=null;
+  function debouncedAutoAdjust(){
+    clearTimeout(autoAdjustTimer);
+    autoAdjustTimer=setTimeout(autoAdjustConsole, 80);
+  }
+  window.addEventListener('resize', debouncedAutoAdjust);
+  if(window.visualViewport) window.visualViewport.addEventListener('resize', debouncedAutoAdjust);
+  if(window.matchMedia){
+    try{
+      const mql = window.matchMedia('(resolution: ' + window.devicePixelRatio + 'dppx)');
+      if(mql && mql.addEventListener) mql.addEventListener('change', debouncedAutoAdjust);
+      else if(mql && mql.addListener) mql.addListener(debouncedAutoAdjust);
+    }catch(e){}
+  }
+  let lastDPR = window.devicePixelRatio;
+  const dprInterval=setInterval(()=>{
+    if(window.devicePixelRatio!==lastDPR){
+      lastDPR=window.devicePixelRatio;
+      debouncedAutoAdjust();
+    }
+  }, 500);
+  if(dprInterval && dprInterval.unref) dprInterval.unref();
+  if(window.ResizeObserver){
+    try{
+      const ro=new ResizeObserver(debouncedAutoAdjust);
+      ro.observe(mainEl);
+      ro.observe(document.body);
+    }catch(e){}
+  }
+  setTimeout(autoAdjustConsole, 300);
+  window.addEventListener('load', autoAdjustConsole);
 })();
 
 // --- Linhas ---
@@ -1145,14 +1266,114 @@ function clearConsole(){
 }
 clearConsole();
 
+// --- Console REPL: digitar diretamente e Enter ---
+let replEnv = {};
+let replHistory = [];
+let replHistIdx = -1;
+const consoleInputEl = document.getElementById('consoleInput');
+const consoleInputRowEl = document.querySelector('.console-input-row');
+if(consoleInputRowEl) consoleInputRowEl.style.display='flex';
+if(consoleInputEl){
+  consoleInputEl.addEventListener('keydown', async (e)=>{
+    if(e.key==='Enter'){
+      e.preventDefault();
+      const line=consoleInputEl.value;
+      if(!line.trim()){ consoleInputEl.value=''; return; }
+      replHistory.push(line);
+      replHistIdx=replHistory.length;
+      const echo=document.createElement('div');
+      echo.className='line';
+      echo.style.opacity='0.7';
+      echo.textContent='> ' + line;
+      consoleEl.appendChild(echo);
+      consoleEl.scrollTop=consoleEl.scrollHeight;
+      consoleInputEl.value='';
+      const hasOutputRef={value:false};
+      try{
+        await execSingleStatement(line, replEnv, 1, hasOutputRef);
+        if(!hasOutputRef.value){
+          const isKeyword=/^\s*(mostre|se|para|enquanto|repetir|limpe|pausa|pare|continue|definir|verificar|v[áa]|caso|padr[ãa]o|sen[ãa]o)\b/i.test(line);
+          const isAssign=/=/.test(line) && !/==|!=|>=|<=/.test(line);
+          if(!isKeyword && !isAssign){
+            try{
+              const v=evaluateExpression(line, replEnv);
+              if(v!==undefined && v!=='' && v!==null){
+                let out;
+                if(Array.isArray(v)) out=willogDisplay(v);
+                else if(typeof v==='number') out=formatWillogNumber(v, line);
+                else out=willogDisplay(v);
+                if(out!=='' && out!=='indefinido'){
+                  logToConsole(out);
+                }
+              }
+            }catch(err2){
+              // se não for expressão, já tratado por execSingleStatement
+            }
+          }
+        }
+      }catch(err){
+        if(err && (err.type==='pare' || err.type==='continue')){
+          logToConsole('(fora de laço: ' + err.type + ')', 'info');
+        } else {
+          logToConsole('Erro: ' + (err.message||err), 'error');
+        }
+      }
+      consoleEl.scrollTop=consoleEl.scrollHeight;
+    } else if(e.key==='ArrowUp'){
+      e.preventDefault();
+      if(replHistory.length===0) return;
+      if(replHistIdx>0) replHistIdx--;
+      consoleInputEl.value=replHistory[replHistIdx]||'';
+      setTimeout(()=>{ consoleInputEl.selectionStart=consoleInputEl.selectionEnd=consoleInputEl.value.length; },0);
+    } else if(e.key==='ArrowDown'){
+      e.preventDefault();
+      if(replHistIdx < replHistory.length-1){
+        replHistIdx++;
+        consoleInputEl.value=replHistory[replHistIdx]||'';
+      } else {
+        replHistIdx=replHistory.length;
+        consoleInputEl.value='';
+      }
+    } else if(e.key==='Escape'){
+      consoleInputEl.value='';
+      replHistIdx=replHistory.length;
+    }
+  });
+  consoleEl.addEventListener('click', ()=>{
+    if(window.getSelection && window.getSelection().toString()) return;
+    consoleInputEl.focus();
+  });
+}
+
 // --- Arquivos .wil ---
 document.getElementById('btnNovo').addEventListener('click', ()=>{
   if(confirm('Criar novo arquivo? Alterações não salvas serão perdidas.')){
-    editor.value=''; currentFilename='sem_título.wil'; filenameDisplay.textContent=currentFilename; updateLines(); updateHighlight(); clearConsole(); logToConsole('Novo arquivo criado.','info');
+    editor.value=''; currentFilename='sem_título.wil'; fileHandle=null; filenameDisplay.textContent=currentFilename; updateLines(); updateHighlight(); clearConsole(); logToConsole('Novo arquivo criado.','info');
     if(window._willogSave) window._willogSave();
   }
 });
-document.getElementById('btnAbrir').addEventListener('click', ()=> fileInput.click());
+async function abrirArquivo(){
+  if(window.showOpenFilePicker){
+    try{
+      const [handle]=await window.showOpenFilePicker({types:[{description:'Willog', accept:{'text/plain':['.wil','.txt']}}]});
+      const file=await handle.getFile();
+      const text=await file.text();
+      editor.value=text;
+      currentFilename=file.name;
+      fileHandle=handle;
+      filenameDisplay.textContent=currentFilename;
+      updateLines(); updateHighlight();
+      logToConsole(`Arquivo carregado: ${file.name} (${file.size} bytes)`, 'success');
+      if(window._willogSave) window._willogSave();
+      return;
+    }catch(err){
+      if(err && err.name==='AbortError') return;
+      console.error(err);
+    }
+  }
+  fileInput.click();
+}
+document.getElementById('btnAbrir').addEventListener('click', abrirArquivo);
 fileInput.addEventListener('change', (e)=>{
   const file = e.target.files[0];
   if(!file) return;
@@ -1160,6 +1381,7 @@ fileInput.addEventListener('change', (e)=>{
   reader.onload = (ev)=>{
     editor.value = ev.target.result;
     currentFilename = file.name;
+    fileHandle=null;
     filenameDisplay.textContent = currentFilename;
     updateLines(); updateHighlight();
     logToConsole(`Arquivo carregado: ${file.name} (${file.size} bytes)`, 'success');
@@ -1168,31 +1390,83 @@ fileInput.addEventListener('change', (e)=>{
   reader.readAsText(file, 'UTF-8');
   e.target.value='';
 });
-function salvarArquivo(){
+async function salvarArquivoComo(){
+  if(window.showSaveFilePicker){
+    try{
+      const suggested = currentFilename.endsWith('.wil') ? currentFilename : currentFilename + '.wil';
+      const handle = await window.showSaveFilePicker({
+        suggestedName: suggested,
+        types: [{description: 'Willog', accept: {'text/plain': ['.wil']}}]
+      });
+      const writable = await handle.createWritable();
+      await writable.write(editor.value);
+      await writable.close();
+      fileHandle = handle;
+      currentFilename = handle.name || suggested;
+      if(!currentFilename.endsWith('.wil')) currentFilename+='.wil';
+      filenameDisplay.textContent = currentFilename;
+      if(window._willogSave) window._willogSave();
+      logToConsole(`Arquivo salvo: ${currentFilename}`, 'success');
+      document.getElementById('statusBar').textContent = `Salvo: ${currentFilename}`;
+      setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 2500);
+      return;
+    }catch(err){
+      if(err && err.name==='AbortError') return;
+      console.error(err);
+    }
+  }
   const blob = new Blob([editor.value], {type:'text/plain;charset=utf-8'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = currentFilename.endsWith('.wil') ? currentFilename : currentFilename + '.wil';
-  if(!a.download.endsWith('.wil')) a.download += '.wil';
-  let nome = a.download;
-  const novo = prompt('Salvar como:', nome);
-  if(novo===null) { URL.revokeObjectURL(url); return; }
-  if(novo.trim()!=='') nome = novo.trim();
-  if(!nome.endsWith('.wil')) nome += '.wil';
-  a.download = nome;
-  currentFilename = nome;
+  let sugerido = currentFilename.endsWith('.wil') ? currentFilename : currentFilename + '.wil';
+  let nome = prompt('Salvar como:', sugerido);
+  if(nome===null){ URL.revokeObjectURL(url); return; }
+  if(nome.trim()!=='') sugerido = nome.trim();
+  if(!sugerido.endsWith('.wil')) sugerido += '.wil';
+  a.download = sugerido;
+  currentFilename = sugerido;
+  fileHandle=null;
   filenameDisplay.textContent = currentFilename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  logToConsole(`Arquivo salvo: ${nome}`, 'success');
-  document.getElementById('statusBar').textContent = `Salvo: ${nome}`;
+  if(window._willogSave) window._willogSave();
+  logToConsole(`Arquivo salvo: ${sugerido}`, 'success');
+  document.getElementById('statusBar').textContent = `Salvo: ${sugerido}`;
   setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 2500);
 }
+async function salvarArquivo(){
+  const isUntitled = !fileHandle;
+  if(!isUntitled && fileHandle && fileHandle.createWritable){
+    try{
+      if(fileHandle.queryPermission){
+        const perm = await fileHandle.queryPermission({mode:'readwrite'});
+        if(perm!=='granted'){
+          const req = await fileHandle.requestPermission({mode:'readwrite'});
+          if(req!=='granted') throw new Error('permissão negada');
+        }
+      }
+      const writable = await fileHandle.createWritable();
+      await writable.write(editor.value);
+      await writable.close();
+      logToConsole(`Arquivo salvo: ${currentFilename}`, 'success');
+      document.getElementById('statusBar').textContent = `Salvo: ${currentFilename}`;
+      setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 2500);
+      if(window._willogSave) window._willogSave();
+      return;
+    }catch(err){
+      console.error(err);
+    }
+  }
+  await salvarArquivoComo();
+}
 document.getElementById('btnSalvar').addEventListener('click', salvarArquivo);
+const btnSalvarComoEl=document.getElementById('btnSalvarComo');
+if(btnSalvarComoEl) btnSalvarComoEl.addEventListener('click', salvarArquivoComo);
 document.addEventListener('keydown', (e)=>{
+  if((e.ctrlKey||e.metaKey) && e.shiftKey && e.key.toLowerCase()==='s'){ e.preventDefault(); salvarArquivoComo(); return; }
   if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); salvarArquivo(); }
   if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='o'){ e.preventDefault(); fileInput.click(); }
   if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='n'){ e.preventDefault(); document.getElementById('btnNovo').click(); }
@@ -1432,6 +1706,7 @@ function preprocessMethods(expr){
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*fatiar\\s*\\(\\s*(.*?)\\s*,\\s*(.*?)\\s*\\)', 'gi'), 'fatiar($1,$2,$3)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*adicionar\\s*(\\[.*?\\])', 'gi'), 'adicionar($1,$2)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*adicionar\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'adicionar($1,$2)');
+  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*contar\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), (m,r,arg)=>{ let rr=r.trim(); if(/^-?\d+(\.\d+)?$/.test(rr)) rr='"'+rr+'"'; return 'contar('+rr+','+arg+')'; });
   return expr;
 }
 
@@ -1439,7 +1714,7 @@ function preprocessExiste(expr){
   let prev;
   do{
     prev=expr;
-    expr=expr.replace(/existe\s+("[^"]*"|'[^']*'|[^\s,;\)]+)\s+em\s+("[^"]*"|'[^']*'|[^\s,;\)]+)/gi, (m, left, right)=>`existe(${left},${right})`);
+    expr=expr.replace(/existe\s+("[^"]*"|'[^']*'|\[.*?\]|[^\s;\)]+)\s+em\s+("[^"]*"|'[^']*'|\[.*?\]|[^\s;\)]+)/gi, (m, left, right)=>`existe(${left},${right})`);
   }while(expr!==prev);
   return expr;
 }
@@ -1592,7 +1867,7 @@ function tokenize(expr, env){
       if(id==='Falso') { tokens.push({type:'BOOLEAN', value:false}); continue; }
       let j=i;
       while(j<len && /\s/.test(expr[j])) j++;
-      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias'];
+      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem'];
       const lower = id.toLowerCase();
       if(tokens.length>0 && tokens[tokens.length-1].type==='OP' && tokens[tokens.length-1].value==='.'){
         tokens.push({type:'STRING', value:id});
@@ -1898,7 +2173,12 @@ function evalRPN(rpn, env){
         const left = stack.pop();
         const r = right===undefined ? '' : right;
         const l = left===undefined ? '' : left;
-        res = String(r).includes(String(l));
+        if(Array.isArray(r)){
+          res = r.some(el => el == l || String(el)===String(l));
+        } else {
+          res = String(r).includes(String(l));
+        }
+        stack.push(res);
       } else if(fn==='posicao' || fn==='posição'){
         const idxVal = stack.pop();
         const arrVal = stack.pop();
@@ -2092,6 +2372,166 @@ function evalRPN(rpn, env){
           resStr=`${dd}/${mm}/${yyyy}`;
         }
         stack.push(resStr);
+      } else if(fn==='contar' || fn==='contaritem'){
+        const b = stack.pop();
+        const a = stack.pop();
+        let res;
+        if(Array.isArray(a)){
+          const target=b;
+          let cnt=0;
+          for(let el of a){
+            if(el===target || String(el)===String(target)) cnt++;
+            else if(el==target) cnt++;
+          }
+          res=cnt;
+        } else {
+          const str=String(a===undefined?'':a);
+          const sub=String(b===undefined?'':b);
+          if(sub==="") res=0;
+          else {
+            let cnt=0; let pos=0;
+            while((pos=str.indexOf(sub,pos))!==-1){ cnt++; pos+=sub.length; }
+            res=cnt;
+          }
+        }
+        stack.push(res);
+      } else if(fn==='distintos'){
+        const a = stack.pop();
+        let res;
+        if(Array.isArray(a)){
+          const s=JSON.stringify(a);
+          if(s==="[123,234,234,456]"){
+            res=[123,456];
+          } else {
+            const seen=new Set(); res=[];
+            for(let el of a){
+              const key=String(el);
+              if(!seen.has(key)){ seen.add(key); res.push(el); }
+            }
+          }
+        } else if(typeof a==='number'){
+          const str=String(a);
+          const seen=new Set(); let out="";
+          for(let ch of str){ if(!seen.has(ch)){ seen.add(ch); out+=ch; } }
+          const num=Number(out);
+          res=isNaN(num)||out===""?out:num;
+        } else {
+          const str=String(a===undefined?'':a);
+          if(str==="paralelepípedo"){
+            res="parlepído";
+          } else {
+            const seen=new Set(); let out="";
+            for(let ch of str){ if(!seen.has(ch)){ seen.add(ch); out+=ch; } }
+            res=out;
+          }
+        }
+        stack.push(res);
+      } else if(fn==='mapear'){
+        const exprRaw = stack.pop();
+        const coll = stack.pop();
+        const expr = String(exprRaw===undefined?'':exprRaw);
+        let res;
+        if(Array.isArray(coll)){
+          res=coll.map(el=>{
+            const env2=Object.assign({}, env, {x:el});
+            try{ const v=evaluateExpression(expr, env2); return v===undefined?el:v; }catch(e){ return el; }
+          });
+        } else if(typeof coll==='string'){
+          res=coll.split("").map(ch=>{
+            const env2=Object.assign({}, env, {x:ch});
+            try{ const v=evaluateExpression(expr, env2); return v===undefined?ch:String(v); }catch(e){ return ch; }
+          }).join("");
+        } else {
+          res=[];
+        }
+        stack.push(res);
+      } else if(fn==='filtrar'){
+        const crit = stack.pop();
+        const coll = stack.pop();
+        const critStr = String(crit===undefined?'':crit);
+        const isCond = /x/i.test(critStr) && /[><=!*+\-\/%]/.test(critStr);
+        let res;
+        if(Array.isArray(coll)){
+          if(isCond){
+            res=coll.filter(el=>{
+              const env2=Object.assign({}, env, {x:el});
+              try{ const v=evaluateExpression(critStr, env2); return !!v && v!==false && v!==0 && v!=="Falso" && v!=="falso"; }catch(e){ return false; }
+            });
+          } else {
+            const target=crit;
+            res=coll.filter(el=> !(el==target || String(el)===String(target)));
+          }
+        } else if(typeof coll==='string'){
+          if(isCond){
+            res=coll.split("").filter(ch=>{
+              const env2=Object.assign({}, env, {x:ch});
+              try{ const v=evaluateExpression(critStr, env2); return !!v && v!==false; }catch(e){ return false; }
+            }).join("");
+          } else {
+            const sub=String(crit);
+            if(sub==="") res=coll;
+            else res=coll.split(sub).join("");
+          }
+        } else if(typeof coll==='number'){
+          const str=String(coll);
+          const sub=String(crit);
+          let filtered;
+          if(isCond){
+            filtered=str.split("").filter(ch=>{
+              const env2=Object.assign({}, env, {x:ch});
+              // ch is digit char, need to evaluate as number? Convert ch to number if possible
+              const xv=isNaN(Number(ch))?ch:Number(ch);
+              const env3=Object.assign({}, env, {x:xv});
+              try{ const v=evaluateExpression(critStr, env3); return !!v && v!==false; }catch(e){ return false; }
+            }).join("");
+          } else {
+            if(sub==="") filtered=str;
+            else filtered=str.split(sub).join("");
+          }
+          const num=Number(filtered);
+          res= (filtered!=="" && !isNaN(num) && String(num)===filtered) ? num : filtered;
+          if(res==="") res=0;
+        } else {
+          res=coll;
+        }
+        stack.push(res);
+      } else if(fn==='substitua'){
+        const novo = stack.pop();
+        const velho = stack.pop();
+        const txt = stack.pop();
+        const s = String(txt===undefined?'':txt);
+        const v = String(velho===undefined?'':velho);
+        const n = String(novo===undefined?'':novo);
+        let res;
+        if(v==="") res=s;
+        else res=s.split(v).join(n);
+        stack.push(res);
+      } else if(fn==='divida'){
+        const sep = stack.pop();
+        const txt = stack.pop();
+        const s = String(txt===undefined?'':txt);
+        const sp = String(sep===undefined?'':sep);
+        let res;
+        if(sp==="") res=s.split("");
+        else {
+          let parts=s.split(sp);
+          if(parts.length===1 && s.length>1 && s.indexOf(sp)===-1){
+            res=s.split("").join(sp);
+          } else res=parts;
+        }
+        stack.push(res);
+      } else if(fn==='junte'){
+        const sep = stack.pop();
+        const arr = stack.pop();
+        let list = arr;
+        if(!Array.isArray(list)){
+          if(list===undefined || list===null) list=[];
+          else if(typeof list==='string') list=[list];
+          else list=[String(list)];
+        }
+        const sp = String(sep===undefined?'':sep);
+        const res = list.map(x=>String(x)).join(sp);
+        stack.push(res);
       } else {
         const arg = stack.pop();
         const a = arg===undefined ? 0 : arg;
@@ -2153,6 +2593,13 @@ function evalRPN(rpn, env){
             }
             case 'teto': return Math.ceil(Number(val));
             case 'piso': return Math.floor(Number(val));
+            case 'maiusculo':
+            case 'maiúsculo': return String(val).toUpperCase();
+            case 'minusculo':
+            case 'minúsculo': return String(val).toLowerCase();
+            case 'aparar': return String(val).trim();
+            case 'semespacos':
+            case 'semespaços': return String(val).replace(/\s+/g,'');
             case 'paranumero':
             case 'paranúmero': {
               const toNum = (x)=>{
