@@ -479,8 +479,6 @@
         <button id="btnAbrir">📂 Abrir</button>
         <button id="btnSalvar">💾 Salvar</button>
         <button id="btnSalvarComo">💾 Salvar como...</button>
-        <div class="menu-sep-dropdown"></div>
-        <button id="btnBaixarHTML" class="primary">⬇ Baixar HTML</button>
       </div>
     </div>
     <div class="menu" id="menuExibir">
@@ -699,7 +697,7 @@ mostre "Olá, {nome}!"</span>
 <span class="saida">-> Olá, Wilson!</span>
 
 <span class="example">m=n=o=5
-mostre m,n,o</span>          <span class="saida">-> 5, 5, 5</span>
+mostre m,n,o</span>          <span class="saida">-> 5,5,5</span>
 <span class="example">mostre m+n+o</span>         <span class="saida">-> 15</span>
 <span class="example">mostre m&n&o</span>         <span class="saida">-> 555</span></pre>
         <h3>mostre { … }</h3>
@@ -986,20 +984,7 @@ document.getElementById('btnFechar').addEventListener('click', ()=>{
   }, 200);
 });
 
-// --- Baixar HTML ---
-document.getElementById('btnBaixarHTML').addEventListener('click', ()=>{
-  const htmlContent = document.documentElement.outerHTML;
-  const blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'willog_ide.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  logToConsole('📥 Arquivo HTML baixado com sucesso!', 'success');
-});
+
 
 // --- Zoom ---
 (function(){
