@@ -423,6 +423,39 @@
   .floating-console .line.success { color:#55efc4; }
   .floating-console.centralizado { text-align:center; }
   .floating-console.centralizado .line { text-align:center; }
+  .autocomplete {
+    position: absolute;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow), 0 8px 24px rgba(0,0,0,0.15);
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 1500;
+    display: none;
+    flex-direction: column;
+    min-width: 180px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+  }
+  .autocomplete.visible { display:flex; }
+  .autocomplete-category {
+    padding: 6px 10px 3px;
+    font-size:11px; font-weight:700; letter-spacing:0.5px;
+    text-transform:uppercase; color:var(--accent);
+    background: var(--panel2);
+    border-bottom:1px solid var(--border);
+    position:sticky; top:0;
+  }
+  .autocomplete-item {
+    padding:7px 12px; cursor:pointer; color:var(--text);
+    display:flex; align-items:center; gap:8px;
+  }
+  .autocomplete-item:hover, .autocomplete-item.active {
+    background: var(--panel2); color: var(--accent);
+  }
+  .autocomplete-item .icon { font-size:12px; opacity:0.7; }
+  .editor-container { position:relative; }
 </style>
 </head>
 <body data-theme="light">
@@ -488,6 +521,7 @@
         <div class="editor-container" id="editorContainer">
           <pre id="highlight" aria-hidden="true"><code id="highlightCode"></code></pre>
           <textarea id="editor" spellcheck="false" placeholder="Digite seu código Willog aqui..."></textarea>
+          <div id="autocomplete" class="autocomplete" style="display:none"></div>
         </div>
       </div>
     </section>
@@ -1377,6 +1411,105 @@ editor.addEventListener('keydown', (e)=>{
 });
 updateLines(); updateHighlight();
 
+
+// --- Autocomplete ---
+(function(){
+  const acEl=document.getElementById('autocomplete');
+  const ed=document.getElementById('editor');
+  if(!acEl || !ed) return;
+  const comandos=['comentários','continue','definir função','enquanto','intervalo','janela','leia','limpe','mostre','para cada','pare','pausa','repetir','se','senão','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','contarItem','cos','data','decimal','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','fatorial','filtrar','fração','hora','inteiro','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','paraNúmero','paraTexto','piso','primos','raizc','raizq','semEspaços','sen','substitua','tan','teto','tipo'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const propriedades=['adicionar','aleatório','contar','fatiar','inverter','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  function getVariables(){
+    const text=ed.value;
+    const vars=new Set();
+    let m;
+    const reAssign=/\b([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*=/g;
+    while((m=reAssign.exec(text))) vars.add(m[1]);
+    const reParaCada=/para\s+cada\s+([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)/gi;
+    while((m=reParaCada.exec(text))) vars.add(m[1]);
+    try{ if(typeof replEnv!=="undefined" && replEnv){ Object.keys(replEnv).forEach(k=>{ if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(k) && !k.startsWith('__')) vars.add(k); }); } }catch(e){}
+    return [...vars].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  }
+  function getWordAtCaret(){
+    const pos=ed.selectionStart;
+    const txt=ed.value;
+    let start=pos;
+    while(start>0 && /[a-zA-Z0-9_À-ÿ]/.test(txt[start-1])) start--;
+    return {word: txt.slice(start,pos), start, end:pos};
+  }
+  function getCaretCoords(){
+    const pos=ed.selectionStart;
+    const textBefore=ed.value.slice(0,pos);
+    const lines=textBefore.split('\n');
+    const lineIdx=lines.length-1;
+    const col=lines[lines.length-1].length;
+    const lineHeight=parseFloat(getComputedStyle(ed).lineHeight)||20;
+    const charWidth=8.4;
+    const containerRect=document.getElementById('editorContainer').getBoundingClientRect();
+    const top=(lineIdx*lineHeight)-ed.scrollTop+10;
+    const left=(col*charWidth)-ed.scrollLeft+48;
+    return {top: Math.min(top, containerRect.height-40), left: Math.min(left, containerRect.width-200)};
+  }
+  let activeIdx=-1; let currentItems=[];
+  function hideAc(){ acEl.style.display='none'; acEl.classList.remove('visible'); activeIdx=-1; currentItems=[]; }
+  function showAc(){
+    const {word}=getWordAtCaret();
+    if(!word || word.length<1){ hideAc(); return; }
+    const lower=word.toLowerCase();
+    const vars=getVariables().filter(v=>v.toLowerCase().startsWith(lower));
+    const cmds=comandos.filter(c=>c.toLowerCase().startsWith(lower));
+    const funcs=funcoes.filter(f=>f.toLowerCase().startsWith(lower));
+    const props=propriedades.filter(p=>p.toLowerCase().startsWith(lower));
+    const groups=[];
+    if(vars.length) groups.push({cat:'Variáveis', items:vars, icon:'🔹'});
+    if(cmds.length) groups.push({cat:'Comandos', items:cmds, icon:'⚡'});
+    if(funcs.length) groups.push({cat:'Funções', items:funcs, icon:'ƒ'});
+    if(props.length) groups.push({cat:'Propriedades', items:props, icon:'🔧'});
+    if(groups.length===0){ hideAc(); return; }
+    acEl.innerHTML=''; currentItems=[];
+    groups.forEach(g=>{
+      const cat=document.createElement('div'); cat.className='autocomplete-category'; cat.textContent=g.cat; acEl.appendChild(cat);
+      g.items.forEach(item=>{
+        const div=document.createElement('div'); div.className='autocomplete-item'; div.innerHTML='<span class=\"icon\">'+g.icon+'</span><span>'+item+'</span>';
+        div.addEventListener('mousedown', (e)=>{ e.preventDefault(); selectItem(item); });
+        acEl.appendChild(div); currentItems.push({el:div, value:item});
+      });
+    });
+    const coords=getCaretCoords(); acEl.style.top=coords.top+'px'; acEl.style.left=coords.left+'px'; acEl.style.display='flex'; acEl.classList.add('visible'); activeIdx=-1; acEl.scrollTop=0;
+  }
+  function selectItem(value){
+    const {word, start}=getWordAtCaret();
+    const before=ed.value.slice(0,start);
+    const after=ed.value.slice(ed.selectionStart);
+    ed.value=before+value+after;
+    ed.selectionStart=ed.selectionEnd=start+value.length;
+    hideAc(); updateLines(); updateHighlight(); ed.focus(); if(window._willogSave) window._willogSave();
+  }
+  function moveActive(dir){
+    if(currentItems.length===0) return;
+    if(activeIdx>=0) currentItems[activeIdx].el.classList.remove('active');
+    activeIdx+=dir; if(activeIdx<0) activeIdx=currentItems.length-1; if(activeIdx>=currentItems.length) activeIdx=0;
+    currentItems[activeIdx].el.classList.add('active'); currentItems[activeIdx].el.scrollIntoView({block:'nearest'});
+  }
+  ed.addEventListener('input', ()=>{ showAc(); });
+  ed.addEventListener('keyup', (e)=>{
+    if(['ArrowDown','ArrowUp','Enter','Tab','Escape'].includes(e.key)) return;
+    if(/^[a-zA-Z0-9_À-ÿ]$/.test(e.key) || e.key==='Backspace' || e.key.length===1) showAc();
+  });
+  ed.addEventListener('keydown', (e)=>{
+    if(acEl.style.display==='none' || !acEl.classList.contains('visible')) return;
+    if(e.key==='ArrowDown'){ e.preventDefault(); moveActive(1); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); moveActive(-1); }
+    else if(e.key==='Enter' || e.key==='Tab'){
+      if(activeIdx>=0){ e.preventDefault(); selectItem(currentItems[activeIdx].value); }
+      else if(currentItems.length===1){ e.preventDefault(); selectItem(currentItems[0].value); }
+    } else if(e.key==='Escape'){ e.preventDefault(); hideAc(); }
+  });
+  ed.addEventListener('blur', ()=>{ setTimeout(hideAc,150); });
+  ed.addEventListener('scroll', hideAc);
+  document.addEventListener('click', (e)=>{ if(!acEl.contains(e.target) && e.target!==ed) hideAc(); });
+})();
 // --- Console helpers ---
 let janelaAtiva=false;
 let janelaCentralizada=false;
