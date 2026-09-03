@@ -379,6 +379,49 @@
     background: #00a381;
     border-color: #00a381;
   }
+  .floating-window {
+    position: fixed;
+    top: 15%; left: 50%; transform: translateX(-50%);
+    width: 640px; height: 420px;
+    background: var(--panel);
+    border: 2px solid var(--border-strong);
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3), var(--shadow);
+    display: flex; flex-direction: column;
+    z-index: 2000;
+    overflow: hidden;
+    min-width: 300px; min-height: 200px;
+  }
+  .floating-window.minimized { height: 40px; }
+  .floating-window.minimized .floating-console { display:none; }
+  .floating-window.maximized { inset:0 !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important; transform:none !important; width:100% !important; height:100% !important; border-radius:0; }
+  .floating-header {
+    background: var(--panel2);
+    border-bottom: 2px solid var(--border);
+    padding: 8px 12px;
+    display:flex; align-items:center; justify-content:space-between;
+    cursor: move;
+    user-select:none;
+    font-family:'Inter',sans-serif; font-size:13px; font-weight:600;
+  }
+  .floating-header span { color: var(--text); }
+  .floating-controls { display:flex; gap:6px; }
+  .floating-controls button {
+    width:28px; height:28px; border-radius:6px; border:1px solid var(--border);
+    background: var(--panel); color: var(--text); cursor:pointer; display:grid; place-items:center; font-size:14px;
+  }
+  .floating-controls button:hover { background: var(--panel2); }
+  .floating-controls button.close:hover { background:#ff4757; color:white; border-color:#ff4757; }
+  .floating-console {
+    flex:1; background: var(--console-bg); color: var(--console-fg);
+    font-family:'JetBrains Mono',monospace; font-size:13px; line-height:19px;
+    padding:12px; overflow-y:auto; white-space:pre-wrap; word-break:break-word;
+  }
+  .floating-console .line { margin:0; }
+  .floating-console .line.error { color:#ff7675; }
+  .floating-console .line.success { color:#55efc4; }
+  .floating-console.centralizado { text-align:center; }
+  .floating-console.centralizado .line { text-align:center; }
 </style>
 </head>
 <body data-theme="light">
@@ -464,6 +507,18 @@
     </section>
   </div>
 
+  <div id="janelaFlutuante" class="floating-window" style="display:none">
+    <div class="floating-header" id="janelaHeader">
+      <span>🪟 Janela Willog — Console</span>
+      <div class="floating-controls">
+        <button id="btnMinJanela" title="Minimizar">─</button>
+        <button id="btnMaxJanela" title="Maximizar">□</button>
+        <button id="btnFecharJanela" class="close" title="Fechar">✕</button>
+      </div>
+    </div>
+    <div class="floating-console" id="janelaConsole"></div>
+  </div>
+
   <div class="help-bar">
     <span class="status" id="statusBar">Pronto • Willog 1.0</span>
   </div>
@@ -482,6 +537,24 @@
         <button class="manual-tab" data-tab="propriedades">Propriedades</button>
       </div>
       <div class="manual-pane active" id="pane-comandos">
+        <h3>comentários</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax"># comentário de linha</span>
+<span class="syntax">// comentário de linha</span>
+<span class="syntax">//:</span>
+<span class="example">  bloco comentado — todo o código entre //: e :// é ignorado</span>
+<span class="syntax">://</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example"># comentário com # 
+mostre "Olá" // comentário após código</span>
+<span class="saida">-> Olá</span>
+
+<span class="example">//:
+  mostre "não executa"
+  x=10
+://
+mostre "executa"</span>
+<span class="saida">-> executa</span></pre>
         <h3>continue</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">continue</span></pre>
@@ -538,6 +611,23 @@ mostre x</span>
 <span class="example">intervalo=(-5..5,2)
 mostre intervalo</span>
 <span class="saida">-> -5,-3,-1,1,3,5</span></pre>
+        <h3>janela</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">janela</span><span class="example">()</span>
+<span class="syntax">janela</span><span class="example">(centraliza)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela()
+mostre "Olá na janela!"</span>
+<span class="saida">-> Abre janela flutuante maximizada e exibe "Olá na janela!"</span>
+
+<span class="example">janela(centraliza)
+mostre "Centralizado!"</span>
+<span class="saida">-> Abre janela maximizada com texto centralizado</span>
+
+<span class="example">mostre "Antes"
+janela()
+mostre "Depois na janela"</span>
+<span class="saida">-> Antes (console) → Depois na janela (flutuante + console, maximizada)</span></pre>
         <h3>leia</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">&lt;variável&gt; = leia</span>
@@ -692,6 +782,7 @@ verificar nota:
         <h3>Funções — ordem alfabética</h3>
         <table>
           <tr><th>Sintaxe</th><th>Descrição</th><th>Exemplo → Saída</th></tr>
+          <tr><td><code class="syntax">abs(x)</code></td><td>Valor absoluto</td><td><code class="example">abs(-2)</code> <span class="saida">→ 2</span></td></tr>
           <tr><td><code class="syntax">adicionarDias(data, dias)</code></td><td>Adiciona dias a uma data</td><td><code class="example">adicionarDias("14/04/1973",19269)</code> <span class="saida">→ 15/01/2026</span></td></tr>
           <tr><td><code class="syntax">agora()</code></td><td>Data e hora atuais</td><td><code class="example">agora()</code> <span class="saida">→ 15/01/2026 14:30:07</span></td></tr>
           <tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr>
@@ -699,37 +790,57 @@ verificar nota:
           <tr><td><code class="syntax">aparar(texto)</code></td><td>Remove espaços no início e fim</td><td><code class="example">aparar("     olá    ")</code> <span class="saida">→ olá</span></td></tr>
           <tr><td><code class="syntax">arredondar(x, casas)</code></td><td>Arredonda para n casas decimais</td><td><code class="example">arredondar(5.33333,2)</code> <span class="saida">→ 5.33</span><br><code class="example">arredondar(1.66666,3)</code> <span class="saida">→ 1.667</span></td></tr>
           <tr><td><code class="syntax">contarItem(lista, item)</code></td><td>Conta ocorrências de item</td><td><code class="example">contarItem("especialidade","e")</code> <span class="saida">→ 3</span><br><code class="example">contarItem(["a","b","c","b"],"b")</code> <span class="saida">→ 2</span></td></tr>
+          <tr><td><code class="syntax">cos(x)</code></td><td>Cosseno (graus)</td><td><code class="example">cos(60)</code> <span class="saida">→ 0.5</span></td></tr>
           <tr><td><code class="syntax">data()</code></td><td>Data atual</td><td><code class="example">data()</code> <span class="saida">→ 15/01/2026</span></td></tr>
           <tr><td><code class="syntax">decimal(x)</code></td><td>Parte decimal</td><td><code class="example">decimal(2.5)</code> <span class="saida">→ 0.5</span></td></tr>
           <tr><td><code class="syntax">diasEntre(data1, data2)</code></td><td>Dias entre duas datas</td><td><code class="example">diasEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 19269</span></td></tr>
           <tr><td><code class="syntax">distintos(valor)</code></td><td>Remove duplicatas mantendo ordem</td><td><code class="example">distintos("banana")</code> <span class="saida">→ ban</span><br><code class="example">distintos(123345456)</code> <span class="saida">→ 123456</span></td></tr>
           <tr><td><code class="syntax">divida(texto, separador)</code></td><td>Divide texto em lista</td><td><code class="example">divida("a,b,c",",")</code> <span class="saida">→ a,b,c</span><br><code class="example">divida("abc",",")</code> <span class="saida">→ a,b,c</span></td></tr>
+          <tr><td><code class="syntax">éÍmpar(x)</code></td><td>Verifica se é ímpar</td><td><code class="example">éÍmpar(511)</code> <span class="saida">→ verdadeiro</span></td></tr>
+          <tr><td><code class="syntax">éLista(x)</code></td><td>Verifica se é lista</td><td><code class="example">éLista([1,3,5,7])</code> <span class="saida">→ verdadeiro</span></td></tr>
+          <tr><td><code class="syntax">embaralhe(valor)</code></td><td>Embaralha lista/texto/número</td><td><code class="example">embaralhe([1,2,3,4,5])</code> <span class="saida">→ 3,1,5,2,4</span><br><code class="example">embaralhe("banana")</code> <span class="saida">→ annaba</span></td></tr>
+          <tr><td><code class="syntax">éNúmero(x)</code></td><td>Verifica se é número</td><td><code class="example">éNúmero(234)</code> <span class="saida">→ verdadeiro</span><br><code class="example">éNúmero("123")</code> <span class="saida">→ falso</span></td></tr>
+          <tr><td><code class="syntax">éPar(x)</code></td><td>Verifica se é par</td><td><code class="example">éPar(1023)</code> <span class="saida">→ falso</span></td></tr>
+          <tr><td><code class="syntax">éPrimo(x)</code></td><td>Verifica se é primo</td><td><code class="example">éPrimo(3)</code> <span class="saida">→ verdadeiro</span></td></tr>
+          <tr><td><code class="syntax">éTexto(x)</code></td><td>Verifica se é texto</td><td><code class="example">éTexto("Willog")</code> <span class="saida">→ verdadeiro</span></td></tr>
+          <tr><td><code class="syntax">fatorial(x)</code></td><td>Fatorial</td><td><code class="example">fatorial(4)</code> <span class="saida">→ 24</span></td></tr>
           <tr><td><code class="syntax">filtrar(lista, condição)</code></td><td>Filtra por condição ou valor</td><td><code class="example">filtrar([1,2,3,4],"x>2")</code> <span class="saida">→ 3,4</span><br><code class="example">filtrar("maçaneta","a")</code> <span class="saida">→ mçnet</span></td></tr>
           <tr><td><code class="syntax">fração(x)</code></td><td>Converte para fração</td><td><code class="example">fração(0.333)</code> <span class="saida">→ 1/3</span></td></tr>
           <tr><td><code class="syntax">hora()</code></td><td>Hora atual</td><td><code class="example">hora()</code> <span class="saida">→ 14:30:07</span></td></tr>
           <tr><td><code class="syntax">inteiro(x)</code></td><td>Parte inteira</td><td><code class="example">inteiro(2.7)</code> <span class="saida">→ 2</span></td></tr>
           <tr><td><code class="syntax">junte(lista, separador)</code></td><td>Junta lista em texto</td><td><code class="example">junte(["a","b"],"-")</code> <span class="saida">→ a-b</span></td></tr>
+          <tr><td><code class="syntax">ln(x)</code></td><td>Logaritmo natural</td><td><code class="example">ln(2)</code> <span class="saida">→ 0.69314718056</span></td></tr>
+          <tr><td><code class="syntax">log(base, valor)</code></td><td>Logaritmo</td><td><code class="example">log(10,2)</code> <span class="saida">→ 0.30102999566</span></td></tr>
           <tr><td><code class="syntax">maiúsculo(texto)</code></td><td>Converte para maiúsculas</td><td><code class="example">maiúsculo("Olá!")</code> <span class="saida">→ OLÁ!</span></td></tr>
           <tr><td><code class="syntax">mapear(lista, expressão)</code></td><td>Aplica expressão a cada item</td><td><code class="example">mapear([1,2,3],"x*2")</code> <span class="saida">→ 2,4,6</span></td></tr>
+          <tr><td><code class="syntax">máximo(...valores)</code></td><td>Maior valor</td><td><code class="example">máximo(2,4,7,4,5)</code> <span class="saida">→ 7</span></td></tr>
+          <tr><td><code class="syntax">mdc(a, b, ...)</code></td><td>Máximo divisor comum</td><td><code class="example">mdc(12,18)</code> <span class="saida">→ 6</span></td></tr>
+          <tr><td><code class="syntax">média(...valores)</code></td><td>Média aritmética</td><td><code class="example">média(2,4,6)</code> <span class="saida">→ 4</span></td></tr>
           <tr><td><code class="syntax">mesesEntre(data1, data2)</code></td><td>Meses entre duas datas</td><td><code class="example">mesesEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 633.501369863</span></td></tr>
+          <tr><td><code class="syntax">mínimo(...valores)</code></td><td>Menor valor</td><td><code class="example">mínimo(-3,1,2)</code> <span class="saida">→ -3</span></td></tr>
           <tr><td><code class="syntax">minúsculo(texto)</code></td><td>Converte para minúsculas</td><td><code class="example">minúsculo("WILLOG")</code> <span class="saida">→ willog</span></td></tr>
+          <tr><td><code class="syntax">mmc(a, b, ...)</code></td><td>Mínimo múltiplo comum</td><td><code class="example">mmc(2,3,5)</code> <span class="saida">→ 30</span></td></tr>
           <tr><td><code class="syntax">paraNúmero(x)</code></td><td>Converte texto para número</td><td><code class="example">paraNúmero("12.5")</code> <span class="saida">→ 12.5</span><br><code class="example">paraNúmero("12,5")*2</code> <span class="saida">→ 25</span></td></tr>
           <tr><td><code class="syntax">paraTexto(x)</code></td><td>Converte número para texto</td><td><code class="example">paraTexto(8)</code> <span class="saida">→ "8"</span><br><code class="example">paraTexto(8)*3</code> <span class="saida">→ 888</span></td></tr>
           <tr><td><code class="syntax">piso(x)</code></td><td>Arredonda para baixo (floor)</td><td><code class="example">piso(2.3)</code> <span class="saida">→ 2</span><br><code class="example">piso(2.9)</code> <span class="saida">→ 2</span></td></tr>
+          <tr><td><code class="syntax">primos(n)</code></td><td>Primeiros n primos</td><td><code class="example">primos(6)</code> <span class="saida">→ 2,3,5,7,11,13</span></td></tr>
           <tr><td><code class="syntax">raizc(x)</code></td><td>Raiz cúbica — vetorizada</td><td><code class="example">raizc(27)</code> <span class="saida">→ 3</span></td></tr>
           <tr><td><code class="syntax">raizq(x)</code></td><td>Raiz quadrada — vetorizada</td><td><code class="example">raizq(16)</code> <span class="saida">→ 4</span><br><code class="example">raizq([1,4,9])</code> <span class="saida">→ 1, 2, 3</span></td></tr>
           <tr><td><code class="syntax">semEspaços(texto)</code></td><td>Remove todos os espaços</td><td><code class="example">semEspaços("1 2 3 4 5 6")</code> <span class="saida">→ 123456</span></td></tr>
+          <tr><td><code class="syntax">sen(x)</code></td><td>Seno (graus)</td><td><code class="example">sen(60)</code> <span class="saida">→ 0.86602540378</span></td></tr>
           <tr><td><code class="syntax">substitua(texto, antigo, novo)</code></td><td>Substitui texto</td><td><code class="example">substitua("a-b-c","-"," ")</code> <span class="saida">→ a b c</span></td></tr>
+          <tr><td><code class="syntax">tan(x)</code></td><td>Tangente (graus)</td><td><code class="example">tan(60)</code> <span class="saida">→ 1.73205080757</span></td></tr>
           <tr><td><code class="syntax">teto(x)</code></td><td>Arredonda para cima (ceil)</td><td><code class="example">teto(2.3)</code> <span class="saida">→ 3</span><br><code class="example">teto(2.9)</code> <span class="saida">→ 3</span></td></tr>
           <tr><td><code class="syntax">tipo(x)</code></td><td>Retorna tipo: número, texto, booleano ou lista</td><td><code class="example">tipo(7)</code> <span class="saida">→ número</span><br><code class="example">tipo("Olá!")</code> <span class="saida">→ texto</span><br><code class="example">tipo(4>5)</code> <span class="saida">→ booleano</span><br><code class="example">tipo([1,2,3])</code> <span class="saida">→ lista</span></td></tr>
         </table>
-        <p style="margin-top:8px; font-size:12px; color:var(--text-dim);">Vetorizadas: <code class="example">raizq([1,4,16])</code> <span class="saida">→ 1, 2, 4</span> &nbsp;|&nbsp; Vazio: <code class="saida">Ø</code></p>
+
       </div>
       <div class="manual-pane" id="pane-operadores">
         <h3>Operadores — ordem alfabética</h3>
         <table>
           <tr><th>Sintaxe</th><th>Descrição</th><th>Exemplo → Saída</th></tr>
           <tr><td><code class="syntax">(início..fim)</code><br><code class="syntax">(início..fim,passo)</code></td><td>Intervalo — cria lista de a até b</td><td><code class="example">x=(1..5)</code> <span class="saida">→ 1,2,3,4,5</span><br><code class="example">(-5..5,2)</code> <span class="saida">→ -5,-3,-1,1,3,5</span></td></tr>
+          <tr><td><code class="syntax">(valor, "p%")</code></td><td>Percentual — p% de valor</td><td><code class="example">(30,"10%")</code> <span class="saida">→ 3</span> &nbsp; <code class="example">(120,"5%")</code> <span class="saida">→ 6</span></td></tr>
           <tr><td><code class="syntax">+</code> <code class="syntax">&</code></td><td>Adição e concatenação; com listas une</td><td><code class="example">2+3</code> <span class="saida">→ 5</span> &nbsp; <code class="example">[1,2]+[3]</code> <span class="saida">→ 1, 2, 3</span></td></tr>
           <tr><td><code class="syntax">-</code></td><td>Subtração; diferença de conjuntos</td><td><code class="example">5-2</code> <span class="saida">→ 3</span> &nbsp; <code class="example">[1,2,3]-[2]</code> <span class="saida">→ 1, 3</span></td></tr>
           <tr><td><code class="syntax">*</code> <code class="syntax">/</code> <code class="syntax">//</code> <code class="syntax">\</code> <code class="syntax">%</code> <code class="syntax">**</code></td><td>Multiplicação, divisão, inteira, quociente fracionário, módulo, potência — vetorizados</td><td><code class="example">2**3</code> <span class="saida">→ 8</span> &nbsp; <code class="example">5//2</code> <span class="saida">→ 2</span> &nbsp; <code class="example">5\</code> <span class="saida">→ 0.5</span></td></tr>
@@ -757,7 +868,7 @@ verificar nota:
           <tr><td><code class="syntax">lista.tamanho</code></td><td>Quantidade de itens/caracteres</td><td><code class="example">[1,2,3].tamanho</code> <span class="saida">→ 3</span> &nbsp; <code class="example">"willog".tamanho</code> <span class="saida">→ 6</span></td></tr>
           <tr><td><code class="syntax">lista.último</code></td><td>Último elemento</td><td><code class="example">[5,6].último</code> <span class="saida">→ 6</span></td></tr>
         </table>
-        <p style="margin-top:10px; font-size:12px; color:var(--text-dim);"><span class="syntax">Literais:</span> <code class="example">10</code>, <code class="example">2.5</code>, <code class="example">"texto {var}"</code> com <code>\n</code>, <code class="example">[1,2,3]</code>, <code class="example">{"chave": valor}</code> &nbsp;|&nbsp; <span class="saida">Vazio → Ø</span></p>
+
       </div>
     </div>
   </div>
@@ -892,10 +1003,22 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia','pare','continue','continuar','limpe','pausa']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia','pare','continue','continuar','limpe','pausa','janela']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   while(i<len){
+    if(code.substr(i,3)==='//:'){
+      let s=i;
+      let end=code.indexOf('://', i+3);
+      if(end!==-1){
+        i=end+3;
+        html+='<span class="hl-comment">'+escapeHtml(code.slice(s,i))+'</span>';
+        continue;
+      } else {
+        html+='<span class="hl-comment">'+escapeHtml(code.slice(s))+'</span>';
+        break;
+      }
+    }
     const c=code[i];
     if(c==='#'){
       let s=i;
@@ -1254,17 +1377,138 @@ editor.addEventListener('keydown', (e)=>{
 updateLines(); updateHighlight();
 
 // --- Console helpers ---
+let janelaAtiva=false;
+let janelaCentralizada=false;
+let janelaEl=document.getElementById('janelaFlutuante');
+let janelaConsoleEl=document.getElementById('janelaConsole');
+function ativarJanela(centraliza){
+  janelaEl=document.getElementById('janelaFlutuante');
+  janelaConsoleEl=document.getElementById('janelaConsole');
+  if(!janelaEl) return;
+  janelaEl.style.display='flex';
+  janelaAtiva=true;
+  janelaCentralizada=!!centraliza;
+  janelaEl.classList.remove('minimized');
+  janelaEl.classList.add('maximized');
+  janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
+  if(janelaConsoleEl){
+    janelaConsoleEl.innerHTML='';
+    if(janelaCentralizada){ janelaConsoleEl.classList.add('centralizado'); janelaConsoleEl.style.textAlign='center'; }
+    else { janelaConsoleEl.classList.remove('centralizado'); janelaConsoleEl.style.textAlign=''; }
+  }
+}
+function fecharJanela(){
+  if(janelaEl){
+    janelaEl.style.display='none';
+    janelaEl.classList.remove('maximized','minimized');
+  }
+  janelaAtiva=false;
+  janelaCentralizada=false;
+  if(janelaConsoleEl){ janelaConsoleEl.classList.remove('centralizado'); janelaConsoleEl.style.textAlign=''; }
+}
+function isJanelaStmt(stmt){
+  const t=stmt.trim();
+  return /^\s*janela\s*(\(\s*(centraliza)?\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(t);
+}
+function isJanelaLine(line){ return isJanelaStmt(line); }
+function getJanelaCentraliza(stmt){
+  const m=stmt.match(/^\s*janela\s*\(\s*([^\)]*)\s*\)/i);
+  if(!m) return false;
+  let a=m[1].trim().toLowerCase().replace(/["']/g,'');
+  return a==='centraliza';
+}
 function logToConsole(text, cls=''){
   const div = document.createElement('div');
   div.className = 'line ' + cls;
   div.textContent = text;
   consoleEl.appendChild(div);
   consoleEl.scrollTop = consoleEl.scrollHeight;
+  if(janelaAtiva && janelaConsoleEl){
+    const d2=document.createElement('div');
+    d2.className='line ' + cls;
+    d2.textContent=text;
+    janelaConsoleEl.appendChild(d2);
+    janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
+  } else if(janelaConsoleEl && janelaEl && janelaEl.style.display!=='none'){
+    const d2=document.createElement('div');
+    d2.className='line ' + cls;
+    d2.textContent=text;
+    janelaConsoleEl.appendChild(d2);
+    janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
+  }
 }
 function clearConsole(){
   consoleEl.innerHTML = '';
+  if(janelaConsoleEl) janelaConsoleEl.innerHTML='';
 }
 clearConsole();
+(function(){
+  const flutuante=document.getElementById('janelaFlutuante');
+  const header=document.getElementById('janelaHeader');
+  const btnMin=document.getElementById('btnMinJanela');
+  const btnMax=document.getElementById('btnMaxJanela');
+  const btnFechar=document.getElementById('btnFecharJanela');
+  if(btnFechar) btnFechar.addEventListener('click', fecharJanela);
+  if(btnMin) btnMin.addEventListener('click', ()=>{
+    if(!flutuante) return;
+    flutuante.classList.toggle('minimized');
+    flutuante.classList.remove('maximized');
+  });
+  let prevLeft, prevTop, prevTransform, prevWidth, prevHeight;
+  if(btnMax) btnMax.addEventListener('click', ()=>{
+    if(!flutuante) return;
+    if(flutuante.classList.contains('maximized')){
+      flutuante.classList.remove('maximized');
+      if(prevLeft!==undefined){
+        flutuante.style.left = prevLeft;
+        flutuante.style.top = prevTop;
+        flutuante.style.transform = prevTransform;
+        flutuante.style.width = prevWidth;
+        flutuante.style.height = prevHeight;
+      }
+    } else {
+      prevLeft = flutuante.style.left;
+      prevTop = flutuante.style.top;
+      prevTransform = flutuante.style.transform;
+      prevWidth = flutuante.style.width;
+      prevHeight = flutuante.style.height;
+      flutuante.style.left = '';
+      flutuante.style.top = '';
+      flutuante.style.transform = '';
+      flutuante.style.width = '';
+      flutuante.style.height = '';
+      flutuante.classList.remove('minimized');
+      flutuante.classList.add('maximized');
+    }
+  });
+  if(header && flutuante){
+    let draggingWin=false, sx=0, sy=0, startLeft=0, startTop=0;
+    header.addEventListener('mousedown', (e)=>{
+      if(e.target.closest('button')) return;
+      if(flutuante.classList.contains('maximized')) return;
+      draggingWin=true;
+      sx=e.clientX; sy=e.clientY;
+      const rect=flutuante.getBoundingClientRect();
+      startLeft=rect.left; startTop=rect.top;
+      flutuante.style.transform='none';
+      flutuante.style.left=startLeft+'px';
+      flutuante.style.top=startTop+'px';
+      document.body.style.userSelect='none';
+      e.preventDefault();
+    });
+    window.addEventListener('mousemove', (e)=>{
+      if(!draggingWin) return;
+      const dx=e.clientX - sx;
+      const dy=e.clientY - sy;
+      flutuante.style.left=(startLeft+dx)+'px';
+      flutuante.style.top=(startTop+dy)+'px';
+    });
+    window.addEventListener('mouseup', ()=>{
+      draggingWin=false;
+      document.body.style.userSelect='';
+    });
+  }
+})();
 
 // --- Console REPL: digitar diretamente e Enter ---
 let replEnv = {};
@@ -1778,6 +2022,18 @@ function evaluateExpression(expr, env){
     }
     return arr;
   }
+  let mPercent = expr.match(/^\s*\(\s*(.+?)\s*,\s*["']\s*([0-9]+(?:[.,][0-9]+)?)\s*%\s*["']\s*\)\s*$/);
+  if(mPercent){
+    const valExpr=mPercent[1].trim();
+    const percStr=mPercent[2].replace(',','.');
+    const v=Number(evaluateExpression(valExpr, env));
+    const p=Number(percStr);
+    if(!isNaN(v) && !isNaN(p)){
+      let r=v*p/100;
+      r=Number(r.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+      return r;
+    }
+  }
   expr = preprocessMethods(expr);
   expr = preprocessObjects(expr, env);
   expr = preprocessArrays(expr, env);
@@ -1795,6 +2051,102 @@ function evaluateExpression(expr, env){
     const a=Number(m2[1]), b=Number(m2[2]);
     const lo=Math.min(a,b), hi=Math.max(a,b);
     return Math.floor(Math.random()*(hi-lo+1))+lo;
+  }
+  let mPri=expr.match(/^\s*primos\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mPri){
+    const n=Math.trunc(Number(evaluateExpression(mPri[1], env)));
+    if(isNaN(n) || n<=0) return [];
+    const isPrime=(x)=>{ if(x<2) return false; if(x===2) return true; if(x%2===0) return false; for(let i=3;i*i<=x;i+=2) if(x%i===0) return false; return true; };
+    const res=[]; let cur=2;
+    while(res.length<n){ if(isPrime(cur)) res.push(cur); cur++; }
+    return res;
+  }
+  let mMmc=expr.match(/^\s*mmc\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mMmc){
+    const parts=splitArrayElements(mMmc[1]);
+    const nums=parts.map(p=>Number(evaluateExpression(p.trim(), env))).filter(v=>!isNaN(v) && isFinite(v));
+    if(nums.length===0) return 0;
+    const gcd=(a,b)=>{ a=Math.abs(a); b=Math.abs(b); while(b){ let t=b; b=a%b; a=t; } return a||1; };
+    const lcm=(a,b)=>{ if(a===0||b===0) return 0; return Math.abs(a*b)/gcd(a,b); };
+    let r=nums[0];
+    for(let i=1;i<nums.length;i++) r=lcm(r, nums[i]);
+    return r;
+  }
+  let mMdc=expr.match(/^\s*mdc\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mMdc){
+    const parts=splitArrayElements(mMdc[1]);
+    const nums=parts.map(p=>Number(evaluateExpression(p.trim(), env))).filter(v=>!isNaN(v) && isFinite(v));
+    if(nums.length===0) return 0;
+    const gcd=(a,b)=>{ a=Math.abs(a); b=Math.abs(b); while(b){ let t=b; b=a%b; a=t; } return a||1; };
+    let r=nums[0];
+    for(let i=1;i<nums.length;i++) r=gcd(r, nums[i]);
+    return Math.abs(r);
+  }
+  let mMedia=expr.match(/^\s*m[ée]dia\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mMedia){
+    const parts=splitArrayElements(mMedia[1]);
+    let nums=[];
+    for(let p of parts){
+      let v=evaluateExpression(p.trim(), env);
+      if(Array.isArray(v)) nums.push(...v.map(x=>Number(x)).filter(n=>!isNaN(n)&&isFinite(n)));
+      else { let n=Number(v); if(!isNaN(n)&&isFinite(n)) nums.push(n); }
+    }
+    if(nums.length===0) return 0;
+    let s=nums.reduce((a,b)=>a+b,0)/nums.length;
+    s=Number(s.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+    return s;
+  }
+  let mMax=expr.match(/^\s*m[áa]ximo\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mMax){
+    const parts=splitArrayElements(mMax[1]);
+    let nums=[];
+    for(let p of parts){
+      let v=evaluateExpression(p.trim(), env);
+      if(Array.isArray(v)) nums.push(...v.map(x=>Number(x)).filter(n=>!isNaN(n)&&isFinite(n)));
+      else { let n=Number(v); if(!isNaN(n)&&isFinite(n)) nums.push(n); }
+    }
+    if(nums.length===0) return 0;
+    return Math.max(...nums);
+  }
+  let mMin=expr.match(/^\s*m[íi]nimo\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mMin){
+    const parts=splitArrayElements(mMin[1]);
+    let nums=[];
+    for(let p of parts){
+      let v=evaluateExpression(p.trim(), env);
+      if(Array.isArray(v)) nums.push(...v.map(x=>Number(x)).filter(n=>!isNaN(n)&&isFinite(n)));
+      else { let n=Number(v); if(!isNaN(n)&&isFinite(n)) nums.push(n); }
+    }
+    if(nums.length===0) return 0;
+    return Math.min(...nums);
+  }
+  let mEmb=expr.match(/^\s*embaralhe\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mEmb){
+    let argStr=mEmb[1].trim();
+    let val;
+    try{ val=evaluateExpression(argStr, env); }catch(e){ val=argStr; }
+    if(val===undefined || val===null) return val;
+    if(Array.isArray(val)){
+      let arr=val.slice();
+      for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+      return arr;
+    } else if(typeof val==='string'){
+      let arr=val.split("");
+      for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+      return arr.join("");
+    } else if(typeof val==='number'){
+      let s=String(Math.trunc(val));
+      let neg=s.startsWith("-");
+      if(neg) s=s.slice(1);
+      let arr=s.split("");
+      for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+      let res=arr.join("");
+      if(neg) res="-"+res;
+      let num=Number(res);
+      return res!=="" && !isNaN(num) && isFinite(num) ? num : res;
+    } else {
+      return val;
+    }
   }
   if(expr==='') return '';
   try {
@@ -1867,7 +2219,7 @@ function tokenize(expr, env){
       if(id==='Falso') { tokens.push({type:'BOOLEAN', value:false}); continue; }
       let j=i;
       while(j<len && /\s/.test(expr[j])) j++;
-      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem'];
+      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem','sen','cos','tan','abs','log','ln','fatorial','énúmero','enúmero','énumero','enumero','élista','elista','étexto','etexto','éprimo','eprimo','épar','epar','éímpar','eímpar','eimpar','primos','mmc','mdc','média','media','máximo','maximo','mínimo','minimo','embaralhe'];
       const lower = id.toLowerCase();
       if(tokens.length>0 && tokens[tokens.length-1].type==='OP' && tokens[tokens.length-1].value==='.'){
         tokens.push({type:'STRING', value:id});
@@ -2495,6 +2847,23 @@ function evalRPN(rpn, env){
           res=coll;
         }
         stack.push(res);
+      } else if(fn==='log'){
+        const val = stack.pop();
+        const base = stack.pop();
+        const b = Number(base);
+        const v = Number(val);
+        let res=0;
+        if(!isNaN(b) && !isNaN(v) && b>0 && b!==1 && v>0){
+          res=Math.log(v)/Math.log(b);
+        } else {
+          res=Math.log(v)/Math.log(b);
+        }
+        if(!isFinite(res)) res="0";
+        else {
+          let s=res.toFixed(11).replace(/0+$/,'').replace(/\.$/,'');
+          res=s;
+        }
+        stack.push(res);
       } else if(fn==='substitua'){
         const novo = stack.pop();
         const velho = stack.pop();
@@ -2593,6 +2962,27 @@ function evalRPN(rpn, env){
             }
             case 'teto': return Math.ceil(Number(val));
             case 'piso': return Math.floor(Number(val));
+            case 'abs': return Math.abs(Number(val));
+            case 'sen': { let r=Math.sin(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
+            case 'cos': { let r=Math.cos(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
+            case 'tan': { let r=Math.tan(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
+            case 'ln': { let r=Math.log(Number(val)); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
+            case 'fatorial': { let n=Math.trunc(Number(val)); if(n<0) return 0; if(n===0||n===1) return 1; let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
+            case 'énúmero':
+            case 'enúmero':
+            case 'énumero':
+            case 'enumero': return typeof val==='number' && !isNaN(val) && isFinite(val);
+            case 'élista':
+            case 'elista': return Array.isArray(val);
+            case 'étexto':
+            case 'etexto': return typeof val==='string';
+            case 'éprimo':
+            case 'eprimo': { let n=Math.trunc(Number(val)); if(n<2) return false; if(n===2) return true; if(n%2===0) return false; for(let i=3;i*i<=n;i+=2) if(n%i===0) return false; return true; }
+            case 'épar':
+            case 'epar': return Number(val)%2===0;
+            case 'éímpar':
+            case 'eímpar':
+            case 'eimpar': return Number(val)%2!==0;
             case 'maiusculo':
             case 'maiúsculo': return String(val).toUpperCase();
             case 'minusculo':
@@ -2630,7 +3020,7 @@ function evalRPN(rpn, env){
         };
         let res;
         if(Array.isArray(a)){
-          if(['ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','inverter','tipo','teto','piso','arredondar'].includes(fn)){
+          if(['ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','inverter','tipo','teto','piso','arredondar','énúmero','enúmero','énumero','enumero','élista','elista','étexto','etexto','éprimo','eprimo','épar','epar','éímpar','eímpar','eimpar'].includes(fn)){
             res = execSingle(a);
           }else{
             res = a.map(x=> {
@@ -3044,6 +3434,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
     await new Promise(res=> setTimeout(res, secs*1000));
     return;
   }
+  if(isJanelaStmt(stmt)){ const cent=getJanelaCentraliza(stmt); ativarJanela(cent); return; }
   if(isGotoStmt(stmt)){
     const target=parseGoto(stmt);
     const dest = (window.__labelMap ? (window.__labelMap[target] ?? window.__labelMap[target.toLowerCase()]) : undefined);
@@ -3185,9 +3576,11 @@ function buildLabelMap(lines){
 async function runWillog(){
   clearConsole();
   const src=editor.value;
+  let srcNoBlock=src.replace(/\/\/:[\s\S]*?:\/\//g, '');
+  srcNoBlock=srcNoBlock.replace(/\/\/:[\s\S]*$/g, '');
   const env={};
   const hasOutputRef={value:false};
-  const rawLines=src.split('\n');
+  const rawLines=srcNoBlock.split('\n');
   const lines=[];
   for(let idx=0; idx<rawLines.length; idx++){
     const raw=rawLines[idx];
@@ -3249,6 +3642,7 @@ async function runWillog(){
         await new Promise(res=> setTimeout(res, secs*1000));
         i++; continue;
       }
+      if(isJanelaLine(raw)){ const cent=getJanelaCentraliza(raw); ativarJanela(cent); i++; continue; }
       if(isLabelLine(raw)){
         i++;
         continue;
