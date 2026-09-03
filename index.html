@@ -301,6 +301,7 @@
   .modal-overlay {
     position:fixed; inset:0; background:rgba(0,0,0,0.45); display:grid; place-items:center; z-index:1000; backdrop-filter: blur(2px);
   }
+  #modalLeia { z-index: 3000; }
   .modal-box {
     background: var(--panel); color: var(--text); border:2px solid var(--border); border-radius:12px; padding:28px 32px; min-width:340px; max-width:90vw; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,0.25); position:relative; text-align:center;
   }
@@ -3469,15 +3470,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
             }
             out+=displayVals[idx];
           }
-          if(out.includes('\n')){
-            const block=document.createElement('div');
-            block.className='line';
-            block.textContent=out;
-            consoleEl.appendChild(block);
-            consoleEl.scrollTop=consoleEl.scrollHeight;
-          }else{
-            logToConsole(out);
-          }
+          logToConsole(out);
           hasOutputRef.value=true;
         }
       }catch(e){
@@ -3533,9 +3526,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       else if(typeof v==='number') out=formatWillogNumber(v, stmt);
       else out=willogDisplay(v);
       if(out!=='' && out!==undefined && out!=='undefined'){
-        if(out.includes('\n')){
-          const block=document.createElement('div'); block.className='line'; block.textContent=out; consoleEl.appendChild(block); consoleEl.scrollTop=consoleEl.scrollHeight;
-        }else logToConsole(out);
+        logToConsole(out);
         hasOutputRef.value=true;
       }
     }
@@ -3677,9 +3668,7 @@ async function runWillog(){
                 if(Array.isArray(v)) out=willogDisplay(v);
                 else if(typeof v==='number') out=formatWillogNumber(v, stmt);
                 else out=willogDisplay(v);
-                if(out.includes('\n')){
-                  const block=document.createElement('div'); block.className='line'; block.textContent=out; consoleEl.appendChild(block);
-                }else logToConsole(out);
+                logToConsole(out);
                 hasOutputRef.value=true;
               }catch(e){ logToConsole(`Erro: ${e.message}`, 'error'); }
             }
@@ -3714,9 +3703,7 @@ async function runWillog(){
               if(Array.isArray(v)) out=willogDisplay(v);
               else if(typeof v==='number') out=formatWillogNumber(v, expr);
               else out=willogDisplay(v);
-              if(out.includes('\n')){
-                const block=document.createElement('div'); block.className='line'; block.textContent=out; consoleEl.appendChild(block);
-              }else logToConsole(out);
+              logToConsole(out);
               hasOutputRef.value=true;
             }catch(e){ logToConsole(`Erro: ${e.message}`, 'error'); }
           }
@@ -3989,9 +3976,7 @@ async function runWillog(){
                     if(Array.isArray(v)) out=willogDisplay(v);
                     else if(typeof v==='number') out=formatWillogNumber(v, after);
                     else out=willogDisplay(v);
-                    if(out.includes('\n')){
-                      const block=document.createElement('div'); block.className='line'; block.textContent=out; consoleEl.appendChild(block);
-                    }else logToConsole(out);
+                    logToConsole(out);
                     hasOutputRef.value=true;
                   }catch(e){ logToConsole(`Erro: ${e.message}`, 'error'); }
                 }
@@ -4021,9 +4006,7 @@ async function runWillog(){
                     if(Array.isArray(v)) out=willogDisplay(v);
                     else if(typeof v==='number') out=formatWillogNumber(v, after);
                     else out=willogDisplay(v);
-                    if(out.includes('\n')){
-                      const block=document.createElement('div'); block.className='line'; block.textContent=out; consoleEl.appendChild(block);
-                    }else logToConsole(out);
+                    logToConsole(out);
                     hasOutputRef.value=true;
                   }catch(e){ logToConsole(`Erro: ${e.message}`, 'error'); }
                 }
