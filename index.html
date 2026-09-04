@@ -465,8 +465,6 @@
       <div>WILLOG <small>Linguagem de programação - Editor e interpretador</small></div>
     </div>
     <div class="header-right">
-      <span class="badge">v1.0 • Willog</span>
-      <span class="badge" id="themeBadge">☀️ Modo Claro</span>
       <button class="btn-close" id="btnFechar" title="Fechar janela">✕</button>
     </div>
   </header>
@@ -961,7 +959,7 @@ let fileHandle = null;
 function applyTheme(theme){
   document.body.setAttribute('data-theme', theme);
   localStorage.setItem('willog-theme', theme);
-  themeBadge.textContent = theme==='dark' ? '🌙 Modo Escuro' : '☀️ Modo Claro';
+  if(themeBadge) themeBadge.textContent = theme==='dark' ? '🌙 Modo Escuro' : '☀️ Modo Claro';
 }
 (function(){
   const saved = localStorage.getItem('willog-theme');
