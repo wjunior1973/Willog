@@ -1114,7 +1114,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia','pare','continue','continuar','limpe','pausa','janela','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia','pare','continue','continuar','limpe','pausa','janela','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   while(i<len){
@@ -1503,8 +1503,8 @@ updateLines(); updateHighlight();
   const acEl=document.getElementById('autocomplete');
   const ed=document.getElementById('editor');
   if(!acEl || !ed) return;
-  const comandos=['abrir','comentários','continue','definir função','enquanto','escrever','espereTecla','fechar','intervalo','janela','leia','ler','limpe','mostre','para cada','pare','pausa','repetir','se','senão','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','captureTecla','contarItem','cos','data','decimal','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','fatorial','filtrar','fração','hora','inteiro','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','paraNúmero','paraTexto','piso','primos','raizc','raizq','semEspaços','sen','substitua','tan','teto','tipo'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const comandos=['abrir','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','enquanto','escrever','espereTecla','fechar','intervalo','janela','leia','ler','limpe','mostre','para cada','pare','pausa','repetir','se','senão','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','captureTecla','contarItem','cos','data','decimal','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','fatorial','filtrar','fração','hora','inteiro','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','paraNúmero','paraTexto','piso','primos','raizc','raizq','semEspaços','sen','substitua','tan','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const propriedades=['adicionar','aleatório','contar','fatiar','inverter','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   let _varsCache=null; let _varsCacheText='';
   function getVariables(){
@@ -2021,6 +2021,17 @@ async function willogFechar(handleName){
   willogFileHandles.delete(fh.filename.toLowerCase());
   willogFileHandles.delete(fh.handleName.toLowerCase());
 }
+// --- Cronômetro ---
+let _cronometroInicio = null;
+let _cronometroFim = null;
+let _cronometroRunning = false;
+function cronometroIniciar(){ _cronometroInicio = performance.now(); _cronometroFim = null; _cronometroRunning = true; logToConsole('Cronômetro iniciado', 'info'); }
+function cronometroParar(){ if(_cronometroInicio!==null){ _cronometroFim = performance.now(); _cronometroRunning = false; const elapsed = (_cronometroFim - _cronometroInicio)/1000; logToConsole(`Cronômetro parado: ${elapsed.toFixed(3)}s`, 'info'); } else { logToConsole('Cronômetro não foi iniciado', 'error'); } }
+function cronometroTempo(){ if(_cronometroInicio===null) return 0; const end = _cronometroRunning ? performance.now() : (_cronometroFim ?? performance.now()); return Number(((end - _cronometroInicio)/1000).toFixed(3)); }
+function isCronometroIniciarStmt(stmt){ return /^\s*cronometro\.iniciar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()) || /^\s*cronômetro\.iniciar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isCronometroPararStmt(stmt){ return /^\s*cronometro\.parar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()) || /^\s*cronômetro\.parar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isCronometroTempoExpr(expr){ return /^\s*cronometro\.tempo\s*(\(\s*\))?\s*$/i.test(expr.trim()) || /^\s*cronômetro\.tempo\s*(\(\s*\))?\s*$/i.test(expr.trim()); }
+
 function logToConsole(text, cls=''){
   const div = document.createElement('div');
   div.className = 'line ' + cls;
@@ -2655,7 +2666,8 @@ function evaluateExpression(expr, env){
     }
   }
   if(/^\s*captureTecla\s*(\(\s*\))?\s*$/i.test(expr)) return _willogLastKey || "";
-  if(/^\s*capture\s*(\(\s*\))?\s*$/i.test(expr)) return _willogLastKey || "";
+  if(/^\s*capture\s*(\(\s*\))?\s*$/i.test(expr)) return _willogLastKey
+  if(isCronometroTempoExpr(expr)) return cronometroTempo();
   expr = preprocessMethods(expr);
   expr = preprocessObjects(expr, env);
   expr = preprocessArrays(expr, env);
@@ -2841,7 +2853,7 @@ function tokenize(expr, env){
       if(id==='Falso') { tokens.push({type:'BOOLEAN', value:false}); continue; }
       let j=i;
       while(j<len && /\s/.test(expr[j])) j++;
-      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem','sen','cos','tan','abs','log','ln','fatorial','énúmero','enúmero','énumero','enumero','élista','elista','étexto','etexto','éprimo','eprimo','épar','epar','éímpar','eímpar','eimpar','primos','mmc','mdc','média','media','máximo','maximo','mínimo','minimo','embaralhe','capturetecla','capture','espereTecla'];
+      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem','sen','cos','tan','abs','log','ln','fatorial','énúmero','enúmero','énumero','enumero','élista','elista','étexto','etexto','éprimo','eprimo','épar','epar','éímpar','eímpar','eimpar','primos','mmc','mdc','média','media','máximo','maximo','mínimo','minimo','embaralhe','capturetecla','capture','espereTecla','exp','hipotenusa','hipotenúsa'];
       const lower = id.toLowerCase();
       if(tokens.length>0 && tokens[tokens.length-1].type==='OP' && tokens[tokens.length-1].value==='.'){
         tokens.push({type:'STRING', value:id});
@@ -3474,6 +3486,15 @@ function evalRPN(rpn, env){
           res=coll;
         }
         stack.push(res);
+      } else if(fn==='hipotenusa' || fn==='hipotenúsa'){
+        const b = stack.pop();
+        const a = stack.pop();
+        const av = Number(a===undefined?0:a);
+        const bv = Number(b===undefined?0:b);
+        let res=Math.sqrt(av*av + bv*bv);
+        if(!isFinite(res)) res=0;
+        else res=Number(res.toFixed(11).replace(/0+$/,'').replace(/\.$/,''));
+        stack.push(res);
       } else if(fn==='log'){
         const val = stack.pop();
         const base = stack.pop();
@@ -3598,6 +3619,7 @@ function evalRPN(rpn, env){
             case 'sen': { let r=Math.sin(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
             case 'cos': { let r=Math.cos(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
             case 'tan': { let r=Math.tan(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
+            case 'exp': { let r=Math.exp(Number(val)); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
             case 'ln': { let r=Math.log(Number(val)); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
             case 'fatorial': { let n=Math.trunc(Number(val)); if(n<0) return 0; if(n===0||n===1) return 1; let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
             case 'énúmero':
@@ -4075,29 +4097,8 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
     try{ if(typeof replEnv!=="undefined") replEnv["__ultimaTecla"]=key; }catch(_){}
     return;
   }
-  if(isAbrirStmt(stmt)){
-    const fn=parseAbrirFilename(stmt, env);
-    await willogAbrir(fn, env);
-    return;
-  }
-  if(isEscreverStmt(stmt)){
-    const info=parseEscrever(stmt, env);
-    if(info) willogEscrever(info.handle, info.values, env);
-    else logToConsole(`Erro na linha ${lineNo}: sintaxe escrever inválida`, 'error');
-    return;
-  }
-  if(isLerStmt(stmt)){
-    const info=parseLer(stmt);
-    if(info) willogLer(info.handle, info.varNames, env);
-    else logToConsole(`Erro na linha ${lineNo}: sintaxe ler inválida`, 'error');
-    return;
-  }
-  if(isFecharStmt(stmt)){
-    const h=parseFechar(stmt);
-    if(h) await willogFechar(h);
-    else logToConsole(`Erro na linha ${lineNo}: sintaxe fechar inválida`, 'error');
-    return;
-  }
+  if(isCronometroIniciarStmt(stmt)){ cronometroIniciar(); return; }
+  if(isCronometroPararStmt(stmt)){ cronometroParar(); return; }
   if(isJanelaStmt(stmt)){ const cent=getJanelaCentraliza(stmt); ativarJanela(cent); return; }
   if(isGotoStmt(stmt)){
     const target=parseGoto(stmt);
@@ -4304,29 +4305,8 @@ async function runWillog(){
         try{ if(typeof replEnv!=="undefined") replEnv["__ultimaTecla"]=key; }catch(_){}
         i++; continue;
       }
-      if(isAbrirStmt(raw)){
-        const fn=parseAbrirFilename(raw, env);
-        await willogAbrir(fn, env);
-        i++; continue;
-      }
-      if(isEscreverStmt(raw)){
-        const info=parseEscrever(raw, env);
-        if(info) willogEscrever(info.handle, info.values, env);
-        else logToConsole(`Erro na linha ${lineNo}: sintaxe escrever inválida`, 'error');
-        i++; continue;
-      }
-      if(isLerStmt(raw)){
-        const info=parseLer(raw);
-        if(info) willogLer(info.handle, info.varNames, env);
-        else logToConsole(`Erro na linha ${lineNo}: sintaxe ler inválida`, 'error');
-        i++; continue;
-      }
-      if(isFecharStmt(raw)){
-        const h=parseFechar(raw);
-        if(h) await willogFechar(h);
-        else logToConsole(`Erro na linha ${lineNo}: sintaxe fechar inválida`, 'error');
-        i++; continue;
-      }
+      if(isCronometroIniciarStmt(raw)){ cronometroIniciar(); i++; continue; }
+      if(isCronometroPararStmt(raw)){ cronometroParar(); i++; continue; }
       if(isJanelaLine(raw)){ const cent=getJanelaCentraliza(raw); ativarJanela(cent); i++; continue; }
       if(isLabelLine(raw)){
         i++;
