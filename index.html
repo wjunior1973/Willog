@@ -101,19 +101,12 @@
   }
   .logo small { font-size: 11px; opacity: 0.9; font-weight:400; letter-spacing:0.3px; display:block; margin-top:-3px; }
   .header-right { margin-left:auto; display:flex; gap:10px; align-items:center; font-family:'JetBrains Mono', monospace; font-size:14px; }
-  .badge { background: rgba(255,255,255,0.18); padding:4px 8px; border-radius:4px; font-size:12px; border:1px solid rgba(255,255,255,0.2); }
   .btn-close {
     width: 32px; height: 32px; border-radius:6px; border:1px solid rgba(255,255,255,0.3);
     background: rgba(255,255,255,0.12); color:white; font-size:16px; line-height:1;
     cursor:pointer; display:grid; place-items:center; transition: all 0.15s;
   }
   .btn-close:hover { background: #ff4757; border-color:#ff4757; }
-  .menubar {
-    background: var(--panel);
-    border-bottom: 2px solid var(--border);
-    display:flex; align-items:center; gap:6px; padding:8px 12px; flex-wrap:wrap;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
   .menu-group { display:flex; gap:6px; align-items:center; }
   .menu-sep { width:2px; height:28px; background:var(--border); margin:0 6px; opacity:0.6; }
   .btn {
@@ -154,8 +147,6 @@
   .pane.editor-pane { flex: 1 1 0; min-width:0; min-height:0; }
   .pane.console-pane { flex: 0 0 38%; min-width:320px; min-height:150px; max-width:100%; max-height:100%; }
   .main.layout-bottom .pane.console-pane { flex: 0 0 32%; min-width:unset; min-height:120px; max-width:100%; max-height:100%; }
-  .main { min-width:0; }
-  .pane { min-width:0; max-width:100%; }
   #splitter {
     flex: 0 0 10px;
     background: transparent;
@@ -296,7 +287,6 @@
     #splitter { cursor: row-resize; }
     #splitter::after { width:48px; height:2px; }
     #splitter:hover::after, #splitter.dragging::after { width:64px; height:3px; }
-    .header-right .badge { display:none; }
   }
   .modal-overlay {
     position:fixed; inset:0; background:rgba(0,0,0,0.45); display:grid; place-items:center; z-index:1000; backdrop-filter: blur(2px);
@@ -315,6 +305,7 @@
     border-bottom: 2px solid var(--border);
     display:flex; align-items:center; gap:4px; padding:4px 8px; flex-wrap:wrap;
     position:relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
   .menu { position:relative; }
   .menu-trigger {
@@ -465,7 +456,7 @@
       <div>WILLOG <small>Linguagem de programação - Editor e interpretador</small></div>
     </div>
     <div class="header-right">
-      <button class="btn-close" id="btnFechar" title="Fechar janela">✕</button>
+      <button class="btn-close" id="btnFechar" title="Fechar janela" aria-label="Fechar janela">✕</button>
     </div>
   </header>
 
@@ -516,13 +507,13 @@
         <div class="line-numbers" id="lineNumbers">1</div>
         <div class="editor-container" id="editorContainer">
           <pre id="highlight" aria-hidden="true"><code id="highlightCode"></code></pre>
-          <textarea id="editor" spellcheck="false" placeholder="Digite seu código Willog aqui..."></textarea>
-          <div id="autocomplete" class="autocomplete" style="display:none"></div>
+          <textarea id="editor" spellcheck="false" placeholder="Digite seu código Willog aqui..." aria-label="Editor de código Willog"></textarea>
+          <div id="autocomplete" class="autocomplete" style="display:none" role="listbox" aria-label="Sugestões de autocompletar"></div>
         </div>
       </div>
     </section>
 
-    <div id="splitter" title="Arraste para redimensionar"></div>
+    <div id="splitter" title="Arraste para redimensionar" role="separator" aria-label="Redimensionar painéis" aria-orientation="horizontal"></div>
     <section class="pane console-pane">
       <div class="pane-header">
         <span><b>CONSOLE</b> <span class="hint">— saída do programa</span></span>
@@ -531,9 +522,9 @@
           <button class="btn small" id="btnLimpar2" style="padding:3px 8px">Limpar</button>
         </div>
       </div>
-      <div class="console-output" id="console"></div>
+      <div class="console-output" id="console" role="log" aria-live="polite" aria-label="Saída do console"></div>
       <div class="console-input-row">
-        <input id="consoleInput" placeholder="Digite um comando Willog e pressione Enter...">
+        <input id="consoleInput" placeholder="Digite um comando Willog e pressione Enter..." aria-label="Entrada do console">
       </div>
     </section>
   </div>
@@ -972,12 +963,16 @@ document.getElementById('btnTema').addEventListener('click', ()=>{
 });
 
 // --- Fechar janela ---
+document.getElementById('btnFechar').setAttribute('aria-label','Fechar janela');
 document.getElementById('btnFechar').addEventListener('click', ()=>{
   window.close();
   setTimeout(()=>{
     try{ window.open('', '_self'); window.close(); }catch(e){}
     if(!window.closed){
-      document.body.innerHTML = '<div style="display:grid;place-items:center;height:100vh;font-family:Inter,sans-serif;color:var(--text);background:var(--bg)"><div><h2>Janela pode ser fechada manualmente</h2><p>O navegador bloqueou o fechamento automático. Feche esta aba/janela com Alt+F4 ou Ctrl+W.</p></div></div>';
+      const overlay=document.createElement('div');
+      overlay.style.cssText='display:grid;place-items:center;height:100vh;font-family:Inter,sans-serif;color:var(--text);background:var(--bg);position:fixed;inset:0;z-index:9999';
+      overlay.innerHTML='<div style="text-align:center"><h2>Janela pode ser fechada manualmente</h2><p>O navegador bloqueou o fechamento automático. Feche esta aba/janela com Alt+F4 ou Ctrl+W.</p><button onclick="location.reload()" style="margin-top:12px;padding:8px 16px;border:2px solid var(--border);border-radius:6px;cursor:pointer">Recarregar</button></div>';
+      document.body.appendChild(overlay);
     }
   }, 200);
 });
@@ -1017,7 +1012,7 @@ document.getElementById('btnFechar').addEventListener('click', ()=>{
 })();
 
 // --- Syntax Highlight ---
-function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
@@ -1134,9 +1129,22 @@ function updateHighlight(){
   let saveTimer = null;
   function saveSession(){
     try{
+      if(editor.value.length > 1800000){
+        console.warn('Willog: conteúdo muito grande para auto-salvamento');
+        document.getElementById('statusBar').textContent = 'Aviso: arquivo muito grande — auto-salvamento limitado';
+        setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 3000);
+        return;
+      }
       localStorage.setItem(KEY_CODE, editor.value);
       localStorage.setItem(KEY_NAME, currentFilename);
-    }catch(e){}
+    }catch(e){
+      if(e && (e.name==='QuotaExceededError' || e.code===22)){
+        console.warn('Willog: localStorage cheio', e);
+        document.getElementById('statusBar').textContent = 'Aviso: armazenamento local cheio — salve o arquivo manualmente';
+        setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 4000);
+        try{ localStorage.removeItem(KEY_CODE); }catch(_){}
+      }
+    }
   }
   window._willogSave = saveSession;
   editor.addEventListener('input', ()=>{
@@ -1237,6 +1245,11 @@ function updateHighlight(){
       localStorage.setItem(W_KEY, newConsoleW);
     }
   }
+  function onTouchMove(e){
+    if(!dragging) return;
+    const t=e.touches[0];
+    onMouseMove({clientX:t.clientX, clientY:t.clientY});
+  }
   function onMouseUp(){
     dragging=false;
     splitter.classList.remove('dragging');
@@ -1244,6 +1257,8 @@ function updateHighlight(){
     document.body.style.cursor='';
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
+    window.removeEventListener('touchmove', onTouchMove);
+    window.removeEventListener('touchend', onMouseUp);
     if(!isBottom && window.innerWidth>900){
       editorPane.style.flex='1 1 0';
     }
@@ -1253,13 +1268,9 @@ function updateHighlight(){
     splitter.addEventListener('touchstart', (e)=>{
       const t=e.touches[0];
       onMouseDown({preventDefault:()=>e.preventDefault(), clientX:t.clientX, clientY:t.clientY});
+      window.addEventListener('touchmove', onTouchMove, {passive:false});
+      window.addEventListener('touchend', onMouseUp);
     }, {passive:false});
-    window.addEventListener('touchmove', (e)=>{
-      if(!dragging) return;
-      const t=e.touches[0];
-      onMouseMove({clientX:t.clientX, clientY:t.clientY});
-    }, {passive:false});
-    window.addEventListener('touchend', onMouseUp);
   }
   if(splitter){
     splitter.addEventListener('dblclick', ()=>{
@@ -1343,7 +1354,6 @@ function updateHighlight(){
     autoAdjustTimer=setTimeout(autoAdjustConsole, 80);
   }
   window.addEventListener('resize', debouncedAutoAdjust);
-  if(window.visualViewport) window.visualViewport.addEventListener('resize', debouncedAutoAdjust);
   if(window.matchMedia){
     try{
       const mql = window.matchMedia('(resolution: ' + window.devicePixelRatio + 'dppx)');
@@ -1351,19 +1361,10 @@ function updateHighlight(){
       else if(mql && mql.addListener) mql.addListener(debouncedAutoAdjust);
     }catch(e){}
   }
-  let lastDPR = window.devicePixelRatio;
-  const dprInterval=setInterval(()=>{
-    if(window.devicePixelRatio!==lastDPR){
-      lastDPR=window.devicePixelRatio;
-      debouncedAutoAdjust();
-    }
-  }, 500);
-  if(dprInterval && dprInterval.unref) dprInterval.unref();
   if(window.ResizeObserver){
     try{
       const ro=new ResizeObserver(debouncedAutoAdjust);
       ro.observe(mainEl);
-      ro.observe(document.body);
     }catch(e){}
   }
   setTimeout(autoAdjustConsole, 300);
@@ -1373,8 +1374,7 @@ function updateHighlight(){
 // --- Linhas ---
 function updateLines(){
   const lines = editor.value.split('\n').length;
-  let html = '';
-  for(let i=1;i<=lines;i++) html += i + '<br>';
+  const html = Array.from({length: lines}, (_, i) => i+1).join('<br>');
   lineNumbers.innerHTML = html;
   lineNumbers.scrollTop = editor.scrollTop;
   highlight.scrollTop = editor.scrollTop;
@@ -1385,10 +1385,15 @@ function syncScroll(){
   highlight.scrollTop = editor.scrollTop;
   highlight.scrollLeft = editor.scrollLeft;
 }
-editor.addEventListener('input', ()=>{ updateLines(); updateHighlight(); });
+let _hlRAF=null;
+function scheduleHighlight(){
+  if(_hlRAF) cancelAnimationFrame(_hlRAF);
+  _hlRAF = requestAnimationFrame(()=>{ updateLines(); updateHighlight(); _hlRAF=null; });
+}
+editor.addEventListener('input', scheduleHighlight);
 editor.addEventListener('scroll', syncScroll);
 editor.addEventListener('keydown', (e)=>{
-  if(e.key==='Tab'){ e.preventDefault(); const s=editor.selectionStart, ed=editor.selectionEnd; editor.value = editor.value.substring(0,s) + '  ' + editor.value.substring(ed); editor.selectionStart=editor.selectionEnd=s+2; updateLines(); updateHighlight(); if(window._willogSave) window._willogSave(); }
+  if(e.key==='Tab'){ e.preventDefault(); const s=editor.selectionStart, ed=editor.selectionEnd; editor.value = editor.value.substring(0,s) + '  ' + editor.value.substring(ed); editor.selectionStart=editor.selectionEnd=s+2; scheduleHighlight(); if(window._willogSave) window._willogSave(); }
   if((e.ctrlKey||e.metaKey) && e.key==='Enter'){ e.preventDefault(); runWillog(); }
   if(e.key==='F5'){ e.preventDefault(); runWillog(); }
 });
@@ -1403,8 +1408,10 @@ updateLines(); updateHighlight();
   const comandos=['comentários','continue','definir função','enquanto','intervalo','janela','leia','limpe','mostre','para cada','pare','pausa','repetir','se','senão','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','contarItem','cos','data','decimal','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','fatorial','filtrar','fração','hora','inteiro','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','paraNúmero','paraTexto','piso','primos','raizc','raizq','semEspaços','sen','substitua','tan','teto','tipo'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const propriedades=['adicionar','aleatório','contar','fatiar','inverter','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  let _varsCache=null; let _varsCacheText='';
   function getVariables(){
     const text=ed.value;
+    if(text===_varsCacheText && _varsCache) return _varsCache;
     const vars=new Set();
     let m;
     const reAssign=/\b([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*=/g;
@@ -1412,7 +1419,9 @@ updateLines(); updateHighlight();
     const reParaCada=/para\s+cada\s+([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)/gi;
     while((m=reParaCada.exec(text))) vars.add(m[1]);
     try{ if(typeof replEnv!=="undefined" && replEnv){ Object.keys(replEnv).forEach(k=>{ if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(k) && !k.startsWith('__')) vars.add(k); }); } }catch(e){}
-    return [...vars].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+    _varsCache=[...vars].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+    _varsCacheText=text;
+    return _varsCache;
   }
   function getWordAtCaret(){
     const pos=ed.selectionStart;
@@ -1454,7 +1463,10 @@ updateLines(); updateHighlight();
     groups.forEach(g=>{
       const cat=document.createElement('div'); cat.className='autocomplete-category'; cat.textContent=g.cat; acEl.appendChild(cat);
       g.items.forEach(item=>{
-        const div=document.createElement('div'); div.className='autocomplete-item'; div.innerHTML='<span class=\"icon\">'+g.icon+'</span><span>'+item+'</span>';
+        const div=document.createElement('div'); div.className='autocomplete-item';
+        const iconSpan=document.createElement('span'); iconSpan.className='icon'; iconSpan.textContent=g.icon;
+        const textSpan=document.createElement('span'); textSpan.textContent=item;
+        div.appendChild(iconSpan); div.appendChild(textSpan);
         div.addEventListener('mousedown', (e)=>{ e.preventDefault(); selectItem(item); });
         acEl.appendChild(div); currentItems.push({el:div, value:item});
       });
@@ -1475,10 +1487,12 @@ updateLines(); updateHighlight();
     activeIdx+=dir; if(activeIdx<0) activeIdx=currentItems.length-1; if(activeIdx>=currentItems.length) activeIdx=0;
     currentItems[activeIdx].el.classList.add('active'); currentItems[activeIdx].el.scrollIntoView({block:'nearest'});
   }
-  ed.addEventListener('input', ()=>{ showAc(); });
+  let _acTimer=null;
+  function debouncedShowAc(){ clearTimeout(_acTimer); _acTimer=setTimeout(showAc, 45); }
+  ed.addEventListener('input', debouncedShowAc);
   ed.addEventListener('keyup', (e)=>{
     if(['ArrowDown','ArrowUp','Enter','Tab','Escape'].includes(e.key)) return;
-    if(/^[a-zA-Z0-9_À-ÿ]$/.test(e.key) || e.key==='Backspace' || e.key.length===1) showAc();
+    if(/^[a-zA-Z0-9_À-ÿ]$/.test(e.key) || e.key==='Backspace' || e.key.length===1) debouncedShowAc();
   });
   ed.addEventListener('keydown', (e)=>{
     if(acEl.style.display==='none' || !acEl.classList.contains('visible')) return;
@@ -1840,8 +1854,16 @@ editor.addEventListener('drop', e=>{
   e.preventDefault(); editor.style.outline='';
   const file = e.dataTransfer.files[0];
   if(!file) return;
+  if(file.size > 2000000){
+    logToConsole(`Erro: arquivo muito grande (${(file.size/1024/1024).toFixed(2)} MB) — limite 2 MB`, 'error');
+    return;
+  }
+  if(!/\.(wil|txt)$/i.test(file.name) && file.type && !file.type.startsWith('text/')){
+    logToConsole(`Aviso: tipo inesperado "${file.type}" — tentando ler como texto`, 'info');
+  }
   const reader = new FileReader();
   reader.onload = ev=>{ editor.value=ev.target.result; currentFilename=file.name; filenameDisplay.textContent=currentFilename; updateLines(); updateHighlight(); logToConsole(`Arquivo solto: ${file.name}`,'success'); if(window._willogSave) window._willogSave(); };
+  reader.onerror = ()=> logToConsole(`Erro ao ler arquivo: ${file.name}`, 'error');
   reader.readAsText(file,'UTF-8');
 });
 
@@ -1860,6 +1882,17 @@ document.getElementById('btnLimpar2').addEventListener('click', clearConsole);
 // INTERPRETADOR WILLOG
 // ================================================================
 
+const _formatCache=new Map();
+function _formatNumber(n){
+  if(!isFinite(n)) return String(n);
+  if(Number.isInteger(n)) return String(n);
+  const k=n.toString();
+  if(_formatCache.has(k)) return _formatCache.get(k);
+  let fixed=n.toFixed(10).replace(/0+$/,'').replace(/\.$/,'');
+  if(_formatCache.size>1000) _formatCache.clear();
+  _formatCache.set(k, fixed);
+  return fixed;
+}
 function willogDisplay(v){
   if(Array.isArray(v)){
     if(v.length===0) return 'Ø';
@@ -1870,8 +1903,7 @@ function willogDisplay(v){
       if(typeof x==='number'){
         if(!isFinite(x)) return String(x);
         if(!Number.isInteger(x)){
-          let f=x.toFixed(10).replace(/0+$/,'').replace(/\.$/,'');
-          return f;
+          return _formatNumber(x);
         }
       }
       return String(x);
@@ -1883,9 +1915,7 @@ function willogDisplay(v){
   if(typeof v==='number'){
     if(!isFinite(v)) return String(v);
     if(!Number.isInteger(v)){
-      let fixed=v.toFixed(10);
-      fixed=fixed.replace(/0+$/, '').replace(/\.$/, '');
-      return fixed;
+      return _formatNumber(v);
     }
   }
   return String(v);
@@ -1962,7 +1992,7 @@ function preprocessArrays(expr, env){
       }
       if(depth===0){
         const inner=expr.slice(i+1, j-1);
-        const placeholder=`__willog_arr${arrIdx++}`;
+        const placeholder=`__willog_internal_arr_${Date.now().toString(36)}_${arrIdx++}_${Math.random().toString(36).slice(2,6)}`;
         let arr=[];
         if(inner.trim()!==''){
           const parts=splitArrayElements(inner);
@@ -1972,7 +2002,7 @@ function preprocessArrays(expr, env){
             try{ return evaluateExpression(t, env); }catch(e){ return t; }
           }).filter(v=>v!==undefined);
         }
-        env[placeholder]=arr;
+        Object.defineProperty(env, placeholder, {value: arr, writable: true, enumerable: false, configurable: true});
         res+=placeholder;
         i=j;
       }else{
@@ -2019,7 +2049,7 @@ function preprocessObjects(expr, env){
       }
       if(depth===0){
         const inner=expr.slice(i+1, j-1);
-        const placeholder=`__willog_obj${objIdx++}`;
+        const placeholder=`__willog_internal_obj_${Date.now().toString(36)}_${objIdx++}_${Math.random().toString(36).slice(2,6)}`;
         let obj={};
         if(inner.trim()!==''){
           const pairs=splitArrayElements(inner);
@@ -2041,7 +2071,7 @@ function preprocessObjects(expr, env){
             }catch(e){}
           }
         }
-        env[placeholder]=obj;
+        Object.defineProperty(env, placeholder, {value: obj, writable: true, enumerable: false, configurable: true});
         res+=placeholder;
         i=j;
       }else{
@@ -2422,14 +2452,17 @@ function toRPN(tokens){
 }
 
 function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ const t=b; b=a%b; a=t; } return a||1; }
+const _fractionCache=new Map();
 function fractionString(x){
   if(!isFinite(x)) return String(x);
   if(Number.isInteger(x)) return x + '/1';
+  const key=x.toString();
+  if(_fractionCache.has(key)) return _fractionCache.get(key);
   const sign = x<0 ? -1 : 1;
   x = Math.abs(x);
   const eps=1e-7;
   let bestP=0, bestQ=1, bestErr=Infinity;
-  for(let q=1; q<=1000; q++){
+  for(let q=1; q<=500; q++){
     const p=Math.round(x*q);
     const err=Math.abs(x - p/q);
     if(err<bestErr){ bestErr=err; bestP=p; bestQ=q; if(err<eps) break; }
@@ -2437,7 +2470,10 @@ function fractionString(x){
   const g=gcd(bestP,bestQ);
   bestP/=g; bestQ/=g;
   if(sign<0) bestP=-bestP;
-  return bestP + '/' + bestQ;
+  const res=bestP + '/' + bestQ;
+  if(_fractionCache.size>500) _fractionCache.clear();
+  _fractionCache.set(key, res);
+  return res;
 }
 
 function toWillogBool(v){
@@ -2631,8 +2667,7 @@ function evalRPN(rpn, env){
     } else if(tok.type==='IDENT'){
       if(tok.value in env) stack.push(env[tok.value]);
       else {
-        stack.push(0);
-        stack[stack.length-1] = undefined;
+        stack.push(undefined);
       }
     } else if(tok.type==='FUNC'){
       const fn = tok.value;
@@ -3554,7 +3589,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
   if(isJanelaStmt(stmt)){ const cent=getJanelaCentraliza(stmt); ativarJanela(cent); return; }
   if(isGotoStmt(stmt)){
     const target=parseGoto(stmt);
-    const dest = (window.__labelMap ? (window.__labelMap[target] ?? window.__labelMap[target.toLowerCase()]) : undefined);
+    const dest = (typeof labelMap !== 'undefined' ? (labelMap[target] ?? labelMap[target.toLowerCase()]) : undefined);
     if(dest!==undefined){
       env.__goto = target;
       env.__gotoDest = dest;
@@ -3725,7 +3760,6 @@ async function runWillog(){
     }
   }
   const labelMap = buildLabelMap(lines);
-  window.__labelMap = labelMap;
   async function execBlock(start, end, baseIndent){
     let i=start;
     while(i<end){
