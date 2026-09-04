@@ -414,6 +414,9 @@
   .floating-console .line.success { color:#55efc4; }
   .floating-console.centralizado { text-align:center; }
   .floating-console.centralizado .line { text-align:center; }
+  .floating-body { flex:1; display:flex; flex-direction:column; overflow:hidden; background:#000; position:relative; min-height:0; }
+  #janelaCanvas { display:none; width:100%; height:100%; flex:1; background:#000; min-height:0; }
+  #janelaCanvas.ativo { display:block; }
   .autocomplete {
     position: absolute;
     background: var(--panel);
@@ -538,7 +541,10 @@
         <button id="btnFecharJanela" class="close" title="Fechar">✕</button>
       </div>
     </div>
-    <div class="floating-console" id="janelaConsole"></div>
+    <div class="floating-body" id="janelaBody">
+      <canvas id="janelaCanvas" width="640" height="400"></canvas>
+      <div class="floating-console" id="janelaConsole"></div>
+    </div>
   </div>
 
   <div class="help-bar">
@@ -629,6 +635,42 @@ produto(5,3,2)</span>
     retorne "S = {s0} + {v} x {t} = {s0+v*t}"
 mostre S(100,20,10)</span>
 <span class="saida">-> S = 100 + 20 x 10 = 300</span></pre>
+        <h3>desenhe.circulo</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">desenhe.circulo</span><span class="example">(x, y, raio, cor)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela()
+tela.limpe
+desenhe.circulo(150,150,50,vermelho)</span>
+<span class="saida">-> desenha círculo vermelho com centro (150,150) e raio 50 em fundo preto</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Fundo padrão <code>preto</code>, traço padrão <code>branco</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        <h3>desenhe.linha</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">desenhe.linha</span><span class="example">(x1, y1, x2, y2, cor)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela()
+tela.limpe
+desenhe.linha(10,10,200,100,azul)</span>
+<span class="saida">-> desenha linha azul de (10,10) até (200,100)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        <h3>desenhe.ponto</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">desenhe.ponto</span><span class="example">(x, y, cor)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela()
+tela.limpe
+desenhe.ponto(100,100,amarelo)</span>
+<span class="saida">-> desenha ponto amarelo em (100,100)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        <h3>desenhe.retangulo</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">desenhe.retangulo</span><span class="example">(x, y, largura, altura, cor)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela()
+tela.limpe
+desenhe.retangulo(20,30,120,80,verde)</span>
+<span class="saida">-> desenha retângulo verde em (20,30) com 120×80</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
         <h3>enquanto</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">enquanto</span> <span class="example">&lt;condição&gt;:</span>
@@ -874,6 +916,30 @@ se nota >= 7:
 senão:
     mostre "Reprovado"</span>
 <span class="saida">-> Aprovado</span></pre>
+        <h3>tela.cor</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">tela.cor</span><span class="example">(cor)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela()
+tela.cor(azul)
+tela.limpe</span>
+<span class="saida">-> fundo da janela fica azul (limpe usa a cor atual)</span>
+
+<span class="example">janela()
+tela.cor(preto)
+tela.limpe
+desenhe.linha(0,0,100,100,branco)</span>
+<span class="saida">-> fundo preto com linha branca</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Cor padrão de fundo <code>preto</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        <h3>tela.limpe</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">tela.limpe</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela()
+tela.limpe
+desenhe.circulo(100,100,40,amarelo)</span>
+<span class="saida">-> limpa a tela com a cor de fundo (preto por padrão) e desenha círculo amarelo</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Limpa toda a área gráfica preenchendo com a cor definida por <code>tela.cor()</code> (padrão <code>preto</code>). Deve ser usado após <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
         <h3>vá para</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">:rótulo</span>
@@ -897,8 +963,7 @@ verificar nota:
     caso 9: "Ótimo!"
     padrão: "Estude mais!"</span>
 <span class="saida">-> Ótimo!</span></pre>
-      </code>, <code>$2</code> etc. O arquivo permanece aberto até <code>fechar</code>.</p>
-        
+      </div>
       <div class="manual-pane" id="pane-funcoes">
         <h3>Funções — ordem alfabética</h3>
         <table>
@@ -1114,7 +1179,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia','pare','continue','continuar','limpe','pausa','janela','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   while(i<len){
@@ -1503,7 +1568,7 @@ updateLines(); updateHighlight();
   const acEl=document.getElementById('autocomplete');
   const ed=document.getElementById('editor');
   if(!acEl || !ed) return;
-  const comandos=['abrir','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','enquanto','escrever','espereTecla','fechar','intervalo','janela','leia','ler','limpe','mostre','para cada','pare','pausa','repetir','se','senão','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const comandos=['abrir','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.circulo','desenhe.linha','desenhe.ponto','desenhe.retangulo','enquanto','escrever','espereTecla','fechar','intervalo','janela','leia','ler','limpe','mostre','para cada','pare','pausa','repetir','se','senão','tela.cor','tela.limpe','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','captureTecla','contarItem','cos','data','decimal','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','fatorial','filtrar','fração','hora','inteiro','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','paraNúmero','paraTexto','piso','primos','raizc','raizq','semEspaços','sen','substitua','tan','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const propriedades=['adicionar','aleatório','contar','fatiar','inverter','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   let _varsCache=null; let _varsCacheText='';
@@ -1622,8 +1687,25 @@ function ativarJanela(centraliza){
   janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
   if(janelaConsoleEl){
     janelaConsoleEl.innerHTML='';
+    janelaConsoleEl.style.display='';
     if(janelaCentralizada){ janelaConsoleEl.classList.add('centralizado'); janelaConsoleEl.style.textAlign='center'; }
     else { janelaConsoleEl.classList.remove('centralizado'); janelaConsoleEl.style.textAlign=''; }
+  }
+  const _cvG=document.getElementById('janelaCanvas');
+  if(_cvG){
+    _telaBgColor='#000000';
+    _telaFgColor='#ffffff';
+    _cvG.style.background='#000000';
+    _cvG.classList.remove('ativo');
+    _cvG.style.display='none';
+    try{ const _ctxG=_cvG.getContext('2d'); if(_ctxG){ _ctxG.setTransform(1,0,0,1,0,0); _ctxG.clearRect(0,0,_cvG.width,_cvG.height);} }catch(e){}
+  }
+  // reseta buffer lógico para nova janela (fundo preto, vazio, escalonável)
+  _telaBuffer=null; _telaBufferCtx=null;
+  _willogInitBuffer();
+  if(!centraliza){
+    // garante que ao maximizar o canvas terá tamanho correto quando ativado
+    requestAnimationFrame(()=>{ const c=document.getElementById('janelaCanvas'); if(c){ const r=c.getBoundingClientRect(); if(r.width>0){ _willogResizeCanvas(); }}}); 
   }
 }
 function fecharJanela(){
@@ -1633,8 +1715,236 @@ function fecharJanela(){
   }
   janelaAtiva=false;
   janelaCentralizada=false;
-  if(janelaConsoleEl){ janelaConsoleEl.classList.remove('centralizado'); janelaConsoleEl.style.textAlign=''; }
+  if(janelaConsoleEl){ janelaConsoleEl.classList.remove('centralizado'); janelaConsoleEl.style.textAlign=''; janelaConsoleEl.style.display=''; }
+  const _cv=document.getElementById('janelaCanvas');
+  if(_cv){ _cv.classList.remove('ativo'); _cv.style.display='none'; }
+  _telaBgColor='#000000';
+  _telaFgColor='#ffffff';
+  // limpa buffer para próxima janela não herdar desenhos
+  if(_telaBuffer && _telaBufferCtx){
+    _telaBufferCtx.fillStyle='#000000';
+    _telaBufferCtx.fillRect(0,0,_telaLogicalW,_telaLogicalH);
+  }
 }
+// --- Willog Tela / Desenhe (gráficos na janela) --- com buffer escalonável ---
+const _willogCores = {
+  'amarelo':'#ffff00','vermelho':'#ff0000','azul':'#0066ff','verde':'#00c853','ciano':'#00ffff','rosa':'#ff69b4','roxo':'#9c27b0','laranja':'#ff9800','branco':'#ffffff','cinza':'#808080','marrom':'#8d5524','preto':'#000000'
+};
+let _telaBgColor = '#000000';
+let _telaFgColor = '#ffffff';
+let _telaBuffer = null;
+let _telaBufferCtx = null;
+const _telaLogicalW = 640;
+const _telaLogicalH = 400;
+function _willogResolveCor(nome, env){
+  if(nome===undefined||nome===null) return null;
+  let s=String(nome).trim();
+  if(s.startsWith('"')||s.startsWith("'")) s=s.slice(1,-1);
+  if(env && s && !(_willogCores[s.toLowerCase()]) && /^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(s) && env[s]!==undefined){
+    const v=env[s];
+    if(typeof v==='string') s=v;
+  }
+  s=s.toLowerCase().trim();
+  if(_willogCores[s]) return _willogCores[s];
+  if(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(s)) return s;
+  const norm=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(_willogCores[norm]) return _willogCores[norm];
+  return null;
+}
+function _willogGetCanvas(){
+  return document.getElementById('janelaCanvas');
+}
+function _willogGetCtx(){
+  const cv=_willogGetCanvas();
+  if(!cv) return null;
+  return cv.getContext('2d');
+}
+function _willogInitBuffer(){
+  if(_telaBuffer && _telaBufferCtx) return;
+  _telaBuffer = document.createElement('canvas');
+  _telaBuffer.width = _telaLogicalW;
+  _telaBuffer.height = _telaLogicalH;
+  _telaBufferCtx = _telaBuffer.getContext('2d');
+  _telaBufferCtx.fillStyle = _telaBgColor;
+  _telaBufferCtx.fillRect(0,0,_telaLogicalW,_telaLogicalH);
+}
+function _willogSyncVisible(){
+  const cv=_willogGetCanvas();
+  if(!cv || !_telaBuffer) return;
+  if(!cv.classList.contains('ativo')) return;
+  const rect=cv.getBoundingClientRect();
+  const dpr=window.devicePixelRatio||1;
+  const w=Math.max(10, Math.round(rect.width * dpr));
+  const h=Math.max(10, Math.round(rect.height * dpr));
+  if(w<=0||h<=0) return;
+  if(cv.width!==w || cv.height!==h){
+    cv.width=w; cv.height=h;
+  }
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.imageSmoothingEnabled=true;
+  // fundo para letterbox (preserva cor de fundo)
+  ctx.fillStyle=_telaBgColor;
+  ctx.fillRect(0,0,w,h);
+  // escalonamento proporcional (preserva aspecto) — fiel às coordenadas, ancora em (0,0)
+  // usa mesma escala em X e Y para não distorcer; (0,0) permanece no canto superior-esquerdo da janela
+  const scale=Math.min(w/_telaLogicalW, h/_telaLogicalH);
+  const destW=_telaLogicalW*scale;
+  const destH=_telaLogicalH*scale;
+  ctx.drawImage(_telaBuffer, 0,0, _telaLogicalW, _telaLogicalH, 0, 0, destW, destH);
+}
+function _willogEnsureTela(){
+  _willogInitBuffer();
+  const cv=_willogGetCanvas();
+  const jConsole=document.getElementById('janelaConsole');
+  if(!cv) return false;
+  cv.classList.add('ativo');
+  cv.style.display='block';
+  if(jConsole) jConsole.style.display='none';
+  // sincroniza conteúdo do buffer escalado para o tamanho atual
+  requestAnimationFrame(()=> _willogSyncVisible());
+  // também sincroniza imediato caso rect já disponível
+  try{ _willogSyncVisible(); }catch(e){}
+  return true;
+}
+function _willogResizeCanvas(){
+  // apenas re-sincroniza buffer escalado; nunca apaga desenhos
+  if(!_telaBuffer || !_telaBufferCtx) return;
+  const cv=_willogGetCanvas();
+  if(!cv || !cv.classList.contains('ativo')) return;
+  _willogSyncVisible();
+}
+function _willogTelaLimpe(){
+  if(!janelaAtiva){ logToConsole('Erro: use janela() antes de tela.limpe', 'error'); return false; }
+  if(janelaCentralizada){ logToConsole('Erro: tela.limpe não pode ser usado após janela(centraliza) — use janela() sem centraliza', 'error'); return false; }
+  _willogInitBuffer();
+  _willogEnsureTela();
+  // limpa buffer com cor de fundo
+  _telaBufferCtx.fillStyle=_telaBgColor;
+  _telaBufferCtx.fillRect(0,0,_telaLogicalW,_telaLogicalH);
+  _willogSyncVisible();
+  requestAnimationFrame(()=> _willogSyncVisible());
+  return true;
+}
+function _willogTelaCor(argRaw, env){
+  if(!janelaAtiva){ logToConsole('Erro: use janela() antes de tela.cor()', 'error'); return false; }
+  if(janelaCentralizada){ logToConsole('Erro: tela.cor() não pode ser usado após janela(centraliza)', 'error'); return false; }
+  let corStr=argRaw.trim();
+  let hex=null;
+  let tryRaw=corStr.replace(/^["']|["']$/g,'').trim();
+  hex=_willogResolveCor(tryRaw, env);
+  if(!hex){
+    try{
+      const v=evaluateExpression(corStr, env);
+      if(v!==undefined&&v!==null) hex=_willogResolveCor(String(v), env);
+    }catch(e){}
+  }
+  if(!hex) hex=_willogResolveCor(corStr, env);
+  if(!hex){
+    logToConsole('Erro: cor desconhecida "'+corStr+'". Use: amarelo, vermelho, azul, verde, ciano, rosa, roxo, laranja, branco, cinza, marrom, preto', 'error');
+    return false;
+  }
+  _telaBgColor=hex;
+  const cv=_willogGetCanvas();
+  if(cv){ cv.style.background=hex; }
+  // não apaga desenhos existentes no buffer; apenas define cor para próximo limpe
+  // se ainda não desenhou nada, atualiza fundo do buffer para feedback visual
+  // verifica se buffer está vazio (apenas fundo) -> preenche
+  // para simplicidade, não preenche automaticamente; tela.limpe usará nova cor
+  return true;
+}
+function _willogCheckGraficoPermitido(){
+  if(!janelaAtiva){ logToConsole('Erro: use janela() antes de desenhe.*', 'error'); return false; }
+  if(janelaCentralizada){ logToConsole('Erro: desenhe.* não pode ser usado após janela(centraliza) — use janela() sem centraliza', 'error'); return false; }
+  _willogInitBuffer();
+  _willogEnsureTela();
+  return true;
+}
+function _willogDrawLinha(x1,y1,x2,y2,corStr,env){
+  if(!_willogCheckGraficoPermitido()) return false;
+  _willogInitBuffer();
+  const hex=_willogResolveCor(corStr, env) || _telaFgColor;
+  // desenha no buffer lógico (escalonável)
+  _telaBufferCtx.strokeStyle=hex;
+  _telaBufferCtx.lineWidth=2;
+  _telaBufferCtx.beginPath();
+  _telaBufferCtx.moveTo(Number(x1), Number(y1));
+  _telaBufferCtx.lineTo(Number(x2), Number(y2));
+  _telaBufferCtx.stroke();
+  _willogSyncVisible();
+  return true;
+}
+function _willogDrawCirculo(x,y,raio,corStr,env){
+  if(!_willogCheckGraficoPermitido()) return false;
+  _willogInitBuffer();
+  const hex=_willogResolveCor(corStr, env) || _telaFgColor;
+  _telaBufferCtx.strokeStyle=hex;
+  _telaBufferCtx.lineWidth=2;
+  _telaBufferCtx.beginPath();
+  _telaBufferCtx.arc(Number(x), Number(y), Math.abs(Number(raio)), 0, Math.PI*2);
+  _telaBufferCtx.stroke();
+  _willogSyncVisible();
+  return true;
+}
+function _willogDrawRetangulo(x,y,w,h,corStr,env){
+  if(!_willogCheckGraficoPermitido()) return false;
+  _willogInitBuffer();
+  const hex=_willogResolveCor(corStr, env) || _telaFgColor;
+  _telaBufferCtx.strokeStyle=hex;
+  _telaBufferCtx.lineWidth=2;
+  _telaBufferCtx.strokeRect(Number(x), Number(y), Number(w), Number(h));
+  _willogSyncVisible();
+  return true;
+}
+function _willogDrawPonto(x,y,corStr,env){
+  if(!_willogCheckGraficoPermitido()) return false;
+  _willogInitBuffer();
+  const hex=_willogResolveCor(corStr, env) || _telaFgColor;
+  _telaBufferCtx.fillStyle=hex;
+  _telaBufferCtx.beginPath();
+  _telaBufferCtx.arc(Number(x), Number(y), 2, 0, Math.PI*2);
+  _telaBufferCtx.fill();
+  _willogSyncVisible();
+  return true;
+}
+function isTelaLimpeStmt(stmt){ return /^\s*tela\.limpe\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isTelaCorStmt(stmt){ return /^\s*tela\.cor\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isDesenheLinhaStmt(stmt){ return /^\s*desenhe\.linha\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isDesenheCirculoStmt(stmt){ return /^\s*desenhe\.circulo\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isDesenheRetanguloStmt(stmt){ return /^\s*desenhe\.retangulo\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isDesenhePontoStmt(stmt){ return /^\s*desenhe\.ponto\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function parseTelaCorArg(stmt){
+  const m=stmt.match(/^\s*tela\.cor\s*\(\s*(.+?)\s*\)\s*(?:#.*|\/\/.*)?$/i);
+  return m? m[1].trim(): '';
+}
+function parseDesenheArgs(stmt){
+  const m=stmt.match(/^\s*desenhe\.\w+\s*\(\s*(.*)\s*\)\s*(?:#.*|\/\/.*)?$/i);
+  if(!m) return [];
+  return splitWillogCommaArgs(m[1]);
+}
+(function(){
+  window.addEventListener('resize', ()=>{
+    if(janelaAtiva && !janelaCentralizada){
+      const cv=document.getElementById('janelaCanvas');
+      if(cv && cv.classList.contains('ativo')) _willogResizeCanvas();
+    }
+  });
+  if(window.ResizeObserver){
+    try{
+      const _body=document.getElementById('janelaBody');
+      if(_body){
+        const _ro=new ResizeObserver(()=>{
+          if(janelaAtiva && !janelaCentralizada){
+            const cv=document.getElementById('janelaCanvas');
+            if(cv && cv.classList.contains('ativo')) _willogResizeCanvas();
+          }
+        });
+        _ro.observe(_body);
+      }
+    }catch(e){}
+  }
+})();
+// reaproveita janelaAtiva para gráficos
 function isJanelaStmt(stmt){
   const t=stmt.trim();
   return /^\s*janela\s*(\(\s*(centraliza)?\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(t);
@@ -4100,6 +4410,58 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
   if(isCronometroIniciarStmt(stmt)){ cronometroIniciar(); return; }
   if(isCronometroPararStmt(stmt)){ cronometroParar(); return; }
   if(isJanelaStmt(stmt)){ const cent=getJanelaCentraliza(stmt); ativarJanela(cent); return; }
+  // --- Tela / Desenhe (gráficos na janela) ---
+  if(isTelaLimpeStmt(stmt)){ if(_willogTelaLimpe()) hasOutputRef.value=true; return; }
+  if(isTelaCorStmt(stmt)){ const _arg=parseTelaCorArg(stmt); if(_willogTelaCor(_arg, env)) hasOutputRef.value=true; return; }
+  if(isDesenheLinhaStmt(stmt)){
+    const _args=parseDesenheArgs(stmt);
+    if(_args.length<4){ logToConsole('Erro: desenhe.linha precisa de x1,y1,x2,y2[,cor]','error'); return; }
+    try{
+      const _x1=evaluateExpression(_args[0], env);
+      const _y1=evaluateExpression(_args[1], env);
+      const _x2=evaluateExpression(_args[2], env);
+      const _y2=evaluateExpression(_args[3], env);
+      const _cor=_args.length>=5 ? _args[4] : 'branco';
+      if(_willogDrawLinha(_x1,_y1,_x2,_y2,_cor,env)) hasOutputRef.value=true;
+    }catch(e){ logToConsole('Erro em desenhe.linha: '+e.message,'error'); }
+    return;
+  }
+  if(isDesenheCirculoStmt(stmt)){
+    const _args=parseDesenheArgs(stmt);
+    if(_args.length<3){ logToConsole('Erro: desenhe.circulo precisa de x,y,raio[,cor]','error'); return; }
+    try{
+      const _x=evaluateExpression(_args[0], env);
+      const _y=evaluateExpression(_args[1], env);
+      const _r=evaluateExpression(_args[2], env);
+      const _cor=_args.length>=4 ? _args[3] : 'branco';
+      if(_willogDrawCirculo(_x,_y,_r,_cor,env)) hasOutputRef.value=true;
+    }catch(e){ logToConsole('Erro em desenhe.circulo: '+e.message,'error'); }
+    return;
+  }
+  if(isDesenheRetanguloStmt(stmt)){
+    const _args=parseDesenheArgs(stmt);
+    if(_args.length<4){ logToConsole('Erro: desenhe.retangulo precisa de x,y,largura,altura[,cor]','error'); return; }
+    try{
+      const _x=evaluateExpression(_args[0], env);
+      const _y=evaluateExpression(_args[1], env);
+      const _w=evaluateExpression(_args[2], env);
+      const _h=evaluateExpression(_args[3], env);
+      const _cor=_args.length>=5 ? _args[4] : 'branco';
+      if(_willogDrawRetangulo(_x,_y,_w,_h,_cor,env)) hasOutputRef.value=true;
+    }catch(e){ logToConsole('Erro em desenhe.retangulo: '+e.message,'error'); }
+    return;
+  }
+  if(isDesenhePontoStmt(stmt)){
+    const _args=parseDesenheArgs(stmt);
+    if(_args.length<2){ logToConsole('Erro: desenhe.ponto precisa de x,y[,cor]','error'); return; }
+    try{
+      const _x=evaluateExpression(_args[0], env);
+      const _y=evaluateExpression(_args[1], env);
+      const _cor=_args.length>=3 ? _args[2] : 'branco';
+      if(_willogDrawPonto(_x,_y,_cor,env)) hasOutputRef.value=true;
+    }catch(e){ logToConsole('Erro em desenhe.ponto: '+e.message,'error'); }
+    return;
+  }
   if(isGotoStmt(stmt)){
     const target=parseGoto(stmt);
     const dest = (typeof labelMap !== 'undefined' ? (labelMap[target] ?? labelMap[target.toLowerCase()]) : undefined);
@@ -4307,7 +4669,49 @@ async function runWillog(){
       }
       if(isCronometroIniciarStmt(raw)){ cronometroIniciar(); i++; continue; }
       if(isCronometroPararStmt(raw)){ cronometroParar(); i++; continue; }
-      if(isJanelaLine(raw)){ const cent=getJanelaCentraliza(raw); ativarJanela(cent); i++; continue; }
+      if(isJanelaLine(raw)){ const cent=getJanelaCentraliza(raw); ativarJanela(cent); if(!cent) hasOutputRef.value=true; i++; continue; }
+      if(isTelaLimpeStmt(raw)){ if(_willogTelaLimpe()) hasOutputRef.value=true; i++; continue; }
+      if(isTelaCorStmt(raw)){ const _a=parseTelaCorArg(raw); if(_willogTelaCor(_a, env)) hasOutputRef.value=true; i++; continue; }
+      if(isDesenheLinhaStmt(raw)){
+        const _args=parseDesenheArgs(raw);
+        if(_args.length<4){ logToConsole('Erro na linha '+lineNo+': desenhe.linha precisa de x1,y1,x2,y2[,cor]','error'); i++; continue; }
+        try{
+          const _x1=evaluateExpression(_args[0], env), _y1=evaluateExpression(_args[1], env), _x2=evaluateExpression(_args[2], env), _y2=evaluateExpression(_args[3], env);
+          const _cor=_args.length>=5 ? _args[4] : 'branco';
+          if(_willogDrawLinha(_x1,_y1,_x2,_y2,_cor,env)) hasOutputRef.value=true;
+        }catch(e){ logToConsole('Erro na linha '+lineNo+': '+e.message,'error'); }
+        i++; continue;
+      }
+      if(isDesenheCirculoStmt(raw)){
+        const _args=parseDesenheArgs(raw);
+        if(_args.length<3){ logToConsole('Erro na linha '+lineNo+': desenhe.circulo precisa de x,y,raio[,cor]','error'); i++; continue; }
+        try{
+          const _x=evaluateExpression(_args[0], env), _y=evaluateExpression(_args[1], env), _r=evaluateExpression(_args[2], env);
+          const _cor=_args.length>=4 ? _args[3] : 'branco';
+          if(_willogDrawCirculo(_x,_y,_r,_cor,env)) hasOutputRef.value=true;
+        }catch(e){ logToConsole('Erro na linha '+lineNo+': '+e.message,'error'); }
+        i++; continue;
+      }
+      if(isDesenheRetanguloStmt(raw)){
+        const _args=parseDesenheArgs(raw);
+        if(_args.length<4){ logToConsole('Erro na linha '+lineNo+': desenhe.retangulo precisa de x,y,largura,altura[,cor]','error'); i++; continue; }
+        try{
+          const _x=evaluateExpression(_args[0], env), _y=evaluateExpression(_args[1], env), _w=evaluateExpression(_args[2], env), _h=evaluateExpression(_args[3], env);
+          const _cor=_args.length>=5 ? _args[4] : 'branco';
+          if(_willogDrawRetangulo(_x,_y,_w,_h,_cor,env)) hasOutputRef.value=true;
+        }catch(e){ logToConsole('Erro na linha '+lineNo+': '+e.message,'error'); }
+        i++; continue;
+      }
+      if(isDesenhePontoStmt(raw)){
+        const _args=parseDesenheArgs(raw);
+        if(_args.length<2){ logToConsole('Erro na linha '+lineNo+': desenhe.ponto precisa de x,y[,cor]','error'); i++; continue; }
+        try{
+          const _x=evaluateExpression(_args[0], env), _y=evaluateExpression(_args[1], env);
+          const _cor=_args.length>=3 ? _args[2] : 'branco';
+          if(_willogDrawPonto(_x,_y,_cor,env)) hasOutputRef.value=true;
+        }catch(e){ logToConsole('Erro na linha '+lineNo+': '+e.message,'error'); }
+        i++; continue;
+      }
       if(isLabelLine(raw)){
         i++;
         continue;
