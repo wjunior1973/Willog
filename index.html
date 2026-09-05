@@ -99,6 +99,9 @@
     font-family: 'JetBrains Mono', monospace; font-size: 19px; font-weight:700; border-radius: 6px; box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
     flex-shrink: 0;
   }
+  .logo-img {
+    height: 36px; width: auto; max-height: 44px; object-fit: contain; border-radius: 6px; box-shadow: 2px 2px 0 rgba(0,0,0,0.2); flex-shrink: 0; background: white; display: block;
+  }
   .logo small { font-size: 11px; opacity: 0.9; font-weight:400; letter-spacing:0.3px; display:block; margin-top:-3px; }
   .header-right { margin-left:auto; display:flex; gap:10px; align-items:center; font-family:'JetBrains Mono', monospace; font-size:14px; }
   .btn-close {
@@ -455,7 +458,8 @@
 <body data-theme="light">
   <header class="header">
     <div class="logo">
-      <div class="logo-icon">W</div>
+      <img class="logo-img" src="https://raw.githubusercontent.com/wjunior1973/Willog/main/Picture.png" alt="Willog Logo" onerror="this.style.display='none'; var fb=document.getElementById('logoFallback'); if(fb) fb.style.display='grid';">
+      <div class="logo-icon" id="logoFallback" style="display:none">W</div>
       <div>WILLOG <small>Linguagem de programação - Editor e interpretador</small></div>
     </div>
     <div class="header-right">
