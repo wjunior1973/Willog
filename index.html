@@ -3111,9 +3111,20 @@ function showLeia(promptText){
   });
 }
 
+function willogCoerceLeiaValue(raw){
+  if(raw===null||raw===undefined) return "";
+  let s = String(raw).trim();
+  if(s==="") return "";
+  if(!/^[+-]?\d+([.,]\d+)?$/.test(s)) return raw;
+  let normalized = s.replace(",", ".");
+  let n = Number(normalized);
+  if(isNaN(n) || !isFinite(n)) return raw;
+  return n;
+}
+
 function hideLeia(result){
   document.getElementById('modalLeia').style.display='none';
-  if(leiaResolver){ const r=leiaResolver; leiaResolver=null; r(result ?? ''); }
+  if(leiaResolver){ const r=leiaResolver; leiaResolver=null; r(willogCoerceLeiaValue(result ?? '')); }
 }
 
 function evaluateExpression(expr, env){
@@ -5116,7 +5127,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
           hasOutputRef.value=true;
         }else{
           const args=splitMostreArgs(rest);
-          const vals=[]; for(let a of args){ const t=a.trim(); let v; if(/^\s*leia\b/i.test(t)){ const pr=parseLeiaPrompt(t); v=await showLeia(pr); } else { v=evaluateExpression(t, env); } vals.push({v, arg:t}); }
+          const vals=[]; for(let a of args){ const t=a.trim(); let v; if(/^\s*leia\b/i.test(t)){ const pr=parseLeiaPrompt(t); v=willogCoerceLeiaValue(await showLeia(pr)); } else { v=evaluateExpression(t, env); } vals.push({v, arg:t}); }
           const displayVals=vals.map(({v,arg})=>{
             if(typeof v==='number') return formatWillogNumber(v, arg);
             return willogDisplay(v);
@@ -5145,7 +5156,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       const rhs=parts[parts.length-1].trim();
       if(rhs==='') return;
       try{
-        let val; if(/^\s*leia\b/i.test(rhs)){ const pr=parseLeiaPrompt(rhs); val=await showLeia(pr); } else { val=evaluateExpression(rhs, env); }
+        let val; if(/^\s*leia\b/i.test(rhs)){ const pr=parseLeiaPrompt(rhs); val=willogCoerceLeiaValue(await showLeia(pr)); } else { val=evaluateExpression(rhs, env); }
         for(let i=0;i<parts.length-1;i++){
           const varPath=parts[i].trim();
           if(varPath==='') continue;
