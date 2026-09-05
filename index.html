@@ -1012,20 +1012,21 @@ verificar nota:
 <tr><td><code class="syntax">abs(x)</code></td><td>Valor absoluto</td><td><code class="example">abs(-2)</code> <span class="saida">→ 2</span></td></tr>
 <tr><td><code class="syntax">adicionarDias(data, dias)</code></td><td>Adiciona dias a uma data</td><td><code class="example">adicionarDias("14/04/1973",19269)</code> <span class="saida">→ 15/01/2026</span></td></tr>
 <tr><td><code class="syntax">agora()</code></td><td>Data e hora atuais</td><td><code class="example">agora()</code> <span class="saida">→ 15/01/2026 14:30:07</span></td></tr>
+<tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr>
 <tr><td><code class="syntax">amostra(lista, n)</code></td><td>Amostra aleatória sem repetição</td><td><code class="example">amostra([1,2,3,4,5,6],2)</code> <span class="saida">→ 5,3</span></td></tr>
 <tr><td><code class="syntax">amostras(lista, tam, qtd)</code></td><td>Qtd amostras de tamanho tam</td><td><code class="example">amostras([1,2,3,4,5,6],3,2)</code> <span class="saida">→ 6,1,2 | 5,6,3</span></td></tr>
-<tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr>
 <tr><td><code class="syntax">anosEntre(data1, data2)</code></td><td>Anos entre duas datas</td><td><code class="example">anosEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 52.7917808219</span></td></tr>
 <tr><td><code class="syntax">aparar(texto)</code></td><td>Remove espaços no início e fim</td><td><code class="example">aparar("     olá    ")</code> <span class="saida">→ olá</span></td></tr>
 <tr><td><code class="syntax">arredondar(x, casas)</code></td><td>Arredonda para n casas decimais</td><td><code class="example">arredondar(5.33333,2)</code> <span class="saida">→ 5.33</span><br><code class="example">arredondar(1.66666,3)</code> <span class="saida">→ 1.667</span></td></tr>
 <tr><td><code class="syntax">captureTecla()</code></td><td>Retorna a última tecla capturada por <code>espereTecla()</code></td><td><code class="example">espereTecla(); tecla=captureTecla()</code> <span class="saida">→ "a"</span><br><code class="example">espereTecla("enter"); captureTecla()</code> <span class="saida">→ "Enter"</span></td></tr>
 <tr><td><code class="syntax">começaCom(texto, prefixo)</code></td><td>Verifica se texto começa com prefixo (ignora maiúsculas/minúsculas)</td><td><code class="example">começaCom("Willog","wil")</code> <span class="saida">→ verdadeiro</span><br><code class="example">começaCom("Willog","log")</code> <span class="saida">→ falso</span></td></tr>
 <tr><td><code class="syntax">contarItem(lista, item)</code></td><td>Conta ocorrências de item</td><td><code class="example">contarItem("especialidade","e")</code> <span class="saida">→ 3</span><br><code class="example">contarItem(["a","b","c","b"],"b")</code> <span class="saida">→ 2</span></td></tr>
+<tr><td><code class="syntax">conte(lista)</code></td><td>Quantidade de elementos</td><td><code class="example">conte([1,3,5,7])</code> <span class="saida">→ 4</span></td></tr>
 <tr><td><code class="syntax">cos(x)</code></td><td>Cosseno (graus)</td><td><code class="example">cos(60)</code> <span class="saida">→ 0.5</span></td></tr>
 <tr><td><code class="syntax">data()</code></td><td>Data atual</td><td><code class="example">data()</code> <span class="saida">→ 15/01/2026</span></td></tr>
 <tr><td><code class="syntax">decimal(x)</code></td><td>Parte decimal</td><td><code class="example">decimal(2.5)</code> <span class="saida">→ 0.5</span></td></tr>
-<tr><td><code class="syntax">diasEntre(data1, data2)</code></td><td>Dias entre duas datas</td><td><code class="example">diasEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 19269</span></td></tr>
 <tr><td><code class="syntax">diaSemana(data)</code></td><td>Dia da semana (domingo a sábado)</td><td><code class="example">diaSemana("15/01/2026")</code> <span class="saida">→ quinta</span></td></tr>
+<tr><td><code class="syntax">diasEntre(data1, data2)</code></td><td>Dias entre duas datas</td><td><code class="example">diasEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 19269</span></td></tr>
 <tr><td><code class="syntax">distintos(valor)</code></td><td>Remove duplicatas mantendo ordem</td><td><code class="example">distintos("banana")</code> <span class="saida">→ ban</span><br><code class="example">distintos(123345456)</code> <span class="saida">→ 123456</span></td></tr>
 <tr><td><code class="syntax">divida(texto, separador)</code></td><td>Divide texto em lista</td><td><code class="example">divida("a,b,c",",")</code> <span class="saida">→ a,b,c</span><br><code class="example">divida("abc",",")</code> <span class="saida">→ a,b,c</span></td></tr>
 <tr><td><code class="syntax">éÍmpar(x)</code></td><td>Verifica se é ímpar</td><td><code class="example">éÍmpar(511)</code> <span class="saida">→ verdadeiro</span></td></tr>
@@ -1041,6 +1042,8 @@ verificar nota:
 <tr><td><code class="syntax">formate(valor, casas)</code></td><td>Formata número truncando para n casas decimais</td><td><code class="example">formate(3.141502,3)</code> <span class="saida">→ 3.141</span><br><code class="example">formate(3.1,3)</code> <span class="saida">→ 3.100</span></td></tr>
 <tr><td><code class="syntax">fração(x)</code></td><td>Converte para fração</td><td><code class="example">fração(0.333)</code> <span class="saida">→ 1/3</span></td></tr>
 <tr><td><code class="syntax">hora()</code></td><td>Hora atual</td><td><code class="example">hora()</code> <span class="saida">→ 14:30:07</span></td></tr>
+<tr><td><code class="syntax">indiceDe(lista, valor)</code></td><td>Índice do valor (0 = primeiro, -1 se não encontrar)</td><td><code class="example">indiceDe([1,2,3,4],3)</code> <span class="saida">→ 2</span></td></tr>
+<tr><td><code class="syntax">insira(lista, pos, valor)</code></td><td>Insere valor após posição pos</td><td><code class="example">insira([1,2,3,4],1,9)</code> <span class="saida">→ 1,2,9,3,4</span></td></tr>
 <tr><td><code class="syntax">inteiro(x)</code></td><td>Parte inteira</td><td><code class="example">inteiro(2.7)</code> <span class="saida">→ 2</span></td></tr>
 <tr><td><code class="syntax">inverta(texto)</code></td><td>Inverte texto/lista</td><td><code class="example">inverta("Willog")</code> <span class="saida">→ golliW</span></td></tr>
 <tr><td><code class="syntax">junte(lista, separador)</code></td><td>Junta lista em texto</td><td><code class="example">junte(["a","b"],"-")</code> <span class="saida">→ a-b</span></td></tr>
@@ -1055,6 +1058,7 @@ verificar nota:
 <tr><td><code class="syntax">mínimo(...valores)</code></td><td>Menor valor</td><td><code class="example">mínimo(-3,1,2)</code> <span class="saida">→ -3</span></td></tr>
 <tr><td><code class="syntax">minúsculo(texto)</code></td><td>Converte para minúsculas</td><td><code class="example">minúsculo("WILLOG")</code> <span class="saida">→ willog</span></td></tr>
 <tr><td><code class="syntax">mmc(a, b, ...)</code></td><td>Mínimo múltiplo comum</td><td><code class="example">mmc(2,3,5)</code> <span class="saida">→ 30</span></td></tr>
+<tr><td><code class="syntax">ordeneDecrescente(lista)</code></td><td>Ordena decrescente</td><td><code class="example">ordeneDecrescente([2,4,6,8,10])</code> <span class="saida">→ 10,8,6,4,2</span></td></tr>
 <tr><td><code class="syntax">paraNúmero(x)</code></td><td>Converte texto para número</td><td><code class="example">paraNúmero("12.5")</code> <span class="saida">→ 12.5</span><br><code class="example">paraNúmero("12,5")*2</code> <span class="saida">→ 25</span></td></tr>
 <tr><td><code class="syntax">paraTexto(x)</code></td><td>Converte número para texto</td><td><code class="example">paraTexto(8)</code> <span class="saida">→ "8"</span><br><code class="example">paraTexto(8)*3</code> <span class="saida">→ 888</span></td></tr>
 <tr><td><code class="syntax">piso(x)</code></td><td>Arredonda para baixo (floor)</td><td><code class="example">piso(2.3)</code> <span class="saida">→ 2</span><br><code class="example">piso(2.9)</code> <span class="saida">→ 2</span></td></tr>
@@ -1062,8 +1066,9 @@ verificar nota:
 <tr><td><code class="syntax">primos(n)</code></td><td>Primeiros n primos</td><td><code class="example">primos(6)</code> <span class="saida">→ 2,3,5,7,11,13</span></td></tr>
 <tr><td><code class="syntax">produto(lista)</code></td><td>Produto dos elementos</td><td><code class="example">produto([1,3,5,7])</code> <span class="saida">→ 105</span></td></tr>
 <tr><td><code class="syntax">raizc(x)</code></td><td>Raiz cúbica — vetorizada</td><td><code class="example">raizc(27)</code> <span class="saida">→ 3</span></td></tr>
-<tr><td><code class="syntax">repita(texto, n)</code></td><td>Repete texto n vezes</td><td><code class="example">repita("oi",4)</code> <span class="saida">→ oioioioi</span></td></tr>
 <tr><td><code class="syntax">raizq(x)</code></td><td>Raiz quadrada — vetorizada</td><td><code class="example">raizq(16)</code> <span class="saida">→ 4</span><br><code class="example">raizq([1,4,9])</code> <span class="saida">→ 1, 2, 3</span></td></tr>
+<tr><td><code class="syntax">remova(lista, valor)</code></td><td>Remove primeira ocorrência</td><td><code class="example">remova([1,2,3,4,5,6],5)</code> <span class="saida">→ 1,2,3,4,6</span></td></tr>
+<tr><td><code class="syntax">repita(texto, n)</code></td><td>Repete texto n vezes</td><td><code class="example">repita("oi",4)</code> <span class="saida">→ oioioioi</span></td></tr>
 <tr><td><code class="syntax">semEspaços(texto)</code></td><td>Remove todos os espaços</td><td><code class="example">semEspaços("1 2 3 4 5 6")</code> <span class="saida">→ 123456</span></td></tr>
 <tr><td><code class="syntax">sen(x)</code></td><td>Seno (graus)</td><td><code class="example">sen(60)</code> <span class="saida">→ 0.86602540378</span></td></tr>
 <tr><td><code class="syntax">soma(lista)</code></td><td>Soma elementos (aceita lista ou valores)</td><td><code class="example">soma([1,2,3,4])</code> <span class="saida">→ 10</span><br><code class="example">soma(1,2,3)</code> <span class="saida">→ 6</span></td></tr>
@@ -1073,11 +1078,6 @@ verificar nota:
 <tr><td><code class="syntax">terminaCom(texto, sufixo)</code></td><td>Verifica se texto termina com sufixo (ignora maiúsculas/minúsculas)</td><td><code class="example">terminaCom("Willog","log")</code> <span class="saida">→ verdadeiro</span><br><code class="example">terminaCom("Willog","llo")</code> <span class="saida">→ falso</span></td></tr>
 <tr><td><code class="syntax">teto(x)</code></td><td>Arredonda para cima (ceil)</td><td><code class="example">teto(2.3)</code> <span class="saida">→ 3</span><br><code class="example">teto(2.9)</code> <span class="saida">→ 3</span></td></tr>
 <tr><td><code class="syntax">tipo(x)</code></td><td>Retorna tipo: número, texto, booleano ou lista</td><td><code class="example">tipo(7)</code> <span class="saida">→ número</span><br><code class="example">tipo("Olá!")</code> <span class="saida">→ texto</span><br><code class="example">tipo(4>5)</code> <span class="saida">→ booleano</span><br><code class="example">tipo([1,2,3])</code> <span class="saida">→ lista</span></td></tr>
-        <tr><td><code class="syntax">indiceDe(lista, valor)</code></td><td>Índice do valor (0 = primeiro, -1 se não encontrar)</td><td><code class="example">indiceDe([1,2,3,4],3)</code> <span class="saida">→ 2</span></td></tr>
-<tr><td><code class="syntax">insira(lista, pos, valor)</code></td><td>Insere valor após posição pos</td><td><code class="example">insira([1,2,3,4],1,9)</code> <span class="saida">→ 1,2,9,3,4</span></td></tr>
-<tr><td><code class="syntax">remova(lista, valor)</code></td><td>Remove primeira ocorrência</td><td><code class="example">remova([1,2,3,4,5,6],5)</code> <span class="saida">→ 1,2,3,4,6</span></td></tr>
-<tr><td><code class="syntax">conte(lista)</code></td><td>Quantidade de elementos</td><td><code class="example">conte([1,3,5,7])</code> <span class="saida">→ 4</span></td></tr>
-<tr><td><code class="syntax">ordeneDecrescente(lista)</code></td><td>Ordena decrescente</td><td><code class="example">ordeneDecrescente([2,4,6,8,10])</code> <span class="saida">→ 10,8,6,4,2</span></td></tr>
 </table>
 
       </div>
