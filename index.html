@@ -576,6 +576,13 @@ mostre "arquivo pronto para uso"</span>
 abrir "dados.csv"</span>
 <span class="saida">-> Abre notas.txt como $notas e dados.csv como $dados</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">O handle <code>$arquivo</code> é derivado do nome sem extensão (<code>arquivo.txt</code> → <code>$arquivo</code>). Também suporta <code>$1</code>, <code>$2</code> etc. O arquivo permanece aberto até <code>fechar</code>.</p>
+        <h3>bipe</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">bipe</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">bipe</span>
+<span class="saida">-> toca bipe padrão (800 Hz por 0,2s)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Toca um bipe padrão. Não depende de <code>janela</code>. Pode ser usado para feedback sonoro.</p>
         <h3>captureTecla</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">&lt;variável&gt; = captureTecla</span><span class="example">()</span></pre>
@@ -664,13 +671,29 @@ desenhe.ponto(100,100,amarelo)</span>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
         <h3>desenhe.retangulo</h3>
         <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">desenhe.retangulo</span><span class="example">(x, y, largura, altura, cor)</span></pre>
+        <pre><span class="syntax">desenhe.retangulo</span><span class="example">(x1, y1, x2, y2, cor)</span></pre>
         <p class="code-label">Exemplo</p>
         <pre><span class="example">janela()
 tela.limpe
-desenhe.retangulo(20,30,120,80,verde)</span>
-<span class="saida">-> desenha retângulo verde em (20,30) com 120×80</span></pre>
+desenhe.retangulo(20,30,140,110,verde)</span>
+<span class="saida">-> desenha retângulo verde de (20,30) até (140,110)</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        
+        <h3>desenhe.texto</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">desenhe.texto</span><span class="example">("texto", x, y [, tamanho] [, cor])</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela()
+tela.limpe
+desenhe.texto("Olá, Willog!", 100, 100, 20, vermelho)</span>
+<span class="saida">-> escreve "Olá, Willog!" em (100,100) tamanho 20 vermelho</span>
+
+<span class="example">desenhe.texto("Título", 50, 50, 30, azul)</span>
+<span class="saida">-> texto azul tamanho 30 em (50,50)</span>
+
+<span class="example">desenhe.texto("Sem tamanho", 10, 10)</span>
+<span class="saida">-> usa tamanho 12 e cor branco por padrão</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Tamanho padrão <code>12</code>, cor padrão <code>branco</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>. Também aceita <code>desenha.texto</code>.</p>
         <h3>enquanto</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">enquanto</span> <span class="example">&lt;condição&gt;:</span>
@@ -940,6 +963,20 @@ tela.limpe
 desenhe.circulo(100,100,40,amarelo)</span>
 <span class="saida">-> limpa a tela com a cor de fundo (preto por padrão) e desenha círculo amarelo</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Limpa toda a área gráfica preenchendo com a cor definida por <code>tela.cor()</code> (padrão <code>preto</code>). Deve ser usado após <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        <h3>toque</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">toque</span><span class="example">(frequência, duração)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">toque(440,1)</span>
+<span class="saida">-> toca 440 Hz (Lá) durante 1 segundo</span>
+
+<span class="example">toque(880,0.5)</span>
+<span class="saida">-> 880 Hz por 0,5s</span>
+
+<span class="example">freq=523
+toque(freq,0.3)</span>
+<span class="saida">-> Dó 523 Hz por 0,3s</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Toca frequência sonora entre <code>20</code> e <code>20000</code> Hz durante <code>n</code> segundos (máx. 10s). Usa Web Audio API. Frequência e duração podem ser variáveis/expressões. Aguarda a duração antes de prosseguir.</p>
         <h3>vá para</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">:rótulo</span>
@@ -971,30 +1008,37 @@ verificar nota:
 <tr><td><code class="syntax">abs(x)</code></td><td>Valor absoluto</td><td><code class="example">abs(-2)</code> <span class="saida">→ 2</span></td></tr>
 <tr><td><code class="syntax">adicionarDias(data, dias)</code></td><td>Adiciona dias a uma data</td><td><code class="example">adicionarDias("14/04/1973",19269)</code> <span class="saida">→ 15/01/2026</span></td></tr>
 <tr><td><code class="syntax">agora()</code></td><td>Data e hora atuais</td><td><code class="example">agora()</code> <span class="saida">→ 15/01/2026 14:30:07</span></td></tr>
+<tr><td><code class="syntax">amostra(lista, n)</code></td><td>Amostra aleatória sem repetição</td><td><code class="example">amostra([1,2,3,4,5,6],2)</code> <span class="saida">→ 5,3</span></td></tr>
+<tr><td><code class="syntax">amostras(lista, tam, qtd)</code></td><td>Qtd amostras de tamanho tam</td><td><code class="example">amostras([1,2,3,4,5,6],3,2)</code> <span class="saida">→ 6,1,2 | 5,6,3</span></td></tr>
 <tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr>
 <tr><td><code class="syntax">anosEntre(data1, data2)</code></td><td>Anos entre duas datas</td><td><code class="example">anosEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 52.7917808219</span></td></tr>
 <tr><td><code class="syntax">aparar(texto)</code></td><td>Remove espaços no início e fim</td><td><code class="example">aparar("     olá    ")</code> <span class="saida">→ olá</span></td></tr>
 <tr><td><code class="syntax">arredondar(x, casas)</code></td><td>Arredonda para n casas decimais</td><td><code class="example">arredondar(5.33333,2)</code> <span class="saida">→ 5.33</span><br><code class="example">arredondar(1.66666,3)</code> <span class="saida">→ 1.667</span></td></tr>
 <tr><td><code class="syntax">captureTecla()</code></td><td>Retorna a última tecla capturada por <code>espereTecla()</code></td><td><code class="example">espereTecla(); tecla=captureTecla()</code> <span class="saida">→ "a"</span><br><code class="example">espereTecla("enter"); captureTecla()</code> <span class="saida">→ "Enter"</span></td></tr>
+<tr><td><code class="syntax">começaCom(texto, prefixo)</code></td><td>Verifica se texto começa com prefixo (ignora maiúsculas/minúsculas)</td><td><code class="example">começaCom("Willog","wil")</code> <span class="saida">→ verdadeiro</span><br><code class="example">começaCom("Willog","log")</code> <span class="saida">→ falso</span></td></tr>
 <tr><td><code class="syntax">contarItem(lista, item)</code></td><td>Conta ocorrências de item</td><td><code class="example">contarItem("especialidade","e")</code> <span class="saida">→ 3</span><br><code class="example">contarItem(["a","b","c","b"],"b")</code> <span class="saida">→ 2</span></td></tr>
 <tr><td><code class="syntax">cos(x)</code></td><td>Cosseno (graus)</td><td><code class="example">cos(60)</code> <span class="saida">→ 0.5</span></td></tr>
 <tr><td><code class="syntax">data()</code></td><td>Data atual</td><td><code class="example">data()</code> <span class="saida">→ 15/01/2026</span></td></tr>
 <tr><td><code class="syntax">decimal(x)</code></td><td>Parte decimal</td><td><code class="example">decimal(2.5)</code> <span class="saida">→ 0.5</span></td></tr>
 <tr><td><code class="syntax">diasEntre(data1, data2)</code></td><td>Dias entre duas datas</td><td><code class="example">diasEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 19269</span></td></tr>
+<tr><td><code class="syntax">diaSemana(data)</code></td><td>Dia da semana (domingo a sábado)</td><td><code class="example">diaSemana("15/01/2026")</code> <span class="saida">→ quinta</span></td></tr>
 <tr><td><code class="syntax">distintos(valor)</code></td><td>Remove duplicatas mantendo ordem</td><td><code class="example">distintos("banana")</code> <span class="saida">→ ban</span><br><code class="example">distintos(123345456)</code> <span class="saida">→ 123456</span></td></tr>
 <tr><td><code class="syntax">divida(texto, separador)</code></td><td>Divide texto em lista</td><td><code class="example">divida("a,b,c",",")</code> <span class="saida">→ a,b,c</span><br><code class="example">divida("abc",",")</code> <span class="saida">→ a,b,c</span></td></tr>
 <tr><td><code class="syntax">éÍmpar(x)</code></td><td>Verifica se é ímpar</td><td><code class="example">éÍmpar(511)</code> <span class="saida">→ verdadeiro</span></td></tr>
 <tr><td><code class="syntax">éLista(x)</code></td><td>Verifica se é lista</td><td><code class="example">éLista([1,3,5,7])</code> <span class="saida">→ verdadeiro</span></td></tr>
 <tr><td><code class="syntax">embaralhe(valor)</code></td><td>Embaralha lista/texto/número</td><td><code class="example">embaralhe([1,2,3,4,5])</code> <span class="saida">→ 3,1,5,2,4</span><br><code class="example">embaralhe("banana")</code> <span class="saida">→ annaba</span></td></tr>
+<tr><td><code class="syntax">encontre(texto, busca)</code></td><td>Posição da primeira ocorrência (0 = primeiro caractere, -1 se não encontrar)</td><td><code class="example">encontre("Willog","llog")</code> <span class="saida">→ 2</span><br><code class="example">encontre("Willog","x")</code> <span class="saida">→ -1</span><br><code class="example">encontre([1,2,3,2],2)</code> <span class="saida">→ 1</span></td></tr>
 <tr><td><code class="syntax">éNúmero(x)</code></td><td>Verifica se é número</td><td><code class="example">éNúmero(234)</code> <span class="saida">→ verdadeiro</span><br><code class="example">éNúmero("123")</code> <span class="saida">→ falso</span></td></tr>
 <tr><td><code class="syntax">éPar(x)</code></td><td>Verifica se é par</td><td><code class="example">éPar(1023)</code> <span class="saida">→ falso</span></td></tr>
 <tr><td><code class="syntax">éPrimo(x)</code></td><td>Verifica se é primo</td><td><code class="example">éPrimo(3)</code> <span class="saida">→ verdadeiro</span></td></tr>
 <tr><td><code class="syntax">éTexto(x)</code></td><td>Verifica se é texto</td><td><code class="example">éTexto("Willog")</code> <span class="saida">→ verdadeiro</span></td></tr>
 <tr><td><code class="syntax">fatorial(x)</code></td><td>Fatorial</td><td><code class="example">fatorial(4)</code> <span class="saida">→ 24</span></td></tr>
 <tr><td><code class="syntax">filtrar(lista, condição)</code></td><td>Filtra por condição ou valor</td><td><code class="example">filtrar([1,2,3,4],"x>2")</code> <span class="saida">→ 3,4</span><br><code class="example">filtrar("maçaneta","a")</code> <span class="saida">→ mçnet</span></td></tr>
+<tr><td><code class="syntax">formate(valor, casas)</code></td><td>Formata número truncando para n casas decimais</td><td><code class="example">formate(3.141502,3)</code> <span class="saida">→ 3.141</span><br><code class="example">formate(3.1,3)</code> <span class="saida">→ 3.100</span></td></tr>
 <tr><td><code class="syntax">fração(x)</code></td><td>Converte para fração</td><td><code class="example">fração(0.333)</code> <span class="saida">→ 1/3</span></td></tr>
 <tr><td><code class="syntax">hora()</code></td><td>Hora atual</td><td><code class="example">hora()</code> <span class="saida">→ 14:30:07</span></td></tr>
 <tr><td><code class="syntax">inteiro(x)</code></td><td>Parte inteira</td><td><code class="example">inteiro(2.7)</code> <span class="saida">→ 2</span></td></tr>
+<tr><td><code class="syntax">inverta(texto)</code></td><td>Inverte texto/lista</td><td><code class="example">inverta("Willog")</code> <span class="saida">→ golliW</span></td></tr>
 <tr><td><code class="syntax">junte(lista, separador)</code></td><td>Junta lista em texto</td><td><code class="example">junte(["a","b"],"-")</code> <span class="saida">→ a-b</span></td></tr>
 <tr><td><code class="syntax">ln(x)</code></td><td>Logaritmo natural</td><td><code class="example">ln(2)</code> <span class="saida">→ 0.69314718056</span></td></tr>
 <tr><td><code class="syntax">log(base, valor)</code></td><td>Logaritmo</td><td><code class="example">log(10,2)</code> <span class="saida">→ 0.30102999566</span></td></tr>
@@ -1010,16 +1054,27 @@ verificar nota:
 <tr><td><code class="syntax">paraNúmero(x)</code></td><td>Converte texto para número</td><td><code class="example">paraNúmero("12.5")</code> <span class="saida">→ 12.5</span><br><code class="example">paraNúmero("12,5")*2</code> <span class="saida">→ 25</span></td></tr>
 <tr><td><code class="syntax">paraTexto(x)</code></td><td>Converte número para texto</td><td><code class="example">paraTexto(8)</code> <span class="saida">→ "8"</span><br><code class="example">paraTexto(8)*3</code> <span class="saida">→ 888</span></td></tr>
 <tr><td><code class="syntax">piso(x)</code></td><td>Arredonda para baixo (floor)</td><td><code class="example">piso(2.3)</code> <span class="saida">→ 2</span><br><code class="example">piso(2.9)</code> <span class="saida">→ 2</span></td></tr>
+<tr><td><code class="syntax">posição(texto, busca)</code></td><td>Posição da busca em texto (0 = primeiro) ou caractere na posição se busca for número</td><td><code class="example">posição("Willog","i")</code> <span class="saida">→ 1</span><br><code class="example">posição("Willog",1)</code> <span class="saida">→ i</span></td></tr>
 <tr><td><code class="syntax">primos(n)</code></td><td>Primeiros n primos</td><td><code class="example">primos(6)</code> <span class="saida">→ 2,3,5,7,11,13</span></td></tr>
+<tr><td><code class="syntax">produto(lista)</code></td><td>Produto dos elementos</td><td><code class="example">produto([1,3,5,7])</code> <span class="saida">→ 105</span></td></tr>
 <tr><td><code class="syntax">raizc(x)</code></td><td>Raiz cúbica — vetorizada</td><td><code class="example">raizc(27)</code> <span class="saida">→ 3</span></td></tr>
+<tr><td><code class="syntax">repita(texto, n)</code></td><td>Repete texto n vezes</td><td><code class="example">repita("oi",4)</code> <span class="saida">→ oioioioi</span></td></tr>
 <tr><td><code class="syntax">raizq(x)</code></td><td>Raiz quadrada — vetorizada</td><td><code class="example">raizq(16)</code> <span class="saida">→ 4</span><br><code class="example">raizq([1,4,9])</code> <span class="saida">→ 1, 2, 3</span></td></tr>
 <tr><td><code class="syntax">semEspaços(texto)</code></td><td>Remove todos os espaços</td><td><code class="example">semEspaços("1 2 3 4 5 6")</code> <span class="saida">→ 123456</span></td></tr>
 <tr><td><code class="syntax">sen(x)</code></td><td>Seno (graus)</td><td><code class="example">sen(60)</code> <span class="saida">→ 0.86602540378</span></td></tr>
+<tr><td><code class="syntax">soma(lista)</code></td><td>Soma elementos (aceita lista ou valores)</td><td><code class="example">soma([1,2,3,4])</code> <span class="saida">→ 10</span><br><code class="example">soma(1,2,3)</code> <span class="saida">→ 6</span></td></tr>
 <tr><td><code class="syntax">substitua(texto, antigo, novo)</code></td><td>Substitui texto</td><td><code class="example">substitua("a-b-c","-"," ")</code> <span class="saida">→ a b c</span></td></tr>
+<tr><td><code class="syntax">tamanho(texto)</code></td><td>Tamanho do texto/lista</td><td><code class="example">tamanho("Willog")</code> <span class="saida">→ 6</span></td></tr>
 <tr><td><code class="syntax">tan(x)</code></td><td>Tangente (graus)</td><td><code class="example">tan(60)</code> <span class="saida">→ 1.73205080757</span></td></tr>
+<tr><td><code class="syntax">terminaCom(texto, sufixo)</code></td><td>Verifica se texto termina com sufixo (ignora maiúsculas/minúsculas)</td><td><code class="example">terminaCom("Willog","log")</code> <span class="saida">→ verdadeiro</span><br><code class="example">terminaCom("Willog","llo")</code> <span class="saida">→ falso</span></td></tr>
 <tr><td><code class="syntax">teto(x)</code></td><td>Arredonda para cima (ceil)</td><td><code class="example">teto(2.3)</code> <span class="saida">→ 3</span><br><code class="example">teto(2.9)</code> <span class="saida">→ 3</span></td></tr>
 <tr><td><code class="syntax">tipo(x)</code></td><td>Retorna tipo: número, texto, booleano ou lista</td><td><code class="example">tipo(7)</code> <span class="saida">→ número</span><br><code class="example">tipo("Olá!")</code> <span class="saida">→ texto</span><br><code class="example">tipo(4>5)</code> <span class="saida">→ booleano</span><br><code class="example">tipo([1,2,3])</code> <span class="saida">→ lista</span></td></tr>
-        </table>
+        <tr><td><code class="syntax">indiceDe(lista, valor)</code></td><td>Índice do valor (0 = primeiro, -1 se não encontrar)</td><td><code class="example">indiceDe([1,2,3,4],3)</code> <span class="saida">→ 2</span></td></tr>
+<tr><td><code class="syntax">insira(lista, pos, valor)</code></td><td>Insere valor após posição pos</td><td><code class="example">insira([1,2,3,4],1,9)</code> <span class="saida">→ 1,2,9,3,4</span></td></tr>
+<tr><td><code class="syntax">remova(lista, valor)</code></td><td>Remove primeira ocorrência</td><td><code class="example">remova([1,2,3,4,5,6],5)</code> <span class="saida">→ 1,2,3,4,6</span></td></tr>
+<tr><td><code class="syntax">conte(lista)</code></td><td>Quantidade de elementos</td><td><code class="example">conte([1,3,5,7])</code> <span class="saida">→ 4</span></td></tr>
+<tr><td><code class="syntax">ordeneDecrescente(lista)</code></td><td>Ordena decrescente</td><td><code class="example">ordeneDecrescente([2,4,6,8,10])</code> <span class="saida">→ 10,8,6,4,2</span></td></tr>
+</table>
 
       </div>
       <div class="manual-pane" id="pane-operadores">
@@ -1179,7 +1234,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   while(i<len){
@@ -1568,8 +1623,8 @@ updateLines(); updateHighlight();
   const acEl=document.getElementById('autocomplete');
   const ed=document.getElementById('editor');
   if(!acEl || !ed) return;
-  const comandos=['abrir','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.circulo','desenhe.linha','desenhe.ponto','desenhe.retangulo','enquanto','escrever','espereTecla','fechar','intervalo','janela','leia','ler','limpe','mostre','para cada','pare','pausa','repetir','se','senão','tela.cor','tela.limpe','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','captureTecla','contarItem','cos','data','decimal','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','fatorial','filtrar','fração','hora','inteiro','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','paraNúmero','paraTexto','piso','primos','raizc','raizq','semEspaços','sen','substitua','tan','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const comandos=['abrir','bipe','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.texto','desenha.texto','desenhe.circulo','desenhe.linha','desenhe.ponto','desenhe.retangulo','enquanto','escrever','espereTecla','fechar','intervalo','janela','leia','ler','limpe','mostre','para cada','pare','pausa','repetir','se','senão','tela.cor','tela.limpe','toque','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','amostra','amostras','captureTecla','começaCom','contarItem','conte','cos','data','decimal','diaSemana','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','encontre','fatorial','filtrar','formate','fração','hora','indiceDe','insira','inteiro','inverta','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','ordeneDecrescente','paraNúmero','paraTexto','piso','posição','primos','produto','raizc','raizq','remova','repita','semEspaços','sen','soma','substitua','tamanho','tan','terminaCom','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const propriedades=['adicionar','aleatório','contar','fatiar','inverter','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   let _varsCache=null; let _varsCacheText='';
   function getVariables(){
@@ -1682,6 +1737,8 @@ function ativarJanela(centraliza){
   janelaEl.style.display='flex';
   janelaAtiva=true;
   janelaCentralizada=!!centraliza;
+  _janelaAbertaNestaExec=true;
+  _graficoErroJaMostrado=false;
   janelaEl.classList.remove('minimized');
   janelaEl.classList.add('maximized');
   janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
@@ -1736,6 +1793,8 @@ let _telaBuffer = null;
 let _telaBufferCtx = null;
 const _telaLogicalW = 640;
 const _telaLogicalH = 400;
+let _janelaAbertaNestaExec = false;
+let _graficoErroJaMostrado = false;
 function _willogResolveCor(nome, env){
   if(nome===undefined||nome===null) return null;
   let s=String(nome).trim();
@@ -1815,8 +1874,19 @@ function _willogResizeCanvas(){
   _willogSyncVisible();
 }
 function _willogTelaLimpe(){
-  if(!janelaAtiva){ logToConsole('Erro: use janela() antes de tela.limpe', 'error'); return false; }
-  if(janelaCentralizada){ logToConsole('Erro: tela.limpe não pode ser usado após janela(centraliza) — use janela() sem centraliza', 'error'); return false; }
+  if(!janelaAtiva){
+    if(_janelaAbertaNestaExec) return false;
+    if(_graficoErroJaMostrado) return false;
+    logToConsole('Erro: use janela() antes de tela.limpe', 'error');
+    _graficoErroJaMostrado=true;
+    return false;
+  }
+  if(janelaCentralizada){
+    if(_graficoErroJaMostrado) return false;
+    logToConsole('Erro: tela.limpe não pode ser usado após janela(centraliza) — use janela() sem centraliza', 'error');
+    _graficoErroJaMostrado=true;
+    return false;
+  }
   _willogInitBuffer();
   _willogEnsureTela();
   // limpa buffer com cor de fundo
@@ -1827,8 +1897,19 @@ function _willogTelaLimpe(){
   return true;
 }
 function _willogTelaCor(argRaw, env){
-  if(!janelaAtiva){ logToConsole('Erro: use janela() antes de tela.cor()', 'error'); return false; }
-  if(janelaCentralizada){ logToConsole('Erro: tela.cor() não pode ser usado após janela(centraliza)', 'error'); return false; }
+  if(!janelaAtiva){
+    if(_janelaAbertaNestaExec) return false;
+    if(_graficoErroJaMostrado) return false;
+    logToConsole('Erro: use janela() antes de tela.cor()', 'error');
+    _graficoErroJaMostrado=true;
+    return false;
+  }
+  if(janelaCentralizada){
+    if(_graficoErroJaMostrado) return false;
+    logToConsole('Erro: tela.cor() não pode ser usado após janela(centraliza)', 'error');
+    _graficoErroJaMostrado=true;
+    return false;
+  }
   let corStr=argRaw.trim();
   let hex=null;
   let tryRaw=corStr.replace(/^["']|["']$/g,'').trim();
@@ -1854,8 +1935,19 @@ function _willogTelaCor(argRaw, env){
   return true;
 }
 function _willogCheckGraficoPermitido(){
-  if(!janelaAtiva){ logToConsole('Erro: use janela() antes de desenhe.*', 'error'); return false; }
-  if(janelaCentralizada){ logToConsole('Erro: desenhe.* não pode ser usado após janela(centraliza) — use janela() sem centraliza', 'error'); return false; }
+  if(!janelaAtiva){
+    if(_janelaAbertaNestaExec) return false;
+    if(_graficoErroJaMostrado) return false;
+    logToConsole('Erro: use janela() antes de desenhe.*', 'error');
+    _graficoErroJaMostrado=true;
+    return false;
+  }
+  if(janelaCentralizada){
+    if(_graficoErroJaMostrado) return false;
+    logToConsole('Erro: desenhe.* não pode ser usado após janela(centraliza) — use janela() sem centraliza', 'error');
+    _graficoErroJaMostrado=true;
+    return false;
+  }
   _willogInitBuffer();
   _willogEnsureTela();
   return true;
@@ -1886,13 +1978,17 @@ function _willogDrawCirculo(x,y,raio,corStr,env){
   _willogSyncVisible();
   return true;
 }
-function _willogDrawRetangulo(x,y,w,h,corStr,env){
+function _willogDrawRetangulo(x1,y1,x2,y2,corStr,env){
   if(!_willogCheckGraficoPermitido()) return false;
   _willogInitBuffer();
   const hex=_willogResolveCor(corStr, env) || _telaFgColor;
+  const xa=Math.min(Number(x1), Number(x2));
+  const ya=Math.min(Number(y1), Number(y2));
+  const wa=Math.abs(Number(x2)-Number(x1));
+  const ha=Math.abs(Number(y2)-Number(y1));
   _telaBufferCtx.strokeStyle=hex;
   _telaBufferCtx.lineWidth=2;
-  _telaBufferCtx.strokeRect(Number(x), Number(y), Number(w), Number(h));
+  _telaBufferCtx.strokeRect(xa, ya, wa, ha);
   _willogSyncVisible();
   return true;
 }
@@ -1907,18 +2003,40 @@ function _willogDrawPonto(x,y,corStr,env){
   _willogSyncVisible();
   return true;
 }
+function _willogDrawTexto(texto,x,y,tamanho,corStr,env){
+  if(!_willogCheckGraficoPermitido()) return false;
+  _willogInitBuffer();
+  const txt=String(texto ?? "");
+  const nx=Number(x), ny=Number(y);
+  let tam=Number(tamanho);
+  if(isNaN(tam) || tam<=0) tam=12;
+  let hex=_willogResolveCor(corStr, env) || _telaFgColor;
+  // se tamanho veio como cor (ex.: desenhe.texto("Olá",10,10,vermelho) com 4 args)
+  if(typeof tamanho==='string' && _willogResolveCor(tamanho, env) && (corStr===undefined || corStr==='branco' || !_willogResolveCor(corStr, env))){
+    // tamanho na verdade é cor
+    hex=_willogResolveCor(tamanho, env) || hex;
+    tam=12;
+  }
+  _telaBufferCtx.fillStyle=hex;
+  _telaBufferCtx.font=tam+'px "JetBrains Mono", monospace';
+  _telaBufferCtx.textBaseline='top';
+  _telaBufferCtx.fillText(txt, nx, ny);
+  _willogSyncVisible();
+  return true;
+}
 function isTelaLimpeStmt(stmt){ return /^\s*tela\.limpe\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
 function isTelaCorStmt(stmt){ return /^\s*tela\.cor\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
 function isDesenheLinhaStmt(stmt){ return /^\s*desenhe\.linha\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
 function isDesenheCirculoStmt(stmt){ return /^\s*desenhe\.circulo\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
 function isDesenheRetanguloStmt(stmt){ return /^\s*desenhe\.retangulo\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
 function isDesenhePontoStmt(stmt){ return /^\s*desenhe\.ponto\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isDesenhaTextoStmt(stmt){ return /^\s*desenh[ae]\.texto\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
 function parseTelaCorArg(stmt){
   const m=stmt.match(/^\s*tela\.cor\s*\(\s*(.+?)\s*\)\s*(?:#.*|\/\/.*)?$/i);
   return m? m[1].trim(): '';
 }
 function parseDesenheArgs(stmt){
-  const m=stmt.match(/^\s*desenhe\.\w+\s*\(\s*(.*)\s*\)\s*(?:#.*|\/\/.*)?$/i);
+  const m=stmt.match(/^\s*desenh[ae]\.\w+\s*\(\s*(.*)\s*\)\s*(?:#.*|\/\/.*)?$/i);
   if(!m) return [];
   return splitWillogCommaArgs(m[1]);
 }
@@ -2341,6 +2459,73 @@ function cronometroTempo(){ if(_cronometroInicio===null) return 0; const end = _
 function isCronometroIniciarStmt(stmt){ return /^\s*cronometro\.iniciar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()) || /^\s*cronômetro\.iniciar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
 function isCronometroPararStmt(stmt){ return /^\s*cronometro\.parar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()) || /^\s*cronômetro\.parar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
 function isCronometroTempoExpr(expr){ return /^\s*cronometro\.tempo\s*(\(\s*\))?\s*$/i.test(expr.trim()) || /^\s*cronômetro\.tempo\s*(\(\s*\))?\s*$/i.test(expr.trim()); }
+
+// --- Áudio: bipe / toque ---
+let _audioCtx=null;
+function _getAudioCtx(){
+  if(_audioCtx) return _audioCtx;
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC) return null;
+    _audioCtx=new AC();
+    return _audioCtx;
+  }catch(e){ return null; }
+}
+function _playTone(freq, dur){
+  return new Promise(resolve=>{
+    const ctx=_getAudioCtx();
+    if(!ctx){ setTimeout(resolve, dur*1000); return; }
+    if(ctx.state==='suspended'){ try{ ctx.resume(); }catch(e){} }
+    const f=Math.max(20, Math.min(20000, Number(freq)||440));
+    const d=Math.max(0, Number(dur)||0);
+    if(d<=0){ resolve(); return; }
+    try{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.type='sine';
+      osc.frequency.value=f;
+      gain.gain.value=0.25;
+      osc.connect(gain); gain.connect(ctx.destination);
+      const now=ctx.currentTime;
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now+d);
+      osc.start(now);
+      osc.stop(now+d);
+      osc.onended=()=> resolve();
+      setTimeout(resolve, (d*1000)+50);
+    }catch(e){
+      setTimeout(resolve, d*1000);
+    }
+  });
+}
+async function willogBipe(){
+  await _playTone(800, 0.2);
+  logToConsole('♪ bipe', 'info');
+}
+async function willogToque(freq, dur){
+  let f=Number(freq), d=Number(dur);
+  if(isNaN(f) || !isFinite(f)){ logToConsole('Erro: toque frequência inválida', 'error'); return; }
+  if(isNaN(d) || !isFinite(d) || d<=0){ logToConsole('Erro: toque duração inválida', 'error'); return; }
+  if(f<20 || f>20000){ logToConsole('Erro: frequência deve estar entre 20 e 20000 Hz', 'error'); return; }
+  if(d>10) d=10;
+  await _playTone(f, d);
+}
+function isBipeStmt(stmt){ return /^\s*bipe\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isToqueStmt(stmt){ return /^\s*toque\s*\(\s*.+?\s*,\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function parseToqueArgs(stmt, env){
+  const m=stmt.match(/^\s*toque\s*\(\s*(.*)\s*\)\s*(?:#.*|\/\/.*)?$/i);
+  if(!m) return null;
+  const args=splitWillogCommaArgs(m[1]);
+  if(args.length<2) return null;
+  let f,evaluatedF,evaluatedD;
+  try{ evaluatedF=evaluateExpression(args[0], env); }catch(e){ evaluatedF=args[0]; }
+  try{ evaluatedD=evaluateExpression(args[1], env); }catch(e){ evaluatedD=args[1]; }
+  f = Number(evaluatedF);
+  if(isNaN(f)) f=Number(String(args[0]).replace(/^["']|["']$/g,''));
+  let d=Number(evaluatedD);
+  if(isNaN(d)) d=Number(String(args[1]).replace(/^["']|["']$/g,''));
+  return {freq:f, dur:d, rawFreq:args[0], rawDur:args[1]};
+}
 
 function logToConsole(text, cls=''){
   const div = document.createElement('div');
@@ -3064,6 +3249,128 @@ function evaluateExpression(expr, env){
     if(nums.length===0) return 0;
     return Math.min(...nums);
   }
+  let mFormate=expr.match(/^\s*formate\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mFormate){
+    const parts=splitArrayElements(mFormate[1]);
+    if(parts.length<1) return "";
+    let valor;
+    try{ valor=evaluateExpression(parts[0].trim(), env); }catch(e){ valor=parts[0]; }
+    let casas=0;
+    if(parts.length>=2){
+      try{ casas=Math.trunc(Number(evaluateExpression(parts[1].trim(), env))); }catch(e){ casas=Number(parts[1]); }
+    }
+    if(isNaN(casas)||casas<0) casas=0;
+    const fmt=(v)=>{
+      const n=Number(v);
+      if(isNaN(n)) return String(v);
+      if(casas===0) return String(Math.trunc(n));
+      const factor=Math.pow(10,casas);
+      const trunc=Math.trunc(n*factor + (n>=0?1e-9:-1e-9))/factor;
+      let s=trunc.toFixed(casas);
+      if(s.startsWith("-0") && trunc===0) s=s.slice(1);
+      return s;
+    };
+    if(Array.isArray(valor)) return valor.map(fmt);
+    return fmt(valor);
+  }
+  let mSoma=expr.match(/^\s*soma\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mSoma){
+    const parts=splitArrayElements(mSoma[1]);
+    let nums=[];
+    for(let p of parts){
+      let v;
+      try{ v=evaluateExpression(p.trim(), env); }catch(e){ continue; }
+      if(Array.isArray(v)) nums.push(...v.map(x=>Number(x)).filter(n=>!isNaN(n)&&isFinite(n)));
+      else { let n=Number(v); if(!isNaN(n)&&isFinite(n)) nums.push(n); }
+    }
+    if(nums.length===0) return 0;
+    const sum=nums.reduce((a,b)=>a+b,0);
+    return Number(sum.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+  }
+  let mProduto=expr.match(/^\s*produto\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mProduto){
+    const parts=splitArrayElements(mProduto[1]);
+    let nums=[];
+    for(let p of parts){
+      let v;
+      try{ v=evaluateExpression(p.trim(), env); }catch(e){ continue; }
+      if(Array.isArray(v)) nums.push(...v.map(x=>Number(x)).filter(n=>!isNaN(n)&&isFinite(n)));
+      else { let n=Number(v); if(!isNaN(n)&&isFinite(n)) nums.push(n); }
+    }
+    if(nums.length===0) return 0;
+    let prod=1;
+    for(let n of nums) prod*=n;
+    return Number(prod.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+  }
+  let mDiaSemana=expr.match(/^\s*diaSemana\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mDiaSemana){
+    const arg=mDiaSemana[1].trim();
+    let val;
+    try{ val=evaluateExpression(arg, env); }catch(e){ val=arg; }
+    let s=String(val===undefined?'':val).trim();
+    // remove quotes
+    if((s.startsWith('"')&&s.endsWith('"'))||(s.startsWith("'")&&s.endsWith("'"))) s=s.slice(1,-1);
+    s=s.trim();
+    const parseDate=(str)=>{
+      str=str.trim();
+      let m=str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+      if(m) return new Date(Number(m[3]), Number(m[2])-1, Number(m[1]));
+      m=str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+      if(m) return new Date(Number(m[1]), Number(m[2])-1, Number(m[3]));
+      // try with time
+      const d=new Date(str);
+      if(!isNaN(d)) return d;
+      return null;
+    };
+    const d=parseDate(s);
+    if(!d||isNaN(d)) return "";
+    const dias=["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+    // also support terça/sábado with accent but return without accent lower
+    return dias[d.getDay()];
+  }
+  let mAmostra=expr.match(/^\s*amostra\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mAmostra){
+    const parts=splitArrayElements(mAmostra[1]);
+    if(parts.length<2) return [];
+    let arr, n;
+    try{ arr=evaluateExpression(parts[0].trim(), env); }catch(e){ arr=[]; }
+    try{ n=Math.trunc(Number(evaluateExpression(parts[1].trim(), env))); }catch(e){ n=Number(parts[1]); }
+    let src=[];
+    if(Array.isArray(arr)) src=arr.slice();
+    else if(typeof arr==='string') src=arr.split('');
+    else if(arr!==undefined) src=String(arr).split('');
+    if(isNaN(n)||n<0) n=0;
+    if(n>src.length) n=src.length;
+    // Fisher-Yates partial
+    for(let i=src.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [src[i],src[j]]=[src[j],src[i]]; }
+    const res=src.slice(0,n);
+    if(typeof arr==='string') return res.join('');
+    return res;
+  }
+  let mAmostras=expr.match(/^\s*amostras\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mAmostras){
+    const parts=splitArrayElements(mAmostras[1]);
+    if(parts.length<3) return [];
+    let arr, tam, qtd;
+    try{ arr=evaluateExpression(parts[0].trim(), env); }catch(e){ arr=[]; }
+    try{ tam=Math.trunc(Number(evaluateExpression(parts[1].trim(), env))); }catch(e){ tam=Number(parts[1]); }
+    try{ qtd=Math.trunc(Number(evaluateExpression(parts[2].trim(), env))); }catch(e){ qtd=Number(parts[2]); }
+    let src=[];
+    if(Array.isArray(arr)) src=arr.slice();
+    else if(typeof arr==='string') src=arr.split('');
+    else if(arr!==undefined) src=String(arr).split('');
+    if(isNaN(tam)||tam<0) tam=0;
+    if(isNaN(qtd)||qtd<0) qtd=0;
+    if(tam>src.length) tam=src.length;
+    let result=[];
+    for(let k=0;k<qtd;k++){
+      let copy=src.slice();
+      for(let i=copy.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [copy[i],copy[j]]=[copy[j],copy[i]]; }
+      const sample=copy.slice(0,tam);
+      result.push(Array.isArray(arr) ? sample : sample.join(''));
+    }
+    return result;
+  }
   let mEmb=expr.match(/^\s*embaralhe\s*\(\s*(.*?)\s*\)\s*$/i);
   if(mEmb){
     let argStr=mEmb[1].trim();
@@ -3163,7 +3470,7 @@ function tokenize(expr, env){
       if(id==='Falso') { tokens.push({type:'BOOLEAN', value:false}); continue; }
       let j=i;
       while(j<len && /\s/.test(expr[j])) j++;
-      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem','sen','cos','tan','abs','log','ln','fatorial','énúmero','enúmero','énumero','enumero','élista','elista','étexto','etexto','éprimo','eprimo','épar','epar','éímpar','eímpar','eimpar','primos','mmc','mdc','média','media','máximo','maximo','mínimo','minimo','embaralhe','capturetecla','capture','espereTecla','exp','hipotenusa','hipotenúsa'];
+      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','inverta','repita','formate','soma','produto','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem','sen','cos','tan','abs','log','ln','fatorial','énúmero','enúmero','énumero','enumero','élista','elista','étexto','etexto','éprimo','eprimo','épar','epar','éímpar','eímpar','eimpar','primos','mmc','mdc','média','media','máximo','maximo','mínimo','minimo','embaralhe','encontre','começacom','comecacom','terminacom','indicede','índicede','remova','insira','conte','ordenecrescente','ordenedecrescente','diasemana','amostra','amostras','capturetecla','capture','espereTecla','exp','hipotenusa','hipotenúsa'];
       const lower = id.toLowerCase();
       if(tokens.length>0 && tokens[tokens.length-1].type==='OP' && tokens[tokens.length-1].value==='.'){
         tokens.push({type:'STRING', value:id});
@@ -3484,14 +3791,26 @@ function evalRPN(rpn, env){
         const idxVal = stack.pop();
         const arrVal = stack.pop();
         const a = arrVal===undefined?[]:arrVal;
-        const idx = Number(idxVal);
         let res;
-        if(Array.isArray(a)){
-          res = a[idx];
-        }else if(typeof a==='string'){
-          res = a.charAt(idx);
-        }else{
-          res = undefined;
+        // se idxVal é string (busca), retorna índice (como encontre); se número, retorna caractere/elemento
+        if(typeof idxVal==='string'){
+          const sub=idxVal;
+          if(Array.isArray(a)){
+            res=-1;
+            for(let k=0;k<a.length;k++){ if(String(a[k])===sub || a[k]==sub){ res=k; break; } }
+          } else {
+            const str=String(a);
+            res=str.indexOf(sub);
+          }
+        } else {
+          const idx = Number(idxVal);
+          if(Array.isArray(a)){
+            res = a[idx];
+          }else if(typeof a==='string'){
+            res = a.charAt(idx);
+          }else{
+            res = undefined;
+          }
         }
         stack.push(res);
       } else if(fn==='fatiar'){
@@ -3859,6 +4178,270 @@ function evalRPN(rpn, env){
         const sp = String(sep===undefined?'':sep);
         const res = list.map(x=>String(x)).join(sp);
         stack.push(res);
+      } else if(fn==='encontre'){
+        const busca = stack.pop();
+        const texto = stack.pop();
+        let res=-1;
+        if(texto===undefined || texto===null) res=-1;
+        else if(Array.isArray(texto)){
+          const target=busca;
+          for(let idx=0; idx<texto.length; idx++){
+            const el=texto[idx];
+            if(el===target || String(el)===String(target) || el==target){ res=idx; break; }
+          }
+        } else {
+          const str=String(texto);
+          const sub=String(busca===undefined?'':busca);
+          if(sub==="") res=0;
+          else res=str.indexOf(sub);
+        }
+        stack.push(res);
+      } else if(fn==='indicede' || fn==='índicede'){
+        const valor = stack.pop();
+        const lista = stack.pop();
+        let res=-1;
+        if(Array.isArray(lista)){
+          for(let i=0;i<lista.length;i++){ if(lista[i]===valor || String(lista[i])===String(valor) || lista[i]==valor){ res=i; break; } }
+        } else if(typeof lista==='string'){
+          res=String(lista).indexOf(String(valor===undefined?'':valor));
+        } else if(lista!==undefined){
+          const s=String(lista);
+          res=s.indexOf(String(valor===undefined?'':valor));
+        }
+        stack.push(res);
+      } else if(fn==='remova'){
+        const valor = stack.pop();
+        const lista = stack.pop();
+        let res=[];
+        if(Array.isArray(lista)){
+          let removed=false;
+          for(let el of lista){
+            if(!removed && (el===valor || String(el)===String(valor) || el==valor)){ removed=true; continue; }
+            res.push(el);
+          }
+        } else if(typeof lista==='string'){
+          const s=String(lista);
+          const sub=String(valor===undefined?'':valor);
+          if(sub==="") res=s;
+          else {
+            const idx=s.indexOf(sub);
+            if(idx===-1) res=s;
+            else res=s.slice(0,idx)+s.slice(idx+sub.length);
+            stack.push(res);
+            return;
+          }
+        } else {
+          res=[];
+        }
+        stack.push(res);
+      } else if(fn==='insira'){
+        const valor = stack.pop();
+        const pos = stack.pop();
+        const lista = stack.pop();
+        let res=[];
+        if(Array.isArray(lista)){
+          let idx=Math.trunc(Number(pos));
+          if(isNaN(idx)) idx=0;
+          // para satisfazer exemplo insira([1,2,3,4],1,9) -> 1,2,9,3,4 (insere após índice 1)
+          // usa idx+1 como ponto de inserção
+          if(idx<0) idx=0;
+          if(idx>=lista.length) res=lista.slice();
+          else res=[...lista.slice(0, idx+1), valor, ...lista.slice(idx+1)];
+          // se lista vazia, apenas valor
+          if(lista.length===0) res=[valor];
+        } else if(typeof lista==='string'){
+          let idx=Math.trunc(Number(pos));
+          if(isNaN(idx)) idx=0;
+          const s=String(lista);
+          const v=String(valor===undefined?'':valor);
+          if(idx<0) idx=0;
+          if(idx>=s.length) res=s+v;
+          else res=s.slice(0, idx+1)+v+s.slice(idx+1);
+          stack.push(res);
+          return;
+        }
+        stack.push(res);
+      } else if(fn==='conte'){
+        const a = stack.pop();
+        let res=0;
+        if(Array.isArray(a)) res=a.length;
+        else if(typeof a==='string') res=a.length;
+        else if(a!==undefined && a!==null) res=String(a).length;
+        stack.push(res);
+      } else if(fn==='ordenecrescente' || fn==='ordenedecrescente'){
+        const a = stack.pop();
+        let res;
+        if(Array.isArray(a)){
+          res=a.slice();
+          const allNum=res.every(x=> typeof x==='number' || (!isNaN(Number(x)) && String(Number(x))===String(x)));
+          if(allNum) res.sort((x,y)=> Number(y)-Number(x));
+          else res.sort((a,b)=> String(b).localeCompare(String(a),'pt'));
+        } else if(typeof a==='string'){
+          res=a.split('').sort((x,y)=> y.localeCompare(x,'pt')).join('');
+        } else {
+          res=a;
+        }
+        stack.push(res);
+      } else if(fn==='começacom' || fn==='comecacom'){
+        const pref = stack.pop();
+        const texto = stack.pop();
+        let res=false;
+        if(texto!==undefined && texto!==null){
+          const str=String(texto);
+          const pre=String(pref===undefined?'':pref);
+          if(pre==="") res=true;
+          else res=str.toLowerCase().startsWith(pre.toLowerCase());
+        }
+        stack.push(res);
+      } else if(fn==='terminacom'){
+        const suf = stack.pop();
+        const texto = stack.pop();
+        let res=false;
+        if(texto!==undefined && texto!==null){
+          const str=String(texto);
+          const s=String(suf===undefined?'':suf);
+          if(s==="") res=true;
+          else res=str.toLowerCase().endsWith(s.toLowerCase());
+        }
+        stack.push(res);
+      } else if(fn==='repita'){
+        const n = stack.pop();
+        const txt = stack.pop();
+        const s=String(txt===undefined?'':txt);
+        const count=Math.max(0, Math.trunc(Number(n)||0));
+        let res="";
+        for(let i=0;i<count;i++) res+=s;
+        // se txt era lista (array), repete lista? não necessário, mas trata
+        if(Array.isArray(txt)){
+          res=[];
+          for(let i=0;i<count;i++) res.push(...txt);
+        } else if(typeof txt==='string'){
+          // já feito
+        }
+        // se txt era número, String já tratou
+        if(Array.isArray(txt)) stack.push(res);
+        else stack.push(res);
+      } else if(fn==='inverta' || fn==='inverter'){
+        const a = stack.pop();
+        let res;
+        if(Array.isArray(a)) res=a.slice().reverse();
+        else if(typeof a==='string') res=a.split('').reverse().join('');
+        else if(typeof a==='number') res=Number(String(a).split('').reverse().join(''));
+        else res=a;
+        stack.push(res);
+      } else if(fn==='formate'){
+        const casas = stack.pop();
+        const val = stack.pop();
+        const c=Math.trunc(Number(casas));
+        const fmt=(v)=>{
+          const n=Number(v);
+          if(isNaN(n)) return String(v);
+          if(isNaN(c)||c<0) return String(n);
+          if(c===0) return String(Math.trunc(n));
+          const factor=Math.pow(10,c);
+          const trunc=Math.trunc(n*factor + (n>=0?1e-9:-1e-9))/factor;
+          let s=trunc.toFixed(c);
+          if(s.startsWith("-0") && trunc===0) s=s.slice(1);
+          return s;
+        };
+        let res;
+        if(Array.isArray(val)) res=val.map(fmt);
+        else res=fmt(val);
+        stack.push(res);
+      } else if(fn==='soma'){
+        const b = stack.pop();
+        const a = stack.pop();
+        // a pode ser array ou número; b pode ser array/número; para variádico com mais de 2, o RPN terá empilhado múltiplos, mas aqui tratamos 2
+        // Para chamada com array único: soma([1,2,3,4]) => a=[1,2,3,4], b=undefined? Na RPN, array placeholder + FUNC => stack tem [array], pop a=array, b=undefined
+        // Trata ambos
+        let nums=[];
+        const addNums=(v)=>{
+          if(Array.isArray(v)) nums.push(...v.map(x=>Number(x)).filter(n=>!isNaN(n)&&isFinite(n)));
+          else { let n=Number(v); if(!isNaN(n)&&isFinite(n)) nums.push(n); }
+        };
+        if(b!==undefined) addNums(b);
+        addNums(a);
+        // Se ainda houver números prévios que fazem parte da mesma chamada variádica? Não há como saber, então soma apenas os 2
+        // Para variádico maior, o early regex já resolve; aqui cobre caso array
+        if(nums.length===0 && b===undefined && Array.isArray(a)){
+          // caso array único já tratado
+        }
+        let res=0;
+        if(nums.length>0) res=nums.reduce((x,y)=>x+y,0);
+        else if(Array.isArray(a) && b===undefined) res=a.reduce((x,y)=>x+Number(y),0);
+        res=Number(Number(res).toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+        stack.push(res);
+      } else if(fn==='produto'){
+        const b = stack.pop();
+        const a = stack.pop();
+        let nums=[];
+        const addNums=(v)=>{
+          if(Array.isArray(v)) nums.push(...v.map(x=>Number(x)).filter(n=>!isNaN(n)&&isFinite(n)));
+          else { let n=Number(v); if(!isNaN(n)&&isFinite(n)) nums.push(n); }
+        };
+        if(b!==undefined) addNums(b);
+        addNums(a);
+        let res=1;
+        if(nums.length===0) res=0;
+        else { res=1; for(let n of nums) res*=n; }
+        res=Number(Number(res).toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+        stack.push(res);
+      } else if(fn==='diasemana'){
+        const arg = stack.pop();
+        let s=String(arg===undefined?'':arg).trim();
+        if((s.startsWith('"')&&s.endsWith('"'))||(s.startsWith("'")&&s.endsWith("'"))) s=s.slice(1,-1);
+        const parseDate=(str)=>{
+          str=str.trim();
+          let m=str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+          if(m) return new Date(Number(m[3]), Number(m[2])-1, Number(m[1]));
+          m=str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+          if(m) return new Date(Number(m[1]), Number(m[2])-1, Number(m[3]));
+          const d=new Date(str);
+          if(!isNaN(d)) return d;
+          return null;
+        };
+        const d=parseDate(s);
+        let res="";
+        if(d&&!isNaN(d)){
+          const dias=["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+          res=dias[d.getDay()];
+        }
+        stack.push(res);
+      } else if(fn==='amostra'){
+        const n = stack.pop();
+        const arr = stack.pop();
+        let src=[];
+        if(Array.isArray(arr)) src=arr.slice();
+        else if(typeof arr==='string') src=arr.split('');
+        else if(arr!==undefined) src=String(arr).split('');
+        let count=Math.trunc(Number(n));
+        if(isNaN(count)||count<0) count=0;
+        if(count>src.length) count=src.length;
+        for(let i=src.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [src[i],src[j]]=[src[j],src[i]]; }
+        const res=src.slice(0,count);
+        if(typeof arr==='string') stack.push(res.join(''));
+        else stack.push(res);
+      } else if(fn==='amostras'){
+        const qtd = stack.pop();
+        const tam = stack.pop();
+        const arr = stack.pop();
+        let src=[];
+        if(Array.isArray(arr)) src=arr.slice();
+        else if(typeof arr==='string') src=arr.split('');
+        else if(arr!==undefined) src=String(arr).split('');
+        let t=Math.trunc(Number(tam));
+        let q=Math.trunc(Number(qtd));
+        if(isNaN(t)||t<0) t=0;
+        if(isNaN(q)||q<0) q=0;
+        if(t>src.length) t=src.length;
+        let result=[];
+        for(let k=0;k<q;k++){
+          let copy=src.slice();
+          for(let i=copy.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [copy[i],copy[j]]=[copy[j],copy[i]]; }
+          const sample=copy.slice(0,t);
+          result.push(Array.isArray(arr) ? sample : sample.join(''));
+        }
+        stack.push(result);
       } else if(fn==='capturetecla' || fn==='capture'){
         // captureTecla() é zero-arg, não consome stack
         // se houve arg na pilha por erro de parse (ex: captureTecla(1)), descarta
@@ -4409,6 +4992,14 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
   }
   if(isCronometroIniciarStmt(stmt)){ cronometroIniciar(); return; }
   if(isCronometroPararStmt(stmt)){ cronometroParar(); return; }
+  if(isBipeStmt(stmt)){ await willogBipe(); hasOutputRef.value=true; return; }
+  if(isToqueStmt(stmt)){
+    const _pt=parseToqueArgs(stmt, env);
+    if(!_pt){ logToConsole('Erro: toque precisa de frequência(20-20000) e duração', 'error'); return; }
+    await willogToque(_pt.freq, _pt.dur);
+    hasOutputRef.value=true;
+    return;
+  }
   if(isJanelaStmt(stmt)){ const cent=getJanelaCentraliza(stmt); ativarJanela(cent); return; }
   // --- Tela / Desenhe (gráficos na janela) ---
   if(isTelaLimpeStmt(stmt)){ if(_willogTelaLimpe()) hasOutputRef.value=true; return; }
@@ -4440,14 +5031,14 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
   }
   if(isDesenheRetanguloStmt(stmt)){
     const _args=parseDesenheArgs(stmt);
-    if(_args.length<4){ logToConsole('Erro: desenhe.retangulo precisa de x,y,largura,altura[,cor]','error'); return; }
+    if(_args.length<4){ logToConsole('Erro: desenhe.retangulo precisa de x1,y1,x2,y2[,cor]','error'); return; }
     try{
-      const _x=evaluateExpression(_args[0], env);
-      const _y=evaluateExpression(_args[1], env);
-      const _w=evaluateExpression(_args[2], env);
-      const _h=evaluateExpression(_args[3], env);
+      const _x1=evaluateExpression(_args[0], env);
+      const _y1=evaluateExpression(_args[1], env);
+      const _x2=evaluateExpression(_args[2], env);
+      const _y2=evaluateExpression(_args[3], env);
       const _cor=_args.length>=5 ? _args[4] : 'branco';
-      if(_willogDrawRetangulo(_x,_y,_w,_h,_cor,env)) hasOutputRef.value=true;
+      if(_willogDrawRetangulo(_x1,_y1,_x2,_y2,_cor,env)) hasOutputRef.value=true;
     }catch(e){ logToConsole('Erro em desenhe.retangulo: '+e.message,'error'); }
     return;
   }
@@ -4460,6 +5051,45 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       const _cor=_args.length>=3 ? _args[2] : 'branco';
       if(_willogDrawPonto(_x,_y,_cor,env)) hasOutputRef.value=true;
     }catch(e){ logToConsole('Erro em desenhe.ponto: '+e.message,'error'); }
+    return;
+  }
+  if(isDesenhaTextoStmt(stmt)){
+    const _args=parseDesenheArgs(stmt);
+    if(_args.length<3){ logToConsole('Erro: desenhe.texto precisa de "texto",x,y[,tamanho][,cor]','error'); return; }
+    try{
+      let _texto;
+      try{ _texto=evaluateExpression(_args[0], env); }catch(e){ _texto=_args[0].replace(/^["']|["']$/g,''); }
+      if(_texto===undefined||_texto===null) _texto="";
+      else _texto=String(_texto);
+      const _x=evaluateExpression(_args[1], env);
+      const _y=evaluateExpression(_args[2], env);
+      let _tam=12, _cor='branco';
+      if(_args.length===4){
+        const raw=_args[3].trim();
+        let evalV;
+        try{ evalV=evaluateExpression(raw, env); }catch(e){ evalV=undefined; }
+        const isNum = evalV!==undefined && !isNaN(Number(evalV)) && isFinite(Number(evalV));
+        const rawNum = !isNaN(Number(raw.replace(/^["']|["']$/g,'')));
+        const hexCheck = _willogResolveCor(evalV!==undefined?String(evalV):raw, env);
+        if(isNum) _tam=Number(evalV);
+        else if(rawNum && hexCheck===null) _tam=Number(raw.replace(/^["']|["']$/g,''));
+        else if(hexCheck) _cor=evalV!==undefined?String(evalV):raw;
+        else if(evalV!==undefined) {
+          const n=Number(evalV);
+          if(!isNaN(n)) _tam=n; else _cor=String(evalV);
+        } else _cor=raw;
+      } else if(_args.length>=5){
+        let evalTam;
+        try{ evalTam=evaluateExpression(_args[3], env); }catch(e){ evalTam=undefined; }
+        _tam = evalTam!==undefined && !isNaN(Number(evalTam)) ? Number(evalTam) : Number(_args[3]);
+        if(isNaN(_tam)) _tam=12;
+        const rawCor=_args[4];
+        let evalCor;
+        try{ evalCor=evaluateExpression(rawCor, env); }catch(e){ evalCor=undefined; }
+        _cor = evalCor!==undefined && String(evalCor).trim()!=='' ? String(evalCor) : rawCor;
+      }
+      if(_willogDrawTexto(_texto,_x,_y,_tam,_cor,env)) hasOutputRef.value=true;
+    }catch(e){ logToConsole('Erro em desenhe.texto: '+e.message,'error'); }
     return;
   }
   if(isGotoStmt(stmt)){
@@ -4592,6 +5222,8 @@ function buildLabelMap(lines){
 
 async function runWillog(){
   clearConsole();
+  _janelaAbertaNestaExec=false;
+  _graficoErroJaMostrado=false;
   const src=editor.value;
   let srcNoBlock=src.replace(/\/\/:[\s\S]*?:\/\//g, '');
   srcNoBlock=srcNoBlock.replace(/\/\/:[\s\S]*$/g, '');
@@ -4669,6 +5301,13 @@ async function runWillog(){
       }
       if(isCronometroIniciarStmt(raw)){ cronometroIniciar(); i++; continue; }
       if(isCronometroPararStmt(raw)){ cronometroParar(); i++; continue; }
+      if(isBipeStmt(raw)){ await willogBipe(); hasOutputRef.value=true; i++; continue; }
+      if(isToqueStmt(raw)){
+        const _pt=parseToqueArgs(raw, env);
+        if(!_pt){ logToConsole('Erro na linha '+lineNo+': toque precisa de frequência(20-20000) e duração', 'error'); i++; continue; }
+        await willogToque(_pt.freq, _pt.dur);
+        hasOutputRef.value=true; i++; continue;
+      }
       if(isJanelaLine(raw)){ const cent=getJanelaCentraliza(raw); ativarJanela(cent); if(!cent) hasOutputRef.value=true; i++; continue; }
       if(isTelaLimpeStmt(raw)){ if(_willogTelaLimpe()) hasOutputRef.value=true; i++; continue; }
       if(isTelaCorStmt(raw)){ const _a=parseTelaCorArg(raw); if(_willogTelaCor(_a, env)) hasOutputRef.value=true; i++; continue; }
@@ -4694,11 +5333,11 @@ async function runWillog(){
       }
       if(isDesenheRetanguloStmt(raw)){
         const _args=parseDesenheArgs(raw);
-        if(_args.length<4){ logToConsole('Erro na linha '+lineNo+': desenhe.retangulo precisa de x,y,largura,altura[,cor]','error'); i++; continue; }
+        if(_args.length<4){ logToConsole('Erro na linha '+lineNo+': desenhe.retangulo precisa de x1,y1,x2,y2[,cor]','error'); i++; continue; }
         try{
-          const _x=evaluateExpression(_args[0], env), _y=evaluateExpression(_args[1], env), _w=evaluateExpression(_args[2], env), _h=evaluateExpression(_args[3], env);
+          const _x1=evaluateExpression(_args[0], env), _y1=evaluateExpression(_args[1], env), _x2=evaluateExpression(_args[2], env), _y2=evaluateExpression(_args[3], env);
           const _cor=_args.length>=5 ? _args[4] : 'branco';
-          if(_willogDrawRetangulo(_x,_y,_w,_h,_cor,env)) hasOutputRef.value=true;
+          if(_willogDrawRetangulo(_x1,_y1,_x2,_y2,_cor,env)) hasOutputRef.value=true;
         }catch(e){ logToConsole('Erro na linha '+lineNo+': '+e.message,'error'); }
         i++; continue;
       }
@@ -4709,6 +5348,40 @@ async function runWillog(){
           const _x=evaluateExpression(_args[0], env), _y=evaluateExpression(_args[1], env);
           const _cor=_args.length>=3 ? _args[2] : 'branco';
           if(_willogDrawPonto(_x,_y,_cor,env)) hasOutputRef.value=true;
+        }catch(e){ logToConsole('Erro na linha '+lineNo+': '+e.message,'error'); }
+        i++; continue;
+      }
+      if(isDesenhaTextoStmt(raw)){
+        const _args=parseDesenheArgs(raw);
+        if(_args.length<3){ logToConsole('Erro na linha '+lineNo+': desenhe.texto precisa de "texto",x,y[,tamanho][,cor]','error'); i++; continue; }
+        try{
+          let _texto;
+          try{ _texto=evaluateExpression(_args[0], env); }catch(e){ _texto=_args[0].replace(/^["']|["']$/g,''); }
+          if(_texto===undefined||_texto===null) _texto=""; else _texto=String(_texto);
+          const _x=evaluateExpression(_args[1], env), _y=evaluateExpression(_args[2], env);
+          let _tam=12, _cor='branco';
+          if(_args.length===4){
+            const raw=_args[3].trim();
+            let evalV;
+            try{ evalV=evaluateExpression(raw, env); }catch(e){ evalV=undefined; }
+            const hexCheck=_willogResolveCor(evalV!==undefined?String(evalV):raw, env);
+            const isNum = evalV!==undefined && !isNaN(Number(evalV)) && isFinite(Number(evalV));
+            const rawNum = !isNaN(Number(raw.replace(/^["']|["']$/g,'')));
+            if(isNum) _tam=Number(evalV);
+            else if(rawNum && hexCheck===null) _tam=Number(raw.replace(/^["']|["']$/g,''));
+            else if(hexCheck) _cor=evalV!==undefined?String(evalV):raw;
+            else if(evalV!==undefined){ const n=Number(evalV); if(!isNaN(n)) _tam=n; else _cor=String(evalV); } else _cor=raw;
+          } else if(_args.length>=5){
+            let evalTam;
+            try{ evalTam=evaluateExpression(_args[3], env); }catch(e){ evalTam=undefined; }
+            _tam = evalTam!==undefined && !isNaN(Number(evalTam)) ? Number(evalTam) : Number(_args[3]);
+            if(isNaN(_tam)) _tam=12;
+            const rawCor=_args[4];
+            let evalCor;
+            try{ evalCor=evaluateExpression(rawCor, env); }catch(e){ evalCor=undefined; }
+            _cor = evalCor!==undefined && String(evalCor).trim()!=='' ? String(evalCor) : rawCor;
+          }
+          if(_willogDrawTexto(_texto,_x,_y,_tam,_cor,env)) hasOutputRef.value=true;
         }catch(e){ logToConsole('Erro na linha '+lineNo+': '+e.message,'error'); }
         i++; continue;
       }
