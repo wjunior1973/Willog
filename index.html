@@ -453,6 +453,8 @@
   }
   .autocomplete-item .icon { font-size:12px; opacity:0.7; }
   .editor-container { position:relative; }
+
+
 </style>
 </head>
 <body data-theme="light">
@@ -494,6 +496,7 @@
       <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Ajuda ▾</button>
       <div class="menu-dropdown">
         <button id="btnReferencia">📖 Referência rápida</button>
+        <button id="btnCodigoComentado">💬 Código comentado</button>
         <div class="menu-sep-dropdown"></div>
         <button id="btnSobre">ℹ️ Sobre</button>
       </div>
@@ -1132,6 +1135,19 @@ verificar nota:
         <p style="margin:0; font-size:14px; font-weight:600; color:var(--text);">Wilson José Andriolli Junior</p>
         <p style="margin:2px 0 12px; font-size:13px; color:var(--accent);">wjunior1973@gmail.com</p>
         <p style="margin:0; font-size:13px; color:var(--text-dim);">2026</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Código Comentado -->
+  <div id="modalCodigoComentado" class="modal-overlay" style="display:none">
+    <div class="modal-manual-box" style="width:98vw; height:98vh; max-width:98vw; max-height:98vh;">
+      <div class="modal-manual-header">
+        <b>💬 Código Comentado</b>
+        <button class="modal-close" id="btnFecharCodigoComentado" title="Fechar">✕</button>
+      </div>
+      <div id="codigoComentadoContainer" style="flex:1; overflow:auto; background:var(--panel); padding:0; display:flex; flex-direction:column;">
+        <div id="codigoComentadoContent" style="flex:1; overflow:auto; padding:22px 24px; font-family:'Inter',sans-serif; line-height:1.7;"></div>
       </div>
     </div>
   </div>
@@ -5894,6 +5910,157 @@ document.getElementById('leiaInput').addEventListener('keydown', (e)=>{
 document.addEventListener('keydown', (e)=>{
   if(e.key==='F5'){ e.preventDefault(); runWillog(); }
 });
+
+
+﻿ 
+
+// ==================== CÓDIGO COMENTADO ====================
+function willogComentarLinha(raw, num){
+  const t = raw.trim();
+  if(t==='' ) return null;
+  if(t.startsWith('#') || t.startsWith('//')){
+    if(t.startsWith('//:') || t.startsWith('://')) return `<div style="display:flex; gap:12px; padding:10px 14px; margin:6px 0; background:var(--panel2); border-left:4px solid var(--border); border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;"><div style="font-family:\'JetBrains Mono\',monospace; font-size:12px; color:var(--hl-comment);">${t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><div style="margin-top:6px; font-size:14px; color:var(--text-dim);"><span style="font-size:20px; line-height:1;">💭</span> <b>Comentário:</b> Essa linha é só uma anotação, igual a um bilhetinho que a gente deixa para lembrar de algo. O computador ignora!</div></div></div>`;
+    return `<div style="display:flex; gap:12px; padding:10px 14px; margin:6px 0; background:var(--panel2); border-left:4px solid var(--border); border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;"><div style="font-family:\'JetBrains Mono\',monospace; font-size:12px; color:var(--hl-comment);">${t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><div style="margin-top:6px; font-size:14px; color:var(--text-dim);">💭 Essa linha é um comentário — um recadinho só para humanos, o computador finge que não viu!</div></div></div>`;
+  }
+  const low = t.toLowerCase();
+  const esc = (s)=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const linhaCode = `<div style="font-family:\'JetBrains Mono\',monospace; font-size:15px; background:var(--panel2); border:1px solid var(--border); padding:8px 12px; border-radius:6px; color:var(--text); font-weight:500;">${esc(t)}</div>`;
+
+  // abrir
+  if(/^abrir\s+/i.test(t)){
+    const m=t.match(/^abrir\s+["\']?(.+?)["\']?\s*$/i);
+    const arq=m?m[1]:"arquivo";
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px; box-shadow:var(--shadow);"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; line-height:1.6; color:var(--text);"><span style="font-size:20px; line-height:1;">📂</span> <b>O que faz?</b> Abre o arquivo <code>"${esc(arq)}"</code> para a gente poder escrever ou ler dentro dele. É como abrir um caderno novo! O Willog cria um apelido <code>$${arq.split(".")[0].toLowerCase()}</code> para usar depois. <br>🧒 <i>Imagina que é abrir sua mochila para pegar o caderno.</i></div></div></div>`;
+  }
+  if(/^fechar\s+\$/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #ff7675; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🔒</span> <b>O que faz?</b> Fecha o arquivo e guarda tudo no disco. É como fechar o caderno e guardar na mochila para não perder!</div></div></div>`;
+  }
+  if(/^escrever\s+\$/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">✍️</span> <b>O que faz?</b> Escreve informações dentro do arquivo. É como anotar algo no caderno que abrimos!</div></div></div>`;
+  }
+  if(/^ler\s+\$/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">👀</span> <b>O que faz?</b> Lê o que está escrito no arquivo e guarda em uma caixinha (variável). É como abrir o caderno e copiar o que está lá!</div></div></div>`;
+  }
+  if(/^janela\s*\(/i.test(t) || /^janela\s*$/i.test(t)){
+    const cent = /centraliza/i.test(t);
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #a29bfe; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🪟</span> <b>O que faz?</b> Abre uma janelinha flutuante ${cent? 'com texto no meio (centralizado)': 'bem grande'} para mostrar desenhos ou mensagens. É como abrir uma nova folha para desenhar!</div></div></div>`;
+  }
+  if(/^tela\.limpe/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🧹</span> <b>O que faz?</b> Apaga tudo que foi desenhado na janelinha e pinta o fundo de preto (ou da cor escolhida). É como apagar o quadro!</div></div></div>`;
+  }
+  if(/^tela\.cor/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🎨</span> <b>O que faz?</b> Escolhe a cor do fundo da janelinha para o próximo <code>tela.limpe</code>. É como escolher a cor do papel!</div></div></div>`;
+  }
+  if(/^desenhe\./i.test(t)){
+    const tipo = t.match(/^desenhe\.(\w+)/i)?.[1] || "algo";
+    const desc = {circulo:"um círculo (bolinha)", linha:"uma linha retinha", ponto:"um pontinho", retangulo:"um retângulo (quadrado esticado)", texto:"um texto escrito"}[tipo.toLowerCase()] || "um desenho";
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🖌️</span> <b>O que faz?</b> Desenha ${desc} na janelinha, na posição e cor escolhidas. É como carimbar no papel!</div></div></div>`;
+  }
+  if(/^bipe\s*$/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #fdcb6e; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🔔</span> <b>O que faz?</b> Faz um barulhinho "bipe" bem curtinho, igual de videogame!</div></div></div>`;
+  }
+  if(/^toque\s*\(/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #fdcb6e; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🎵</span> <b>O que faz?</b> Toca um som com a frequência e tempo escolhidos. É como tocar uma nota musical!</div></div></div>`;
+  }
+  if(/^\s*se\b/i.test(t) && t.includes(':')){
+    const cond = t.replace(/^\s*se\s+/i,'').replace(/:\s*$/,'');
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c5ce7; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🤔</span> <b>O que faz?</b> Pergunta: <code>${esc(cond)}</code> é verdadeiro? Se for <b>Sim</b>, faz o que está indentado embaixo; se for <b>Não</b>, pula ou vai para o <code>senão</code>. É como decidir: "Se estiver chovendo, levo guarda-chuva!"</div></div></div>`;
+  }
+  if(/^\s*sen[ãa]o/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c5ce7; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">↩️</span> <b>O que faz?</b> É o "plano B" do <code>se</code>. Se a pergunta anterior deu <b>Não</b>, faz o que está aqui embaixo.</div></div></div>`;
+  }
+  if(/^\s*para\s+cada\b/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🔁</span> <b>O que faz?</b> Repete para cada item de uma lista ou intervalo. É como contar cada figurinha do álbum, uma por uma! O que está indentado embaixo será feito para cada valor.</div></div></div>`;
+  }
+  if(/^\s*enquanto\b/i.test(t)){
+    const cond = t.replace(/^\s*enquanto\s+/i,'').replace(/:\s*$/,'');
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">⏳</span> <b>O que faz?</b> Repete <b>enquanto</b> <code>${esc(cond)}</code> for verdadeiro. Fica repetindo até a condição ficar falsa. É como "enquanto tiver doces, continue comendo!"</div></div></div>`;
+  }
+  if(/^\s*repetir\s*\(/i.test(t)){
+    const n = t.match(/repetir\s*\(\s*(.*?)\s*\)/i)?.[1]||"n";
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🔂</span> <b>O que faz?</b> Repete o que está indentado embaixo <b>${esc(n)}</b> vezes. É como carimbar ${esc(n)} vezes no papel!</div></div></div>`;
+  }
+  if(/^\s*verificar\b/i.test(t)){
+    const v = t.replace(/^\s*verificar\s+/i,'').replace(/:\s*$/,'');
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🔀</span> <b>O que faz?</b> Olha o valor de <code>${esc(v)}</code> e escolhe o <code>caso</code> que combina. É como escolher a porta certa pela etiqueta!</div></div></div>`;
+  }
+  if(/^\s*caso\b/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🎯</span> <b>O que faz?</b> Se o valor do <code>verificar</code> for esse, faz o que está do lado. É uma das opções!</div></div></div>`;
+  }
+  if(/^\s*padr[ãa]o/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🌟</span> <b>O que faz?</b> É o "se nenhum outro caso servir", faz isso aqui. O coringa!</div></div></div>`;
+  }
+  if(/^\s*definir\s+fun/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #a29bfe; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🛠️</span> <b>O que faz?</b> Cria uma nova "receita" (função) com nome e ingredientes (parâmetros). Depois a gente pode usar essa receita quantas vezes quiser!</div></div></div>`;
+  }
+  if(/^\s*retorne\b/i.test(t) || /^\s*retorna\b/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #a29bfe; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🎁</span> <b>O que faz?</b> Devolve um resultado da função. É como entregar o bolo pronto depois de seguir a receita!</div></div></div>`;
+  }
+  if(/^\s*mostre\b/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">📢</span> <b>O que faz?</b> Mostra uma mensagem no console (a telinha escura). É como gritar algo para o usuário ver! Se tiver <code>{variável}</code>, troca pelo valor dela.</div></div></div>`;
+  }
+  if(/leia/i.test(t) && t.includes('=')){
+    const varName = t.split('=')[0].trim();
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">⌨️</span> <b>O que faz?</b> Abre uma janelinha pedindo para a pessoa digitar algo e guarda o que foi digitado na caixinha <code>${esc(varName)}</code>. Se digitar número, já vira número de verdade! É como perguntar "qual seu nome?" e anotar a resposta.</div></div></div>`;
+  }
+  if(/^\s*limpe\s*$/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🧼</span> <b>O que faz?</b> Limpa tudo que estava escrito no console. Deixa a telinha limpinha de novo!</div></div></div>`;
+  }
+  if(/^\s*pausa\s*\(/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">⏸️</span> <b>O que faz?</b> Faz o programa dar uma pausinha e esperar um pouquinho antes de continuar. É como contar até 2 antes de falar "já"!</div></div></div>`;
+  }
+  if(/^\s*pare\s*$/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #ff7675; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🛑</span> <b>O que faz?</b> Para o laço na hora, mesmo que ainda faltasse repetir. É como apertar o botão de parar!</div></div></div>`;
+  }
+  if(/^\s*continue\s*$/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #fdcb6e; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">⏭️</span> <b>O que faz?</b> Pula essa volta do laço e vai direto para a próxima. É como pular uma vez na amarelinha!</div></div></div>`;
+  }
+  if(/^\s*:\w+/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #ffeaa7; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🏷️</span> <b>O que faz?</b> Cria um marcador chamado <code>${esc(t)}</code> para o <code>vá para</code> poder pular para cá. É como colocar uma plaquinha com nome no chão!</div></div></div>`;
+  }
+  if(/^\s*v[áa]\s+para\b/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #ffeaa7; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🚀</span> <b>O que faz?</b> Pula direto para o marcador indicado. É como teletransporte!</div></div></div>`;
+  }
+  if(t.includes('=') && !t.includes('==') && !t.includes('>=') && !t.includes('<=') && !t.includes('!=')){
+    const varName = t.split('=')[0].trim().split(',').pop().trim();
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c5ce7; border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">📦</span> <b>O que faz?</b> Guarda um valor na caixinha <code>${esc(varName)}</code>. É como colocar um brinquedo dentro de uma caixa com etiqueta!</div></div></div>`;
+  }
+  return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid var(--border-strong); border-radius:8px;"><div style="min-width:56px; font-family:\'JetBrains Mono\',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:14px; color:var(--text);"><span style="font-size:20px; line-height:1;">🔍</span> <b>O que faz?</b> Executa essa linha. Se tiver conta ou texto, calcula e mostra o resultado!</div></div></div>`;
+}
+function willogGerarCodigoComentado(){
+  const src = editor.value;
+  const container = document.getElementById('codigoComentadoContent');
+  if(!src.trim()){
+    container.innerHTML = '<div style="padding:40px; text-align:center; color:var(--text-dim); font-family:Inter,sans-serif;"><div style="font-size:48px; margin-bottom:12px;">📝</div><div style="font-size:18px; font-weight:600; color:var(--text);">Nenhum código ainda!</div><div style="font-size:14px; margin-top:8px;">Escreva seu código no editor e clique em <b>Código comentado</b> para ver a explicação de cada linha.</div></div>';
+    return;
+  }
+  const lines = src.split('\n');
+  let html = '';
+  let hasContent = false;
+  for(let i=0;i<lines.length;i++){
+    const raw = lines[i];
+    if(raw.trim()==='' && lines[i+1] && lines[i+1].trim()==='') continue;
+    const res = willogComentarLinha(raw, i+1);
+    if(res){ html+=res; hasContent=true; }
+  }
+  if(!hasContent){
+    html+='<div style="padding:20px; text-align:center; color:var(--text-dim);">Seu código só tem linhas vazias ou comentários. Que tal escrever algo como <code>mostre "Olá!"</code>?</div>';
+  }
+
+  container.innerHTML = html;
+}
+function willogMostrarCodigoComentado(){
+  const modal = document.getElementById('modalCodigoComentado');
+  modal.style.display='grid';
+  const box = modal.querySelector('.modal-manual-box');
+  if(box){ box.style.width='98vw'; box.style.height='98vh'; box.classList.add('maximized'); }
+  willogGerarCodigoComentado();
+}
+document.getElementById('btnCodigoComentado')?.addEventListener('click', willogMostrarCodigoComentado);
+document.getElementById('btnFecharCodigoComentado')?.addEventListener('click', ()=>{ document.getElementById('modalCodigoComentado').style.display='none'; });
+document.getElementById('modalCodigoComentado')?.addEventListener('click', (e)=>{ if(e.target.id==='modalCodigoComentado') document.getElementById('modalCodigoComentado').style.display='none'; });
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') document.getElementById('modalCodigoComentado').style.display='none'; });
+// ==================== FIM CÓDIGO COMENTADO ====================
 
 </script>
 </body>
