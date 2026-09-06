@@ -643,19 +643,19 @@ se captureTecla()=="Enter":
         <h3>comentários</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax"># comentário de linha</span>
-<span class="syntax">// comentário de linha</span>
-<span class="syntax">//:</span>
-<span class="example">  bloco comentado — todo o código entre //: e :// é ignorado</span>
-<span class="syntax">://</span></pre>
+<span class="syntax">#' comentário de linha</span>
+<span class="syntax">#:</span>
+<span class="example">  bloco comentado — todo o código entre #: e :# é ignorado</span>
+<span class="syntax">:#</span></pre>
         <p class="code-label">Exemplos</p>
         <pre><span class="example"># comentário com # 
-mostre "Olá" // comentário após código</span>
+mostre "Olá" #' comentário após código</span>
 <span class="saida">-> Olá</span>
 
-<span class="example">//:
+<span class="example">#:
   mostre "não executa"
   x=10
-://
+:#
 mostre "executa"</span>
 <span class="saida">-> executa</span></pre>
         <h3>continue</h3>
@@ -1129,7 +1129,7 @@ verificar nota:
           <tr><td><code class="syntax">(valor, "p%")</code></td><td>Percentual — p% de valor</td><td><code class="example">(30,"10%")</code> <span class="saida">→ 3</span> &nbsp; <code class="example">(120,"5%")</code> <span class="saida">→ 6</span></td></tr>
           <tr><td><code class="syntax">+</code> <code class="syntax">&</code></td><td>Adição e concatenação; com listas une</td><td><code class="example">2+3</code> <span class="saida">→ 5</span> &nbsp; <code class="example">[1,2]+[3]</code> <span class="saida">→ 1, 2, 3</span></td></tr>
           <tr><td><code class="syntax">-</code></td><td>Subtração; diferença de conjuntos</td><td><code class="example">5-2</code> <span class="saida">→ 3</span> &nbsp; <code class="example">[1,2,3]-[2]</code> <span class="saida">→ 1, 3</span></td></tr>
-          <tr><td><code class="syntax">*</code> <code class="syntax">/</code> <code class="syntax">\</code> <code class="syntax">%</code> <code class="syntax">**</code></td><td>Multiplicação, divisão, divisão inteira, módulo, potência — vetorizados</td><td><code class="example">2**3</code> <span class="saida">→ 8</span> &nbsp; <code class="example">5\2</code> <span class="saida">→ 2</span> &nbsp; <code class="example">7%3</code> <span class="saida">→ 1</span></td></tr>
+          <tr><td><code class="syntax">*</code> <code class="syntax">/</code> <code class="syntax">//</code> <code class="syntax">\</code> <code class="syntax">%</code> <code class="syntax">**</code></td><td>Multiplicação, divisão, inteira, quociente fracionário, módulo, potência — vetorizados</td><td><code class="example">2**3</code> <span class="saida">→ 8</span> &nbsp; <code class="example">5//2</code> <span class="saida">→ 2</span> &nbsp; <code class="example">5\2</code> <span class="saida">→ 0.5</span></td></tr>
           <tr><td><code class="syntax">> &lt; >= &lt;= == !=</code></td><td>Comparação → <code>Verdadeiro</code>/<code>Falso</code></td><td><code class="example">10>5</code> <span class="saida">→ Verdadeiro</span></td></tr>
           <tr><td><code class="syntax">e</code></td><td>Conjunção lógica</td><td><code class="example">5>3 e 2<4</code> <span class="saida">→ Verdadeiro</span></td></tr>
           <tr><td><code class="syntax">existe … em …</code></td><td>Pertinência em texto/lista</td><td><code class="example">existe "a" em "casa"</code> <span class="saida">→ Verdadeiro</span></td></tr>
@@ -1295,11 +1295,11 @@ function highlightWillog(code){
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   while(i<len){
-    if(code.substr(i,3)==='//:'){
+    if(code.substr(i,2)==='#:'){
       let s=i;
-      let end=code.indexOf('://', i+3);
+      let end=code.indexOf(':#', i+2);
       if(end!==-1){
-        i=end+3;
+        i=end+2;
         html+='<span class="hl-comment">'+escapeHtml(code.slice(s,i))+'</span>';
         continue;
       } else {
@@ -1308,13 +1308,13 @@ function highlightWillog(code){
       }
     }
     const c=code[i];
-    if(c==='#'){
+    if(code.substr(i,2)==="#'"){
       let s=i;
       while(i<len && code[i]!=='\n') i++;
       html+='<span class="hl-comment">'+escapeHtml(code.slice(s,i))+'</span>';
       continue;
     }
-    if(c==='/' && code[i+1]==='/'){
+    if(c==='#'){
       let s=i;
       while(i<len && code[i]!=='\n') i++;
       html+='<span class="hl-comment">'+escapeHtml(code.slice(s,i))+'</span>';
@@ -1363,7 +1363,7 @@ function highlightWillog(code){
       continue;
     }
     const two=code.substr(i,2);
-    if(['>=','<=','==','!=','**'].includes(two)){
+    if(['>=','<=','==','!=','**','//'].includes(two)){
       html+='<span class="hl-operator">'+escapeHtml(two)+'</span>'; i+=2; continue;
     }
     if(c==='\\'){
@@ -2081,19 +2081,19 @@ function _willogDrawTexto(texto,x,y,tamanho,corStr,env){
   _willogSyncVisible();
   return true;
 }
-function isTelaLimpeStmt(stmt){ return /^\s*tela\.limpe\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
-function isTelaCorStmt(stmt){ return /^\s*tela\.cor\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
-function isDesenheLinhaStmt(stmt){ return /^\s*desenhe\.linha\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
-function isDesenheCirculoStmt(stmt){ return /^\s*desenhe\.circulo\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
-function isDesenheRetanguloStmt(stmt){ return /^\s*desenhe\.retangulo\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
-function isDesenhePontoStmt(stmt){ return /^\s*desenhe\.ponto\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
-function isDesenhaTextoStmt(stmt){ return /^\s*desenh[ae]\.texto\s*\(\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isTelaLimpeStmt(stmt){ return /^\s*tela\.limpe\s*(\(\s*\))?\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isTelaCorStmt(stmt){ return /^\s*tela\.cor\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isDesenheLinhaStmt(stmt){ return /^\s*desenhe\.linha\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isDesenheCirculoStmt(stmt){ return /^\s*desenhe\.circulo\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isDesenheRetanguloStmt(stmt){ return /^\s*desenhe\.retangulo\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isDesenhePontoStmt(stmt){ return /^\s*desenhe\.ponto\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isDesenhaTextoStmt(stmt){ return /^\s*desenh[ae]\.texto\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
 function parseTelaCorArg(stmt){
-  const m=stmt.match(/^\s*tela\.cor\s*\(\s*(.+?)\s*\)\s*(?:#.*|\/\/.*)?$/i);
+  const m=stmt.match(/^\s*tela\.cor\s*\(\s*(.+?)\s*\)\s*(?:#.*)?$/i);
   return m? m[1].trim(): '';
 }
 function parseDesenheArgs(stmt){
-  const m=stmt.match(/^\s*desenh[ae]\.\w+\s*\(\s*(.*)\s*\)\s*(?:#.*|\/\/.*)?$/i);
+  const m=stmt.match(/^\s*desenh[ae]\.\w+\s*\(\s*(.*)\s*\)\s*(?:#.*)?$/i);
   if(!m) return [];
   return splitWillogCommaArgs(m[1]);
 }
@@ -2122,7 +2122,7 @@ function parseDesenheArgs(stmt){
 // reaproveita janelaAtiva para gráficos
 function isJanelaStmt(stmt){
   const t=stmt.trim();
-  return /^\s*janela\s*(\(\s*(centraliza)?\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(t);
+  return /^\s*janela\s*(\(\s*(centraliza)?\s*\))?\s*(?:#.*)?$/i.test(t);
 }
 function isJanelaLine(line){ return isJanelaStmt(line); }
 function getJanelaCentraliza(stmt){
@@ -2159,10 +2159,10 @@ function _normalizeTecla(k){
 }
 function isEspereTeclaStmt(stmt){
   const t=stmt.trim();
-  return /^\s*espereTecla\s*(\(\s*(".*?"|'.*?'|[^)]*)\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(t);
+  return /^\s*espereTecla\s*(\(\s*(".*?"|'.*?'|[^)]*)\s*\))?\s*(?:#.*)?$/i.test(t);
 }
 function getEspereTeclaArg(stmt, env){
-  const m=stmt.match(/^\s*espereTecla\s*\(\s*(.*?)\s*\)\s*(?:#.*|\/\/.*)?$/i);
+  const m=stmt.match(/^\s*espereTecla\s*\(\s*(.*?)\s*\)\s*(?:#.*)?$/i);
   if(!m) return "";
   let raw=m[1].trim();
   if(raw==="") return "";
@@ -2257,10 +2257,10 @@ function _willogHandleNameFromFilename(fn){
   return (noExt||base).toLowerCase();
 }
 function isAbrirStmt(stmt){
-  return /^\s*abrir\s+(".*?"|'.*?'|[^\s#]+)(\s+.*)?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim());
+  return /^\s*abrir\s+(".*?"|'.*?'|[^\s#]+)(\s+.*)?\s*(?:#.*)?$/i.test(stmt.trim());
 }
 function parseAbrirFilename(stmt, env){
-  const m=stmt.match(/^\s*abrir\s+(.+?)\s*(?:#.*|\/\/.*)?$/i);
+  const m=stmt.match(/^\s*abrir\s+(.+?)\s*(?:#.*)?$/i);
   if(!m) return "";
   let raw=m[1].trim();
   // remove trailing handle spec like "arquivo.txt" sem # já é filename
@@ -2300,7 +2300,7 @@ function isEscreverStmt(stmt){
   return /^\s*escrever\s+\$\s*[a-zA-Z_À-ÿ0-9]+\s*,.+$/i.test(stmt.trim());
 }
 function parseEscrever(stmt, env){
-  const m=stmt.match(/^\s*escrever\s+\$\s*([a-zA-Z_À-ÿ0-9]+)\s*,\s*(.+?)\s*(?:#.*|\/\/.*)?$/i);
+  const m=stmt.match(/^\s*escrever\s+\$\s*([a-zA-Z_À-ÿ0-9]+)\s*,\s*(.+?)\s*(?:#.*)?$/i);
   if(!m) return null;
   const handle=m[1].toLowerCase();
   const rest=m[2].trim();
@@ -2313,10 +2313,10 @@ function parseEscrever(stmt, env){
   return {handle, values, exprs, value: values[0], expr: exprs[0]};
 }
 function isLerStmt(stmt){
-  return /^\s*ler\s+\$\s*[a-zA-Z_À-ÿ0-9]+\s*,\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*(\s*,\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)*\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim());
+  return /^\s*ler\s+\$\s*[a-zA-Z_À-ÿ0-9]+\s*,\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*(\s*,\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)*\s*(?:#.*)?$/i.test(stmt.trim());
 }
 function parseLer(stmt){
-  const m=stmt.match(/^\s*ler\s+\$\s*([a-zA-Z_À-ÿ0-9]+)\s*,\s*(.+?)\s*(?:#.*|\/\/.*)?$/i);
+  const m=stmt.match(/^\s*ler\s+\$\s*([a-zA-Z_À-ÿ0-9]+)\s*,\s*(.+?)\s*(?:#.*)?$/i);
   if(!m) return null;
   const handle=m[1].toLowerCase();
   const rest=m[2].trim();
@@ -2327,10 +2327,10 @@ function parseLer(stmt){
   return {handle, varNames, varName: varNames[0]};
 }
 function isFecharStmt(stmt){
-  return /^\s*fechar\s+\$\s*[a-zA-Z_À-ÿ0-9]+\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim());
+  return /^\s*fechar\s+\$\s*[a-zA-Z_À-ÿ0-9]+\s*(?:#.*)?$/i.test(stmt.trim());
 }
 function parseFechar(stmt){
-  const m=stmt.match(/^\s*fechar\s+\$\s*([a-zA-Z_À-ÿ0-9]+)\s*(?:#.*|\/\/.*)?$/i);
+  const m=stmt.match(/^\s*fechar\s+\$\s*([a-zA-Z_À-ÿ0-9]+)\s*(?:#.*)?$/i);
   if(!m) return null;
   return m[1].toLowerCase();
 }
@@ -2513,8 +2513,8 @@ let _cronometroRunning = false;
 function cronometroIniciar(){ _cronometroInicio = performance.now(); _cronometroFim = null; _cronometroRunning = true; logToConsole('Cronômetro iniciado', 'info'); }
 function cronometroParar(){ if(_cronometroInicio!==null){ _cronometroFim = performance.now(); _cronometroRunning = false; const elapsed = (_cronometroFim - _cronometroInicio)/1000; logToConsole(`Cronômetro parado: ${elapsed.toFixed(3)}s`, 'info'); } else { logToConsole('Cronômetro não foi iniciado', 'error'); } }
 function cronometroTempo(){ if(_cronometroInicio===null) return 0; const end = _cronometroRunning ? performance.now() : (_cronometroFim ?? performance.now()); return Number(((end - _cronometroInicio)/1000).toFixed(3)); }
-function isCronometroIniciarStmt(stmt){ return /^\s*cronometro\.iniciar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()) || /^\s*cronômetro\.iniciar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
-function isCronometroPararStmt(stmt){ return /^\s*cronometro\.parar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()) || /^\s*cronômetro\.parar\s*(\(\s*\))?\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isCronometroIniciarStmt(stmt){ return /^\s*cronometro\.iniciar\s*(\(\s*\))?\s*(?:#.*)?$/i.test(stmt.trim()) || /^\s*cronômetro\.iniciar\s*(\(\s*\))?\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isCronometroPararStmt(stmt){ return /^\s*cronometro\.parar\s*(\(\s*\))?\s*(?:#.*)?$/i.test(stmt.trim()) || /^\s*cronômetro\.parar\s*(\(\s*\))?\s*(?:#.*)?$/i.test(stmt.trim()); }
 function isCronometroTempoExpr(expr){ return /^\s*cronometro\.tempo\s*(\(\s*\))?\s*$/i.test(expr.trim()) || /^\s*cronômetro\.tempo\s*(\(\s*\))?\s*$/i.test(expr.trim()); }
 
 // --- Áudio: bipe / toque ---
@@ -2567,10 +2567,10 @@ async function willogToque(freq, dur){
   if(d>10) d=10;
   await _playTone(f, d);
 }
-function isBipeStmt(stmt){ return /^\s*bipe\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
-function isToqueStmt(stmt){ return /^\s*toque\s*\(\s*.+?\s*,\s*.+?\s*\)\s*(?:#.*|\/\/.*)?$/i.test(stmt.trim()); }
+function isBipeStmt(stmt){ return /^\s*bipe\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isToqueStmt(stmt){ return /^\s*toque\s*\(\s*.+?\s*,\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
 function parseToqueArgs(stmt, env){
-  const m=stmt.match(/^\s*toque\s*\(\s*(.*)\s*\)\s*(?:#.*|\/\/.*)?$/i);
+  const m=stmt.match(/^\s*toque\s*\(\s*(.*)\s*\)\s*(?:#.*)?$/i);
   if(!m) return null;
   const args=splitWillogCommaArgs(m[1]);
   if(args.length<2) return null;
@@ -3566,7 +3566,7 @@ function tokenize(expr, env){
     if(c===':'){ tokens.push({type:'COLON', value:c}); i++; continue; }
     if(c==='.'){ tokens.push({type:'OP', value:'.'}); i++; continue; }
     const two = expr.substr(i,2);
-    if(['>=','<=','==','!=','**'].includes(two)){ tokens.push({type:'OP', value:two}); i+=2; continue; }
+    if(['>=','<=','==','!=','**','//'].includes(two)){ tokens.push({type:'OP', value:two}); i+=2; continue; }
     if(c==='\\'){ tokens.push({type:'OP', value:'\\'}); i++; continue; }
     if('+-*/%><=&'.includes(c)){ tokens.push({type:'OP', value:c}); i++; continue; }
     if(c===','){ tokens.push({type:'COMMA', value:c}); i++; continue; }
@@ -3578,7 +3578,7 @@ function tokenize(expr, env){
 function toRPN(tokens){
   const output=[];
   const ops=[];
-  const prec={ 'ou':1, '&':1, 'e':2, 'não':3, '==':4, '!=':4, '>':4, '<':4, '>=':4, '<=':4, '+':5, '-':5, 'união':5, 'intersecção':5, '*':6, '/':6, '%':6, '\\':6, '**':7, 'u-':8, '.':9 };
+  const prec={ 'ou':1, '&':1, 'e':2, 'não':3, '==':4, '!=':4, '>':4, '<':4, '>=':4, '<=':4, '+':5, '-':5, 'união':5, 'intersecção':5, '*':6, '/':6, '%':6, '//':6, '\\':6, '**':7, 'u-':8, '.':9 };
   const isLeft = (op)=> op !== '**' && op !== 'não' && op !== 'u-';
   let prev=null;
   for(let t of tokens){
@@ -4800,7 +4800,8 @@ function evalRPN(rpn, env){
             break;
           }
           case '**': res = powerWillog(av,bv); break;
-          case '\\': res = floorDivWillog(av,bv); break;
+          case '//': res = floorDivWillog(av,bv); break;
+          case '\\': res = fracDivWillog(av,bv); break;
           case '&':
             if(Array.isArray(av) || Array.isArray(bv)){
               const arrA = Array.isArray(av) ? av : [av];
@@ -4919,7 +4920,7 @@ function getIndent(line){
 
 function isEmptyOrComment(line){
   const t=line.trim();
-  return t==='' || t.startsWith('#') || t.startsWith('//');
+  return t==='' || t.startsWith('#');
 }
 
 function isSeLine(line){
@@ -5098,17 +5099,17 @@ function isGotoStmt(stmt){
 }
 function isPareStmt(stmt){
   const t=stmt.trim();
-  return /^\s*pare\s*$/i.test(t) || /^\s*pare\s*(?:#.*|\/\/.*)$/i.test(t);
+  return /^\s*pare\s*$/i.test(t) || /^\s*pare\s*(?:#.*)$/i.test(t);
 }
 function isContinueStmt(stmt){
   const t=stmt.trim();
-  return /^\s*continue\s*$/i.test(t) || /^\s*continuar\s*$/i.test(t) || /^\s*continue\s*(?:#.*|\/\/.*)$/i.test(t) || /^\s*continuar\s*(?:#.*|\/\/.*)$/i.test(t);
+  return /^\s*continue\s*$/i.test(t) || /^\s*continuar\s*$/i.test(t) || /^\s*continue\s*(?:#.*)$/i.test(t) || /^\s*continuar\s*(?:#.*)$/i.test(t);
 }
 function isPareLine(line){ return isPareStmt(line); }
 function isContinueLine(line){ return isContinueStmt(line); }
 function isLimpeStmt(stmt){
   const t=stmt.trim();
-  return /^\s*limpe\s*$/i.test(t) || /^\s*limpe\s*(?:#.*|\/\/.*)$/i.test(t);
+  return /^\s*limpe\s*$/i.test(t) || /^\s*limpe\s*(?:#.*)$/i.test(t);
 }
 function isLimpeLine(line){ return isLimpeStmt(line); }
 function isPausaStmt(stmt){
@@ -5116,13 +5117,13 @@ function isPausaStmt(stmt){
   if(!/^\s*pausa\b/i.test(t)) return false;
   const rest=t.replace(/^\s*pausa\b/i,"").trim();
   if(rest==="") return true;
-  if(rest.startsWith("#") || rest.startsWith("//")) return true;
+  if(rest.startsWith("#")) return true;
   if(rest.startsWith("(")) return true;
   return rest.length>0;
 }
 function isPausaLine(line){ return isPausaStmt(line); }
 function getPausaSeconds(stmt, env){
-  const m=stmt.match(/^\s*pausa\s*(?:\(\s*(.*?)\s*\)|\s+(.+?))?\s*(?:#.*|\/\/.*)?$/i);
+  const m=stmt.match(/^\s*pausa\s*(?:\(\s*(.*?)\s*\)|\s+(.+?))?\s*(?:#.*)?$/i);
   let arg="";
   if(m) arg=(m[1]!==undefined ? m[1] : m[2]||"").trim();
   if(!arg) return 0;
@@ -5140,7 +5141,7 @@ const WILLLOG_CONTINUE = {type:'continue'};
 async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
   stmt=stmt.trim();
   if(stmt==='') return;
-  if(stmt.startsWith('#') || stmt.startsWith('//')) return;
+  if(stmt.startsWith('#')) return;
   if(isPareStmt(stmt)) throw WILLLOG_BREAK;
   if(isContinueStmt(stmt)) throw WILLLOG_CONTINUE;
   if(isLimpeStmt(stmt)){ clearConsole(); return; }
@@ -5418,8 +5419,8 @@ async function runWillog(){
   _janelaAbertaNestaExec=false;
   _graficoErroJaMostrado=false;
   const src=editor.value;
-  let srcNoBlock=src.replace(/\/\/:[\s\S]*?:\/\//g, '');
-  srcNoBlock=srcNoBlock.replace(/\/\/:[\s\S]*$/g, '');
+  let srcNoBlock=src.replace(/#:[\s\S]*?:#/g, '');
+  srcNoBlock=srcNoBlock.replace(/#:[\s\S]*$/g, '');
   const env={};
   const hasOutputRef={value:false};
   const rawLines=srcNoBlock.split('\n');
@@ -6106,7 +6107,7 @@ document.addEventListener('keydown', (e)=>{
   if(t==='' ) return null;
   const esc = (s)=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const linhaCode = `<div style="font-family:'JetBrains Mono',monospace; font-size:15px; background:var(--panel2); border:1px solid var(--border); padding:8px 12px; border-radius:6px; color:var(--text); font-weight:500;">${esc(t)}</div>`;
-  if(t.startsWith('#') || t.startsWith('//')){
+  if(t.startsWith('#')){
     return `<div style="display:flex; gap:12px; padding:10px 14px; margin:6px 0; background:var(--panel2); border-left:4px solid var(--border); border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;"><div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--hl-comment);">${t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><div style="margin-top:6px; font-size:14px; color:var(--text-dim);">💭 Essa linha é um comentário — um recadinho só para humanos, o computador finge que não viu!</div></div></div>`;
   }
   if(/^abrir\s+/i.test(t)){
