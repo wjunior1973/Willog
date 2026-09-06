@@ -1129,7 +1129,7 @@ verificar nota:
           <tr><td><code class="syntax">(valor, "p%")</code></td><td>Percentual — p% de valor</td><td><code class="example">(30,"10%")</code> <span class="saida">→ 3</span> &nbsp; <code class="example">(120,"5%")</code> <span class="saida">→ 6</span></td></tr>
           <tr><td><code class="syntax">+</code> <code class="syntax">&</code></td><td>Adição e concatenação; com listas une</td><td><code class="example">2+3</code> <span class="saida">→ 5</span> &nbsp; <code class="example">[1,2]+[3]</code> <span class="saida">→ 1, 2, 3</span></td></tr>
           <tr><td><code class="syntax">-</code></td><td>Subtração; diferença de conjuntos</td><td><code class="example">5-2</code> <span class="saida">→ 3</span> &nbsp; <code class="example">[1,2,3]-[2]</code> <span class="saida">→ 1, 3</span></td></tr>
-          <tr><td><code class="syntax">*</code> <code class="syntax">/</code> <code class="syntax">//</code> <code class="syntax">\</code> <code class="syntax">%</code> <code class="syntax">**</code></td><td>Multiplicação, divisão, inteira, quociente fracionário, módulo, potência — vetorizados</td><td><code class="example">2**3</code> <span class="saida">→ 8</span> &nbsp; <code class="example">5//2</code> <span class="saida">→ 2</span> &nbsp; <code class="example">5\</code> <span class="saida">→ 0.5</span></td></tr>
+          <tr><td><code class="syntax">*</code> <code class="syntax">/</code> <code class="syntax">\</code> <code class="syntax">%</code> <code class="syntax">**</code></td><td>Multiplicação, divisão, divisão inteira, módulo, potência — vetorizados</td><td><code class="example">2**3</code> <span class="saida">→ 8</span> &nbsp; <code class="example">5\2</code> <span class="saida">→ 2</span> &nbsp; <code class="example">7%3</code> <span class="saida">→ 1</span></td></tr>
           <tr><td><code class="syntax">> &lt; >= &lt;= == !=</code></td><td>Comparação → <code>Verdadeiro</code>/<code>Falso</code></td><td><code class="example">10>5</code> <span class="saida">→ Verdadeiro</span></td></tr>
           <tr><td><code class="syntax">e</code></td><td>Conjunção lógica</td><td><code class="example">5>3 e 2<4</code> <span class="saida">→ Verdadeiro</span></td></tr>
           <tr><td><code class="syntax">existe … em …</code></td><td>Pertinência em texto/lista</td><td><code class="example">existe "a" em "casa"</code> <span class="saida">→ Verdadeiro</span></td></tr>
@@ -1363,7 +1363,7 @@ function highlightWillog(code){
       continue;
     }
     const two=code.substr(i,2);
-    if(['>=','<=','==','!=','**','//'].includes(two)){
+    if(['>=','<=','==','!=','**'].includes(two)){
       html+='<span class="hl-operator">'+escapeHtml(two)+'</span>'; i+=2; continue;
     }
     if(c==='\\'){
@@ -3566,7 +3566,7 @@ function tokenize(expr, env){
     if(c===':'){ tokens.push({type:'COLON', value:c}); i++; continue; }
     if(c==='.'){ tokens.push({type:'OP', value:'.'}); i++; continue; }
     const two = expr.substr(i,2);
-    if(['>=','<=','==','!=','**','//'].includes(two)){ tokens.push({type:'OP', value:two}); i+=2; continue; }
+    if(['>=','<=','==','!=','**'].includes(two)){ tokens.push({type:'OP', value:two}); i+=2; continue; }
     if(c==='\\'){ tokens.push({type:'OP', value:'\\'}); i++; continue; }
     if('+-*/%><=&'.includes(c)){ tokens.push({type:'OP', value:c}); i++; continue; }
     if(c===','){ tokens.push({type:'COMMA', value:c}); i++; continue; }
@@ -3578,7 +3578,7 @@ function tokenize(expr, env){
 function toRPN(tokens){
   const output=[];
   const ops=[];
-  const prec={ 'ou':1, '&':1, 'e':2, 'não':3, '==':4, '!=':4, '>':4, '<':4, '>=':4, '<=':4, '+':5, '-':5, 'união':5, 'intersecção':5, '*':6, '/':6, '%':6, '//':6, '\\':6, '**':7, 'u-':8, '.':9 };
+  const prec={ 'ou':1, '&':1, 'e':2, 'não':3, '==':4, '!=':4, '>':4, '<':4, '>=':4, '<=':4, '+':5, '-':5, 'união':5, 'intersecção':5, '*':6, '/':6, '%':6, '\\':6, '**':7, 'u-':8, '.':9 };
   const isLeft = (op)=> op !== '**' && op !== 'não' && op !== 'u-';
   let prev=null;
   for(let t of tokens){
@@ -4800,8 +4800,7 @@ function evalRPN(rpn, env){
             break;
           }
           case '**': res = powerWillog(av,bv); break;
-          case '//': res = floorDivWillog(av,bv); break;
-          case '\\': res = fracDivWillog(av,bv); break;
+          case '\\': res = floorDivWillog(av,bv); break;
           case '&':
             if(Array.isArray(av) || Array.isArray(bv)){
               const arrA = Array.isArray(av) ? av : [av];
