@@ -3758,7 +3758,7 @@ function floorDivWillog(a,b){
     return res;
   }
   const bv=Number(b);
-  return bv===0? Infinity : Number(a)/bv;
+  return bv===0? Infinity : Math.floor(Number(a)/bv);
 }
 
 function fracDivWillog(a,b){
@@ -3938,27 +3938,128 @@ function evalRPN(rpn, env){
           retVal = evaluateExpression(funcObj.body[0], newEnv);
         } else {
           let foundRet = null;
-          for(let line of funcObj.body){
-            if(isRetorneLine(line)){
-              const expr = parseRetorne(line);
-              if(expr==='') foundRet = undefined;
-              else foundRet = evaluateExpression(expr, newEnv);
-              break;
-            } else {
-              try{
-                if(line.includes('=')){
-                  const parts=line.split('=');
-                  if(parts.length>=2){
-                    const rhs=parts[parts.length-1].trim();
-                    const val=evaluateExpression(rhs, newEnv);
-                    const varName=parts[0].trim();
-                    if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(varName)){
-                      newEnv[varName]=val;
+          let fIdx=0;
+          const fLines=funcObj.body;
+          const execAssignInFunc=(stmt)=>{
+            try{
+              const parts=splitAssignmentParts(stmt);
+              if(parts.length>=2){
+                const rhs=parts[parts.length-1].trim();
+                if(rhs==='') return;
+                const val=evaluateExpression(rhs, newEnv);
+                for(let pi=0; pi<parts.length-1; pi++){
+                  const varPath=parts[pi].trim();
+                  if(varPath==='') continue;
+                  if(varPath.includes('.')){
+                    const pathParts=varPath.split('.').map(p=>p.trim()).filter(p=>p!=='');
+                    let valid=true; for(let pp of pathParts){ if(!/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(pp)){ valid=false; break; } }
+                    if(!valid) continue;
+                    let obj=newEnv;
+                    for(let k=0;k<pathParts.length-1;k++){
+                      const key=pathParts[k];
+                      if(!(key in obj) || obj[key]===null || typeof obj[key]!=='object' || Array.isArray(obj[key])){
+                        if(!(key in obj) || obj[key]===null || typeof obj[key]!=='object'){ obj[key]={}; }
+                      }
+                      obj=obj[key];
                     }
+                    obj[pathParts[pathParts.length-1]]=val;
+                  } else {
+                    if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(varPath)) newEnv[varPath]=val;
                   }
                 }
-              }catch(e){}
+              } else {
+                try{ evaluateExpression(stmt, newEnv); }catch(e){}
+              }
+            }catch(e){}
+          };
+          while(fIdx < fLines.length && foundRet===null){
+            const line=fLines[fIdx];
+            if(isEmptyOrComment(line)){ fIdx++; continue; }
+            if(isRetorneLine(line)){
+              const expr=parseRetorne(line);
+              foundRet = expr===''? undefined : evaluateExpression(expr, newEnv);
+              break;
+            } else if(isSeLine(line)){
+              const seIndent=getIndent(line);
+              const parsed=parseSe(line);
+              const after=parsed.after;
+              const condVal=evaluateCondition(parsed.cond, newEnv);
+              if(after && after.trim()!==''){
+                let nxt=fIdx+1;
+                while(nxt<fLines.length && isEmptyOrComment(fLines[nxt])) nxt++;
+                let hasElse=nxt<fLines.length && isSenaoLine(fLines[nxt]) && getIndent(fLines[nxt])===seIndent;
+                let elseAfter=hasElse? parseSenao(fLines[nxt]).after : '';
+                if(condVal){
+                  if(isRetorneLine(after)){
+                    const e=parseRetorne(after);
+                    foundRet = e===''? undefined : evaluateExpression(e, newEnv);
+                    break;
+                  } else { execAssignInFunc(after); }
+                } else if(hasElse){
+                  if(elseAfter && elseAfter.trim()!==''){
+                    if(isRetorneLine(elseAfter)){
+                      const e=parseRetorne(elseAfter);
+                      foundRet = e===''? undefined : evaluateExpression(e, newEnv);
+                      break;
+                    } else { execAssignInFunc(elseAfter); }
+                  } else {
+                    let es= nxt+1, ee=es;
+                    while(ee<fLines.length && getIndent(fLines[ee])>seIndent) ee++;
+                    for(let k=es;k<ee;k++){
+                      const l=fLines[k];
+                      if(isRetorneLine(l)){ const e=parseRetorne(l); foundRet=e===''?undefined:evaluateExpression(e,newEnv); break; }
+                      else execAssignInFunc(l);
+                      if(foundRet!==null) break;
+                    }
+                    if(foundRet!==null) break;
+                  }
+                }
+                fIdx = hasElse ? (elseAfter && elseAfter.trim()!=='' ? nxt+1 : (()=>{ let ee=nxt+1; while(ee<fLines.length && getIndent(fLines[ee])>seIndent) ee++; return ee; })()) : fIdx+1;
+                continue;
+              } else {
+                let blockStart=fIdx+1, blockEnd=blockStart;
+                while(blockEnd<fLines.length && getIndent(fLines[blockEnd])>seIndent) blockEnd++;
+                let nxt=blockEnd;
+                while(nxt<fLines.length && isEmptyOrComment(fLines[nxt])) nxt++;
+                let hasElse=nxt<fLines.length && isSenaoLine(fLines[nxt]) && getIndent(fLines[nxt])===seIndent;
+                let elseAfter=hasElse? parseSenao(fLines[nxt]).after : '';
+                let elseEnd=hasElse? (elseAfter && elseAfter.trim()!=='' ? nxt+1 : (()=>{ let ee=nxt+1; while(ee<fLines.length && getIndent(fLines[ee])>seIndent) ee++; return ee; })()) : -1;
+                if(condVal){
+                  for(let k=blockStart;k<blockEnd;k++){
+                    const l=fLines[k];
+                    if(isEmptyOrComment(l)) continue;
+                    if(isRetorneLine(l)){ const e=parseRetorne(l); foundRet=e===''?undefined:evaluateExpression(e,newEnv); break; }
+                    else execAssignInFunc(l);
+                    if(foundRet!==null) break;
+                  }
+                  if(foundRet!==null) break;
+                  fIdx = hasElse ? elseEnd : blockEnd;
+                  continue;
+                } else if(hasElse){
+                  if(elseAfter && elseAfter.trim()!==''){
+                    if(isRetorneLine(elseAfter)){ const e=parseRetorne(elseAfter); foundRet=e===''?undefined:evaluateExpression(e,newEnv); break; }
+                    else execAssignInFunc(elseAfter);
+                  } else {
+                    for(let k=nxt+1;k<elseEnd;k++){
+                      const l=fLines[k];
+                      if(isEmptyOrComment(l)) continue;
+                      if(isRetorneLine(l)){ const e=parseRetorne(l); foundRet=e===''?undefined:evaluateExpression(e,newEnv); break; }
+                      else execAssignInFunc(l);
+                      if(foundRet!==null) break;
+                    }
+                    if(foundRet!==null) break;
+                  }
+                  fIdx=elseEnd;
+                  continue;
+                } else {
+                  fIdx=blockEnd;
+                  continue;
+                }
+              }
+            } else {
+              execAssignInFunc(line);
             }
+            fIdx++;
           }
           if(foundRet!==null) retVal=foundRet;
           else retVal=undefined;
@@ -4230,7 +4331,7 @@ function evalRPN(rpn, env){
         else {
           let parts=s.split(sp);
           if(parts.length===1 && s.length>1 && s.indexOf(sp)===-1){
-            res=s.split("").join(sp);
+            res=s.split("");
           } else res=parts;
         }
         stack.push(res);
@@ -4339,13 +4440,14 @@ function evalRPN(rpn, env){
       } else if(fn==='ordenecrescente' || fn==='ordenedecrescente'){
         const a = stack.pop();
         let res;
+        const isCrescente = fn==='ordenecrescente';
         if(Array.isArray(a)){
           res=a.slice();
           const allNum=res.every(x=> typeof x==='number' || (!isNaN(Number(x)) && String(Number(x))===String(x)));
-          if(allNum) res.sort((x,y)=> Number(y)-Number(x));
-          else res.sort((a,b)=> String(b).localeCompare(String(a),'pt'));
+          if(allNum) res.sort((x,y)=> isCrescente ? Number(x)-Number(y) : Number(y)-Number(x));
+          else res.sort((a,b)=> isCrescente ? String(a).localeCompare(String(b),'pt') : String(b).localeCompare(String(a),'pt'));
         } else if(typeof a==='string'){
-          res=a.split('').sort((x,y)=> y.localeCompare(x,'pt')).join('');
+          res=a.split('').sort((x,y)=> isCrescente ? x.localeCompare(y,'pt') : y.localeCompare(x,'pt')).join('');
         } else {
           res=a;
         }
@@ -5160,6 +5262,30 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
     }catch(e){ logToConsole('Erro em desenhe.texto: '+e.message,'error'); }
     return;
   }
+  if(isAbrirStmt(stmt)){
+    const _fn=parseAbrirFilename(stmt, env);
+    await willogAbrir(_fn, env);
+    hasOutputRef.value=true;
+    return;
+  }
+  if(isEscreverStmt(stmt)){
+    const _p=parseEscrever(stmt, env);
+    if(!_p){ logToConsole('Erro na linha '+lineNo+': escrever precisa de $arquivo, valor', 'error'); return; }
+    willogEscrever(_p.handle, _p.values, env);
+    hasOutputRef.value=true;
+    return;
+  }
+  if(isLerStmt(stmt)){
+    const _p=parseLer(stmt);
+    if(!_p){ logToConsole('Erro na linha '+lineNo+': ler precisa de $arquivo, variável', 'error'); return; }
+    willogLer(_p.handle, _p.varNames, env);
+    return;
+  }
+  if(isFecharStmt(stmt)){
+    const _h=parseFechar(stmt);
+    if(_h) await willogFechar(_h);
+    return;
+  }
   if(isGotoStmt(stmt)){
     const target=parseGoto(stmt);
     const dest = (typeof labelMap !== 'undefined' ? (labelMap[target] ?? labelMap[target.toLowerCase()]) : undefined);
@@ -5451,6 +5577,30 @@ async function runWillog(){
           }
           if(_willogDrawTexto(_texto,_x,_y,_tam,_cor,env)) hasOutputRef.value=true;
         }catch(e){ logToConsole('Erro na linha '+lineNo+': '+e.message,'error'); }
+        i++; continue;
+      }
+      if(isAbrirStmt(raw)){
+        const _fn=parseAbrirFilename(raw, env);
+        await willogAbrir(_fn, env);
+        hasOutputRef.value=true;
+        i++; continue;
+      }
+      if(isEscreverStmt(raw)){
+        const _p=parseEscrever(raw, env);
+        if(!_p){ logToConsole('Erro na linha '+lineNo+': escrever precisa de $arquivo, valor', 'error'); i++; continue; }
+        willogEscrever(_p.handle, _p.values, env);
+        hasOutputRef.value=true;
+        i++; continue;
+      }
+      if(isLerStmt(raw)){
+        const _p=parseLer(raw);
+        if(!_p){ logToConsole('Erro na linha '+lineNo+': ler precisa de $arquivo, variável', 'error'); i++; continue; }
+        willogLer(_p.handle, _p.varNames, env);
+        i++; continue;
+      }
+      if(isFecharStmt(raw)){
+        const _h=parseFechar(raw);
+        if(_h) await willogFechar(_h);
         i++; continue;
       }
       if(isLabelLine(raw)){
