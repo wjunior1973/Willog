@@ -261,7 +261,7 @@
     white-space:pre-wrap;
     word-break:break-word;
   }
-  .console-output .line { margin:0; }
+  .console-output .line { margin:0; white-space:pre-wrap; word-break:break-word; }
   .console-output .line.error { color: #ff7675; }
   .console-output .line.success { color: #55efc4; }
   .console-output .line.info { color: #74b9ff; opacity:0.9; }
@@ -390,6 +390,8 @@
   .floating-window.minimized { height: 40px; }
   .floating-window.minimized .floating-console { display:none; }
   .floating-window.maximized { inset:0 !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important; transform:none !important; width:100% !important; height:100% !important; border-radius:0; }
+  .floating-window.maximized .floating-body { width:100% !important; height:auto !important; flex:1 !important; min-height:0 !important; display:flex !important; }
+  .floating-window.maximized #janelaCanvas { width:100% !important; height:100% !important; flex:1 !important; }
   .floating-header {
     background: var(--panel2);
     border-bottom: 2px solid var(--border);
@@ -412,7 +414,7 @@
     font-family:'JetBrains Mono',monospace; font-size:13px; line-height:19px;
     padding:12px; overflow-y:auto; white-space:pre-wrap; word-break:break-word;
   }
-  .floating-console .line { margin:0; }
+  .floating-console .line { margin:0; white-space:pre-wrap; word-break:break-word; }
   .floating-console .line.error { color:#ff7675; }
   .floating-console .line.success { color:#55efc4; }
   .floating-console.centralizado { text-align:center; }
@@ -607,6 +609,7 @@
         <button class="manual-tab" data-tab="funcoes">Funções</button>
         <button class="manual-tab" data-tab="operadores">Operadores</button>
         <button class="manual-tab" data-tab="propriedades">Propriedades</button>
+        <button class="manual-tab" data-tab="cores">Cores</button>
       </div>
       <div class="manual-pane active" id="pane-comandos"><h3>abrir</h3>
         <p class="code-label">Sintaxe</p>
@@ -640,6 +643,17 @@ mostre "Tecla: {tecla}"</span>
 se captureTecla()=="Enter":
     mostre "Enter confirmado"</span>
 <span class="saida">-> Enter confirmado</span></pre>
+        <h3>colar</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">colar</span><span class="example">(variável, x, y)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela(400,400)
+tela.limpe
+a=desenhe.polígono(200,200,5,50)
+recortar(a)
+colar(a,300,300)</span>
+<span class="saida">-> recorta a e cola em (300,300)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cola o desenho recortado com <code>recortar(variável)</code> na coordenada (x,y). Para <code>linha</code>/<code>retangulo</code> centraliza em (x,y).</p>
         <h3>comentários</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax"># comentário de linha</span>
@@ -658,6 +672,18 @@ mostre "Olá" #' comentário após código</span>
 :#
 mostre "executa"</span>
 <span class="saida">-> executa</span></pre>
+        <h3>constante</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">constante</span> <span class="example">NOME = valor</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">constante PI = 3.1415
+mostre PI</span>
+<span class="saida">-> 3.1415</span>
+
+<span class="example">constante Valor = 5000
+mostre Valor</span>
+<span class="saida">-> 5000</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Constantes não podem ser alteradas: após <code>constante PI = 3.1415</code>, <code>PI = 5</code> gera erro.</p>
         <h3>continue</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">continue</span></pre>
@@ -667,6 +693,25 @@ mostre "executa"</span>
         continue
     mostre n</span>
 <span class="saida">-> 1  3  4  5  6  7  8  9  10 (pula n==2)</span></pre>
+        <h3>corAleatória</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">corAleatória</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">janela(300,400)
+tela.limpe
+desenhe.linha(0,0,100,100,corAleatória)</span>
+<span class="saida">-> linha com cor aleatória</span>
+
+<span class="example">janela(300,400)
+tela.limpe
+desenhe.circulo(150,150,50,corAleatória)</span>
+<span class="saida">-> círculo com cor aleatória</span>
+
+<span class="example">janela(300,400)
+tela.cor(corAleatória)
+tela.limpe</span>
+<span class="saida">-> fundo com cor aleatória</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Pode ser usado em <code>tela.cor(corAleatória)</code> e em todos <code>desenhe.*(...,corAleatória)</code>. Cada chamada sorteia uma cor diferente entre amarelo, vermelho, azul, verde, ciano, rosa, roxo, laranja, branco, cinza, marrom, preto.</p>
         <h3>definir função</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">definir função</span> <span class="example">&lt;nome&gt;(&lt;parâmetro 1&gt;, &lt;parâmetro 2&gt;, ...):</span>
@@ -690,44 +735,53 @@ mostre S(100,20,10)</span>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">desenhe.circulo</span><span class="example">(x, y, raio, cor)</span></pre>
         <p class="code-label">Exemplo</p>
-        <pre><span class="example">janela()
+        <pre><span class="example">janela(300,400)
 tela.limpe
 desenhe.circulo(150,150,50,vermelho)</span>
 <span class="saida">-> desenha círculo vermelho com centro (150,150) e raio 50 em fundo preto</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Fundo padrão <code>preto</code>, traço padrão <code>branco</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Fundo padrão <code>preto</code>, traço padrão <code>branco</code>. Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
         <h3>desenhe.linha</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">desenhe.linha</span><span class="example">(x1, y1, x2, y2, cor)</span></pre>
         <p class="code-label">Exemplo</p>
-        <pre><span class="example">janela()
+        <pre><span class="example">janela(300,400)
 tela.limpe
 desenhe.linha(10,10,200,100,azul)</span>
 <span class="saida">-> desenha linha azul de (10,10) até (200,100)</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
+        <h3>desenhe.polígono</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">desenhe.polígono</span><span class="example">(x, y, n, raio, cor)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela(300,400)
+tela.limpe
+desenhe.polígono(150,150,5,50,vermelho)</span>
+<span class="saida">-> desenha polígono regular com centro (150,150), 5 lados e raio 50 em fundo preto</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Desenha polígono regular com centro em (x,y), n lados e raio da circunferência externa que passa por todos os vértices. Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
         <h3>desenhe.ponto</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">desenhe.ponto</span><span class="example">(x, y, cor)</span></pre>
         <p class="code-label">Exemplo</p>
-        <pre><span class="example">janela()
+        <pre><span class="example">janela(300,400)
 tela.limpe
 desenhe.ponto(100,100,amarelo)</span>
 <span class="saida">-> desenha ponto amarelo em (100,100)</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
         <h3>desenhe.retangulo</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">desenhe.retangulo</span><span class="example">(x1, y1, x2, y2, cor)</span></pre>
         <p class="code-label">Exemplo</p>
-        <pre><span class="example">janela()
+        <pre><span class="example">janela(300,400)
 tela.limpe
 desenhe.retangulo(20,30,140,110,verde)</span>
 <span class="saida">-> desenha retângulo verde de (20,30) até (140,110)</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
         
-        <h3>desenhe.texto</h3>
+                <h3>desenhe.texto</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">desenhe.texto</span><span class="example">("texto", x, y [, tamanho] [, cor])</span></pre>
         <p class="code-label">Exemplo</p>
-        <pre><span class="example">janela()
+        <pre><span class="example">janela(300,400)
 tela.limpe
 desenhe.texto("Olá, Willog!", 100, 100, 20, vermelho)</span>
 <span class="saida">-> escreve "Olá, Willog!" em (100,100) tamanho 20 vermelho</span>
@@ -737,7 +791,7 @@ desenhe.texto("Olá, Willog!", 100, 100, 20, vermelho)</span>
 
 <span class="example">desenhe.texto("Sem tamanho", 10, 10)</span>
 <span class="saida">-> usa tamanho 12 e cor branco por padrão</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Tamanho padrão <code>12</code>, cor padrão <code>branco</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>. Também aceita <code>desenha.texto</code>.</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Tamanho padrão <code>12</code>, cor padrão <code>branco</code>. Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
         <h3>enquanto</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">enquanto</span> <span class="example">&lt;condição&gt;:</span>
@@ -806,6 +860,35 @@ fechar $notas
 # sem fechar, dados ficam em memória até fechar</span>
 <span class="saida">-> Arquivo com duas linhas; fechar persiste em disco/localStorage</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Use <code>fechar</code> para garantir gravação em disco. Arquivos virtuais ficam em <code>localStorage</code> sob chave <code>willog_file_&lt;nome&gt;</code>.</p>
+        <h3>figura.girar</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">figura.girar</span><span class="example">(ângulo, vezes, pausa)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela(600,600)
+figura=desenhe.polígono(200,200,5,50,vermelho)
+figura.girar(45,3,0.5)</span>
+<span class="saida">-> gira o polígono 45° à direita, 3 vezes com 0.5s de pausa (total 135°)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Gira o desenho armazenado em variável (ex: <code>figura</code>) ao redor de seu centro. Requer <code>figura=desenhe.polígono(...)</code> ou outro <code>desenhe.*</code> atribuído. Cada chamada atualiza <code>figura.rotacao</code> e redesenha todos.</p>
+        <h3>figura.mover</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">figura.mover</span><span class="example">(x, y, passo)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela(600,600)
+figura=desenhe.polígono(200,200,5,50,azul)
+figura.mover(400,300,2)</span>
+<span class="saida">-> move o polígono para (400,300) com passo 2px por quadro (16ms), centralizando em (x,y)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Move o desenho para novas coordenadas (x,y) com passo em pixels. Para <code>linha</code>/<code>retangulo</code> move o centro para (x,y). Para <code>ponto</code>/<code>circulo</code>/<code>poligono</code>/<code>texto</code> move o centro/posição.</p>
+        <h3>girar</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">girar</span><span class="example">(a(ângulo, vezes, pausa), b(ângulo, vezes, pausa), ...)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela(400,400)
+tela.limpe
+a=desenhe.polígono(200,200,5,50)
+b=desenhe.polígono(200,200,4,100)
+girar(a(30,5,0.125),b(-15,5,0.250))</span>
+<span class="saida">-> gira a 30° à direita 5 vezes com 0.125s e ao mesmo tempo gira b 15° à esquerda 5 vezes com 0.250s</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Gira vários desenhos ao mesmo tempo. Cada item é <code>variável(ângulo, vezes, pausa)</code>. Ângulo positivo gira à direita, negativo à esquerda. Requer desenhos atribuídos com <code>a=desenhe.polígono(...)</code>. Para girar um só desenho use <code>figura.girar(ângulo, vezes, pausa)</code>.</p>
         <h3>intervalo</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">(</span><span class="example">início..fim</span><span class="syntax">)</span>
@@ -820,21 +903,28 @@ mostre intervalo</span>
 <span class="saida">-> -5,-3,-1,1,3,5</span></pre>
         <h3>janela</h3>
         <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">janela</span><span class="example">()</span>
-<span class="syntax">janela</span><span class="example">(centraliza)</span></pre>
+        <pre><span class="syntax">janela</span><span class="example">()</span> <span class="saida">→ console maximizado</span>
+<span class="syntax">janela</span><span class="example">(centraliza)</span> <span class="saida">→ console maximizado centralizado</span>
+<span class="syntax">janela</span><span class="example">(largura, altura)</span> <span class="saida">→ desenho (ex: janela(300,400))</span></pre>
         <p class="code-label">Exemplo</p>
         <pre><span class="example">janela()
 mostre "Olá na janela!"</span>
-<span class="saida">-> Abre janela flutuante maximizada e exibe "Olá na janela!"</span>
+<span class="saida">-> Abre janela flutuante maximizada (console) e exibe "Olá na janela!"</span>
 
 <span class="example">janela(centraliza)
 mostre "Centralizado!"</span>
-<span class="saida">-> Abre janela maximizada com texto centralizado</span>
+<span class="saida">-> Abre janela maximizada com texto centralizado (console)</span>
+
+<span class="example">janela(300,400)
+tela.limpe
+desenhe.circulo(150,200,50,vermelho)</span>
+<span class="saida">-> Abre janela normal 300x400 centralizada para desenho (0,0 topo-esquerda, coordenadas reais, exclusivo para desenho)</span>
 
 <span class="example">mostre "Antes"
 janela()
 mostre "Depois na janela"</span>
-<span class="saida">-> Antes (console) → Depois na janela (flutuante + console, maximizada)</span></pre>
+<span class="saida">-> Antes (console principal) → Depois na janela (console maximizado)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px"><b>Exclusividade:</b> <code>janela()</code> e <code>janela(centraliza)</code> são exclusivos para <code>mostre</code>/<code>leia</code> (console). <code>janela(largura,altura)</code> é exclusivo para <code>tela.*</code> e <code>desenhe.*</code> (desenho). Tentar misturar gera erro.</p>
         <h3>leia</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">&lt;variável&gt; = leia</span>
@@ -910,6 +1000,17 @@ A
 }</span>
 <span class="saida">-> 1, 2, 3
 -> A é uma lista</span></pre>
+        <h3>mover</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">mover</span><span class="example">(a(x, y, passo), b(x, y, passo), ...)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela(400,400)
+tela.limpe
+a=desenhe.polígono(200,200,5,50)
+b=desenhe.polígono(200,200,4,100)
+mover(a(100,100,0.5),b(300,300))</span>
+<span class="saida">-> move a para (100,100) com passo 0.5px e ao mesmo tempo move b para (300,300) com passo padrão 1</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Move vários desenhos ao mesmo tempo. Cada item é <code>variável(x, y, passo)</code>. Passo omitido usa <code>1</code>. Requer desenhos atribuídos com <code>a=desenhe.polígono(...)</code>. Para mover um só desenho use <code>figura.mover(x, y, passo)</code>.</p>
         <h3>para cada</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">para cada</span> <span class="example">&lt;variável&gt; entre &lt;início&gt; e &lt;fim&gt; [pulando &lt;passo&gt;]:</span>
@@ -959,15 +1060,24 @@ mostre "Mundo"</span>
     mostre n
     pausa(1)</span>
 <span class="saida">-> 1 (pausa 1s) -> 2 (pausa 1s) -> 3</span></pre>
-        <h3>repetir</h3>
+        <h3>recortar</h3>
         <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">repetir</span><span class="example">(&lt;n&gt;):</span>
+        <pre><span class="syntax">recortar</span><span class="example">(variável)</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela(400,400)
+tela.limpe
+a=desenhe.polígono(200,200,5,50)
+recortar(a)</span>
+<span class="saida">-> remove a do canvas (use colar(a,x,y) para mostrar de novo)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Recorta o desenho armazenado em variável. Use <code>colar(variável,x,y)</code> para colar em nova coordenada.</p>
+        <h3>repita</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">repita</span><span class="example">(&lt;n&gt;):</span>
 <span class="example">    &lt;comandos&gt;</span></pre>
         <p class="code-label">Exemplo</p>
-        <pre><span class="example">repetir(4):
+        <pre><span class="example">repita(3):
     mostre "Olá!"</span>
 <span class="saida">-> Olá!
--> Olá!
 -> Olá!
 -> Olá!</span></pre>
         <h3>se … senão</h3>
@@ -987,26 +1097,31 @@ senão:
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">tela.cor</span><span class="example">(cor)</span></pre>
         <p class="code-label">Exemplo</p>
-        <pre><span class="example">janela()
+        <pre><span class="example">janela(300,400)
 tela.cor(azul)
 tela.limpe</span>
 <span class="saida">-> fundo da janela fica azul (limpe usa a cor atual)</span>
 
-<span class="example">janela()
+<span class="example">janela(300,400)
 tela.cor(preto)
 tela.limpe
 desenhe.linha(0,0,100,100,branco)</span>
-<span class="saida">-> fundo preto com linha branca</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>. Cor padrão de fundo <code>preto</code>. Exige <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+<span class="saida">-> fundo preto com linha branca</span>
+
+<span class="example">janela(300,400)
+tela.cor(corAleatória)
+tela.limpe</span>
+<span class="saida">-> fundo com cor aleatória a cada execução</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Cor padrão de fundo <code>preto</code>. Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
         <h3>tela.limpe</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">tela.limpe</span></pre>
         <p class="code-label">Exemplo</p>
-        <pre><span class="example">janela()
+        <pre><span class="example">janela(300,400)
 tela.limpe
 desenhe.circulo(100,100,40,amarelo)</span>
 <span class="saida">-> limpa a tela com a cor de fundo (preto por padrão) e desenha círculo amarelo</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Limpa toda a área gráfica preenchendo com a cor definida por <code>tela.cor()</code> (padrão <code>preto</code>). Deve ser usado após <code>janela()</code> — não funciona após <code>janela(centraliza)</code>.</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Limpa toda a área gráfica preenchendo com a cor definida por <code>tela.cor()</code> (padrão <code>preto</code>). Deve ser usado após <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
         <h3>toque</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">toque</span><span class="example">(frequência, duração)</span></pre>
@@ -1021,7 +1136,7 @@ desenhe.circulo(100,100,40,amarelo)</span>
 toque(freq,0.3)</span>
 <span class="saida">-> Dó 523 Hz por 0,3s</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Toca frequência sonora entre <code>20</code> e <code>20000</code> Hz durante <code>n</code> segundos (máx. 10s). Usa Web Audio API. Frequência e duração podem ser variáveis/expressões. Aguarda a duração antes de prosseguir.</p>
-        <h3>vá para</h3>
+      <h3>vá para</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">:rótulo</span>
 <span class="syntax">vá para</span> <span class="example">rótulo</span></pre>
@@ -1044,81 +1159,10 @@ verificar nota:
     caso 9: "Ótimo!"
     padrão: "Estude mais!"</span>
 <span class="saida">-> Ótimo!</span></pre>
-      </div>
+        </div>
       <div class="manual-pane" id="pane-funcoes">
         <h3>Funções — ordem alfabética</h3>
-        <table>
-<tr><th>Sintaxe</th><th>Descrição</th><th>Exemplo → Saída</th></tr>
-<tr><td><code class="syntax">abs(x)</code></td><td>Valor absoluto</td><td><code class="example">abs(-2)</code> <span class="saida">→ 2</span></td></tr>
-<tr><td><code class="syntax">adicionarDias(data, dias)</code></td><td>Adiciona dias a uma data</td><td><code class="example">adicionarDias("14/04/1973",19269)</code> <span class="saida">→ 15/01/2026</span></td></tr>
-<tr><td><code class="syntax">agora()</code></td><td>Data e hora atuais</td><td><code class="example">agora()</code> <span class="saida">→ 15/01/2026 14:30:07</span></td></tr>
-<tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr>
-<tr><td><code class="syntax">amostra(lista, n)</code></td><td>Amostra aleatória sem repetição</td><td><code class="example">amostra([1,2,3,4,5,6],2)</code> <span class="saida">→ 5,3</span></td></tr>
-<tr><td><code class="syntax">amostras(lista, tam, qtd)</code></td><td>Qtd amostras de tamanho tam</td><td><code class="example">amostras([1,2,3,4,5,6],3,2)</code> <span class="saida">→ 6,1,2 | 5,6,3</span></td></tr>
-<tr><td><code class="syntax">anosEntre(data1, data2)</code></td><td>Anos entre duas datas</td><td><code class="example">anosEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 52.7917808219</span></td></tr>
-<tr><td><code class="syntax">aparar(texto)</code></td><td>Remove espaços no início e fim</td><td><code class="example">aparar("     olá    ")</code> <span class="saida">→ olá</span></td></tr>
-<tr><td><code class="syntax">arredondar(x, casas)</code></td><td>Arredonda para n casas decimais</td><td><code class="example">arredondar(5.33333,2)</code> <span class="saida">→ 5.33</span><br><code class="example">arredondar(1.66666,3)</code> <span class="saida">→ 1.667</span></td></tr>
-<tr><td><code class="syntax">captureTecla()</code></td><td>Retorna a última tecla capturada por <code>espereTecla()</code></td><td><code class="example">espereTecla(); tecla=captureTecla()</code> <span class="saida">→ "a"</span><br><code class="example">espereTecla("enter"); captureTecla()</code> <span class="saida">→ "Enter"</span></td></tr>
-<tr><td><code class="syntax">começaCom(texto, prefixo)</code></td><td>Verifica se texto começa com prefixo (ignora maiúsculas/minúsculas)</td><td><code class="example">começaCom("Willog","wil")</code> <span class="saida">→ verdadeiro</span><br><code class="example">começaCom("Willog","log")</code> <span class="saida">→ falso</span></td></tr>
-<tr><td><code class="syntax">contarItem(lista, item)</code></td><td>Conta ocorrências de item</td><td><code class="example">contarItem("especialidade","e")</code> <span class="saida">→ 3</span><br><code class="example">contarItem(["a","b","c","b"],"b")</code> <span class="saida">→ 2</span></td></tr>
-<tr><td><code class="syntax">conte(lista)</code></td><td>Quantidade de elementos</td><td><code class="example">conte([1,3,5,7])</code> <span class="saida">→ 4</span></td></tr>
-<tr><td><code class="syntax">cos(x)</code></td><td>Cosseno (graus)</td><td><code class="example">cos(60)</code> <span class="saida">→ 0.5</span></td></tr>
-<tr><td><code class="syntax">data()</code></td><td>Data atual</td><td><code class="example">data()</code> <span class="saida">→ 15/01/2026</span></td></tr>
-<tr><td><code class="syntax">decimal(x)</code></td><td>Parte decimal</td><td><code class="example">decimal(2.5)</code> <span class="saida">→ 0.5</span></td></tr>
-<tr><td><code class="syntax">diaSemana(data)</code></td><td>Dia da semana (domingo a sábado)</td><td><code class="example">diaSemana("15/01/2026")</code> <span class="saida">→ quinta</span></td></tr>
-<tr><td><code class="syntax">diasEntre(data1, data2)</code></td><td>Dias entre duas datas</td><td><code class="example">diasEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 19269</span></td></tr>
-<tr><td><code class="syntax">distintos(valor)</code></td><td>Remove duplicatas mantendo ordem</td><td><code class="example">distintos("banana")</code> <span class="saida">→ ban</span><br><code class="example">distintos(123345456)</code> <span class="saida">→ 123456</span></td></tr>
-<tr><td><code class="syntax">divida(texto, separador)</code></td><td>Divide texto em lista</td><td><code class="example">divida("a,b,c",",")</code> <span class="saida">→ a,b,c</span><br><code class="example">divida("abc",",")</code> <span class="saida">→ a,b,c</span></td></tr>
-<tr><td><code class="syntax">éÍmpar(x)</code></td><td>Verifica se é ímpar</td><td><code class="example">éÍmpar(511)</code> <span class="saida">→ verdadeiro</span></td></tr>
-<tr><td><code class="syntax">éLista(x)</code></td><td>Verifica se é lista</td><td><code class="example">éLista([1,3,5,7])</code> <span class="saida">→ verdadeiro</span></td></tr>
-<tr><td><code class="syntax">embaralhe(valor)</code></td><td>Embaralha lista/texto/número</td><td><code class="example">embaralhe([1,2,3,4,5])</code> <span class="saida">→ 3,1,5,2,4</span><br><code class="example">embaralhe("banana")</code> <span class="saida">→ annaba</span></td></tr>
-<tr><td><code class="syntax">encontre(texto, busca)</code></td><td>Posição da primeira ocorrência (0 = primeiro caractere, -1 se não encontrar)</td><td><code class="example">encontre("Willog","llog")</code> <span class="saida">→ 2</span><br><code class="example">encontre("Willog","x")</code> <span class="saida">→ -1</span><br><code class="example">encontre([1,2,3,2],2)</code> <span class="saida">→ 1</span></td></tr>
-<tr><td><code class="syntax">éNúmero(x)</code></td><td>Verifica se é número</td><td><code class="example">éNúmero(234)</code> <span class="saida">→ verdadeiro</span><br><code class="example">éNúmero("123")</code> <span class="saida">→ falso</span></td></tr>
-<tr><td><code class="syntax">éPar(x)</code></td><td>Verifica se é par</td><td><code class="example">éPar(1023)</code> <span class="saida">→ falso</span></td></tr>
-<tr><td><code class="syntax">éPrimo(x)</code></td><td>Verifica se é primo</td><td><code class="example">éPrimo(3)</code> <span class="saida">→ verdadeiro</span></td></tr>
-<tr><td><code class="syntax">éTexto(x)</code></td><td>Verifica se é texto</td><td><code class="example">éTexto("Willog")</code> <span class="saida">→ verdadeiro</span></td></tr>
-<tr><td><code class="syntax">fatorial(x)</code></td><td>Fatorial</td><td><code class="example">fatorial(4)</code> <span class="saida">→ 24</span></td></tr>
-<tr><td><code class="syntax">filtrar(lista, condição)</code></td><td>Filtra por condição ou valor</td><td><code class="example">filtrar([1,2,3,4],"x>2")</code> <span class="saida">→ 3,4</span><br><code class="example">filtrar("maçaneta","a")</code> <span class="saida">→ mçnet</span></td></tr>
-<tr><td><code class="syntax">formate(valor, casas)</code></td><td>Formata número truncando para n casas decimais</td><td><code class="example">formate(3.141502,3)</code> <span class="saida">→ 3.141</span><br><code class="example">formate(3.1,3)</code> <span class="saida">→ 3.100</span></td></tr>
-<tr><td><code class="syntax">fração(x)</code></td><td>Converte para fração</td><td><code class="example">fração(0.333)</code> <span class="saida">→ 1/3</span></td></tr>
-<tr><td><code class="syntax">hora()</code></td><td>Hora atual</td><td><code class="example">hora()</code> <span class="saida">→ 14:30:07</span></td></tr>
-<tr><td><code class="syntax">indiceDe(lista, valor)</code></td><td>Índice do valor (0 = primeiro, -1 se não encontrar)</td><td><code class="example">indiceDe([1,2,3,4],3)</code> <span class="saida">→ 2</span></td></tr>
-<tr><td><code class="syntax">insira(lista, pos, valor)</code></td><td>Insere valor após posição pos</td><td><code class="example">insira([1,2,3,4],1,9)</code> <span class="saida">→ 1,2,9,3,4</span></td></tr>
-<tr><td><code class="syntax">inteiro(x)</code></td><td>Parte inteira</td><td><code class="example">inteiro(2.7)</code> <span class="saida">→ 2</span></td></tr>
-<tr><td><code class="syntax">inverta(texto)</code></td><td>Inverte texto/lista</td><td><code class="example">inverta("Willog")</code> <span class="saida">→ golliW</span></td></tr>
-<tr><td><code class="syntax">junte(lista, separador)</code></td><td>Junta lista em texto</td><td><code class="example">junte(["a","b"],"-")</code> <span class="saida">→ a-b</span></td></tr>
-<tr><td><code class="syntax">ln(x)</code></td><td>Logaritmo natural</td><td><code class="example">ln(2)</code> <span class="saida">→ 0.69314718056</span></td></tr>
-<tr><td><code class="syntax">log(base, valor)</code></td><td>Logaritmo</td><td><code class="example">log(10,2)</code> <span class="saida">→ 0.30102999566</span></td></tr>
-<tr><td><code class="syntax">maiúsculo(texto)</code></td><td>Converte para maiúsculas</td><td><code class="example">maiúsculo("Olá!")</code> <span class="saida">→ OLÁ!</span></td></tr>
-<tr><td><code class="syntax">mapear(lista, expressão)</code></td><td>Aplica expressão a cada item</td><td><code class="example">mapear([1,2,3],"x*2")</code> <span class="saida">→ 2,4,6</span></td></tr>
-<tr><td><code class="syntax">máximo(...valores)</code></td><td>Maior valor</td><td><code class="example">máximo(2,4,7,4,5)</code> <span class="saida">→ 7</span></td></tr>
-<tr><td><code class="syntax">mdc(a, b, ...)</code></td><td>Máximo divisor comum</td><td><code class="example">mdc(12,18)</code> <span class="saida">→ 6</span></td></tr>
-<tr><td><code class="syntax">média(...valores)</code></td><td>Média aritmética</td><td><code class="example">média(2,4,6)</code> <span class="saida">→ 4</span></td></tr>
-<tr><td><code class="syntax">mesesEntre(data1, data2)</code></td><td>Meses entre duas datas</td><td><code class="example">mesesEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 633.501369863</span></td></tr>
-<tr><td><code class="syntax">mínimo(...valores)</code></td><td>Menor valor</td><td><code class="example">mínimo(-3,1,2)</code> <span class="saida">→ -3</span></td></tr>
-<tr><td><code class="syntax">minúsculo(texto)</code></td><td>Converte para minúsculas</td><td><code class="example">minúsculo("WILLOG")</code> <span class="saida">→ willog</span></td></tr>
-<tr><td><code class="syntax">mmc(a, b, ...)</code></td><td>Mínimo múltiplo comum</td><td><code class="example">mmc(2,3,5)</code> <span class="saida">→ 30</span></td></tr>
-<tr><td><code class="syntax">ordeneDecrescente(lista)</code></td><td>Ordena decrescente</td><td><code class="example">ordeneDecrescente([2,4,6,8,10])</code> <span class="saida">→ 10,8,6,4,2</span></td></tr>
-<tr><td><code class="syntax">paraNúmero(x)</code></td><td>Converte texto para número</td><td><code class="example">paraNúmero("12.5")</code> <span class="saida">→ 12.5</span><br><code class="example">paraNúmero("12,5")*2</code> <span class="saida">→ 25</span></td></tr>
-<tr><td><code class="syntax">paraTexto(x)</code></td><td>Converte número para texto</td><td><code class="example">paraTexto(8)</code> <span class="saida">→ "8"</span><br><code class="example">paraTexto(8)*3</code> <span class="saida">→ 888</span></td></tr>
-<tr><td><code class="syntax">piso(x)</code></td><td>Arredonda para baixo (floor)</td><td><code class="example">piso(2.3)</code> <span class="saida">→ 2</span><br><code class="example">piso(2.9)</code> <span class="saida">→ 2</span></td></tr>
-<tr><td><code class="syntax">posição(texto, busca)</code></td><td>Posição da busca em texto (0 = primeiro) ou caractere na posição se busca for número</td><td><code class="example">posição("Willog","i")</code> <span class="saida">→ 1</span><br><code class="example">posição("Willog",1)</code> <span class="saida">→ i</span></td></tr>
-<tr><td><code class="syntax">primos(n)</code></td><td>Primeiros n primos</td><td><code class="example">primos(6)</code> <span class="saida">→ 2,3,5,7,11,13</span></td></tr>
-<tr><td><code class="syntax">produto(lista)</code></td><td>Produto dos elementos</td><td><code class="example">produto([1,3,5,7])</code> <span class="saida">→ 105</span></td></tr>
-<tr><td><code class="syntax">raizc(x)</code></td><td>Raiz cúbica — vetorizada</td><td><code class="example">raizc(27)</code> <span class="saida">→ 3</span></td></tr>
-<tr><td><code class="syntax">raizq(x)</code></td><td>Raiz quadrada — vetorizada</td><td><code class="example">raizq(16)</code> <span class="saida">→ 4</span><br><code class="example">raizq([1,4,9])</code> <span class="saida">→ 1, 2, 3</span></td></tr>
-<tr><td><code class="syntax">remova(lista, valor)</code></td><td>Remove primeira ocorrência</td><td><code class="example">remova([1,2,3,4,5,6],5)</code> <span class="saida">→ 1,2,3,4,6</span></td></tr>
-<tr><td><code class="syntax">repita(texto, n)</code></td><td>Repete texto n vezes</td><td><code class="example">repita("oi",4)</code> <span class="saida">→ oioioioi</span></td></tr>
-<tr><td><code class="syntax">semEspaços(texto)</code></td><td>Remove todos os espaços</td><td><code class="example">semEspaços("1 2 3 4 5 6")</code> <span class="saida">→ 123456</span></td></tr>
-<tr><td><code class="syntax">sen(x)</code></td><td>Seno (graus)</td><td><code class="example">sen(60)</code> <span class="saida">→ 0.86602540378</span></td></tr>
-<tr><td><code class="syntax">soma(lista)</code></td><td>Soma elementos (aceita lista ou valores)</td><td><code class="example">soma([1,2,3,4])</code> <span class="saida">→ 10</span><br><code class="example">soma(1,2,3)</code> <span class="saida">→ 6</span></td></tr>
-<tr><td><code class="syntax">substitua(texto, antigo, novo)</code></td><td>Substitui texto</td><td><code class="example">substitua("a-b-c","-"," ")</code> <span class="saida">→ a b c</span></td></tr>
-<tr><td><code class="syntax">tamanho(texto)</code></td><td>Tamanho do texto/lista</td><td><code class="example">tamanho("Willog")</code> <span class="saida">→ 6</span></td></tr>
-<tr><td><code class="syntax">tan(x)</code></td><td>Tangente (graus)</td><td><code class="example">tan(60)</code> <span class="saida">→ 1.73205080757</span></td></tr>
-<tr><td><code class="syntax">terminaCom(texto, sufixo)</code></td><td>Verifica se texto termina com sufixo (ignora maiúsculas/minúsculas)</td><td><code class="example">terminaCom("Willog","log")</code> <span class="saida">→ verdadeiro</span><br><code class="example">terminaCom("Willog","llo")</code> <span class="saida">→ falso</span></td></tr>
-<tr><td><code class="syntax">teto(x)</code></td><td>Arredonda para cima (ceil)</td><td><code class="example">teto(2.3)</code> <span class="saida">→ 3</span><br><code class="example">teto(2.9)</code> <span class="saida">→ 3</span></td></tr>
-<tr><td><code class="syntax">tipo(x)</code></td><td>Retorna tipo: número, texto, booleano ou lista</td><td><code class="example">tipo(7)</code> <span class="saida">→ número</span><br><code class="example">tipo("Olá!")</code> <span class="saida">→ texto</span><br><code class="example">tipo(4>5)</code> <span class="saida">→ booleano</span><br><code class="example">tipo([1,2,3])</code> <span class="saida">→ lista</span></td></tr>
-</table>
+        <table><tr><td><code class="syntax">abs(x)</code></td><td>Valor absoluto</td><td><code class="example">abs(-2)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">adicionarDias(data, dias)</code></td><td>Adiciona dias a uma data</td><td><code class="example">adicionarDias("14/04/1973",19269)</code> <span class="saida">→ 15/01/2026</span></td></tr><tr><td><code class="syntax">agora()</code></td><td>Data e hora atuais</td><td><code class="example">agora()</code> <span class="saida">→ 15/01/2026 14:30:07</span></td></tr><tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr><tr><td><code class="syntax">amostra(lista, n)</code></td><td>Amostra aleatória sem repetição</td><td><code class="example">amostra([1,2,3,4,5,6],2)</code> <span class="saida">→ 5,3</span></td></tr><tr><td><code class="syntax">amostras(lista, tam, qtd)</code></td><td>Qtd amostras de tamanho tam</td><td><code class="example">amostras([1,2,3,4,5,6],3,2)</code> <span class="saida">→ 6,1,2 | 5,6,3</span></td></tr><tr><td><code class="syntax">anosEntre(data1, data2)</code></td><td>Anos entre duas datas</td><td><code class="example">anosEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 52.7917808219</span></td></tr><tr><td><code class="syntax">aparar(texto)</code></td><td>Remove espaços no início e fim</td><td><code class="example">aparar("     olá    ")</code> <span class="saida">→ olá</span></td></tr><tr><td><code class="syntax">arredondar(x, casas)</code></td><td>Arredonda para n casas decimais</td><td><code class="example">arredondar(5.33333,2)</code> <span class="saida">→ 5.33</span><br><code class="example">arredondar(1.66666,3)</code> <span class="saida">→ 1.667</span></td></tr><tr><td><code class="syntax">captureTecla()</code></td><td>Retorna a última tecla capturada por <code>espereTecla()</code></td><td><code class="example">espereTecla(); tecla=captureTecla()</code> <span class="saida">→ "a"</span><br><code class="example">espereTecla("enter"); captureTecla()</code> <span class="saida">→ "Enter"</span></td></tr><tr><td><code class="syntax">começaCom(texto, prefixo)</code></td><td>Verifica se texto começa com prefixo (ignora maiúsculas/minúsculas)</td><td><code class="example">começaCom("Willog","wil")</code> <span class="saida">→ verdadeiro</span><br><code class="example">começaCom("Willog","log")</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">contarItem(lista, item)</code></td><td>Conta ocorrências de item</td><td><code class="example">contarItem("especialidade","e")</code> <span class="saida">→ 3</span><br><code class="example">contarItem(["a","b","c","b"],"b")</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">conte(lista)</code></td><td>Quantidade de elementos</td><td><code class="example">conte([1,3,5,7])</code> <span class="saida">→ 4</span></td></tr><tr><td><code class="syntax">cos(x)</code></td><td>Cosseno (graus)</td><td><code class="example">cos(60)</code> <span class="saida">→ 0.5</span></td></tr><tr><td><code class="syntax">data()</code></td><td>Data atual</td><td><code class="example">data()</code> <span class="saida">→ 15/01/2026</span></td></tr><tr><td><code class="syntax">decimal(x)</code></td><td>Parte decimal</td><td><code class="example">decimal(2.5)</code> <span class="saida">→ 0.5</span></td></tr><tr><td><code class="syntax">diaSemana(data)</code></td><td>Dia da semana (domingo a sábado)</td><td><code class="example">diaSemana("15/01/2026")</code> <span class="saida">→ quinta</span></td></tr><tr><td><code class="syntax">diasEntre(data1, data2)</code></td><td>Dias entre duas datas</td><td><code class="example">diasEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 19269</span></td></tr><tr><td><code class="syntax">distintos(valor)</code></td><td>Remove duplicatas mantendo ordem</td><td><code class="example">distintos("banana")</code> <span class="saida">→ ban</span><br><code class="example">distintos(123345456)</code> <span class="saida">→ 123456</span></td></tr><tr><td><code class="syntax">divida(texto, separador)</code></td><td>Divide texto em lista</td><td><code class="example">divida("a,b,c",",")</code> <span class="saida">→ a,b,c</span><br><code class="example">divida("abc",",")</code> <span class="saida">→ a,b,c</span></td></tr><tr><td><code class="syntax">éÍmpar(x)</code></td><td>Verifica se é ímpar</td><td><code class="example">éÍmpar(511)</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">éLista(x)</code></td><td>Verifica se é lista</td><td><code class="example">éLista([1,3,5,7])</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">embaralhe(valor)</code></td><td>Embaralha lista/texto/número</td><td><code class="example">embaralhe([1,2,3,4,5])</code> <span class="saida">→ 3,1,5,2,4</span><br><code class="example">embaralhe("banana")</code> <span class="saida">→ annaba</span></td></tr><tr><td><code class="syntax">encontre(texto, busca)</code></td><td>Posição da primeira ocorrência (0 = primeiro caractere, -1 se não encontrar)</td><td><code class="example">encontre("Willog","llog")</code> <span class="saida">→ 2</span><br><code class="example">encontre("Willog","x")</code> <span class="saida">→ -1</span><br><code class="example">encontre([1,2,3,2],2)</code> <span class="saida">→ 1</span></td></tr><tr><td><code class="syntax">éNúmero(x)</code></td><td>Verifica se é número</td><td><code class="example">éNúmero(234)</code> <span class="saida">→ verdadeiro</span><br><code class="example">éNúmero("123")</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">éPar(x)</code></td><td>Verifica se é par</td><td><code class="example">éPar(1023)</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">éPrimo(x)</code></td><td>Verifica se é primo</td><td><code class="example">éPrimo(3)</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">éTexto(x)</code></td><td>Verifica se é texto</td><td><code class="example">éTexto("Willog")</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">fatorial(x)</code></td><td>Fatorial</td><td><code class="example">fatorial(4)</code> <span class="saida">→ 24</span></td></tr><tr><td><code class="syntax">fibonacci(n)</code></td><td>Primeiros n termos de Fibonacci</td><td><code class="example">fibonacci(3)</code> <span class="saida">→ 1,1,2</span><br><code class="example">fibonacci(5)</code> <span class="saida">→ 1,1,2,3,5</span></td></tr><tr><td><code class="syntax">filtrar(lista, condição)</code></td><td>Filtra por condição ou valor</td><td><code class="example">filtrar([1,2,3,4],"x>2")</code> <span class="saida">→ 3,4</span><br><code class="example">filtrar("maçaneta","a")</code> <span class="saida">→ mçnet</span></td></tr><tr><td><code class="syntax">formate(valor, casas)</code></td><td>Formata número truncando para n casas decimais</td><td><code class="example">formate(3.141502,3)</code> <span class="saida">→ 3.141</span><br><code class="example">formate(3.1,3)</code> <span class="saida">→ 3.100</span></td></tr><tr><td><code class="syntax">fração(x)</code></td><td>Converte para fração</td><td><code class="example">fração(0.333)</code> <span class="saida">→ 1/3</span></td></tr><tr><td><code class="syntax">hora()</code></td><td>Hora atual</td><td><code class="example">hora()</code> <span class="saida">→ 14:30:07</span></td></tr><tr><td><code class="syntax">indiceDe(lista, valor)</code></td><td>Índice do valor (0 = primeiro, -1 se não encontrar)</td><td><code class="example">indiceDe([1,2,3,4],3)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">insira(lista, pos, valor)</code></td><td>Insere valor após posição pos</td><td><code class="example">insira([1,2,3,4],1,9)</code> <span class="saida">→ 1,2,9,3,4</span></td></tr><tr><td><code class="syntax">inteiro(x)</code></td><td>Parte inteira</td><td><code class="example">inteiro(2.7)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">inverta(texto)</code></td><td>Inverte texto/lista</td><td><code class="example">inverta("Willog")</code> <span class="saida">→ golliW</span></td></tr><tr><td><code class="syntax">junte(lista, separador)</code></td><td>Junta lista em texto</td><td><code class="example">junte(["a","b"],"-")</code> <span class="saida">→ a-b</span></td></tr><tr><td><code class="syntax">ln(x)</code></td><td>Logaritmo natural</td><td><code class="example">ln(2)</code> <span class="saida">→ 0.69314718056</span></td></tr><tr><td><code class="syntax">log(base, valor)</code></td><td>Logaritmo</td><td><code class="example">log(10,2)</code> <span class="saida">→ 0.30102999566</span></td></tr><tr><td><code class="syntax">maiúsculo(texto)</code></td><td>Converte para maiúsculas</td><td><code class="example">maiúsculo("Olá!")</code> <span class="saida">→ OLÁ!</span></td></tr><tr><td><code class="syntax">mapear(lista, expressão)</code></td><td>Aplica expressão a cada item</td><td><code class="example">mapear([1,2,3],"x*2")</code> <span class="saida">→ 2,4,6</span></td></tr><tr><td><code class="syntax">máximo(...valores)</code></td><td>Maior valor</td><td><code class="example">máximo(2,4,7,4,5)</code> <span class="saida">→ 7</span></td></tr><tr><td><code class="syntax">mdc(a, b, ...)</code></td><td>Máximo divisor comum</td><td><code class="example">mdc(12,18)</code> <span class="saida">→ 6</span></td></tr><tr><td><code class="syntax">média(...valores)</code></td><td>Média aritmética</td><td><code class="example">média(2,4,6)</code> <span class="saida">→ 4</span></td></tr><tr><td><code class="syntax">mesesEntre(data1, data2)</code></td><td>Meses entre duas datas</td><td><code class="example">mesesEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 633.501369863</span></td></tr><tr><td><code class="syntax">mínimo(...valores)</code></td><td>Menor valor</td><td><code class="example">mínimo(-3,1,2)</code> <span class="saida">→ -3</span></td></tr><tr><td><code class="syntax">minúsculo(texto)</code></td><td>Converte para minúsculas</td><td><code class="example">minúsculo("WILLOG")</code> <span class="saida">→ willog</span></td></tr><tr><td><code class="syntax">mmc(a, b, ...)</code></td><td>Mínimo múltiplo comum</td><td><code class="example">mmc(2,3,5)</code> <span class="saida">→ 30</span></td></tr><tr><td><code class="syntax">ordeneDecrescente(lista)</code></td><td>Ordena decrescente</td><td><code class="example">ordeneDecrescente([2,4,6,8,10])</code> <span class="saida">→ 10,8,6,4,2</span></td></tr><tr><td><code class="syntax">paraNúmero(x)</code></td><td>Converte texto para número</td><td><code class="example">paraNúmero("12.5")</code> <span class="saida">→ 12.5</span><br><code class="example">paraNúmero("12,5")*2</code> <span class="saida">→ 25</span></td></tr><tr><td><code class="syntax">paraTexto(x)</code></td><td>Converte número para texto</td><td><code class="example">paraTexto(8)</code> <span class="saida">→ "8"</span><br><code class="example">paraTexto(8)*3</code> <span class="saida">→ 888</span></td></tr><tr><td><code class="syntax">piso(x)</code></td><td>Arredonda para baixo (floor)</td><td><code class="example">piso(2.3)</code> <span class="saida">→ 2</span><br><code class="example">piso(2.9)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">posição(texto, busca)</code></td><td>Posição da busca em texto (0 = primeiro) ou caractere na posição se busca for número</td><td><code class="example">posição("Willog","i")</code> <span class="saida">→ 1</span><br><code class="example">posição("Willog",1)</code> <span class="saida">→ i</span></td></tr><tr><td><code class="syntax">primos(n)</code></td><td>Primeiros n primos</td><td><code class="example">primos(6)</code> <span class="saida">→ 2,3,5,7,11,13</span></td></tr><tr><td><code class="syntax">produto(lista)</code></td><td>Produto dos elementos</td><td><code class="example">produto([1,3,5,7])</code> <span class="saida">→ 105</span></td></tr><tr><td><code class="syntax">raizc(x)</code></td><td>Raiz cúbica — vetorizada</td><td><code class="example">raizc(27)</code> <span class="saida">→ 3</span></td></tr><tr><td><code class="syntax">raizq(x)</code></td><td>Raiz quadrada — vetorizada</td><td><code class="example">raizq(16)</code> <span class="saida">→ 4</span><br><code class="example">raizq([1,4,9])</code> <span class="saida">→ 1, 2, 3</span></td></tr><tr><td><code class="syntax">remova(lista, valor)</code></td><td>Remove primeira ocorrência</td><td><code class="example">remova([1,2,3,4,5,6],5)</code> <span class="saida">→ 1,2,3,4,6</span></td></tr><tr><td><code class="syntax">repetir(texto, n)</code></td><td>Repete texto n vezes</td><td><code class="example">repetir("oi",4)</code> <span class="saida">→ oioioioi</span></td></tr><tr><td><code class="syntax">romanos(n)</code></td><td>Converte número em algarismos romanos</td><td><code class="example">romanos(5)</code> <span class="saida">→ V</span><br><code class="example">romanos(3)</code> <span class="saida">→ III</span><br><code class="example">romanos(102)</code> <span class="saida">→ CII</span></td></tr><tr><td><code class="syntax">semEspaços(texto)</code></td><td>Remove todos os espaços</td><td><code class="example">semEspaços("1 2 3 4 5 6")</code> <span class="saida">→ 123456</span></td></tr><tr><td><code class="syntax">sen(x)</code></td><td>Seno (graus)</td><td><code class="example">sen(60)</code> <span class="saida">→ 0.86602540378</span></td></tr><tr><td><code class="syntax">soma(lista)</code></td><td>Soma elementos (aceita lista ou valores)</td><td><code class="example">soma([1,2,3,4])</code> <span class="saida">→ 10</span><br><code class="example">soma(1,2,3)</code> <span class="saida">→ 6</span></td></tr><tr><td><code class="syntax">substitua(texto, antigo, novo)</code></td><td>Substitui texto</td><td><code class="example">substitua("a-b-c","-"," ")</code> <span class="saida">→ a b c</span></td></tr><tr><td><code class="syntax">tamanho(texto)</code></td><td>Tamanho do texto/lista</td><td><code class="example">tamanho("Willog")</code> <span class="saida">→ 6</span></td></tr><tr><td><code class="syntax">tan(x)</code></td><td>Tangente (graus)</td><td><code class="example">tan(60)</code> <span class="saida">→ 1.73205080757</span></td></tr><tr><td><code class="syntax">terminaCom(texto, sufixo)</code></td><td>Verifica se texto termina com sufixo (ignora maiúsculas/minúsculas)</td><td><code class="example">terminaCom("Willog","log")</code> <span class="saida">→ verdadeiro</span><br><code class="example">terminaCom("Willog","llo")</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">teto(x)</code></td><td>Arredonda para cima (ceil)</td><td><code class="example">teto(2.3)</code> <span class="saida">→ 3</span><br><code class="example">teto(2.9)</code> <span class="saida">→ 3</span></td></tr><tr><td><code class="syntax">tipo(x)</code></td><td>Retorna tipo: número, texto, booleano ou lista</td><td><code class="example">tipo(7)</code> <span class="saida">→ número</span><br><code class="example">tipo("Olá!")</code> <span class="saida">→ texto</span><br><code class="example">tipo(4>5)</code> <span class="saida">→ booleano</span><br><code class="example">tipo([1,2,3])</code> <span class="saida">→ lista</span></td></tr></table>
 
       </div>
       <div class="manual-pane" id="pane-operadores">
@@ -1155,6 +1199,11 @@ verificar nota:
 <tr><td><code class="syntax">lista.último</code></td><td>Último elemento</td><td><code class="example">[5,6].último</code> <span class="saida">→ 6</span></td></tr>
         </table>
 
+      </div>
+      <div class="manual-pane" id="pane-cores">
+        <h3>Cores — ordem alfabética</h3>
+        <table><tr><td><code>amarelo</code></td><td>#ffff00</td><td><code>desenhe.linha(0,0,100,100,amarelo)</code></td></tr><tr><td><code>azul</code></td><td>#0066ff</td><td><code>desenhe.linha(0,0,100,100,azul)</code></td></tr><tr><td><code>branco</code></td><td>#ffffff</td><td><code>desenhe.linha(0,0,100,100,branco)</code></td></tr><tr><td><code>ciano</code></td><td>#00ffff</td><td><code>desenhe.linha(0,0,100,100,ciano)</code></td></tr><tr><td><code>cinza</code></td><td>#808080</td><td><code>desenhe.linha(0,0,100,100,cinza)</code></td></tr><tr><td><code>corAleatória</code></td><td>aleatória</td><td><code>desenhe.circulo(100,100,50,corAleatória)</code> → cor aleatória a cada chamada<br><code>tela.cor(corAleatória)</code> → fundo aleatório<br><code>desenhe.linha(0,0,100,100,corAleatória)</code> → linha aleatória</td></tr><tr><td><code>laranja</code></td><td>#ff9800</td><td><code>desenhe.linha(0,0,100,100,laranja)</code></td></tr><tr><td><code>marrom</code></td><td>#8d5524</td><td><code>desenhe.linha(0,0,100,100,marrom)</code></td></tr><tr><td><code>preto</code></td><td>#000000</td><td><code>desenhe.linha(0,0,100,100,preto)</code></td></tr><tr><td><code>rosa</code></td><td>#ff69b4</td><td><code>desenhe.linha(0,0,100,100,rosa)</code></td></tr><tr><td><code>roxo</code></td><td>#9c27b0</td><td><code>desenhe.linha(0,0,100,100,roxo)</code></td></tr><tr><td><code>verde</code></td><td>#00c853</td><td><code>desenhe.linha(0,0,100,100,verde)</code></td></tr><tr><td><code>vermelho</code></td><td>#ff0000</td><td><code>desenhe.linha(0,0,100,100,vermelho)</code></td></tr></table>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Use <code>corAleatória</code> em qualquer <code>desenhe.*(...,cor)</code> ou <code>tela.cor(corAleatória)</code>. Cada chamada sorteia entre as 12 cores. Também aceita <code>coraleatoria</code> sem acento (ex: <code>coraleatoria</code>).</p>
       </div>
     </div>
   </div>
@@ -1291,9 +1340,10 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
+  const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatoria','coraleatória']);
   while(i<len){
     if(code.substr(i,2)==='#:'){
       let s=i;
@@ -1354,9 +1404,11 @@ function highlightWillog(code){
       const isFunc = j<len && code[j]==='(';
       let cls='hl-variable';
       const low=w.toLowerCase();
+      const lowNorm=low.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
       if(booleans.has(w)) cls='hl-boolean';
       else if(logicalOps.has(low)) cls='hl-operator';
       else if(keywords.has(low)) cls='hl-keyword';
+      else if(colors.has(low) || colors.has(lowNorm)) cls='hl-property';
       else if(isProp) cls='hl-property';
       else if(isFunc) cls='hl-function';
       html+='<span class="'+cls+'">'+escapeHtml(w)+'</span>';
@@ -1680,9 +1732,10 @@ updateLines(); updateHighlight();
   const acEl=document.getElementById('autocomplete');
   const ed=document.getElementById('editor');
   if(!acEl || !ed) return;
-  const comandos=['abrir','bipe','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.texto','desenha.texto','desenhe.circulo','desenhe.linha','desenhe.ponto','desenhe.retangulo','enquanto','escrever','espereTecla','fechar','intervalo','janela','leia','ler','limpe','mostre','para cada','pare','pausa','repetir','se','senão','tela.cor','tela.limpe','toque','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','amostra','amostras','captureTecla','começaCom','contarItem','conte','cos','data','decimal','diaSemana','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','encontre','fatorial','filtrar','formate','fração','hora','indiceDe','insira','inteiro','inverta','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','ordeneDecrescente','paraNúmero','paraTexto','piso','posição','primos','produto','raizc','raizq','remova','repita','semEspaços','sen','soma','substitua','tamanho','tan','terminaCom','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const propriedades=['adicionar','aleatório','contar','fatiar','inverter','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const comandos=['abrir','bipe','colar','constante','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.circulo','desenhe.linha','desenhe.polígono','desenhe.poligono','desenhe.ponto','desenhe.retangulo','desenhe.texto','enquanto','escrever','espereTecla','fechar','figura.girar','figura.mover','girar','intervalo','janela','leia','ler','limpe','mostre','mover','para cada','pare','pausa','recortar','repita','repetir','se','senão','tela.cor','tela.limpe','toque','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','amostra','amostras','captureTecla','começaCom','contarItem','conte','cos','data','decimal','diaSemana','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','encontre','fatorial','fibonacci','filtrar','formate','fração','hora','indiceDe','insira','inteiro','inverta','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','ordeneDecrescente','paraNúmero','paraTexto','piso','posição','primos','produto','raizc','raizq','remova','repetir','romanos','semEspaços','sen','soma','substitua','tamanho','tan','terminaCom','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const propriedades=['adicionar','aleatório','contar','fatiar','girar','inverter','mover','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const cores=['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','corAleatória'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   let _varsCache=null; let _varsCacheText='';
   function getVariables(){
     const text=ed.value;
@@ -1728,11 +1781,18 @@ updateLines(); updateHighlight();
     const cmds=comandos.filter(c=>c.toLowerCase().startsWith(lower));
     const funcs=funcoes.filter(f=>f.toLowerCase().startsWith(lower));
     const props=propriedades.filter(p=>p.toLowerCase().startsWith(lower));
+    const coresFiltered=cores.filter(c=>{
+      const cl=c.toLowerCase();
+      const nl=cl.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      const ll=lower.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      return cl.startsWith(lower) || nl.startsWith(ll);
+    });
     const groups=[];
     if(vars.length) groups.push({cat:'Variáveis', items:vars, icon:'🔹'});
     if(cmds.length) groups.push({cat:'Comandos', items:cmds, icon:'⚡'});
     if(funcs.length) groups.push({cat:'Funções', items:funcs, icon:'ƒ'});
     if(props.length) groups.push({cat:'Propriedades', items:props, icon:'🔧'});
+    if(coresFiltered.length) groups.push({cat:'Cores', items:coresFiltered, icon:'🎨'});
     if(groups.length===0){ hideAc(); return; }
     acEl.innerHTML=''; currentItems=[];
     groups.forEach(g=>{
@@ -1785,6 +1845,7 @@ updateLines(); updateHighlight();
 // --- Console helpers ---
 let janelaAtiva=false;
 let janelaCentralizada=false;
+let janelaModo=null; // 'console' | 'desenho'
 let janelaEl=document.getElementById('janelaFlutuante');
 let janelaConsoleEl=document.getElementById('janelaConsole');
 function ativarJanela(centraliza){
@@ -1794,11 +1855,14 @@ function ativarJanela(centraliza){
   janelaEl.style.display='flex';
   janelaAtiva=true;
   janelaCentralizada=!!centraliza;
+  janelaModo='console';
   _janelaAbertaNestaExec=true;
   _graficoErroJaMostrado=false;
   janelaEl.classList.remove('minimized');
   janelaEl.classList.add('maximized');
   janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
+  const janelaBodyEl=document.getElementById('janelaBody');
+  if(janelaBodyEl){ janelaBodyEl.style.width=''; janelaBodyEl.style.height=''; janelaBodyEl.style.flex=''; }
   if(janelaConsoleEl){
     janelaConsoleEl.innerHTML='';
     janelaConsoleEl.style.display='';
@@ -1814,13 +1878,54 @@ function ativarJanela(centraliza){
     _cvG.style.display='none';
     try{ const _ctxG=_cvG.getContext('2d'); if(_ctxG){ _ctxG.setTransform(1,0,0,1,0,0); _ctxG.clearRect(0,0,_cvG.width,_cvG.height);} }catch(e){}
   }
-  // reseta buffer lógico para nova janela (fundo preto, vazio, escalonável)
+  // reseta buffer lógico para janela console (padrão 640x400)
+  _telaLogicalW=640; _telaLogicalH=400;
   _telaBuffer=null; _telaBufferCtx=null;
+  _willogDesenhos = [];
   _willogInitBuffer();
   if(!centraliza){
-    // garante que ao maximizar o canvas terá tamanho correto quando ativado
-    requestAnimationFrame(()=>{ const c=document.getElementById('janelaCanvas'); if(c){ const r=c.getBoundingClientRect(); if(r.width>0){ _willogResizeCanvas(); }}}); 
+    requestAnimationFrame(()=>{ const c=document.getElementById('janelaCanvas'); if(c){ const r=c.getBoundingClientRect(); if(r.width>0){ _willogResizeCanvas(); }}});
   }
+}
+function ativarJanelaDesenho(w,h){
+  janelaEl=document.getElementById('janelaFlutuante');
+  janelaConsoleEl=document.getElementById('janelaConsole');
+  if(!janelaEl) return;
+  w=Math.max(100, Math.min(1600, Math.trunc(Number(w)||300)));
+  h=Math.max(100, Math.min(1200, Math.trunc(Number(h)||400)));
+  janelaEl.style.display='flex';
+  janelaAtiva=true;
+  janelaCentralizada=false;
+  janelaModo='desenho';
+  _janelaAbertaNestaExec=true;
+  _graficoErroJaMostrado=false;
+  janelaEl.classList.remove('minimized','maximized');
+  const janelaBodyEl=document.getElementById('janelaBody');
+  const headerEl=document.getElementById('janelaHeader');
+  const headerH=headerEl?headerEl.offsetHeight:36;
+  janelaEl.style.left='50%'; janelaEl.style.top='50%'; janelaEl.style.transform='translate(-50%,-50%)';
+  janelaEl.style.width=w+'px'; janelaEl.style.height=(h+headerH)+'px';
+  if(janelaBodyEl){ janelaBodyEl.style.width=w+'px'; janelaBodyEl.style.height=h+'px'; janelaBodyEl.style.flex='none'; }
+  if(janelaConsoleEl){
+    janelaConsoleEl.innerHTML='';
+    janelaConsoleEl.style.display='none';
+    janelaConsoleEl.classList.remove('centralizado'); janelaConsoleEl.style.textAlign='';
+  }
+  const _cvG=document.getElementById('janelaCanvas');
+  if(_cvG){
+    _telaBgColor='#000000';
+    _telaFgColor='#ffffff';
+    _cvG.style.background='#000000';
+    _cvG.classList.remove('ativo');
+    _cvG.style.display='none';
+    try{ const _ctxG=_cvG.getContext('2d'); if(_ctxG){ _ctxG.setTransform(1,0,0,1,0,0); _ctxG.clearRect(0,0,_cvG.width,_cvG.height);} }catch(e){}
+  }
+  // buffer lógico com tamanho real da janela de desenho (coordenadas reais 0,0 topo-esquerda)
+  _telaLogicalW=w; _telaLogicalH=h;
+  _telaBuffer=null; _telaBufferCtx=null;
+  _willogDesenhos = [];
+  _willogInitBuffer();
+  requestAnimationFrame(()=>{ const c=document.getElementById('janelaCanvas'); if(c){ const r=c.getBoundingClientRect(); if(r.width>0){ _willogResizeCanvas(); }}});
 }
 function fecharJanela(){
   if(janelaEl){
@@ -1829,16 +1934,20 @@ function fecharJanela(){
   }
   janelaAtiva=false;
   janelaCentralizada=false;
+  janelaModo=null;
+  const janelaBodyEl=document.getElementById('janelaBody');
+  if(janelaBodyEl){ janelaBodyEl.style.width=''; janelaBodyEl.style.height=''; janelaBodyEl.style.flex=''; }
   if(janelaConsoleEl){ janelaConsoleEl.classList.remove('centralizado'); janelaConsoleEl.style.textAlign=''; janelaConsoleEl.style.display=''; }
   const _cv=document.getElementById('janelaCanvas');
   if(_cv){ _cv.classList.remove('ativo'); _cv.style.display='none'; }
   _telaBgColor='#000000';
   _telaFgColor='#ffffff';
-  // limpa buffer para próxima janela não herdar desenhos
   if(_telaBuffer && _telaBufferCtx){
     _telaBufferCtx.fillStyle='#000000';
     _telaBufferCtx.fillRect(0,0,_telaLogicalW,_telaLogicalH);
   }
+  _telaLogicalW=640; _telaLogicalH=400;
+  janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
 }
 // --- Willog Tela / Desenhe (gráficos na janela) --- com buffer escalonável ---
 const _willogCores = {
@@ -1848,10 +1957,11 @@ let _telaBgColor = '#000000';
 let _telaFgColor = '#ffffff';
 let _telaBuffer = null;
 let _telaBufferCtx = null;
-const _telaLogicalW = 640;
-const _telaLogicalH = 400;
+let _telaLogicalW = 640;
+let _telaLogicalH = 400;
 let _janelaAbertaNestaExec = false;
 let _graficoErroJaMostrado = false;
+let _willogDesenhos = [];
 function _willogResolveCor(nome, env){
   if(nome===undefined||nome===null) return null;
   let s=String(nome).trim();
@@ -1861,6 +1971,11 @@ function _willogResolveCor(nome, env){
     if(typeof v==='string') s=v;
   }
   s=s.toLowerCase().trim();
+  const normCheck=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(normCheck==='coraleatoria'){
+    const cores=Object.values(_willogCores);
+    return cores[Math.floor(Math.random()*cores.length)];
+  }
   if(_willogCores[s]) return _willogCores[s];
   if(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(s)) return s;
   const norm=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -1902,12 +2017,14 @@ function _willogSyncVisible(){
   // fundo para letterbox (preserva cor de fundo)
   ctx.fillStyle=_telaBgColor;
   ctx.fillRect(0,0,w,h);
-  // escalonamento proporcional (preserva aspecto) — fiel às coordenadas, ancora em (0,0)
-  // usa mesma escala em X e Y para não distorcer; (0,0) permanece no canto superior-esquerdo da janela
+  // escalonamento proporcional (preserva aspecto) — coordenadas reais, (0,0) topo-esquerda em janela normal, centralizado quando maximizada
   const scale=Math.min(w/_telaLogicalW, h/_telaLogicalH);
   const destW=_telaLogicalW*scale;
   const destH=_telaLogicalH*scale;
-  ctx.drawImage(_telaBuffer, 0,0, _telaLogicalW, _telaLogicalH, 0, 0, destW, destH);
+  const isMaxDesenho = janelaEl && janelaEl.classList.contains('maximized') && janelaModo==='desenho';
+  const dx=isMaxDesenho ? (w-destW)/2 : 0;
+  const dy=isMaxDesenho ? (h-destH)/2 : 0;
+  ctx.drawImage(_telaBuffer, 0,0, _telaLogicalW, _telaLogicalH, dx, dy, destW, destH);
 }
 function _willogEnsureTela(){
   _willogInitBuffer();
@@ -1931,16 +2048,11 @@ function _willogResizeCanvas(){
   _willogSyncVisible();
 }
 function _willogTelaLimpe(){
-  if(!janelaAtiva){
+  if(janelaModo!=='desenho'){
     if(_janelaAbertaNestaExec) return false;
     if(_graficoErroJaMostrado) return false;
-    logToConsole('Erro: use janela() antes de tela.limpe', 'error');
-    _graficoErroJaMostrado=true;
-    return false;
-  }
-  if(janelaCentralizada){
-    if(_graficoErroJaMostrado) return false;
-    logToConsole('Erro: tela.limpe não pode ser usado após janela(centraliza) — use janela() sem centraliza', 'error');
+    if(!janelaAtiva) logToConsole('Erro: use janela(largura,altura) antes de tela.limpe (ex: janela(300,400))', 'error');
+    else logToConsole('Erro: tela.limpe é exclusivo para janela(largura,altura) — janela() é exclusivo para console', 'error');
     _graficoErroJaMostrado=true;
     return false;
   }
@@ -1949,21 +2061,17 @@ function _willogTelaLimpe(){
   // limpa buffer com cor de fundo
   _telaBufferCtx.fillStyle=_telaBgColor;
   _telaBufferCtx.fillRect(0,0,_telaLogicalW,_telaLogicalH);
+  _willogDesenhos = [];
   _willogSyncVisible();
   requestAnimationFrame(()=> _willogSyncVisible());
   return true;
 }
 function _willogTelaCor(argRaw, env){
-  if(!janelaAtiva){
+  if(janelaModo!=='desenho'){
     if(_janelaAbertaNestaExec) return false;
     if(_graficoErroJaMostrado) return false;
-    logToConsole('Erro: use janela() antes de tela.cor()', 'error');
-    _graficoErroJaMostrado=true;
-    return false;
-  }
-  if(janelaCentralizada){
-    if(_graficoErroJaMostrado) return false;
-    logToConsole('Erro: tela.cor() não pode ser usado após janela(centraliza)', 'error');
+    if(!janelaAtiva) logToConsole('Erro: use janela(largura,altura) antes de tela.cor() (ex: janela(300,400))', 'error');
+    else logToConsole('Erro: tela.cor() é exclusivo para janela(largura,altura) — janela() é exclusivo para console', 'error');
     _graficoErroJaMostrado=true;
     return false;
   }
@@ -1992,22 +2100,27 @@ function _willogTelaCor(argRaw, env){
   return true;
 }
 function _willogCheckGraficoPermitido(){
-  if(!janelaAtiva){
+  if(janelaModo!=='desenho'){
     if(_janelaAbertaNestaExec) return false;
     if(_graficoErroJaMostrado) return false;
-    logToConsole('Erro: use janela() antes de desenhe.*', 'error');
-    _graficoErroJaMostrado=true;
-    return false;
-  }
-  if(janelaCentralizada){
-    if(_graficoErroJaMostrado) return false;
-    logToConsole('Erro: desenhe.* não pode ser usado após janela(centraliza) — use janela() sem centraliza', 'error');
+    if(!janelaAtiva) logToConsole('Erro: use janela(largura,altura) antes de desenhe.* (ex: janela(300,400))', 'error');
+    else logToConsole('Erro: desenhe.* é exclusivo para janela(largura,altura) — janela() é exclusivo para console', 'error');
     _graficoErroJaMostrado=true;
     return false;
   }
   _willogInitBuffer();
   _willogEnsureTela();
   return true;
+}
+function _willogNovoId(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function _willogFindDesenhoIndex(obj){
+  if(!obj) return -1;
+  let idx=_willogDesenhos.indexOf(obj);
+  if(idx>=0) return idx;
+  if(obj.id){
+    for(let i=0;i<_willogDesenhos.length;i++){ if(_willogDesenhos[i] && _willogDesenhos[i].id===obj.id) return i; }
+  }
+  return -1;
 }
 function _willogDrawLinha(x1,y1,x2,y2,corStr,env){
   if(!_willogCheckGraficoPermitido()) return false;
@@ -2020,20 +2133,25 @@ function _willogDrawLinha(x1,y1,x2,y2,corStr,env){
   _telaBufferCtx.moveTo(Number(x1), Number(y1));
   _telaBufferCtx.lineTo(Number(x2), Number(y2));
   _telaBufferCtx.stroke();
+  const obj={tipo:'linha', x1:x1, y1:y1, x2:x2, y2:y2, cor:corStr||'branco', rotacao:0, id:_willogNovoId()};
+  _willogDesenhos.push(obj);
   _willogSyncVisible();
-  return true;
+  return obj;
 }
 function _willogDrawCirculo(x,y,raio,corStr,env){
   if(!_willogCheckGraficoPermitido()) return false;
   _willogInitBuffer();
   const hex=_willogResolveCor(corStr, env) || _telaFgColor;
+  const cx=Number(x), cy=Number(y), r=Math.abs(Number(raio));
   _telaBufferCtx.strokeStyle=hex;
   _telaBufferCtx.lineWidth=2;
   _telaBufferCtx.beginPath();
-  _telaBufferCtx.arc(Number(x), Number(y), Math.abs(Number(raio)), 0, Math.PI*2);
+  _telaBufferCtx.arc(cx, cy, r, 0, Math.PI*2);
   _telaBufferCtx.stroke();
+  const obj={tipo:'circulo', x:cx, y:cy, raio:r, cor:corStr||'branco', rotacao:0, id:_willogNovoId()};
+  _willogDesenhos.push(obj);
   _willogSyncVisible();
-  return true;
+  return obj;
 }
 function _willogDrawRetangulo(x1,y1,x2,y2,corStr,env){
   if(!_willogCheckGraficoPermitido()) return false;
@@ -2046,19 +2164,24 @@ function _willogDrawRetangulo(x1,y1,x2,y2,corStr,env){
   _telaBufferCtx.strokeStyle=hex;
   _telaBufferCtx.lineWidth=2;
   _telaBufferCtx.strokeRect(xa, ya, wa, ha);
+  const obj={tipo:'retangulo', x1:x1, y1:y1, x2:x2, y2:y2, cor:corStr||'branco', rotacao:0, id:_willogNovoId()};
+  _willogDesenhos.push(obj);
   _willogSyncVisible();
-  return true;
+  return obj;
 }
 function _willogDrawPonto(x,y,corStr,env){
   if(!_willogCheckGraficoPermitido()) return false;
   _willogInitBuffer();
   const hex=_willogResolveCor(corStr, env) || _telaFgColor;
+  const nx=Number(x), ny=Number(y);
   _telaBufferCtx.fillStyle=hex;
   _telaBufferCtx.beginPath();
-  _telaBufferCtx.arc(Number(x), Number(y), 2, 0, Math.PI*2);
+  _telaBufferCtx.arc(nx, ny, 2, 0, Math.PI*2);
   _telaBufferCtx.fill();
+  const obj={tipo:'ponto', x:nx, y:ny, cor:corStr||'branco', rotacao:0, id:_willogNovoId()};
+  _willogDesenhos.push(obj);
   _willogSyncVisible();
-  return true;
+  return obj;
 }
 function _willogDrawTexto(texto,x,y,tamanho,corStr,env){
   if(!_willogCheckGraficoPermitido()) return false;
@@ -2078,22 +2201,367 @@ function _willogDrawTexto(texto,x,y,tamanho,corStr,env){
   _telaBufferCtx.font=tam+'px "JetBrains Mono", monospace';
   _telaBufferCtx.textBaseline='top';
   _telaBufferCtx.fillText(txt, nx, ny);
+  const _objTexto={tipo:'texto', texto:txt, x:nx, y:ny, tamanho:tam, cor:corStr||'branco', rotacao:0, id:_willogNovoId()}; _willogDesenhos.push(_objTexto);
   _willogSyncVisible();
+  return _objTexto;
+}
+function _willogDrawPoligono(x,y,n,raio,corStr,env){
+  if(!_willogCheckGraficoPermitido()) return false;
+  _willogInitBuffer();
+  const hex=_willogResolveCor(corStr, env) || _telaFgColor;
+  const cx=Number(x), cy=Number(y);
+  const sides=Math.trunc(Number(n));
+  const r=Math.abs(Number(raio));
+  if(isNaN(cx)||isNaN(cy)||isNaN(sides)||isNaN(r)||sides<3||r<=0){
+    logToConsole('Erro: desenhe.polígono precisa de x,y,n>=3,raio>0[,cor] (ex: desenhe.polígono(150,150,5,50,vermelho))', 'error');
+    return false;
+  }
+  const obj={tipo:'poligono', x:cx, y:cy, n:sides, raio:r, cor:corStr||'branco', rotacao:0, id:_willogNovoId(), _hex:hex};
+  _willogDesenhos.push(obj);
+  _telaBufferCtx.strokeStyle=hex;
+  _telaBufferCtx.lineWidth=2;
+  _telaBufferCtx.beginPath();
+  for(let i=0;i<sides;i++){
+    const ang=-Math.PI/2 + i*2*Math.PI/sides;
+    const vx=cx + r*Math.cos(ang);
+    const vy=cy + r*Math.sin(ang);
+    if(i===0) _telaBufferCtx.moveTo(vx,vy);
+    else _telaBufferCtx.lineTo(vx,vy);
+  }
+  _telaBufferCtx.closePath();
+  _telaBufferCtx.stroke();
+  _willogSyncVisible();
+  return obj;
+}
+function _willogRedesenharTudo(){
+  if(!_telaBufferCtx) return;
+  _telaBufferCtx.fillStyle=_telaBgColor;
+  _telaBufferCtx.fillRect(0,0,_telaLogicalW,_telaLogicalH);
+  for(const obj of _willogDesenhos){
+    const hex=_willogResolveCor(obj.cor) || _telaFgColor;
+    _telaBufferCtx.strokeStyle=hex;
+    _telaBufferCtx.fillStyle=hex;
+    _telaBufferCtx.lineWidth=2;
+    if(obj.tipo==='poligono'){
+      const cx=Number(obj.x), cy=Number(obj.y), r=Math.abs(Number(obj.raio)), n=Math.trunc(Number(obj.n));
+      const rot=(Number(obj.rotacao)||0)*Math.PI/180;
+      _telaBufferCtx.beginPath();
+      for(let i=0;i<n;i++){
+        const ang=-Math.PI/2 + rot + i*2*Math.PI/n;
+        const vx=cx + r*Math.cos(ang);
+        const vy=cy + r*Math.sin(ang);
+        if(i===0) _telaBufferCtx.moveTo(vx,vy);
+        else _telaBufferCtx.lineTo(vx,vy);
+      }
+      _telaBufferCtx.closePath();
+      _telaBufferCtx.stroke();
+    } else if(obj.tipo==='linha'){
+      _telaBufferCtx.beginPath();
+      _telaBufferCtx.moveTo(Number(obj.x1),Number(obj.y1));
+      _telaBufferCtx.lineTo(Number(obj.x2),Number(obj.y2));
+      _telaBufferCtx.stroke();
+    } else if(obj.tipo==='circulo'){
+      _telaBufferCtx.beginPath();
+      _telaBufferCtx.arc(Number(obj.x),Number(obj.y),Math.abs(Number(obj.raio)),0,Math.PI*2);
+      _telaBufferCtx.stroke();
+    } else if(obj.tipo==='retangulo'){
+      const xa=Math.min(Number(obj.x1),Number(obj.x2));
+      const ya=Math.min(Number(obj.y1),Number(obj.y2));
+      const wa=Math.abs(Number(obj.x2)-Number(obj.x1));
+      const ha=Math.abs(Number(obj.y2)-Number(obj.y1));
+      _telaBufferCtx.strokeRect(xa,ya,wa,ha);
+    } else if(obj.tipo==='ponto'){
+      _telaBufferCtx.beginPath();
+      _telaBufferCtx.arc(Number(obj.x),Number(obj.y),2,0,Math.PI*2);
+      _telaBufferCtx.fill();
+    } else if(obj.tipo==='texto'){
+      _telaBufferCtx.font=(Number(obj.tamanho)||12)+'px "JetBrains Mono", monospace';
+      _telaBufferCtx.textBaseline='top';
+      _telaBufferCtx.fillText(String(obj.texto), Number(obj.x), Number(obj.y));
+    }
+  }
+  _willogSyncVisible();
+}
+function _willogCriarDesenho(tipo, params, cor, env){
+  const obj={tipo, cor: cor||'branco', rotacao:0, id: Date.now().toString(36)+Math.random().toString(36).slice(2,6)};
+  if(tipo==='poligono'){ obj.x=params[0]; obj.y=params[1]; obj.n=params[2]; obj.raio=params[3]; }
+  else if(tipo==='linha'){ obj.x1=params[0]; obj.y1=params[1]; obj.x2=params[2]; obj.y2=params[3]; }
+  else if(tipo==='circulo'){ obj.x=params[0]; obj.y=params[1]; obj.raio=params[2]; }
+  else if(tipo==='retangulo'){ obj.x1=params[0]; obj.y1=params[1]; obj.x2=params[2]; obj.y2=params[3]; }
+  else if(tipo==='ponto'){ obj.x=params[0]; obj.y=params[1]; }
+  else if(tipo==='texto'){ obj.texto=params[0]; obj.x=params[1]; obj.y=params[2]; obj.tamanho=params[3]||12; }
+  _willogDesenhos.push(obj);
+  return obj;
+}
+function isGirarStmt(stmt){
+  return /^\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\.girar\s*\(.*\)\s*(?:#.*)?$/i.test(stmt.trim());
+}
+function parseGirar(stmt){
+  const m=stmt.trim().match(/^\s*([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\.girar\s*\(\s*(.*)\s*\)\s*(?:#.*)?$/i);
+  if(!m) return null;
+  const varName=m[1];
+  const args=splitWillogCommaArgs(m[2]);
+  return {varName, args};
+}
+async function execGirar(stmt, env, lineNo){
+  const p=parseGirar(stmt);
+  if(!p){ logToConsole('Erro: use var.girar(ângulo,vezes,pausa) ex: figura.girar(45,3,0.5)', 'error'); return; }
+  const obj=env[p.varName];
+  if(!obj || typeof obj!=='object' || !obj.tipo){
+    logToConsole('Erro: '+p.varName+' não é um desenho (use figura=desenhe.polígono(...))', 'error');
+    return;
+  }
+  let ang=45, vezes=1, pausa=0.5;
+  try{
+    if(p.args[0]!==undefined) ang=Number(evaluateExpression(p.args[0], env));
+    if(p.args[1]!==undefined) vezes=Math.trunc(Number(evaluateExpression(p.args[1], env)));
+    if(p.args[2]!==undefined) pausa=Number(evaluateExpression(p.args[2], env));
+  }catch(e){ logToConsole('Erro em girar: '+e.message,'error'); return; }
+  if(isNaN(ang)) ang=45;
+  if(isNaN(vezes)||vezes<1) vezes=1;
+  if(isNaN(pausa)||pausa<0) pausa=0;
+  for(let i=0;i<vezes;i++){
+    obj.rotacao=(Number(obj.rotacao)||0)+ang;
+    _willogRedesenharTudo();
+    if(pausa>0) await new Promise(r=>setTimeout(r, pausa*1000));
+  }
+}
+function isGirarGlobalStmt(stmt){
+  return /^\s*girar\s*\(.*\)\s*(?:#.*)?$/i.test(stmt.trim());
+}
+function parseGirarGlobal(stmt){
+  const m=stmt.trim().match(/^\s*girar\s*\(\s*(.*)\s*\)\s*(?:#.*)?$/i);
+  if(!m) return null;
+  const inside=m[1].trim();
+  if(inside==="") return [];
+  const parts=splitWillogCommaArgs(inside);
+  const res=[];
+  for(const part of parts){
+    const pm=part.trim().match(/^([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*\(\s*(.*)\s*\)\s*$/);
+    if(!pm) return null;
+    const varName=pm[1];
+    const args=splitWillogCommaArgs(pm[2]);
+    res.push({varName, args});
+  }
+  return res;
+}
+async function execGirarGlobal(stmt, env, lineNo){
+  const list=parseGirarGlobal(stmt);
+  if(list===null){ logToConsole('Erro: use girar(a(ângulo,vezes,pausa),b(...)) ex: girar(a(30,5,0.125),b(-15,5,0.250))', 'error'); return; }
+  if(list.length===0){ logToConsole('Erro: girar precisa de ao menos um desenho', 'error'); return; }
+  const tasks=[];
+  for(const entry of list){
+    const obj=env[entry.varName];
+    if(!obj || typeof obj!=='object' || !obj.tipo){
+      logToConsole('Erro: '+entry.varName+' não é um desenho (use a=desenhe.polígono(...))', 'error');
+      continue;
+    }
+    let ang=0, vezes=1, pausa=0.125;
+    try{
+      if(entry.args[0]!==undefined) ang=Number(evaluateExpression(entry.args[0], env));
+      if(entry.args[1]!==undefined) vezes=Math.trunc(Number(evaluateExpression(entry.args[1], env)));
+      if(entry.args[2]!==undefined) pausa=Number(evaluateExpression(entry.args[2], env));
+    }catch(e){ logToConsole('Erro em girar: '+e.message,'error'); continue; }
+    if(isNaN(ang)) ang=0;
+    if(isNaN(vezes)||vezes<1) vezes=1;
+    if(isNaN(pausa)||pausa<0) pausa=0;
+    const task=(async()=>{
+      for(let i=0;i<vezes;i++){
+        obj.rotacao=(Number(obj.rotacao)||0)+ang;
+        _willogRedesenharTudo();
+        if(pausa>0) await new Promise(r=>setTimeout(r, pausa*1000));
+        else await new Promise(r=>setTimeout(r, 16));
+      }
+    })();
+    tasks.push(task);
+  }
+  if(tasks.length>0) await Promise.all(tasks);
+}
+function isMoverStmt(stmt){
+  return /^\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\.mover\s*\(.*\)\s*(?:#.*)?$/i.test(stmt.trim());
+}
+function parseMover(stmt){
+  const m=stmt.trim().match(/^\s*([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\.mover\s*\(\s*(.*)\s*\)\s*(?:#.*)?$/i);
+  if(!m) return null;
+  const varName=m[1];
+  const args=splitWillogCommaArgs(m[2]);
+  return {varName, args};
+}
+async function execMover(stmt, env, lineNo){
+  const p=parseMover(stmt);
+  if(!p){ logToConsole('Erro: use var.mover(x,y,passo) ex: figura.mover(100,100,2)', 'error'); return; }
+  const obj=env[p.varName];
+  if(!obj || typeof obj!=='object' || !obj.tipo){
+    logToConsole('Erro: '+p.varName+' não é um desenho (use figura=desenhe.polígono(...))', 'error');
+    return;
+  }
+  let tx, ty, passo=2;
+  try{
+    if(p.args[0]!==undefined) tx=Number(evaluateExpression(p.args[0], env));
+    if(p.args[1]!==undefined) ty=Number(evaluateExpression(p.args[1], env));
+    if(p.args[2]!==undefined) passo=Number(evaluateExpression(p.args[2], env));
+  }catch(e){ logToConsole('Erro em mover: '+e.message,'error'); return; }
+  if(isNaN(tx) || isNaN(ty)){ logToConsole('Erro: mover precisa de x,y numéricos', 'error'); return; }
+  await _willogMoverObjeto(obj, tx, ty, passo);
+}
+async function _willogMoverObjeto(obj, tx, ty, passo){
+  if(isNaN(tx) || isNaN(ty)) return false;
+  if(isNaN(passo) || passo<=0) passo=1;
+  passo=Math.abs(passo);
+  let curX, curY;
+  if(obj.tipo==='poligono' || obj.tipo==='circulo' || obj.tipo==='ponto' || obj.tipo==='texto'){
+    curX=Number(obj.x); curY=Number(obj.y);
+  } else if(obj.tipo==='linha'){
+    curX=(Number(obj.x1)+Number(obj.x2))/2; curY=(Number(obj.y1)+Number(obj.y2))/2;
+  } else if(obj.tipo==='retangulo'){
+    curX=(Number(obj.x1)+Number(obj.x2))/2; curY=(Number(obj.y1)+Number(obj.y2))/2;
+  } else { curX=Number(obj.x||0); curY=Number(obj.y||0); }
+  if(isNaN(curX)||isNaN(curY)){ curX=0; curY=0; }
+  const dx=tx - curX, dy=ty - curY;
+  const dist=Math.hypot(dx, dy);
+  if(dist===0) return true;
+  const steps=Math.max(1, Math.ceil(dist / passo));
+  const stepX=dx/steps, stepY=dy/steps;
+  for(let i=0;i<steps;i++){
+    if(obj.tipo==='poligono' || obj.tipo==='circulo' || obj.tipo==='ponto' || obj.tipo==='texto'){
+      obj.x=Number(obj.x)+stepX; obj.y=Number(obj.y)+stepY;
+    } else if(obj.tipo==='linha'){
+      obj.x1=Number(obj.x1)+stepX; obj.y1=Number(obj.y1)+stepY;
+      obj.x2=Number(obj.x2)+stepX; obj.y2=Number(obj.y2)+stepY;
+    } else if(obj.tipo==='retangulo'){
+      obj.x1=Number(obj.x1)+stepX; obj.y1=Number(obj.y1)+stepY;
+      obj.x2=Number(obj.x2)+stepX; obj.y2=Number(obj.y2)+stepY;
+    }
+    _willogRedesenharTudo();
+    await new Promise(r=>setTimeout(r, 16));
+  }
+  if(obj.tipo==='poligono' || obj.tipo==='circulo' || obj.tipo==='ponto' || obj.tipo==='texto'){
+    obj.x=tx; obj.y=ty;
+  } else if(obj.tipo==='linha'){
+    const curX2=(Number(obj.x1)+Number(obj.x2))/2, curY2=(Number(obj.y1)+Number(obj.y2))/2;
+    const dx2=tx-curX2, dy2=ty-curY2;
+    obj.x1+=dx2; obj.y1+=dy2; obj.x2+=dx2; obj.y2+=dy2;
+  } else if(obj.tipo==='retangulo'){
+    const curX2=(Number(obj.x1)+Number(obj.x2))/2, curY2=(Number(obj.y1)+Number(obj.y2))/2;
+    const dx2=tx-curX2, dy2=ty-curY2;
+    obj.x1+=dx2; obj.y1+=dy2; obj.x2+=dx2; obj.y2+=dy2;
+  }
+  _willogRedesenharTudo();
   return true;
+}
+function isMoverGlobalStmt(stmt){
+  return /^\s*mover\s*\(.*\)\s*(?:#.*)?$/i.test(stmt.trim());
+}
+function parseMoverGlobal(stmt){
+  const m=stmt.trim().match(/^\s*mover\s*\(\s*(.*)\s*\)\s*(?:#.*)?$/i);
+  if(!m) return null;
+  const inside=m[1].trim();
+  if(inside==="") return [];
+  const parts=splitWillogCommaArgs(inside);
+  const res=[];
+  for(const part of parts){
+    const pm=part.trim().match(/^([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*\(\s*(.*)\s*\)\s*$/);
+    if(!pm) return null;
+    const varName=pm[1];
+    const args=splitWillogCommaArgs(pm[2]);
+    res.push({varName, args});
+  }
+  return res;
+}
+async function execMoverGlobal(stmt, env, lineNo){
+  const list=parseMoverGlobal(stmt);
+  if(list===null){ logToConsole('Erro: use mover(a(x,y,passo),b(...)) ex: mover(a(100,100,0.5),b(300,300))', 'error'); return; }
+  if(list.length===0){ logToConsole('Erro: mover precisa de ao menos um desenho', 'error'); return; }
+  const tasks=[];
+  for(const entry of list){
+    const obj=env[entry.varName];
+    if(!obj || typeof obj!=='object' || !obj.tipo){
+      logToConsole('Erro: '+entry.varName+' não é um desenho (use a=desenhe.polígono(...))', 'error');
+      continue;
+    }
+    let tx, ty, passo=1;
+    try{
+      if(entry.args[0]!==undefined) tx=Number(evaluateExpression(entry.args[0], env));
+      if(entry.args[1]!==undefined) ty=Number(evaluateExpression(entry.args[1], env));
+      if(entry.args[2]!==undefined) passo=Number(evaluateExpression(entry.args[2], env));
+    }catch(e){ logToConsole('Erro em mover: '+e.message,'error'); continue; }
+    if(isNaN(tx) || isNaN(ty)){ logToConsole('Erro: mover precisa de x,y numéricos para '+entry.varName, 'error'); continue; }
+    const task=_willogMoverObjeto(obj, tx, ty, passo);
+    tasks.push(task);
+  }
+  if(tasks.length>0) await Promise.all(tasks);
+}
+function isRecortarStmt(stmt){
+  return /^\s*recortar\s*\(\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\s*\)\s*(?:#.*)?$/i.test(stmt.trim());
+}
+function parseRecortar(stmt){
+  const m=stmt.trim().match(/^\s*recortar\s*\(\s*([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*\)\s*(?:#.*)?$/i);
+  if(!m) return null;
+  return m[1];
+}
+function execRecortar(stmt, env, lineNo){
+  const varName=parseRecortar(stmt);
+  if(!varName){ logToConsole('Erro: use recortar(a) ex: recortar(a)', 'error'); return; }
+  const obj=env[varName];
+  if(!obj || typeof obj!=='object' || !obj.tipo){
+    logToConsole('Erro: '+varName+' não é um desenho (use a=desenhe.polígono(...))', 'error');
+    return;
+  }
+  const idx=_willogFindDesenhoIndex(obj);
+  if(idx>=0) _willogDesenhos.splice(idx,1);
+  obj._recortado=true;
+  _willogRedesenharTudo();
+}
+function isColarStmt(stmt){
+  return /^\s*colar\s*\(\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\s*,.+\)\s*(?:#.*)?$/i.test(stmt.trim());
+}
+function parseColar(stmt){
+  const m=stmt.trim().match(/^\s*colar\s*\(\s*([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*,(.*)\)\s*(?:#.*)?$/i);
+  if(!m) return null;
+  const varName=m[1];
+  const args=splitWillogCommaArgs(m[2]);
+  return {varName, args};
+}
+function execColar(stmt, env, lineNo){
+  const p=parseColar(stmt);
+  if(!p){ logToConsole('Erro: use colar(a,x,y) ex: colar(a,300,300)', 'error'); return; }
+  const obj=env[p.varName];
+  if(!obj || typeof obj!=='object' || !obj.tipo){
+    logToConsole('Erro: '+p.varName+' não é um desenho (use a=desenhe.polígono(...))', 'error');
+    return;
+  }
+  let tx, ty;
+  try{
+    if(p.args[0]!==undefined) tx=Number(evaluateExpression(p.args[0], env));
+    if(p.args[1]!==undefined) ty=Number(evaluateExpression(p.args[1], env));
+  }catch(e){ logToConsole('Erro em colar: '+e.message,'error'); return; }
+  if(isNaN(tx) || isNaN(ty)){ logToConsole('Erro: colar precisa de x,y numéricos ex: colar(a,300,300)', 'error'); return; }
+  if(obj.tipo==='poligono' || obj.tipo==='circulo' || obj.tipo==='ponto' || obj.tipo==='texto'){
+    obj.x=tx; obj.y=ty;
+  } else if(obj.tipo==='linha' || obj.tipo==='retangulo'){
+    const curX=(Number(obj.x1)+Number(obj.x2))/2, curY=(Number(obj.y1)+Number(obj.y2))/2;
+    const dx=tx-curX, dy=ty-curY;
+    obj.x1=Number(obj.x1)+dx; obj.y1=Number(obj.y1)+dy;
+    obj.x2=Number(obj.x2)+dx; obj.y2=Number(obj.y2)+dy;
+  }
+  obj._recortado=false;
+  if(_willogFindDesenhoIndex(obj)<0) _willogDesenhos.push(obj);
+  _willogRedesenharTudo();
 }
 function isTelaLimpeStmt(stmt){ return /^\s*tela\.limpe\s*(\(\s*\))?\s*(?:#.*)?$/i.test(stmt.trim()); }
 function isTelaCorStmt(stmt){ return /^\s*tela\.cor\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
 function isDesenheLinhaStmt(stmt){ return /^\s*desenhe\.linha\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
-function isDesenheCirculoStmt(stmt){ return /^\s*desenhe\.circulo\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
-function isDesenheRetanguloStmt(stmt){ return /^\s*desenhe\.retangulo\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isDesenheCirculoStmt(stmt){ return /^\s*desenhe\.c[ií]rculo\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isDesenheRetanguloStmt(stmt){ return /^\s*desenhe\.ret[aâ]ngulo\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
 function isDesenhePontoStmt(stmt){ return /^\s*desenhe\.ponto\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
-function isDesenhaTextoStmt(stmt){ return /^\s*desenh[ae]\.texto\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isDesenhaTextoStmt(stmt){ return /^\s*desenhe\.texto\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isDesenhePoligonoStmt(stmt){ return /^\s*desenhe\.pol[ií]gono\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
 function parseTelaCorArg(stmt){
   const m=stmt.match(/^\s*tela\.cor\s*\(\s*(.+?)\s*\)\s*(?:#.*)?$/i);
   return m? m[1].trim(): '';
 }
 function parseDesenheArgs(stmt){
-  const m=stmt.match(/^\s*desenh[ae]\.\w+\s*\(\s*(.*)\s*\)\s*(?:#.*)?$/i);
+  const m=stmt.match(/^\s*desenhe\.[a-zA-ZÀ-ÿ]+\s*\(\s*(.*)\s*\)\s*(?:#.*)?$/i);
   if(!m) return [];
   return splitWillogCommaArgs(m[1]);
 }
@@ -2122,7 +2590,7 @@ function parseDesenheArgs(stmt){
 // reaproveita janelaAtiva para gráficos
 function isJanelaStmt(stmt){
   const t=stmt.trim();
-  return /^\s*janela\s*(\(\s*(centraliza)?\s*\))?\s*(?:#.*)?$/i.test(t);
+  return /^\s*janela\s*(\(\s*[^)]*\s*\))?\s*(?:#.*)?$/i.test(t) || /^\s*janela\s*$/i.test(t);
 }
 function isJanelaLine(line){ return isJanelaStmt(line); }
 function getJanelaCentraliza(stmt){
@@ -2130,6 +2598,28 @@ function getJanelaCentraliza(stmt){
   if(!m) return false;
   let a=m[1].trim().toLowerCase().replace(/["']/g,'');
   return a==='centraliza';
+}
+function isJanelaDesenhoStmt(stmt){
+  const t=stmt.trim();
+  const m=t.match(/^\s*janela\s*\(\s*(.+?)\s*\)\s*(?:#.*)?$/i);
+  if(!m) return false;
+  const inside=m[1].trim();
+  if(inside.toLowerCase()==='centraliza') return false;
+  if(inside==='') return false;
+  return inside.includes(',');
+}
+function parseJanelaDesenho(stmt, env){
+  const m=stmt.match(/^\s*janela\s*\(\s*(.+?)\s*\)\s*(?:#.*)?$/i);
+  if(!m) return null;
+  const inside=m[1];
+  const parts=splitWillogCommaArgs(inside);
+  if(parts.length!==2) return null;
+  let w,h;
+  try{ w=evaluateExpression(parts[0].trim(), env); }catch(e){ w=parts[0]; }
+  try{ h=evaluateExpression(parts[1].trim(), env); }catch(e){ h=parts[1]; }
+  w=Number(w); h=Number(h);
+  if(isNaN(w) || isNaN(h) || !isFinite(w) || !isFinite(h)) return null;
+  return {w: Math.trunc(w), h: Math.trunc(h)};
 }
 // --- Willog Arquivos ($arquivo) ---
 const willogFileHandles = new Map();
@@ -2587,19 +3077,56 @@ function parseToqueArgs(stmt, env){
 function logToConsole(text, cls=''){
   const div = document.createElement('div');
   div.className = 'line ' + cls;
-  div.textContent = text;
+  div.style.whiteSpace='pre-wrap';
+  div.style.wordBreak='break-word';
+  const str=String(text);
+  if(str.includes('\n')){
+    const parts=str.split('\n');
+    parts.forEach((part,i)=>{
+      if(i>0) div.appendChild(document.createElement('br'));
+      if(part!=='') div.appendChild(document.createTextNode(part));
+      else if(i===0 && parts.length>1) div.appendChild(document.createElement('br'));
+    });
+    if(str==='\n') div.appendChild(document.createElement('br'));
+  } else {
+    div.textContent=str;
+  }
   consoleEl.appendChild(div);
   consoleEl.scrollTop = consoleEl.scrollHeight;
-  if(janelaAtiva && janelaConsoleEl){
+  if(janelaModo==='console' && janelaAtiva && janelaConsoleEl){
     const d2=document.createElement('div');
     d2.className='line ' + cls;
-    d2.textContent=text;
+    d2.style.whiteSpace='pre-wrap';
+    d2.style.wordBreak='break-word';
+    if(str.includes('\n')){
+      const parts=str.split('\n');
+      parts.forEach((part,i)=>{
+        if(i>0) d2.appendChild(document.createElement('br'));
+        if(part!=='') d2.appendChild(document.createTextNode(part));
+        else if(i===0 && parts.length>1) d2.appendChild(document.createElement('br'));
+      });
+      if(str==='\n') d2.appendChild(document.createElement('br'));
+    } else {
+      d2.textContent=str;
+    }
     janelaConsoleEl.appendChild(d2);
     janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
-  } else if(janelaConsoleEl && janelaEl && janelaEl.style.display!=='none'){
+  } else if(janelaModo==='console' && janelaConsoleEl && janelaEl && janelaEl.style.display!=='none'){
     const d2=document.createElement('div');
     d2.className='line ' + cls;
-    d2.textContent=text;
+    d2.style.whiteSpace='pre-wrap';
+    d2.style.wordBreak='break-word';
+    if(str.includes('\n')){
+      const parts=str.split('\n');
+      parts.forEach((part,i)=>{
+        if(i>0) d2.appendChild(document.createElement('br'));
+        if(part!=='') d2.appendChild(document.createTextNode(part));
+        else if(i===0 && parts.length>1) d2.appendChild(document.createElement('br'));
+      });
+      if(str==='\n') d2.appendChild(document.createElement('br'));
+    } else {
+      d2.textContent=str;
+    }
     janelaConsoleEl.appendChild(d2);
     janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
   }
@@ -2679,6 +3206,7 @@ clearConsole();
 
 // --- Console REPL: digitar diretamente e Enter ---
 let replEnv = {};
+try{ willogInitConstantes(replEnv); }catch(e){ replEnv.__consts={}; }
 let replHistory = [];
 let replHistIdx = -1;
 const consoleInputEl = document.getElementById('consoleInput');
@@ -3235,19 +3763,25 @@ function evaluateExpression(expr, env){
   expr = preprocessObjects(expr, env);
   expr = preprocessArrays(expr, env);
   expr = preprocessExiste(expr);
-  if(/^\s*aleat[óo]rio\s*\(\s*\)\s*$/i.test(expr)){
-    let r; do{ r=Math.random(); }while(r===0 || r===1); return r;
-  }
-  let m1=expr.match(/^\s*aleat[óo]rio\s*\(\s*(\d+(?:\.\d+)?)\s*\)\s*$/i);
-  if(m1){
-    const n=Number(m1[1]);
-    return Math.floor(Math.random()*n)+1;
-  }
-  let m2=expr.match(/^\s*aleat[óo]rio\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)\s*$/i);
-  if(m2){
-    const a=Number(m2[1]), b=Number(m2[2]);
-    const lo=Math.min(a,b), hi=Math.max(a,b);
-    return Math.floor(Math.random()*(hi-lo+1))+lo;
+  let mAle=expr.match(/^\s*aleat[óo]rio\s*\(\s*(.*?)\s*\)\s*$/i);
+  if(mAle){
+    const inside=mAle[1].trim();
+    if(inside===""){
+      let r; do{ r=Math.random(); }while(r===0 || r===1); return r;
+    }
+    const parts=splitArrayElements(inside);
+    if(parts.length===1){
+      const v=evaluateExpression(parts[0].trim(), env);
+      const n=Number(v);
+      if(isNaN(n) || !isFinite(n) || n<=0) return 0;
+      return Math.floor(Math.random()*Math.trunc(n))+1;
+    } else if(parts.length===2){
+      const a=Number(evaluateExpression(parts[0].trim(), env));
+      const b=Number(evaluateExpression(parts[1].trim(), env));
+      if(isNaN(a) || isNaN(b) || !isFinite(a) || !isFinite(b)) return 0;
+      const lo=Math.min(Math.trunc(a), Math.trunc(b)), hi=Math.max(Math.trunc(a), Math.trunc(b));
+      return Math.floor(Math.random()*(hi-lo+1))+lo;
+    }
   }
   let mPri=expr.match(/^\s*primos\s*\(\s*(.*?)\s*\)\s*$/i);
   if(mPri){
@@ -3538,7 +4072,7 @@ function tokenize(expr, env){
       if(id==='Falso') { tokens.push({type:'BOOLEAN', value:false}); continue; }
       let j=i;
       while(j<len && /\s/.test(expr[j])) j++;
-      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','inverta','repita','formate','soma','produto','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem','sen','cos','tan','abs','log','ln','fatorial','énúmero','enúmero','énumero','enumero','élista','elista','étexto','etexto','éprimo','eprimo','épar','epar','éímpar','eímpar','eimpar','primos','mmc','mdc','média','media','máximo','maximo','mínimo','minimo','embaralhe','encontre','começacom','comecacom','terminacom','indicede','índicede','remova','insira','conte','ordenecrescente','ordenedecrescente','diasemana','amostra','amostras','capturetecla','capture','espereTecla','exp','hipotenusa','hipotenúsa'];
+      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','inverta','repetir','repita','formate','soma','produto','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem','sen','cos','tan','abs','log','ln','fatorial','fibonacci','romanos','énúmero','enúmero','énumero','enumero','élista','elista','étexto','etexto','éprimo','eprimo','épar','epar','éímpar','eímpar','eimpar','primos','mmc','mdc','média','media','máximo','maximo','mínimo','minimo','embaralhe','encontre','começacom','comecacom','terminacom','indicede','índicede','remova','insira','conte','ordenecrescente','ordenedecrescente','diasemana','amostra','amostras','capturetecla','capture','espereTecla','exp','hipotenusa','hipotenúsa'];
       const lower = id.toLowerCase();
       if(tokens.length>0 && tokens[tokens.length-1].type==='OP' && tokens[tokens.length-1].value==='.'){
         tokens.push({type:'STRING', value:id});
@@ -3658,11 +4192,21 @@ function toWillogBool(v){
 }
 
 function multiplyWillog(a,b){
-  if(typeof a==='string' && typeof b==='number') return a.repeat(Math.max(0, Math.trunc(b)));
-  if(typeof b==='string' && typeof a==='number') return b.repeat(Math.max(0, Math.trunc(a)));
+  const isNumericStr=(s)=> typeof s==='string' && s.trim()!=='' && !isNaN(Number(s)) && isFinite(Number(s)) && /^-?\d+(\.\d+)?([eE][+-]?\d+)?$/.test(s.trim());
+  if(typeof a==='string' && typeof b==='number'){
+    if(isNumericStr(a)) return Number(a)*b;
+    return a.repeat(Math.max(0, Math.trunc(b)));
+  }
+  if(typeof b==='string' && typeof a==='number'){
+    if(isNumericStr(b)) return a*Number(b);
+    return b.repeat(Math.max(0, Math.trunc(a)));
+  }
   if(Array.isArray(a) && typeof b==='number'){
     return a.map(x=>{
-      if(typeof x==='string') return x.repeat(Math.max(0, Math.trunc(b)));
+      if(typeof x==='string'){
+        if(isNumericStr(x)) return Number(x)*b;
+        return x.repeat(Math.max(0, Math.trunc(b)));
+      }
       if(typeof x==='number') return x * b;
       if(Array.isArray(x)) return multiplyWillog(x,b);
       return x;
@@ -3670,7 +4214,10 @@ function multiplyWillog(a,b){
   }
   if(typeof a==='number' && Array.isArray(b)){
     return b.map(x=>{
-      if(typeof x==='string') return x.repeat(Math.max(0, Math.trunc(a)));
+      if(typeof x==='string'){
+        if(isNumericStr(x)) return a*Number(x);
+        return x.repeat(Math.max(0, Math.trunc(a)));
+      }
       if(typeof x==='number') return a * x;
       if(Array.isArray(x)) return multiplyWillog(a,x);
       return x;
@@ -3930,6 +4477,7 @@ function evalRPN(rpn, env){
           args.unshift(v===undefined?0:v);
         }
         let newEnv = Object.assign({}, env);
+        try{ newEnv.__consts = Object.assign({}, env.__consts||{}); }catch(e){ newEnv.__consts = {}; }
         for(let k=0;k<paramCount;k++){
           newEnv[funcObj.params[k]] = args[k];
         }
@@ -3942,6 +4490,14 @@ function evalRPN(rpn, env){
           const fLines=funcObj.body;
           const execAssignInFunc=(stmt)=>{
             try{
+              if(isConstanteStmt(stmt)){
+                const pc=parseConstante(stmt);
+                if(!pc) return;
+                if(!newEnv.__consts) newEnv.__consts={};
+                if(isConstanteName(newEnv, pc.name) || pc.name in newEnv) return;
+                try{ newEnv[pc.name]=evaluateExpression(pc.expr, newEnv); newEnv.__consts[pc.name]=true; }catch(e){}
+                return;
+              }
               const parts=splitAssignmentParts(stmt);
               if(parts.length>=2){
                 const rhs=parts[parts.length-1].trim();
@@ -3954,6 +4510,7 @@ function evalRPN(rpn, env){
                     const pathParts=varPath.split('.').map(p=>p.trim()).filter(p=>p!=='');
                     let valid=true; for(let pp of pathParts){ if(!/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(pp)){ valid=false; break; } }
                     if(!valid) continue;
+                    if(isConstanteName(newEnv, pathParts[0])) continue;
                     let obj=newEnv;
                     for(let k=0;k<pathParts.length-1;k++){
                       const key=pathParts[k];
@@ -3964,7 +4521,7 @@ function evalRPN(rpn, env){
                     }
                     obj[pathParts[pathParts.length-1]]=val;
                   } else {
-                    if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(varPath)) newEnv[varPath]=val;
+                    if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(varPath) && !isConstanteName(newEnv, varPath)) newEnv[varPath]=val;
                   }
                 }
               } else {
@@ -4304,10 +4861,11 @@ function evalRPN(rpn, env){
         } else {
           res=Math.log(v)/Math.log(b);
         }
-        if(!isFinite(res)) res="0";
+        if(!isFinite(res)) res=0;
         else {
           let s=res.toFixed(11).replace(/0+$/,'').replace(/\.$/,'');
-          res=s;
+          const n=Number(s);
+          res=isNaN(n)?0:n;
         }
         stack.push(res);
       } else if(fn==='substitua'){
@@ -4474,7 +5032,7 @@ function evalRPN(rpn, env){
           else res=str.toLowerCase().endsWith(s.toLowerCase());
         }
         stack.push(res);
-      } else if(fn==='repita'){
+      } else if(fn==='repetir' || fn==='repita'){
         const n = stack.pop();
         const txt = stack.pop();
         const s=String(txt===undefined?'':txt);
@@ -4652,6 +5210,15 @@ function evalRPN(rpn, env){
               }else if(typeof val==='string'){
                 if(val.length===0) return '';
                 return val[Math.floor(Math.random()*val.length)];
+              }else if(typeof val==='number'){
+                const n=Math.trunc(Number(val));
+                if(isNaN(n) || !isFinite(n) || n<=0) return 0;
+                return Math.floor(Math.random()*n)+1;
+              }else{
+                const n=Number(val);
+                if(!isNaN(n) && isFinite(n) && n>0){
+                  return Math.floor(Math.random()*Math.trunc(n))+1;
+                }
               }
               return val;
             }
@@ -4679,12 +5246,14 @@ function evalRPN(rpn, env){
             case 'teto': return Math.ceil(Number(val));
             case 'piso': return Math.floor(Number(val));
             case 'abs': return Math.abs(Number(val));
-            case 'sen': { let r=Math.sin(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
-            case 'cos': { let r=Math.cos(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
-            case 'tan': { let r=Math.tan(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
-            case 'exp': { let r=Math.exp(Number(val)); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
-            case 'ln': { let r=Math.log(Number(val)); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); return s; }
+            case 'sen': { let r=Math.sin(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'cos': { let r=Math.cos(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'tan': { let r=Math.tan(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'exp': { let r=Math.exp(Number(val)); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'ln': { let r=Math.log(Number(val)); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
             case 'fatorial': { let n=Math.trunc(Number(val)); if(n<0) return 0; if(n===0||n===1) return 1; let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
+            case 'romanos': { let n=Math.trunc(Number(val)); if(isNaN(n)||n<=0) return ""; const tab=[[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']]; let s=""; for(const [v,sym] of tab){ while(n>=v){ s+=sym; n-=v; } } return s; }
+            case 'fibonacci': { let n=Math.trunc(Number(val)); if(isNaN(n)||n<=0) return []; if(n===1) return [1]; const res=[1,1]; while(res.length<n){ res.push(res[res.length-1]+res[res.length-2]); } return res.slice(0,n); }
             case 'énúmero':
             case 'enúmero':
             case 'énumero':
@@ -4982,14 +5551,18 @@ function isPadraoLine(line){
 }
 
 function isRepetirLine(line){
-  return /^\s*repetir\s*\(.*\)\s*:/i.test(line);
+  return /^\s*repetir\s*\(.*\)\s*:/i.test(line) || /^\s*repita\s*\(.*\)\s*:/i.test(line);
 }
+function isRepitaLine(line){ return isRepetirLine(line); }
 
 function parseRepetir(line){
-  const m=line.match(/^\s*repetir\s*\(\s*(.*?)\s*\)\s*:\s*(.*)$/i);
+  let m=line.match(/^\s*repetir\s*\(\s*(.*?)\s*\)\s*:\s*(.*)$/i);
+  if(m) return {expr:m[1].trim(), after:m[2].trim()};
+  m=line.match(/^\s*repita\s*\(\s*(.*?)\s*\)\s*:\s*(.*)$/i);
   if(m) return {expr:m[1].trim(), after:m[2].trim()};
   return {expr:'', after:''};
 }
+function parseRepita(line){ return parseRepetir(line); }
 
 function isEnquantoLine(line){
   return /^\s*enquanto\b.*:/i.test(line);
@@ -5097,6 +5670,20 @@ function findBlockEnd(lines, start, parentIndent){
 function isGotoStmt(stmt){
   return /^\s*v[áa]\s+para\s+[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\s*$/i.test(stmt);
 }
+function willogInitConstantes(env){
+  if(!env.__consts) env.__consts={};
+}
+function isConstanteStmt(stmt){
+  return /^\s*constante\b/i.test(stmt.trim());
+}
+function parseConstante(stmt){
+  const m=stmt.trim().match(/^\s*constante\s+([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\s*=\s*(.+?)\s*(?:#.*)?$/i);
+  if(!m) return null;
+  return {name:m[1], expr:m[2].trim()};
+}
+function isConstanteName(env, name){
+  return !!(env.__consts && env.__consts[name]);
+}
 function isPareStmt(stmt){
   const t=stmt.trim();
   return /^\s*pare\s*$/i.test(t) || /^\s*pare\s*(?:#.*)$/i.test(t);
@@ -5170,7 +5757,14 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
     hasOutputRef.value=true;
     return;
   }
-  if(isJanelaStmt(stmt)){ const cent=getJanelaCentraliza(stmt); ativarJanela(cent); return; }
+  if(isJanelaDesenhoStmt(stmt)){
+    const p=parseJanelaDesenho(stmt, env);
+    if(!p){ logToConsole('Erro: janela(largura,altura) precisa de dois números (ex: janela(300,400))', 'error'); return; }
+    ativarJanelaDesenho(p.w, p.h);
+    hasOutputRef.value=true;
+    return;
+  }
+  if(isJanelaStmt(stmt)){ const cent=getJanelaCentraliza(stmt); ativarJanela(cent); if(!cent) hasOutputRef.value=true; return; }
   // --- Tela / Desenhe (gráficos na janela) ---
   if(isTelaLimpeStmt(stmt)){ if(_willogTelaLimpe()) hasOutputRef.value=true; return; }
   if(isTelaCorStmt(stmt)){ const _arg=parseTelaCorArg(stmt); if(_willogTelaCor(_arg, env)) hasOutputRef.value=true; return; }
@@ -5262,6 +5856,19 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
     }catch(e){ logToConsole('Erro em desenhe.texto: '+e.message,'error'); }
     return;
   }
+  if(isDesenhePoligonoStmt(stmt)){
+    const _args=parseDesenheArgs(stmt);
+    if(_args.length<4){ logToConsole('Erro: desenhe.polígono precisa de x,y,n,raio[,cor]','error'); return; }
+    try{
+      const _x=evaluateExpression(_args[0], env);
+      const _y=evaluateExpression(_args[1], env);
+      const _n=evaluateExpression(_args[2], env);
+      const _r=evaluateExpression(_args[3], env);
+      const _cor=_args.length>=5 ? _args[4] : 'branco';
+      if(_willogDrawPoligono(_x,_y,_n,_r,_cor,env)) hasOutputRef.value=true;
+    }catch(e){ logToConsole('Erro em desenhe.polígono: '+e.message,'error'); }
+    return;
+  }
   if(isAbrirStmt(stmt)){
     const _fn=parseAbrirFilename(stmt, env);
     await willogAbrir(_fn, env);
@@ -5329,21 +5936,52 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       return;
     }
   }
+  if(isGirarGlobalStmt(stmt)){ await execGirarGlobal(stmt, env, lineNo); hasOutputRef.value=true; return; }
+  if(isMoverGlobalStmt(stmt)){ await execMoverGlobal(stmt, env, lineNo); hasOutputRef.value=true; return; }
+  if(isRecortarStmt(stmt)){ execRecortar(stmt, env, lineNo); hasOutputRef.value=true; return; }
+  if(isColarStmt(stmt)){ execColar(stmt, env, lineNo); hasOutputRef.value=true; return; }
+  if(isGirarStmt(stmt)){ await execGirar(stmt, env, lineNo); hasOutputRef.value=true; return; }
+  if(isMoverStmt(stmt)){ await execMover(stmt, env, lineNo); hasOutputRef.value=true; return; }
+  if(isConstanteStmt(stmt)){
+    const pc=parseConstante(stmt);
+    if(!pc){ logToConsole(`Erro na linha ${lineNo}: use constante NOME = valor ex: constante PI = 3.1415`, 'error'); return; }
+    if(!env.__consts) env.__consts={};
+    if(isConstanteName(env, pc.name) || pc.name in env){ logToConsole(`Erro na linha ${lineNo}: "${pc.name}" já existe e não pode ser redeclarado como constante`, 'error'); return; }
+    try{
+      let cval;
+      if(/^\s*leia\b/i.test(pc.expr)){ const pr=parseLeiaPrompt(pc.expr); cval=willogCoerceLeiaValue(await showLeia(pr)); }
+      else { cval=evaluateExpression(pc.expr, env); }
+      env[pc.name]=cval;
+      env.__consts[pc.name]=true;
+    }catch(e){ logToConsole(`Erro na linha ${lineNo}: ${e.message}`, 'error'); }
+    return;
+  }
   if(stmt.includes('=')){
     const parts=splitAssignmentParts(stmt);
     if(parts.length>=2){
       const rhs=parts[parts.length-1].trim();
       if(rhs==='') return;
       try{
-        let val; if(/^\s*leia\b/i.test(rhs)){ const pr=parseLeiaPrompt(rhs); val=willogCoerceLeiaValue(await showLeia(pr)); } else { val=evaluateExpression(rhs, env); }
+        let val;
+        if(/^\s*leia\b/i.test(rhs)){ const pr=parseLeiaPrompt(rhs); val=willogCoerceLeiaValue(await showLeia(pr)); }
+        else if(/^\s*desenhe\.pol[ií]gono/i.test(rhs)){
+          const _a=parseDesenheArgs(rhs);
+          if(_a.length<4){ logToConsole('Erro: desenhe.polígono precisa de x,y,n,raio[,cor]', 'error'); return; }
+          const _x=evaluateExpression(_a[0], env), _y=evaluateExpression(_a[1], env), _n=evaluateExpression(_a[2], env), _r=evaluateExpression(_a[3], env);
+          const _c=_a.length>=5?_a[4]:'branco';
+          const _obj=_willogDrawPoligono(_x,_y,_n,_r,_c,env);
+          val=_obj;
+        } else { val=evaluateExpression(rhs, env); }
         for(let i=0;i<parts.length-1;i++){
           const varPath=parts[i].trim();
           if(varPath==='') continue;
+          if(/^constante\b/i.test(varPath)){ logToConsole(`Erro na linha ${lineNo}: use constante NOME = valor (sem repetir "constante" na atribuição)`, 'error'); continue; }
           if(varPath.includes('.')){
             const pathParts=varPath.split('.').map(p=>p.trim()).filter(p=>p!=='');
             let valid=true;
             for(let pp of pathParts){ if(!/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(pp)){ valid=false; break; } }
             if(!valid){ logToConsole(`Erro na linha ${lineNo}: nome de variável inválido "${varPath}"`, 'error'); continue; }
+            if(isConstanteName(env, pathParts[0])){ logToConsole(`Erro na linha ${lineNo}: "${pathParts[0]}" é constante e não pode ser alterada`, 'error'); continue; }
             let obj=env;
             for(let pi=0; pi<pathParts.length-1; pi++){
               const key=pathParts[pi];
@@ -5356,6 +5994,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
             obj[lastKey]=val;
           }else{
             if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(varPath)){
+              if(isConstanteName(env, varPath)){ logToConsole(`Erro na linha ${lineNo}: "${varPath}" é constante e não pode ser alterada`, 'error'); continue; }
               env[varPath]=val;
             }else if(varPath!==''){
               logToConsole(`Erro na linha ${lineNo}: nome de variável inválido "${varPath}"`, 'error');
@@ -5422,6 +6061,7 @@ async function runWillog(){
   let srcNoBlock=src.replace(/#:[\s\S]*?:#/g, '');
   srcNoBlock=srcNoBlock.replace(/#:[\s\S]*$/g, '');
   const env={};
+  willogInitConstantes(env);
   const hasOutputRef={value:false};
   const rawLines=srcNoBlock.split('\n');
   const lines=[];
@@ -5502,6 +6142,12 @@ async function runWillog(){
         await willogToque(_pt.freq, _pt.dur);
         hasOutputRef.value=true; i++; continue;
       }
+      if(isJanelaDesenhoStmt(raw)){
+        const p=parseJanelaDesenho(raw, env);
+        if(!p){ logToConsole('Erro na linha '+lineNo+': janela(largura,altura) precisa de dois números', 'error'); i++; continue; }
+        ativarJanelaDesenho(p.w, p.h);
+        hasOutputRef.value=true; i++; continue;
+      }
       if(isJanelaLine(raw)){ const cent=getJanelaCentraliza(raw); ativarJanela(cent); if(!cent) hasOutputRef.value=true; i++; continue; }
       if(isTelaLimpeStmt(raw)){ if(_willogTelaLimpe()) hasOutputRef.value=true; i++; continue; }
       if(isTelaCorStmt(raw)){ const _a=parseTelaCorArg(raw); if(_willogTelaCor(_a, env)) hasOutputRef.value=true; i++; continue; }
@@ -5579,6 +6225,25 @@ async function runWillog(){
         }catch(e){ logToConsole('Erro na linha '+lineNo+': '+e.message,'error'); }
         i++; continue;
       }
+      if(isDesenhePoligonoStmt(raw)){
+        const _args=parseDesenheArgs(raw);
+        if(_args.length<4){ logToConsole('Erro na linha '+lineNo+': desenhe.polígono precisa de x,y,n,raio[,cor]','error'); i++; continue; }
+        try{
+          const _x=evaluateExpression(_args[0], env);
+          const _y=evaluateExpression(_args[1], env);
+          const _n=evaluateExpression(_args[2], env);
+          const _r=evaluateExpression(_args[3], env);
+          const _cor=_args.length>=5 ? _args[4] : 'branco';
+          if(_willogDrawPoligono(_x,_y,_n,_r,_cor,env)) hasOutputRef.value=true;
+        }catch(e){ logToConsole('Erro na linha '+lineNo+': '+e.message,'error'); }
+        i++; continue;
+      }
+      if(isGirarGlobalStmt(raw)){ await execGirarGlobal(raw, env, lineNo); hasOutputRef.value=true; i++; continue; }
+      if(isMoverGlobalStmt(raw)){ await execMoverGlobal(raw, env, lineNo); hasOutputRef.value=true; i++; continue; }
+      if(isRecortarStmt(raw)){ execRecortar(raw, env, lineNo); hasOutputRef.value=true; i++; continue; }
+      if(isColarStmt(raw)){ execColar(raw, env, lineNo); hasOutputRef.value=true; i++; continue; }
+      if(isGirarStmt(raw)){ await execGirar(raw, env, lineNo); hasOutputRef.value=true; i++; continue; }
+      if(isMoverStmt(raw)){ await execMover(raw, env, lineNo); hasOutputRef.value=true; i++; continue; }
       if(isAbrirStmt(raw)){
         const _fn=parseAbrirFilename(raw, env);
         await willogAbrir(_fn, env);
@@ -6110,6 +6775,9 @@ document.addEventListener('keydown', (e)=>{
   if(t.startsWith('#')){
     return `<div style="display:flex; gap:12px; padding:10px 14px; margin:6px 0; background:var(--panel2); border-left:4px solid var(--border); border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;"><div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--hl-comment);">${t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><div style="margin-top:6px; font-size:14px; color:var(--text-dim);">💭 Essa linha é um comentário — um recadinho só para humanos, o computador finge que não viu!</div></div></div>`;
   }
+  if(/^constante\s+/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c5ce7; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📌 <b>O que faz?</b> Cria uma constante (valor fixo que não pode mudar). Ex: <code>constante PI = 3.1415</code>.</div></div></div>`;
+  }
   if(/^abrir\s+/i.test(t)){
     const m=t.match(/^abrir\s+["\']?(.+?)["\']?\s*$/i);
     const arq=m?m[1]:"arquivo";
@@ -6135,9 +6803,27 @@ document.addEventListener('keydown', (e)=>{
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🎨 <b>O que faz?</b> Escolhe a cor do fundo da janelinha para o próximo <code>tela.limpe</code>. É como escolher a cor do papel!</div></div></div>`;
   }
   if(/^desenhe\./i.test(t)){
-    const tipo = t.match(/^desenhe\.(\w+)/i)?.[1] || "algo";
-    const desc = {circulo:"um círculo (bolinha)", linha:"uma linha retinha", ponto:"um pontinho", retangulo:"um retângulo (quadrado esticado)", texto:"um texto escrito"}[tipo.toLowerCase()] || "um desenho";
+    const tipo = t.match(/^desenhe\.([a-zA-ZÀ-ÿ]+)/i)?.[1] || "algo";
+    const desc = {circulo:"um círculo (bolinha)", linha:"uma linha retinha", ponto:"um pontinho", retangulo:"um retângulo (quadrado esticado)", texto:"um texto escrito", poligono:"um polígono regular", "polígono":"um polígono regular"}[tipo.toLowerCase()] || "um desenho";
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🖌️ <b>O que faz?</b> Desenha ${desc} na janelinha, na posição e cor escolhidas. É como carimbar no papel!</div></div></div>`;
+  }
+  if(/\.girar\s*\(/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🔄 <b>O que faz?</b> Gira o desenho armazenado (ex: <code>figura=desenhe.polígono(...)</code>) <b>ângulo</b> graus à direita, <b>vezes</b> vezes com <b>pausa</b> segundos. Ex: <code>figura.girar(45,3,0.5)</code> gira 45° 3× com 0.5s.</div></div></div>`;
+  }
+  if(/^\s*girar\s*\(/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🔄 <b>O que faz?</b> Gira vários desenhos ao mesmo tempo. Ex: <code>girar(a(30,5,0.125),b(-15,5,0.250))</code> gira a e b juntos.</div></div></div>`;
+  }
+  if(/\.mover\s*\(/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🚀 <b>O que faz?</b> Move o desenho armazenado para <b>(x,y)</b> com <b>passo</b> pixels por quadro (16ms). Ex: <code>figura.mover(300,200,2)</code> desliza até (300,200).</div></div></div>`;
+  }
+  if(/^\s*mover\s*\(/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🚀 <b>O que faz?</b> Move vários desenhos ao mesmo tempo. Ex: <code>mover(a(100,100,0.5),b(300,300))</code> move a e b juntos (passo omitido = 1).</div></div></div>`;
+  }
+  if(/^\s*recortar\s*\(/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">✂️ <b>O que faz?</b> Recorta o desenho da tela (ex: <code>recortar(a)</code>). Use <code>colar(a,x,y)</code> para mostrar de novo.</div></div></div>`;
+  }
+  if(/^\s*colar\s*\(/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📌 <b>O que faz?</b> Cola o desenho recortado em (x,y). Ex: <code>colar(a,300,300)</code>.</div></div></div>`;
   }
   if(/^bipe\s*$/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #fdcb6e; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🔔 <b>O que faz?</b> Faz um barulhinho "bipe" bem curtinho, igual de videogame!</div></div></div>`;
@@ -6159,8 +6845,8 @@ document.addEventListener('keydown', (e)=>{
     const cond = t.replace(/^\s*enquanto\s+/i,'').replace(/:\s*$/,'');
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">⏳ <b>O que faz?</b> Repete <b>enquanto</b> <code>${esc(cond)}</code> for verdadeiro. Fica repetindo até a condição ficar falsa. É como "enquanto tiver doces, continue comendo!"</div></div></div>`;
   }
-  if(/^\s*repetir\s*\(/i.test(t)){
-    const n = t.match(/repetir\s*\(\s*(.*?)\s*\)/i)?.[1]||"n";
+  if(/^\s*repit(?:a|ir)\s*\(/i.test(t)){
+    const n = t.match(/repit(?:a|ir)\s*\(\s*(.*?)\s*\)/i)?.[1]||"n";
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🔂 <b>O que faz?</b> Repete o que está indentado embaixo <b>${esc(n)}</b> vezes. É como carimbar ${esc(n)} vezes no papel!</div></div></div>`;
   }
   if(/^\s*verificar\b/i.test(t)){
@@ -6371,3 +7057,19 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') document.getEle
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
