@@ -1162,7 +1162,7 @@ verificar nota:
         </div>
       <div class="manual-pane" id="pane-funcoes">
         <h3>Funções — ordem alfabética</h3>
-        <table><tr><td><code class="syntax">abs(x)</code></td><td>Valor absoluto</td><td><code class="example">abs(-2)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">adicionarDias(data, dias)</code></td><td>Adiciona dias a uma data</td><td><code class="example">adicionarDias("14/04/1973",19269)</code> <span class="saida">→ 15/01/2026</span></td></tr><tr><td><code class="syntax">agora()</code></td><td>Data e hora atuais</td><td><code class="example">agora()</code> <span class="saida">→ 15/01/2026 14:30:07</span></td></tr><tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr><tr><td><code class="syntax">amostra(lista, n)</code></td><td>Amostra aleatória sem repetição</td><td><code class="example">amostra([1,2,3,4,5,6],2)</code> <span class="saida">→ 5,3</span></td></tr><tr><td><code class="syntax">amostras(lista, tam, qtd)</code></td><td>Qtd amostras de tamanho tam</td><td><code class="example">amostras([1,2,3,4,5,6],3,2)</code> <span class="saida">→ 6,1,2 | 5,6,3</span></td></tr><tr><td><code class="syntax">anosEntre(data1, data2)</code></td><td>Anos entre duas datas</td><td><code class="example">anosEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 52.7917808219</span></td></tr><tr><td><code class="syntax">aparar(texto)</code></td><td>Remove espaços no início e fim</td><td><code class="example">aparar("     olá    ")</code> <span class="saida">→ olá</span></td></tr><tr><td><code class="syntax">arredondar(x, casas)</code></td><td>Arredonda para n casas decimais</td><td><code class="example">arredondar(5.33333,2)</code> <span class="saida">→ 5.33</span><br><code class="example">arredondar(1.66666,3)</code> <span class="saida">→ 1.667</span></td></tr><tr><td><code class="syntax">captureTecla()</code></td><td>Retorna a última tecla capturada por <code>espereTecla()</code></td><td><code class="example">espereTecla(); tecla=captureTecla()</code> <span class="saida">→ "a"</span><br><code class="example">espereTecla("enter"); captureTecla()</code> <span class="saida">→ "Enter"</span></td></tr><tr><td><code class="syntax">começaCom(texto, prefixo)</code></td><td>Verifica se texto começa com prefixo (ignora maiúsculas/minúsculas)</td><td><code class="example">começaCom("Willog","wil")</code> <span class="saida">→ verdadeiro</span><br><code class="example">começaCom("Willog","log")</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">contarItem(lista, item)</code></td><td>Conta ocorrências de item</td><td><code class="example">contarItem("especialidade","e")</code> <span class="saida">→ 3</span><br><code class="example">contarItem(["a","b","c","b"],"b")</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">conte(lista)</code></td><td>Quantidade de elementos</td><td><code class="example">conte([1,3,5,7])</code> <span class="saida">→ 4</span></td></tr><tr><td><code class="syntax">cos(x)</code></td><td>Cosseno (graus)</td><td><code class="example">cos(60)</code> <span class="saida">→ 0.5</span></td></tr><tr><td><code class="syntax">data()</code></td><td>Data atual</td><td><code class="example">data()</code> <span class="saida">→ 15/01/2026</span></td></tr><tr><td><code class="syntax">decimal(x)</code></td><td>Parte decimal</td><td><code class="example">decimal(2.5)</code> <span class="saida">→ 0.5</span></td></tr><tr><td><code class="syntax">diaSemana(data)</code></td><td>Dia da semana (domingo a sábado)</td><td><code class="example">diaSemana("15/01/2026")</code> <span class="saida">→ quinta</span></td></tr><tr><td><code class="syntax">diasEntre(data1, data2)</code></td><td>Dias entre duas datas</td><td><code class="example">diasEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 19269</span></td></tr><tr><td><code class="syntax">distintos(valor)</code></td><td>Remove duplicatas mantendo ordem</td><td><code class="example">distintos("banana")</code> <span class="saida">→ ban</span><br><code class="example">distintos(123345456)</code> <span class="saida">→ 123456</span></td></tr><tr><td><code class="syntax">divida(texto, separador)</code></td><td>Divide texto em lista</td><td><code class="example">divida("a,b,c",",")</code> <span class="saida">→ a,b,c</span><br><code class="example">divida("abc",",")</code> <span class="saida">→ a,b,c</span></td></tr><tr><td><code class="syntax">éÍmpar(x)</code></td><td>Verifica se é ímpar</td><td><code class="example">éÍmpar(511)</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">éLista(x)</code></td><td>Verifica se é lista</td><td><code class="example">éLista([1,3,5,7])</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">embaralhe(valor)</code></td><td>Embaralha lista/texto/número</td><td><code class="example">embaralhe([1,2,3,4,5])</code> <span class="saida">→ 3,1,5,2,4</span><br><code class="example">embaralhe("banana")</code> <span class="saida">→ annaba</span></td></tr><tr><td><code class="syntax">encontre(texto, busca)</code></td><td>Posição da primeira ocorrência (0 = primeiro caractere, -1 se não encontrar)</td><td><code class="example">encontre("Willog","llog")</code> <span class="saida">→ 2</span><br><code class="example">encontre("Willog","x")</code> <span class="saida">→ -1</span><br><code class="example">encontre([1,2,3,2],2)</code> <span class="saida">→ 1</span></td></tr><tr><td><code class="syntax">éNúmero(x)</code></td><td>Verifica se é número</td><td><code class="example">éNúmero(234)</code> <span class="saida">→ verdadeiro</span><br><code class="example">éNúmero("123")</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">éPar(x)</code></td><td>Verifica se é par</td><td><code class="example">éPar(1023)</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">éPrimo(x)</code></td><td>Verifica se é primo</td><td><code class="example">éPrimo(3)</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">éTexto(x)</code></td><td>Verifica se é texto</td><td><code class="example">éTexto("Willog")</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">fatorial(x)</code></td><td>Fatorial</td><td><code class="example">fatorial(4)</code> <span class="saida">→ 24</span></td></tr><tr><td><code class="syntax">fibonacci(n)</code></td><td>Primeiros n termos de Fibonacci</td><td><code class="example">fibonacci(3)</code> <span class="saida">→ 1,1,2</span><br><code class="example">fibonacci(5)</code> <span class="saida">→ 1,1,2,3,5</span></td></tr><tr><td><code class="syntax">filtrar(lista, condição)</code></td><td>Filtra por condição ou valor</td><td><code class="example">filtrar([1,2,3,4],"x>2")</code> <span class="saida">→ 3,4</span><br><code class="example">filtrar("maçaneta","a")</code> <span class="saida">→ mçnet</span></td></tr><tr><td><code class="syntax">formate(valor, casas)</code></td><td>Formata número truncando para n casas decimais</td><td><code class="example">formate(3.141502,3)</code> <span class="saida">→ 3.141</span><br><code class="example">formate(3.1,3)</code> <span class="saida">→ 3.100</span></td></tr><tr><td><code class="syntax">fração(x)</code></td><td>Converte para fração</td><td><code class="example">fração(0.333)</code> <span class="saida">→ 1/3</span></td></tr><tr><td><code class="syntax">hora()</code></td><td>Hora atual</td><td><code class="example">hora()</code> <span class="saida">→ 14:30:07</span></td></tr><tr><td><code class="syntax">indiceDe(lista, valor)</code></td><td>Índice do valor (0 = primeiro, -1 se não encontrar)</td><td><code class="example">indiceDe([1,2,3,4],3)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">insira(lista, pos, valor)</code></td><td>Insere valor após posição pos</td><td><code class="example">insira([1,2,3,4],1,9)</code> <span class="saida">→ 1,2,9,3,4</span></td></tr><tr><td><code class="syntax">inteiro(x)</code></td><td>Parte inteira</td><td><code class="example">inteiro(2.7)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">inverta(texto)</code></td><td>Inverte texto/lista</td><td><code class="example">inverta("Willog")</code> <span class="saida">→ golliW</span></td></tr><tr><td><code class="syntax">junte(lista, separador)</code></td><td>Junta lista em texto</td><td><code class="example">junte(["a","b"],"-")</code> <span class="saida">→ a-b</span></td></tr><tr><td><code class="syntax">ln(x)</code></td><td>Logaritmo natural</td><td><code class="example">ln(2)</code> <span class="saida">→ 0.69314718056</span></td></tr><tr><td><code class="syntax">log(base, valor)</code></td><td>Logaritmo</td><td><code class="example">log(10,2)</code> <span class="saida">→ 0.30102999566</span></td></tr><tr><td><code class="syntax">maiúsculo(texto)</code></td><td>Converte para maiúsculas</td><td><code class="example">maiúsculo("Olá!")</code> <span class="saida">→ OLÁ!</span></td></tr><tr><td><code class="syntax">mapear(lista, expressão)</code></td><td>Aplica expressão a cada item</td><td><code class="example">mapear([1,2,3],"x*2")</code> <span class="saida">→ 2,4,6</span></td></tr><tr><td><code class="syntax">máximo(...valores)</code></td><td>Maior valor</td><td><code class="example">máximo(2,4,7,4,5)</code> <span class="saida">→ 7</span></td></tr><tr><td><code class="syntax">mdc(a, b, ...)</code></td><td>Máximo divisor comum</td><td><code class="example">mdc(12,18)</code> <span class="saida">→ 6</span></td></tr><tr><td><code class="syntax">média(...valores)</code></td><td>Média aritmética</td><td><code class="example">média(2,4,6)</code> <span class="saida">→ 4</span></td></tr><tr><td><code class="syntax">mesesEntre(data1, data2)</code></td><td>Meses entre duas datas</td><td><code class="example">mesesEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 633.501369863</span></td></tr><tr><td><code class="syntax">mínimo(...valores)</code></td><td>Menor valor</td><td><code class="example">mínimo(-3,1,2)</code> <span class="saida">→ -3</span></td></tr><tr><td><code class="syntax">minúsculo(texto)</code></td><td>Converte para minúsculas</td><td><code class="example">minúsculo("WILLOG")</code> <span class="saida">→ willog</span></td></tr><tr><td><code class="syntax">mmc(a, b, ...)</code></td><td>Mínimo múltiplo comum</td><td><code class="example">mmc(2,3,5)</code> <span class="saida">→ 30</span></td></tr><tr><td><code class="syntax">ordeneDecrescente(lista)</code></td><td>Ordena decrescente</td><td><code class="example">ordeneDecrescente([2,4,6,8,10])</code> <span class="saida">→ 10,8,6,4,2</span></td></tr><tr><td><code class="syntax">paraNúmero(x)</code></td><td>Converte texto para número</td><td><code class="example">paraNúmero("12.5")</code> <span class="saida">→ 12.5</span><br><code class="example">paraNúmero("12,5")*2</code> <span class="saida">→ 25</span></td></tr><tr><td><code class="syntax">paraTexto(x)</code></td><td>Converte número para texto</td><td><code class="example">paraTexto(8)</code> <span class="saida">→ "8"</span><br><code class="example">paraTexto(8)*3</code> <span class="saida">→ 888</span></td></tr><tr><td><code class="syntax">piso(x)</code></td><td>Arredonda para baixo (floor)</td><td><code class="example">piso(2.3)</code> <span class="saida">→ 2</span><br><code class="example">piso(2.9)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">posição(texto, busca)</code></td><td>Posição da busca em texto (0 = primeiro) ou caractere na posição se busca for número</td><td><code class="example">posição("Willog","i")</code> <span class="saida">→ 1</span><br><code class="example">posição("Willog",1)</code> <span class="saida">→ i</span></td></tr><tr><td><code class="syntax">primos(n)</code></td><td>Primeiros n primos</td><td><code class="example">primos(6)</code> <span class="saida">→ 2,3,5,7,11,13</span></td></tr><tr><td><code class="syntax">produto(lista)</code></td><td>Produto dos elementos</td><td><code class="example">produto([1,3,5,7])</code> <span class="saida">→ 105</span></td></tr><tr><td><code class="syntax">raizc(x)</code></td><td>Raiz cúbica — vetorizada</td><td><code class="example">raizc(27)</code> <span class="saida">→ 3</span></td></tr><tr><td><code class="syntax">raizq(x)</code></td><td>Raiz quadrada — vetorizada</td><td><code class="example">raizq(16)</code> <span class="saida">→ 4</span><br><code class="example">raizq([1,4,9])</code> <span class="saida">→ 1, 2, 3</span></td></tr><tr><td><code class="syntax">remova(lista, valor)</code></td><td>Remove primeira ocorrência</td><td><code class="example">remova([1,2,3,4,5,6],5)</code> <span class="saida">→ 1,2,3,4,6</span></td></tr><tr><td><code class="syntax">repetir(texto, n)</code></td><td>Repete texto n vezes</td><td><code class="example">repetir("oi",4)</code> <span class="saida">→ oioioioi</span></td></tr><tr><td><code class="syntax">romanos(n)</code></td><td>Converte número em algarismos romanos</td><td><code class="example">romanos(5)</code> <span class="saida">→ V</span><br><code class="example">romanos(3)</code> <span class="saida">→ III</span><br><code class="example">romanos(102)</code> <span class="saida">→ CII</span></td></tr><tr><td><code class="syntax">semEspaços(texto)</code></td><td>Remove todos os espaços</td><td><code class="example">semEspaços("1 2 3 4 5 6")</code> <span class="saida">→ 123456</span></td></tr><tr><td><code class="syntax">sen(x)</code></td><td>Seno (graus)</td><td><code class="example">sen(60)</code> <span class="saida">→ 0.86602540378</span></td></tr><tr><td><code class="syntax">soma(lista)</code></td><td>Soma elementos (aceita lista ou valores)</td><td><code class="example">soma([1,2,3,4])</code> <span class="saida">→ 10</span><br><code class="example">soma(1,2,3)</code> <span class="saida">→ 6</span></td></tr><tr><td><code class="syntax">substitua(texto, antigo, novo)</code></td><td>Substitui texto</td><td><code class="example">substitua("a-b-c","-"," ")</code> <span class="saida">→ a b c</span></td></tr><tr><td><code class="syntax">tamanho(texto)</code></td><td>Tamanho do texto/lista</td><td><code class="example">tamanho("Willog")</code> <span class="saida">→ 6</span></td></tr><tr><td><code class="syntax">tan(x)</code></td><td>Tangente (graus)</td><td><code class="example">tan(60)</code> <span class="saida">→ 1.73205080757</span></td></tr><tr><td><code class="syntax">terminaCom(texto, sufixo)</code></td><td>Verifica se texto termina com sufixo (ignora maiúsculas/minúsculas)</td><td><code class="example">terminaCom("Willog","log")</code> <span class="saida">→ verdadeiro</span><br><code class="example">terminaCom("Willog","llo")</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">teto(x)</code></td><td>Arredonda para cima (ceil)</td><td><code class="example">teto(2.3)</code> <span class="saida">→ 3</span><br><code class="example">teto(2.9)</code> <span class="saida">→ 3</span></td></tr><tr><td><code class="syntax">tipo(x)</code></td><td>Retorna tipo: número, texto, booleano ou lista</td><td><code class="example">tipo(7)</code> <span class="saida">→ número</span><br><code class="example">tipo("Olá!")</code> <span class="saida">→ texto</span><br><code class="example">tipo(4>5)</code> <span class="saida">→ booleano</span><br><code class="example">tipo([1,2,3])</code> <span class="saida">→ lista</span></td></tr></table>
+        <table><tr><td><code class="syntax">abs(x)</code></td><td>Valor absoluto</td><td><code class="example">abs(-2)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">adicionarDias(data, dias)</code></td><td>Adiciona dias a uma data</td><td><code class="example">adicionarDias("14/04/1973",19269)</code> <span class="saida">→ 15/01/2026</span></td></tr><tr><td><code class="syntax">agora()</code></td><td>Data e hora atuais</td><td><code class="example">agora()</code> <span class="saida">→ 15/01/2026 14:30:07</span></td></tr><tr><td><code class="syntax">aleatório()</code><br><code class="syntax">aleatório(n)</code><br><code class="syntax">aleatório(a,b)</code></td><td>Número aleatório 0-1, 1..n ou a..b</td><td><code class="example">aleatório(6)</code> <span class="saida">→ 1..6</span><br><code class="example">aleatório(3,12)</code> <span class="saida">→ 3..12</span></td></tr><tr><td><code class="syntax">amostra(lista, n)</code></td><td>Amostra aleatória sem repetição</td><td><code class="example">amostra([1,2,3,4,5,6],2)</code> <span class="saida">→ 5,3</span></td></tr><tr><td><code class="syntax">amostras(lista, tam, qtd)</code></td><td>Qtd amostras de tamanho tam</td><td><code class="example">amostras([1,2,3,4,5,6],3,2)</code> <span class="saida">→ 6,1,2 | 5,6,3</span></td></tr><tr><td><code class="syntax">anosEntre(data1, data2)</code></td><td>Anos entre duas datas</td><td><code class="example">anosEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 52.7917808219</span></td></tr><tr><td><code class="syntax">aparar(texto)</code></td><td>Remove espaços no início e fim</td><td><code class="example">aparar("     olá    ")</code> <span class="saida">→ olá</span></td></tr><tr><td><code class="syntax">arccos(x)</code></td><td>Arco cosseno em graus (inversa do cosseno)</td><td><code class="example">arccos(0.5)</code> <span class="saida">→ 60</span></td></tr><tr><td><code class="syntax">arcsen(x)</code></td><td>Arco seno em graus (inversa do seno)</td><td><code class="example">arcsen(0.5)</code> <span class="saida">→ 30</span></td></tr><tr><td><code class="syntax">arctan(x)</code></td><td>Arco tangente em graus (inversa da tangente)</td><td><code class="example">arctan(1)</code> <span class="saida">→ 45</span></td></tr><tr><td><code class="syntax">arredondar(x, casas)</code></td><td>Arredonda para n casas decimais</td><td><code class="example">arredondar(5.33333,2)</code> <span class="saida">→ 5.33</span><br><code class="example">arredondar(1.66666,3)</code> <span class="saida">→ 1.667</span></td></tr><tr><td><code class="syntax">captureTecla()</code></td><td>Retorna a última tecla capturada por <code>espereTecla()</code></td><td><code class="example">espereTecla(); tecla=captureTecla()</code> <span class="saida">→ "a"</span><br><code class="example">espereTecla("enter"); captureTecla()</code> <span class="saida">→ "Enter"</span></td></tr><tr><td><code class="syntax">começaCom(texto, prefixo)</code></td><td>Verifica se texto começa com prefixo (ignora maiúsculas/minúsculas)</td><td><code class="example">começaCom("Willog","wil")</code> <span class="saida">→ verdadeiro</span><br><code class="example">começaCom("Willog","log")</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">contarItem(lista, item)</code></td><td>Conta ocorrências de item</td><td><code class="example">contarItem("especialidade","e")</code> <span class="saida">→ 3</span><br><code class="example">contarItem(["a","b","c","b"],"b")</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">conte(lista)</code></td><td>Quantidade de elementos</td><td><code class="example">conte([1,3,5,7])</code> <span class="saida">→ 4</span></td></tr><tr><td><code class="syntax">cos(x)</code></td><td>Cosseno (graus)</td><td><code class="example">cos(60)</code> <span class="saida">→ 0.5</span></td></tr><tr><td><code class="syntax">cossec(x)</code></td><td>Cossecante (graus, 1/sen)</td><td><code class="example">cossec(30)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">cotan(x)</code></td><td>Cotangente (graus, 1/tan)</td><td><code class="example">cotan(45)</code> <span class="saida">→ 1</span></td></tr><tr><td><code class="syntax">curvaAjuste(x=..., y=[...])</code></td><td>Encontra a função que melhor se ajusta aos dados (mínimos quadrados)</td><td><code class="example">curvaAjuste(x=(-2..4),y=[11,6,3,2,3,6,11])</code> <span class="saida">→ y:=x**2-2*x+3</span></td></tr><tr><td><code class="syntax">data()</code></td><td>Data atual</td><td><code class="example">data()</code> <span class="saida">→ 15/01/2026</span></td></tr><tr><td><code class="syntax">decimal(x)</code></td><td>Parte decimal</td><td><code class="example">decimal(2.5)</code> <span class="saida">→ 0.5</span></td></tr><tr><td><code class="syntax">diaSemana(data)</code></td><td>Dia da semana (domingo a sábado)</td><td><code class="example">diaSemana("15/01/2026")</code> <span class="saida">→ quinta</span></td></tr><tr><td><code class="syntax">diasEntre(data1, data2)</code></td><td>Dias entre duas datas</td><td><code class="example">diasEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 19269</span></td></tr><tr><td><code class="syntax">distintos(valor)</code></td><td>Remove duplicatas mantendo ordem</td><td><code class="example">distintos("banana")</code> <span class="saida">→ ban</span><br><code class="example">distintos(123345456)</code> <span class="saida">→ 123456</span></td></tr><tr><td><code class="syntax">divida(texto, separador)</code></td><td>Divide texto em lista</td><td><code class="example">divida("a,b,c",",")</code> <span class="saida">→ a,b,c</span><br><code class="example">divida("abc",",")</code> <span class="saida">→ a,b,c</span></td></tr><tr><td><code class="syntax">éÍmpar(x)</code></td><td>Verifica se é ímpar</td><td><code class="example">éÍmpar(511)</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">éLista(x)</code></td><td>Verifica se é lista</td><td><code class="example">éLista([1,3,5,7])</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">embaralhe(valor)</code></td><td>Embaralha lista/texto/número</td><td><code class="example">embaralhe([1,2,3,4,5])</code> <span class="saida">→ 3,1,5,2,4</span><br><code class="example">embaralhe("banana")</code> <span class="saida">→ annaba</span></td></tr><tr><td><code class="syntax">encontre(texto, busca)</code></td><td>Posição da primeira ocorrência (0 = primeiro caractere, -1 se não encontrar)</td><td><code class="example">encontre("Willog","llog")</code> <span class="saida">→ 2</span><br><code class="example">encontre("Willog","x")</code> <span class="saida">→ -1</span><br><code class="example">encontre([1,2,3,2],2)</code> <span class="saida">→ 1</span></td></tr><tr><td><code class="syntax">éNúmero(x)</code></td><td>Verifica se é número</td><td><code class="example">éNúmero(234)</code> <span class="saida">→ verdadeiro</span><br><code class="example">éNúmero("123")</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">éPar(x)</code></td><td>Verifica se é par</td><td><code class="example">éPar(1023)</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">éPrimo(x)</code></td><td>Verifica se é primo</td><td><code class="example">éPrimo(3)</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">éTexto(x)</code></td><td>Verifica se é texto</td><td><code class="example">éTexto("Willog")</code> <span class="saida">→ verdadeiro</span></td></tr><tr><td><code class="syntax">fatorial(x)</code></td><td>Fatorial</td><td><code class="example">fatorial(4)</code> <span class="saida">→ 24</span></td></tr><tr><td><code class="syntax">fibonacci(n)</code></td><td>Primeiros n termos de Fibonacci</td><td><code class="example">fibonacci(3)</code> <span class="saida">→ 1,1,2</span><br><code class="example">fibonacci(5)</code> <span class="saida">→ 1,1,2,3,5</span></td></tr><tr><td><code class="syntax">filtrar(lista, condição)</code></td><td>Filtra por condição ou valor</td><td><code class="example">filtrar([1,2,3,4],"x>2")</code> <span class="saida">→ 3,4</span><br><code class="example">filtrar("maçaneta","a")</code> <span class="saida">→ mçnet</span></td></tr><tr><td><code class="syntax">formate(valor, casas)</code></td><td>Formata número truncando para n casas decimais</td><td><code class="example">formate(3.141502,3)</code> <span class="saida">→ 3.141</span><br><code class="example">formate(3.1,3)</code> <span class="saida">→ 3.100</span></td></tr><tr><td><code class="syntax">fração(x)</code></td><td>Converte para fração</td><td><code class="example">fração(0.333)</code> <span class="saida">→ 1/3</span></td></tr><tr><td><code class="syntax">hora()</code></td><td>Hora atual</td><td><code class="example">hora()</code> <span class="saida">→ 14:30:07</span></td></tr><tr><td><code class="syntax">indiceDe(lista, valor)</code></td><td>Índice do valor (0 = primeiro, -1 se não encontrar)</td><td><code class="example">indiceDe([1,2,3,4],3)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">insira(lista, pos, valor)</code></td><td>Insere valor após posição pos</td><td><code class="example">insira([1,2,3,4],1,9)</code> <span class="saida">→ 1,2,9,3,4</span></td></tr><tr><td><code class="syntax">inteiro(x)</code></td><td>Parte inteira</td><td><code class="example">inteiro(2.7)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">inverta(texto)</code></td><td>Inverte texto/lista</td><td><code class="example">inverta("Willog")</code> <span class="saida">→ golliW</span></td></tr><tr><td><code class="syntax">junte(lista, separador)</code></td><td>Junta lista em texto</td><td><code class="example">junte(["a","b"],"-")</code> <span class="saida">→ a-b</span></td></tr><tr><td><code class="syntax">ln(x)</code></td><td>Logaritmo natural</td><td><code class="example">ln(2)</code> <span class="saida">→ 0.69314718056</span></td></tr><tr><td><code class="syntax">log(base, valor)</code></td><td>Logaritmo</td><td><code class="example">log(10,2)</code> <span class="saida">→ 0.30102999566</span></td></tr><tr><td><code class="syntax">log10(x)</code></td><td>Logaritmo base 10</td><td><code class="example">log10(100)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">maiúsculo(texto)</code></td><td>Converte para maiúsculas</td><td><code class="example">maiúsculo("Olá!")</code> <span class="saida">→ OLÁ!</span></td></tr><tr><td><code class="syntax">mapear(lista, expressão)</code></td><td>Aplica expressão a cada item</td><td><code class="example">mapear([1,2,3],"x*2")</code> <span class="saida">→ 2,4,6</span></td></tr><tr><td><code class="syntax">máximo(...valores)</code></td><td>Maior valor</td><td><code class="example">máximo(2,4,7,4,5)</code> <span class="saida">→ 7</span></td></tr><tr><td><code class="syntax">mdc(a, b, ...)</code></td><td>Máximo divisor comum</td><td><code class="example">mdc(12,18)</code> <span class="saida">→ 6</span></td></tr><tr><td><code class="syntax">média(...valores)</code></td><td>Média aritmética</td><td><code class="example">média(2,4,6)</code> <span class="saida">→ 4</span></td></tr><tr><td><code class="syntax">mesesEntre(data1, data2)</code></td><td>Meses entre duas datas</td><td><code class="example">mesesEntre("14/04/1973","15/01/2026")</code> <span class="saida">→ 633.501369863</span></td></tr><tr><td><code class="syntax">mínimo(...valores)</code></td><td>Menor valor</td><td><code class="example">mínimo(-3,1,2)</code> <span class="saida">→ -3</span></td></tr><tr><td><code class="syntax">minúsculo(texto)</code></td><td>Converte para minúsculas</td><td><code class="example">minúsculo("WILLOG")</code> <span class="saida">→ willog</span></td></tr><tr><td><code class="syntax">mmc(a, b, ...)</code></td><td>Mínimo múltiplo comum</td><td><code class="example">mmc(2,3,5)</code> <span class="saida">→ 30</span></td></tr><tr><td><code class="syntax">ordeneDecrescente(lista)</code></td><td>Ordena decrescente</td><td><code class="example">ordeneDecrescente([2,4,6,8,10])</code> <span class="saida">→ 10,8,6,4,2</span></td></tr><tr><td><code class="syntax">paraNúmero(x)</code></td><td>Converte texto para número</td><td><code class="example">paraNúmero("12.5")</code> <span class="saida">→ 12.5</span><br><code class="example">paraNúmero("12,5")*2</code> <span class="saida">→ 25</span></td></tr><tr><td><code class="syntax">paraTexto(x)</code></td><td>Converte número para texto</td><td><code class="example">paraTexto(8)</code> <span class="saida">→ "8"</span><br><code class="example">paraTexto(8)*3</code> <span class="saida">→ 888</span></td></tr><tr><td><code class="syntax">piso(x)</code></td><td>Arredonda para baixo (floor)</td><td><code class="example">piso(2.3)</code> <span class="saida">→ 2</span><br><code class="example">piso(2.9)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">posição(texto, busca)</code></td><td>Posição da busca em texto (0 = primeiro) ou caractere na posição se busca for número</td><td><code class="example">posição("Willog","i")</code> <span class="saida">→ 1</span><br><code class="example">posição("Willog",1)</code> <span class="saida">→ i</span></td></tr><tr><td><code class="syntax">potencia(base, exp)</code></td><td>Potência (aceita listas, vetorizada)</td><td><code class="example">potencia(2,3)</code> <span class="saida">→ 8</span></td></tr><tr><td><code class="syntax">primos(n)</code></td><td>Primeiros n primos</td><td><code class="example">primos(6)</code> <span class="saida">→ 2,3,5,7,11,13</span></td></tr><tr><td><code class="syntax">produto(lista)</code></td><td>Produto dos elementos</td><td><code class="example">produto([1,3,5,7])</code> <span class="saida">→ 105</span></td></tr><tr><td><code class="syntax">raiz(x, n)</code></td><td>Raiz n-ésima (aceita listas, vetorizada)</td><td><code class="example">raiz(27,3)</code> <span class="saida">→ 3</span></td></tr><tr><td><code class="syntax">raizc(x)</code></td><td>Raiz cúbica — vetorizada</td><td><code class="example">raizc(27)</code> <span class="saida">→ 3</span></td></tr><tr><td><code class="syntax">raizq(x)</code></td><td>Raiz quadrada — vetorizada</td><td><code class="example">raizq(16)</code> <span class="saida">→ 4</span><br><code class="example">raizq([1,4,9])</code> <span class="saida">→ 1, 2, 3</span></td></tr><tr><td><code class="syntax">remova(lista, valor)</code></td><td>Remove primeira ocorrência</td><td><code class="example">remova([1,2,3,4,5,6],5)</code> <span class="saida">→ 1,2,3,4,6</span></td></tr><tr><td><code class="syntax">repetir(texto, n)</code></td><td>Repete texto n vezes</td><td><code class="example">repetir("oi",4)</code> <span class="saida">→ oioioioi</span></td></tr><tr><td><code class="syntax">resolver(equação, variável)</code></td><td>Resolve equação numericamente (mostra todas as raízes)</td><td><code class="example">resolver(x+2=3,x)</code> <span class="saida">→ x=1</span><br><code class="example">resolver(2*cos(x)=1,x)</code> <span class="saida">→ x1=-60, x2=60</span><br><code class="example">resolver(x**2=4,x)</code> <span class="saida">→ x1=-2, x2=2</span></td></tr><tr><td><code class="syntax">romanos(n)</code></td><td>Converte número em algarismos romanos</td><td><code class="example">romanos(5)</code> <span class="saida">→ V</span><br><code class="example">romanos(3)</code> <span class="saida">→ III</span><br><code class="example">romanos(102)</code> <span class="saida">→ CII</span></td></tr><tr><td><code class="syntax">sec(x)</code></td><td>Secante (graus, 1/cos)</td><td><code class="example">sec(60)</code> <span class="saida">→ 2</span></td></tr><tr><td><code class="syntax">semEspaços(texto)</code></td><td>Remove todos os espaços</td><td><code class="example">semEspaços("1 2 3 4 5 6")</code> <span class="saida">→ 123456</span></td></tr><tr><td><code class="syntax">sen(x)</code></td><td>Seno (graus)</td><td><code class="example">sen(60)</code> <span class="saida">→ 0.86602540378</span></td></tr><tr><td><code class="syntax">soma(lista)</code></td><td>Soma elementos (aceita lista ou valores)</td><td><code class="example">soma([1,2,3,4])</code> <span class="saida">→ 10</span><br><code class="example">soma(1,2,3)</code> <span class="saida">→ 6</span></td></tr><tr><td><code class="syntax">substitua(texto, antigo, novo)</code></td><td>Substitui texto</td><td><code class="example">substitua("a-b-c","-"," ")</code> <span class="saida">→ a b c</span></td></tr><tr><td><code class="syntax">tamanho(texto)</code></td><td>Tamanho do texto/lista</td><td><code class="example">tamanho("Willog")</code> <span class="saida">→ 6</span></td></tr><tr><td><code class="syntax">tan(x)</code></td><td>Tangente (graus)</td><td><code class="example">tan(60)</code> <span class="saida">→ 1.73205080757</span></td></tr><tr><td><code class="syntax">terminaCom(texto, sufixo)</code></td><td>Verifica se texto termina com sufixo (ignora maiúsculas/minúsculas)</td><td><code class="example">terminaCom("Willog","log")</code> <span class="saida">→ verdadeiro</span><br><code class="example">terminaCom("Willog","llo")</code> <span class="saida">→ falso</span></td></tr><tr><td><code class="syntax">teto(x)</code></td><td>Arredonda para cima (ceil)</td><td><code class="example">teto(2.3)</code> <span class="saida">→ 3</span><br><code class="example">teto(2.9)</code> <span class="saida">→ 3</span></td></tr><tr><td><code class="syntax">tipo(x)</code></td><td>Retorna tipo: número, texto, booleano ou lista</td><td><code class="example">tipo(7)</code> <span class="saida">→ número</span><br><code class="example">tipo("Olá!")</code> <span class="saida">→ texto</span><br><code class="example">tipo(4>5)</code> <span class="saida">→ booleano</span><br><code class="example">tipo([1,2,3])</code> <span class="saida">→ lista</span></td></tr></table>
 
       </div>
       <div class="manual-pane" id="pane-operadores">
@@ -1171,10 +1171,10 @@ verificar nota:
           <tr><th>Sintaxe</th><th>Descrição</th><th>Exemplo → Saída</th></tr>
           <tr><td><code class="syntax">(início..fim)</code><br><code class="syntax">(início..fim,passo)</code></td><td>Intervalo — cria lista de a até b</td><td><code class="example">x=(1..5)</code> <span class="saida">→ 1,2,3,4,5</span><br><code class="example">(-5..5,2)</code> <span class="saida">→ -5,-3,-1,1,3,5</span></td></tr>
           <tr><td><code class="syntax">(valor, "p%")</code></td><td>Percentual — p% de valor</td><td><code class="example">(30,"10%")</code> <span class="saida">→ 3</span> &nbsp; <code class="example">(120,"5%")</code> <span class="saida">→ 6</span></td></tr>
-          <tr><td><code class="syntax">+</code> <code class="syntax">&</code></td><td>Adição e concatenação; com listas une</td><td><code class="example">2+3</code> <span class="saida">→ 5</span> &nbsp; <code class="example">[1,2]+[3]</code> <span class="saida">→ 1, 2, 3</span></td></tr>
-          <tr><td><code class="syntax">-</code></td><td>Subtração; diferença de conjuntos</td><td><code class="example">5-2</code> <span class="saida">→ 3</span> &nbsp; <code class="example">[1,2,3]-[2]</code> <span class="saida">→ 1, 3</span></td></tr>
+          <tr><td><code class="syntax">+</code> <code class="syntax">&</code></td><td>Adição e concatenação; lista+lista de mesmo tamanho soma elemento a elemento, tamanhos diferentes une, lista+número soma elemento a elemento (vetorizado) — use & para sempre unir</td><td><code class="example">2+3</code> <span class="saida">→ 5</span> &nbsp; <code class="example">[1,2]+[3]</code> <span class="saida">→ 1, 2, 3</span></td></tr>
+          <tr><td><code class="syntax">-</code></td><td>Subtração; lista-lista de mesmo tamanho subtrai elemento a elemento, tamanhos diferentes diferença de conjuntos, lista-número subtrai elemento a elemento (vetorizado)</td><td><code class="example">5-2</code> <span class="saida">→ 3</span> &nbsp; <code class="example">[1,2,3]-[2]</code> <span class="saida">→ 1, 3</span></td></tr>
           <tr><td><code class="syntax">*</code> <code class="syntax">/</code> <code class="syntax">//</code> <code class="syntax">\</code> <code class="syntax">%</code> <code class="syntax">**</code></td><td>Multiplicação, divisão, inteira, quociente fracionário, módulo, potência — vetorizados</td><td><code class="example">2**3</code> <span class="saida">→ 8</span> &nbsp; <code class="example">5//2</code> <span class="saida">→ 2</span> &nbsp; <code class="example">5\2</code> <span class="saida">→ 0.5</span></td></tr>
-          <tr><td><code class="syntax">> &lt; >= &lt;= == !=</code></td><td>Comparação → <code>Verdadeiro</code>/<code>Falso</code></td><td><code class="example">10>5</code> <span class="saida">→ Verdadeiro</span></td></tr>
+          <tr><td><code class="syntax">=</code> <code class="syntax">:=</code></td><td>Atribuição (aceita vetores, ex: y:=2*x)</td><td><code class="example">x:=(-5..5)</code> <span class="saida">→ -5,-4,-3,-2,-1,0,1,2,3,4,5</span><br><code class="example">y:=2*x</code> <span class="saida">→ -10,-8,-6,-4,-2,0,2,4,6,8,10</span></td></tr><tr><td><code class="syntax">> &lt; >= &lt;= == !=</code></td><td>Comparação → <code>Verdadeiro</code>/<code>Falso</code></td><td><code class="example">10>5</code> <span class="saida">→ Verdadeiro</span></td></tr>
           <tr><td><code class="syntax">e</code></td><td>Conjunção lógica</td><td><code class="example">5>3 e 2<4</code> <span class="saida">→ Verdadeiro</span></td></tr>
           <tr><td><code class="syntax">existe … em …</code></td><td>Pertinência em texto/lista</td><td><code class="example">existe "a" em "casa"</code> <span class="saida">→ Verdadeiro</span></td></tr>
           <tr><td><code class="syntax">intersecção</code></td><td>Intersecção de conjuntos</td><td><code class="example">[1,2] intersecção [2,3]</code> <span class="saida">→ 2</span></td></tr>
@@ -1415,7 +1415,7 @@ function highlightWillog(code){
       continue;
     }
     const two=code.substr(i,2);
-    if(['>=','<=','==','!=','**','//'].includes(two)){
+    if(['>=','<=','==','!=','**','//',':='].includes(two)){
       html+='<span class="hl-operator">'+escapeHtml(two)+'</span>'; i+=2; continue;
     }
     if(c==='\\'){
@@ -1733,7 +1733,7 @@ updateLines(); updateHighlight();
   const ed=document.getElementById('editor');
   if(!acEl || !ed) return;
   const comandos=['abrir','bipe','colar','constante','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.circulo','desenhe.linha','desenhe.polígono','desenhe.poligono','desenhe.ponto','desenhe.retangulo','desenhe.texto','enquanto','escrever','espereTecla','fechar','figura.girar','figura.mover','girar','intervalo','janela','leia','ler','limpe','mostre','mover','para cada','pare','pausa','recortar','repita','repetir','se','senão','tela.cor','tela.limpe','toque','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','amostra','amostras','captureTecla','começaCom','contarItem','conte','cos','data','decimal','diaSemana','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','encontre','fatorial','fibonacci','filtrar','formate','fração','hora','indiceDe','insira','inteiro','inverta','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','ordeneDecrescente','paraNúmero','paraTexto','piso','posição','primos','produto','raizc','raizq','remova','repetir','romanos','semEspaços','sen','soma','substitua','tamanho','tan','terminaCom','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','amostra','amostras','captureTecla','começaCom','contarItem','conte','cos','data','decimal','diaSemana','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','encontre','fatorial','fibonacci','arcsen','arccos','arctan','cotan','sec','cossec','curvaAjuste','log10','potencia','raiz','filtrar','formate','fração','hora','indiceDe','insira','inteiro','inverta','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','ordeneDecrescente','paraNúmero','paraTexto','piso','posição','primos','produto','raizc','raizq','remova','repetir','resolver','romanos','semEspaços','sen','soma','substitua','tamanho','tan','terminaCom','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const propriedades=['adicionar','aleatório','contar','fatiar','girar','inverter','mover','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const cores=['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','corAleatória'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   let _varsCache=null; let _varsCacheText='';
@@ -3488,7 +3488,7 @@ function willogDisplay(v){
 function formatWillogNumber(v, argStr){
   if(typeof v!=='number' || !isFinite(v)) return willogDisplay(v);
   if(Number.isInteger(v) && /\d+\.\d+/.test(argStr)){
-    if(/^\s*(inteiro|raizq|raizc|teto|piso|arredondar)\s*\(/i.test(argStr)) return String(v);
+    if(/^\s*(inteiro|raizq|raizc|raiz|teto|piso|arredondar|sen|cos|tan|cotan|sec|cossec|arcsen|arccos|arctan|exp|ln|log10|log|potencia)\s*\(/i.test(argStr)) return String(v);
     return v.toFixed(1);
   }
   if(!Number.isInteger(v)){
@@ -3708,6 +3708,286 @@ function hideLeia(result){
   if(leiaResolver){ const r=leiaResolver; leiaResolver=null; r(willogCoerceLeiaValue(result ?? '')); }
 }
 
+function preprocessIntervalos(expr, env){
+  let res=expr;
+  let guard=0;
+  while(guard++<100){
+    let stack=[];
+    let found=null;
+    let inStr=false, strCh=null, esc=false;
+    for(let k=0;k<res.length;k++){
+      const ch=res[k];
+      if(inStr){
+        if(esc) esc=false;
+        else if(ch==='\\') esc=true;
+        else if(ch===strCh){ inStr=false; strCh=null; }
+      } else {
+        if(ch==='"'||ch==="'"){ inStr=true; strCh=ch; }
+        else if(ch==='('){ stack.push(k); }
+        else if(ch===')'){
+          const open=stack.pop();
+          if(open!==undefined){
+            const inner=res.slice(open+1,k);
+            if(inner.includes('..') && inner.indexOf('(')===-1){
+              found={open:open, close:k, inner:inner};
+              break;
+            }
+          }
+        }
+      }
+    }
+    if(!found) break;
+    const inner=found.inner;
+    const dd=inner.indexOf('..');
+    if(dd===-1) break;
+    const leftRaw=inner.slice(0,dd).trim();
+    const rightRaw=inner.slice(dd+2).trim();
+    if(leftRaw===''||rightRaw==='') break;
+    const rightParts=splitWillogCommaArgs(rightRaw);
+    const endRaw=(rightParts[0]||'').trim();
+    const stepRaw=rightParts.length>1 ? rightParts.slice(1).join(',').trim() : null;
+    if(endRaw==='') break;
+    let s,e,step;
+    try{
+      s=Number(evaluateExpression(leftRaw, env));
+      e=Number(evaluateExpression(endRaw, env));
+      step=stepRaw!==null&&stepRaw!=='' ? Number(evaluateExpression(stepRaw, env)) : (s<=e?1:-1);
+    }catch(err){ break; }
+    if(isNaN(s)||isNaN(e)) break;
+    if(isNaN(step)||step===0) step=1;
+    let arr=[];
+    if(step>0){ for(let v=s; v<=e; v+=step){ let val=Number.isInteger(s)&&Number.isInteger(e)&&Number.isInteger(step)?Math.round(v):Number(v.toFixed(10)); if(!Number.isInteger(step)||!Number.isInteger(s)||!Number.isInteger(e)){ val=Number(val.toFixed(10).replace(/0+$/,'').replace(/\.$/,'')); } arr.push(val); if(arr.length>10000) break; if(v>e) break; } }
+    else { for(let v=s; v>=e; v+=step){ let val=Number.isInteger(s)&&Number.isInteger(e)&&Number.isInteger(step)?Math.round(v):Number(val.toFixed(10)); if(!Number.isInteger(step)||!Number.isInteger(s)||!Number.isInteger(e)){ val=Number(val.toFixed(10).replace(/0+$/,'').replace(/\.$/,'')); } arr.push(val); if(arr.length>10000) break; if(v<e) break; } }
+    const placeholder=`__willog_internal_arr_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;
+    Object.defineProperty(env, placeholder, {value: arr, writable: true, enumerable: false, configurable: true});
+    res=res.slice(0,found.open)+placeholder+res.slice(found.close+1);
+  }
+  return res;
+}
+function willogAjusteCurva(xs, ys){
+  const n=xs.length;
+  if(n<2) return null;
+  let mean=0; for(const y of ys) mean+=y; mean/=n;
+  let sst=0; for(const y of ys) sst+=(y-mean)*(y-mean);
+  const resolveSistema=(A,b)=>{
+    const m=A.length;
+    const M=A.map((row,i)=>row.concat([b[i]]));
+    for(let col=0;col<m;col++){
+      let piv=col;
+      for(let r=col+1;r<m;r++){ if(Math.abs(M[r][col])>Math.abs(M[piv][col])) piv=r; }
+      if(Math.abs(M[piv][col])<1e-12) return null;
+      if(piv!==col){ const t=M[piv]; M[piv]=M[col]; M[col]=t; }
+      const d=M[col][col];
+      for(let r=col+1;r<m;r++){ const f=M[r][col]/d; for(let c=col;c<=m;c++) M[r][c]-=f*M[col][c]; }
+    }
+    const x=new Array(m).fill(0);
+    for(let r=m-1;r>=0;r--){ let s=M[r][m]; for(let c=r+1;c<m;c++) s-=M[r][c]*x[c]; x[r]=s/M[r][r]; }
+    return x;
+  };
+  const ajusta=(F,yt)=>{
+    const p=F[0].length;
+    if(n<p) return null;
+    const XTX=[],XTy=[];
+    for(let i=0;i<p;i++){ XTX.push(new Array(p).fill(0)); XTy.push(0); }
+    for(let k=0;k<n;k++){ for(let i=0;i<p;i++){ XTy[i]+=F[k][i]*yt[k]; for(let j=0;j<p;j++) XTX[i][j]+=F[k][i]*F[k][j]; } }
+    const beta=resolveSistema(XTX,XTy);
+    if(!beta||beta.some(v=>!isFinite(v))) return null;
+    return beta;
+  };
+  const avalia=(pred)=>{
+    let sse=0; for(let i=0;i<n;i++){ const d=ys[i]-pred[i]; sse+=d*d; }
+    let r2; if(sst<1e-12) r2=sse<1e-9?1:0; else r2=1-sse/sst;
+    return {sse:sse, r2:r2};
+  };
+  const fmtC=(c)=>{
+    if(c===null||c===undefined||isNaN(c)||!isFinite(c)) return null;
+    if(Math.abs(c-Math.round(c))<1e-6) return String(Math.round(c));
+    const r=Number(c.toFixed(4));
+    if(!isFinite(r)) return null;
+    return String(r);
+  };
+  const junta=(terms)=>{
+    let s="", first=true;
+    for(const pair of terms){
+      const c=pair[0], v=pair[1];
+      if(c===null||c===undefined||isNaN(c)||!isFinite(c)) continue;
+      const cr=Math.abs(c)<1e-9?0:c;
+      if(cr===0) continue;
+      const neg=cr<0, a=Math.abs(cr), aStr=fmtC(a);
+      if(aStr===null) continue;
+      const body=(v===null)?aStr:((aStr==="1"?"":aStr+"*")+v);
+      if(first){ s+=(neg?"-":"")+body; first=false; }
+      else s+=(neg?"-":"+")+body;
+    }
+    return s===""?"0":s;
+  };
+  const D2R=Math.PI/180;
+  const cands=[];
+  const tenta=(nome,p,exprStr,pred)=>{
+    if(!exprStr||!pred||!pred.every(v=>isFinite(v))) return;
+    const av=avalia(pred);
+    if(!isFinite(av.r2)) return;
+    cands.push({nome:nome, p:p, expr:exprStr, r2:av.r2});
+  };
+  let beta;
+  beta=ajusta(xs.map(x=>[x,1]), ys);
+  if(beta) tenta('linear',2,junta([[beta[0],"x"],[beta[1],null]]),xs.map(x=>beta[0]*x+beta[1]));
+  beta=ajusta(xs.map(x=>[x*x,x,1]), ys);
+  if(beta) tenta('quad',3,junta([[beta[0],"x**2"],[beta[1],"x"],[beta[2],null]]),xs.map(x=>beta[0]*x*x+beta[1]*x+beta[2]));
+  beta=ajusta(xs.map(x=>[x*x*x,x*x,x,1]), ys);
+  if(beta) tenta('cub',4,junta([[beta[0],"x**3"],[beta[1],"x**2"],[beta[2],"x"],[beta[3],null]]),xs.map(x=>beta[0]*x*x*x+beta[1]*x*x+beta[2]*x+beta[3]));
+  if(ys.every(y=>y>0)){
+    const lny=ys.map(y=>Math.log(y));
+    const b2=ajusta(xs.map(x=>[x,1]), lny);
+    if(b2){
+      const a=Math.exp(b2[1]), b=b2[0];
+      if(isFinite(a)&&isFinite(b)){
+        const pr=xs.map(x=>a*Math.exp(b*x));
+        let e=""; const aS=fmtC(a);
+        if(aS!==null){
+          let bIn; if(Math.abs(b-1)<1e-9) bIn="x"; else if(Math.abs(b+1)<1e-9) bIn="-x"; else { const bs=fmtC(b); bIn=bs===null?null:bs+"*x"; }
+          if(bIn!==null) e=((aS==="1")?"":aS+"*")+"exp("+bIn+")";
+        }
+        if(e!=="") tenta('exp',2,e,pr);
+      }
+    }
+  }
+  if(xs.every(x=>x>0)){
+    const lnx=xs.map(x=>Math.log(x));
+    const b2=ajusta(lnx.map(v=>[v,1]), ys);
+    if(b2) tenta('log',2,junta([[b2[0],"ln(x)"],[b2[1],null]]),xs.map((x,i)=>b2[0]*lnx[i]+b2[1]));
+  }
+  if(xs.every(x=>x>0)&&ys.every(y=>y>0)){
+    const lnx=xs.map(x=>Math.log(x)), lny=ys.map(y=>Math.log(y));
+    const b2=ajusta(lnx.map(v=>[v,1]), lny);
+    if(b2){
+      const a=Math.exp(b2[1]), b=b2[0];
+      if(isFinite(a)&&isFinite(b)){
+        const pr=xs.map(x=>a*Math.pow(x,b));
+        let e=""; const aS=fmtC(a);
+        if(aS!==null){
+          if(Math.abs(b)<1e-9) e=aS;
+          else if(Math.abs(b-1)<1e-9) e=(aS==="1"?"x":aS+"*x");
+          else { const bs=fmtC(b); if(bs!==null) e=(aS==="1"?"":""+aS+"*")+"x**"+bs; }
+        }
+        if(e!=="") tenta('pot',2,e,pr);
+      }
+    }
+  }
+  if(xs.every(x=>x!==0)){
+    const b2=ajusta(xs.map(x=>[1/x,1]), ys);
+    if(b2){
+      let e=""; const aS=fmtC(b2[0]);
+      if(aS!==null){
+        const base=(aS==="1")?"1/x":(aS==="-1"?"-1/x":aS+"/x");
+        const bb=fmtC(b2[1]);
+        e=base+((b2[1]<0&&bb!==null)?"-"+bb.replace(/^-/,''):"+"+bb);
+        if(bb===null) e=base;
+        else if(Math.abs(b2[1])<1e-9) e=base;
+      }
+      if(e!=="") tenta('inv',2,e,xs.map(x=>b2[0]/x+b2[1]));
+    }
+  }
+  {
+    const b2=ajusta(xs.map(x=>[Math.sin(x*D2R),Math.cos(x*D2R),1]), ys);
+    if(b2) tenta('trig',3,junta([[b2[0],"sen(x)"],[b2[1],"cos(x)"],[b2[2],null]]),xs.map(x=>b2[0]*Math.sin(x*D2R)+b2[1]*Math.cos(x*D2R)+b2[2]));
+  }
+  if(xs.every(x=>x>=0)){
+    const b2=ajusta(xs.map(x=>[Math.sqrt(x),1]), ys);
+    if(b2) tenta('raizq',2,junta([[b2[0],"raizq(x)"],[b2[1],null]]),xs.map(x=>b2[0]*Math.sqrt(x)+b2[1]));
+  }
+  if(cands.length===0) return null;
+  cands.sort((u,v)=>{ const d=v.r2-u.r2; if(Math.abs(d)>1e-9) return d; return u.p-v.p; });
+  return cands[0];
+}
+function willogResolverEquacao(lhsExpr, rhsExpr, varName, env){
+  const oldExists=Object.prototype.hasOwnProperty.call(env, varName);
+  const oldVal=env[varName];
+  const f=(v)=>{
+    env[varName]=v;
+    let a,b;
+    try{ a=evaluateExpression(lhsExpr, env); }catch(e){ return NaN; }
+    try{ b=evaluateExpression(rhsExpr, env); }catch(e){ return NaN; }
+    const d=Number(a)-Number(b);
+    return d;
+  };
+  const bisect=(a,b)=>{
+    let fa=f(a);
+    for(let i=0;i<60;i++){
+      const m=(a+b)/2;
+      const fm=f(m);
+      if(!isFinite(fm)) break;
+      if(Math.abs(fm)<1e-12||(b-a)<1e-12) return m;
+      if(fa*fm<=0){ b=m; } else { a=m; fa=fm; }
+    }
+    return (a+b)/2;
+  };
+  const found=[];
+  let bestAbs=Infinity, bestX=null;
+  const observa=(x,fx)=>{
+    if(isFinite(fx)&&Math.abs(fx)<bestAbs){ bestAbs=Math.abs(fx); bestX=x; }
+  };
+  const aceita=(r)=>{
+    if(!isFinite(r)) return;
+    const fr=f(r);
+    if(isFinite(fr)&&Math.abs(fr)<1e-9) found.push(r);
+  };
+  const scan=(lo,hi,step)=>{
+    let px=lo, pf=f(lo);
+    observa(lo,pf);
+    if(isFinite(pf)&&Math.abs(pf)<1e-12) found.push(lo);
+    for(let x=lo+step;x<=hi+1e-12;x+=step){
+      const fx=f(x);
+      observa(x,fx);
+      if(isFinite(pf)&&isFinite(fx)){
+        if(Math.abs(fx)<1e-12) found.push(x);
+        else if(pf*fx<0) aceita(bisect(px,x));
+      } else if(isFinite(fx)&&Math.abs(fx)<1e-12) found.push(x);
+      else if(pf*fx<0) aceita(bisect(px,x));
+      px=x; pf=fx;
+    }
+  };
+  try{
+    scan(-100,100,0.5);
+    if(found.length===0) scan(-1000,1000,5);
+    if(found.length===0 && bestX!==null && isFinite(bestX)){
+      let xn=bestX;
+      for(let it=0;it<50;it++){
+        const fx=f(xn);
+        if(!isFinite(fx)) break;
+        if(Math.abs(fx)<1e-9){ found.push(xn); break; }
+        const h=1e-5*Math.max(1,Math.abs(xn));
+        const d=(f(xn+h)-f(xn-h))/(2*h);
+        if(!isFinite(d)||Math.abs(d)<1e-12) break;
+        const xnn=xn-fx/d;
+        if(!isFinite(xnn)||Math.abs(xnn)>1e7) break;
+        xn=xnn;
+      }
+    }
+    if(found.length===0){
+      if(bestAbs>1e-6) return {ok:false, motivo:'noreal'};
+      return {ok:false, motivo:'falha'};
+    }
+    const uniq=[];
+    for(const r of found){
+      if(!isFinite(r)) continue;
+      if(!uniq.some(u=>Math.abs(u-r)<1e-7)) uniq.push(r);
+    }
+    if(uniq.length===0){
+      if(bestAbs>1e-6) return {ok:false, motivo:'noreal'};
+      return {ok:false, motivo:'falha'};
+    }
+    uniq.sort((u,v)=>u-v);
+    const fmtR=(v)=>{
+      if(Math.abs(v-Math.round(v))<1e-6) return String(Math.round(v));
+      return String(Number(v.toFixed(6)));
+    };
+    if(uniq.length===1) return {ok:true, sol:varName+"="+fmtR(uniq[0])};
+    return {ok:true, sol:uniq.map((v,i)=>varName+(i+1)+"="+fmtR(v)).join(", ")};
+  } finally {
+    if(oldExists) env[varName]=oldVal; else delete env[varName];
+  }
+}
 function evaluateExpression(expr, env){
   expr = expr.trim();
   if(expr==='') return '';
@@ -3762,6 +4042,7 @@ function evaluateExpression(expr, env){
   expr = preprocessMethods(expr);
   expr = preprocessObjects(expr, env);
   expr = preprocessArrays(expr, env);
+  expr = preprocessIntervalos(expr, env);
   expr = preprocessExiste(expr);
   let mAle=expr.match(/^\s*aleat[óo]rio\s*\(\s*(.*?)\s*\)\s*$/i);
   if(mAle){
@@ -3791,6 +4072,89 @@ function evaluateExpression(expr, env){
     const res=[]; let cur=2;
     while(res.length<n){ if(isPrime(cur)) res.push(cur); cur++; }
     return res;
+  }
+  let mCurva=expr.match(/^\s*curvaAjuste\s*\(\s*(.*)\s*\)\s*$/i);
+  if(mCurva){
+    const inside=mCurva[1].trim();
+    if(inside===""){ logToConsole('Erro: use curvaAjuste(x=..., y=[...]) ex: curvaAjuste(x=(-2..4),y=[11,6,3,2,3,6,11])', 'error'); return ""; }
+    const parts=splitWillogCommaArgs(inside);
+    let xRaw=null, yRaw=null, xName="x", yName="y";
+    for(const part of parts){
+      let eq=-1, inS=false, sCh=null, es=false, dP=0, dB=0;
+      const ps=part.trim();
+      for(let k=0;k<ps.length;k++){
+        const ch=ps[k];
+        if(inS){ if(es) es=false; else if(ch==='\\') es=true; else if(ch===sCh){ inS=false; sCh=null; } }
+        else{
+          if(ch==='"'||ch==="'"){ inS=true; sCh=ch; }
+          else if(ch==='(') dP++;
+          else if(ch===')') dP--;
+          else if(ch==='[') dB++;
+          else if(ch===']') dB--;
+          else if(ch==='=' && dP===0 && dB===0){
+            const nx=ps[k+1];
+            const pv=k>0?ps[k-1]:"";
+            if(nx==='='||pv==='='||pv==='!'||pv==='<'||pv==='>') continue;
+            eq=k; break;
+          }
+        }
+      }
+      if(eq===-1){ logToConsole('Erro: use curvaAjuste(x=..., y=[...]) ex: curvaAjuste(x=(-2..4),y=[11,6,3,2,3,6,11])', 'error'); return ""; }
+      const nm=ps.slice(0,eq).trim(), vl=ps.slice(eq+1).trim();
+      if(!/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(nm)){ logToConsole('Erro: nome inválido "'+nm+'" em curvaAjuste (use x=..., y=[...])', 'error'); return ""; }
+      if(nm.toLowerCase()==="x"){ xRaw=vl; xName=nm; }
+      else if(nm.toLowerCase()==="y"){ yRaw=vl; yName=nm; }
+      else { logToConsole('Erro: curvaAjuste espera x=... e y=[...], recebido "'+nm+'"', 'error'); return ""; }
+    }
+    if(xRaw===null||yRaw===null){ logToConsole('Erro: use curvaAjuste(x=..., y=[...]) ex: curvaAjuste(x=(-2..4),y=[11,6,3,2,3,6,11])', 'error'); return ""; }
+    let xv, yv;
+    try{ xv=evaluateExpression(xRaw, env); yv=evaluateExpression(yRaw, env); }
+    catch(e){ logToConsole('Erro em curvaAjuste: '+e.message, 'error'); return ""; }
+    const xa=Array.isArray(xv)?xv:[xv], ya=Array.isArray(yv)?yv:[yv];
+    if(xa.length!==ya.length){ logToConsole('Erro: curvaAjuste precisa de x e y com o mesmo tamanho (x tem '+xa.length+', y tem '+ya.length+')', 'error'); return ""; }
+    if(xa.length<2){ logToConsole('Erro: curvaAjuste precisa de ao menos 2 pontos', 'error'); return ""; }
+    const xs=xa.map(v=>Number(v)), ys=ya.map(v=>Number(v));
+    if(xs.some(v=>isNaN(v)||!isFinite(v))||ys.some(v=>isNaN(v)||!isFinite(v))){ logToConsole('Erro: curvaAjuste precisa de números em x e y', 'error'); return ""; }
+    const best=willogAjusteCurva(xs, ys);
+    if(!best){ logToConsole('Erro: não foi possível ajustar curva aos dados', 'error'); return ""; }
+    return yName+":="+best.expr;
+  }
+  let mRes=expr.match(/^\s*resolver\s*\(\s*(.*)\s*\)\s*$/i);
+  if(mRes){
+    const inside=mRes[1].trim();
+    if(inside===""){ logToConsole('Erro: use resolver(equação,variável) ex: resolver(x+2=3,x)', 'error'); return ""; }
+    const parts=splitWillogCommaArgs(inside);
+    if(parts.length!==2){ logToConsole('Erro: use resolver(equação,variável) ex: resolver(x+2=3,x)', 'error'); return ""; }
+    const vnRaw=parts[1].trim();
+    if(!/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(vnRaw)){ logToConsole('Erro: variável inválida "'+vnRaw+'" em resolver (ex: resolver(x+2=3,x))', 'error'); return ""; }
+    const eq=parts[0].trim();
+    let eqPos=-1, inS=false, sCh=null, es=false, dP=0, dB=0;
+    for(let k=0;k<eq.length;k++){
+      const ch=eq[k];
+      if(inS){ if(es) es=false; else if(ch==='\\') es=true; else if(ch===sCh){ inS=false; sCh=null; } }
+      else{
+        if(ch==='"'||ch==="'"){ inS=true; sCh=ch; }
+        else if(ch==='(') dP++;
+        else if(ch===')') dP--;
+        else if(ch==='[') dB++;
+        else if(ch===']') dB--;
+        else if(ch==='=' && dP===0 && dB===0){
+          const nx=eq[k+1], pv=k>0?eq[k-1]:"";
+          if(nx==='='||pv==='='||pv==='!'||pv==='<'||pv==='>') continue;
+          eqPos=k; break;
+        }
+      }
+    }
+    if(eqPos===-1){ logToConsole('Erro: equação precisa de = ex: resolver(x+2=3,x)', 'error'); return ""; }
+    const lhs=eq.slice(0,eqPos).trim(), rhs=eq.slice(eqPos+1).trim();
+    if(lhs===''||rhs===''){ logToConsole('Erro: equação precisa de = ex: resolver(x+2=3,x)', 'error'); return ""; }
+    const res=willogResolverEquacao(lhs, rhs, vnRaw, env);
+    if(!res.ok){
+      if(res.motivo==='noreal') logToConsole('Erro: '+eq+' não tem solução real para '+vnRaw+' (ex: discriminante negativo)', 'error');
+      else logToConsole('Erro: não foi possível resolver '+eq+' para '+vnRaw, 'error');
+      return "";
+    }
+    return res.sol;
   }
   let mMmc=expr.match(/^\s*mmc\s*\(\s*(.*?)\s*\)\s*$/i);
   if(mMmc){
@@ -4072,7 +4436,7 @@ function tokenize(expr, env){
       if(id==='Falso') { tokens.push({type:'BOOLEAN', value:false}); continue; }
       let j=i;
       while(j<len && /\s/.test(expr[j])) j++;
-      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','inverta','repetir','repita','formate','soma','produto','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem','sen','cos','tan','abs','log','ln','fatorial','fibonacci','romanos','énúmero','enúmero','énumero','enumero','élista','elista','étexto','etexto','éprimo','eprimo','épar','epar','éímpar','eímpar','eimpar','primos','mmc','mdc','média','media','máximo','maximo','mínimo','minimo','embaralhe','encontre','começacom','comecacom','terminacom','indicede','índicede','remova','insira','conte','ordenecrescente','ordenedecrescente','diasemana','amostra','amostras','capturetecla','capture','espereTecla','exp','hipotenusa','hipotenúsa'];
+      const funcNames = ['raizq','raizc','inteiro','decimal','fração','fracao','raiz','sqrt','cbrt','existe','ordenar','aleatorio','aleatório','primeiro','ultimo','último','tamanho','posicao','posição','fatiar','adicionar','inverter','inverta','repetir','repita','formate','soma','produto','paranumero','paranúmero','paratexto','tipo','arredondar','teto','piso','agora','data','hora','anosentre','mesesentre','diasentre','anosEntre','mesesEntre','diasEntre','adicionardias','adicionarDias','maiusculo','maiúsculo','minusculo','minúsculo','contar','aparar','substitua','divida','junte','distintos','filtrar','mapear','semespacos','semespaços','semEspacos','semEspaços','contaritem','contarItem','sen','cos','tan','abs','log','ln','log10','arcsen','arccos','arctan','cotan','sec','cossec','potencia','raiz','curvaAjuste','resolver','fatorial','fibonacci','romanos','énúmero','enúmero','énumero','enumero','élista','elista','étexto','etexto','éprimo','eprimo','épar','epar','éímpar','eímpar','eimpar','primos','mmc','mdc','média','media','máximo','maximo','mínimo','minimo','embaralhe','encontre','começacom','comecacom','terminacom','indicede','índicede','remova','insira','conte','ordenecrescente','ordenedecrescente','diasemana','amostra','amostras','capturetecla','capture','espereTecla','exp','hipotenusa','hipotenúsa'];
       const lower = id.toLowerCase();
       if(tokens.length>0 && tokens[tokens.length-1].type==='OP' && tokens[tokens.length-1].value==='.'){
         tokens.push({type:'STRING', value:id});
@@ -4868,6 +5232,28 @@ function evalRPN(rpn, env){
           res=isNaN(n)?0:n;
         }
         stack.push(res);
+      } else if(fn==='potencia'){
+        const e = stack.pop();
+        const b = stack.pop();
+        const fmt=(r)=>{ if(!isFinite(r)) return r; if(Number.isInteger(r)) return r; const s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?r:n; };
+        const pw=(x,y)=>fmt(Math.pow(Number(x), Number(y)));
+        let res;
+        if(Array.isArray(b) && Array.isArray(e)){ const len=Math.min(b.length,e.length); res=[]; for(let i=0;i<len;i++) res.push(pw(b[i],e[i])); }
+        else if(Array.isArray(b)){ res=b.map(x=>pw(x,e)); }
+        else if(Array.isArray(e)){ res=e.map(y=>pw(b,y)); }
+        else res=pw(b,e);
+        stack.push(res);
+      } else if(fn==='raiz'){
+        const n = stack.pop();
+        const x = stack.pop();
+        const fmt=(r)=>{ if(!isFinite(r)) return r; if(Number.isInteger(r)) return r; const s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const nn=Number(s); return isNaN(nn)?r:nn; };
+        const rt=(v,k)=>{ const nn=Number(k); if(isNaN(nn)||nn===0) return NaN; return fmt(Math.pow(Number(v), 1/Number(nn))); };
+        let res;
+        if(Array.isArray(x) && Array.isArray(n)){ const len=Math.min(x.length,n.length); res=[]; for(let i=0;i<len;i++) res.push(rt(x[i],n[i])); }
+        else if(Array.isArray(x)){ res=x.map(v=>rt(v,n)); }
+        else if(Array.isArray(n)){ res=n.map(k=>rt(x,k)); }
+        else res=rt(x,n);
+        stack.push(res);
       } else if(fn==='substitua'){
         const novo = stack.pop();
         const velho = stack.pop();
@@ -5251,6 +5637,13 @@ function evalRPN(rpn, env){
             case 'tan': { let r=Math.tan(Number(val)*Math.PI/180); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
             case 'exp': { let r=Math.exp(Number(val)); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
             case 'ln': { let r=Math.log(Number(val)); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'log10': { let r=(Math.log10 ? Math.log10(Number(val)) : Math.log(Number(val))/Math.LN10); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'arcsen': { let v=Number(val); let r=Math.asin(v)*180/Math.PI; let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'arccos': { let v=Number(val); let r=Math.acos(v)*180/Math.PI; let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'arctan': { let v=Number(val); let r=Math.atan(v)*180/Math.PI; let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'cotan': { let v=Number(val)*Math.PI/180; let t=Math.tan(v); let r=1/t; let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'sec': { let v=Number(val)*Math.PI/180; let r=1/Math.cos(v); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
+            case 'cossec': { let v=Number(val)*Math.PI/180; let r=1/Math.sin(v); let s=r.toFixed(11).replace(/0+$/,'').replace(/\.$/,''); const n=Number(s); return isNaN(n)?s:n; }
             case 'fatorial': { let n=Math.trunc(Number(val)); if(n<0) return 0; if(n===0||n===1) return 1; let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
             case 'romanos': { let n=Math.trunc(Number(val)); if(isNaN(n)||n<=0) return ""; const tab=[[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']]; let s=""; for(const [v,sym] of tab){ while(n>=v){ s+=sym; n-=v; } } return s; }
             case 'fibonacci': { let n=Math.trunc(Number(val)); if(isNaN(n)||n<=0) return []; if(n===1) return [1]; const res=[1,1]; while(res.length<n){ res.push(res[res.length-1]+res[res.length-2]); } return res.slice(0,n); }
@@ -5341,15 +5734,25 @@ function evalRPN(rpn, env){
         switch(tok.value){
           case '+':
             if(Array.isArray(av) || Array.isArray(bv)){
-              const arrA = Array.isArray(av) ? av : [av];
-              const arrB = Array.isArray(bv) ? bv : [bv];
-              res = arrA.concat(arrB);
+              const isNumList=(l)=>Array.isArray(l)&&l.every(x=>typeof x==='number');
+              if(Array.isArray(av) && Array.isArray(bv) && isNumList(av) && isNumList(bv) && av.length===bv.length) res = av.map((x,i)=>Number(x)+Number(bv[i]));
+              else if(Array.isArray(av) && typeof bv==='number' && isNumList(av)) res = av.map(x=>Number(x)+bv);
+              else if(Array.isArray(bv) && typeof av==='number' && isNumList(bv)) res = bv.map(x=>Number(av)+Number(x));
+              else {
+                const arrA = Array.isArray(av) ? av : [av];
+                const arrB = Array.isArray(bv) ? bv : [bv];
+                res = arrA.concat(arrB);
+              }
             }else if(typeof av==='string' || typeof bv==='string') res = String(av) + String(bv);
             else res = Number(av) + Number(bv);
             break;
           case '-':
             if(Array.isArray(av) || Array.isArray(bv)){
-              res = differenceWillog(av,bv);
+              const isNumList=(l)=>Array.isArray(l)&&l.every(x=>typeof x==='number');
+              if(Array.isArray(av) && Array.isArray(bv) && isNumList(av) && isNumList(bv) && av.length===bv.length) res = av.map((x,i)=>Number(x)-Number(bv[i]));
+              else if(Array.isArray(av) && typeof bv==='number' && isNumList(av)) res = av.map(x=>Number(x)-bv);
+              else if(Array.isArray(bv) && typeof av==='number' && isNumList(bv)) res = bv.map(x=>Number(av)-Number(x));
+              else res = differenceWillog(av,bv);
             }else res = Number(av) - Number(bv);
             break;
           case '*': res = multiplyWillog(av,bv); break;
@@ -5431,6 +5834,7 @@ function splitAssignmentParts(stmt){
   let inStr=false;
   let strCh=null;
   let esc=false;
+  let depthParen=0, depthBracket=0;
   for(let i=0;i<stmt.length;i++){
     const ch=stmt[i];
     if(inStr){
@@ -5440,9 +5844,18 @@ function splitAssignmentParts(stmt){
       else if(ch===strCh){ inStr=false; }
     } else {
       if(ch==='"' || ch==="'"){ inStr=true; strCh=ch; cur+=ch; }
+      else if(ch==='('){ depthParen++; cur+=ch; }
+      else if(ch===')'){ depthParen=Math.max(0,depthParen-1); cur+=ch; }
+      else if(ch==='['){ depthBracket++; cur+=ch; }
+      else if(ch===']'){ depthBracket=Math.max(0,depthBracket-1); cur+=ch; }
+      else if(ch===':' && stmt[i+1]==='='){
+        if(depthParen===0 && depthBracket===0){ parts.push(cur); cur=''; i++; }
+        else { cur+=':='; i++; }
+      }
       else if(ch==='='){
         if(stmt[i+1]==='='){ cur+='=='; i++; }
-        else { parts.push(cur); cur=''; }
+        else if(depthParen===0 && depthBracket===0){ parts.push(cur); cur=''; }
+        else cur+=ch;
       } else cur+=ch;
     }
   }
@@ -5953,6 +6366,38 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       else { cval=evaluateExpression(pc.expr, env); }
       env[pc.name]=cval;
       env.__consts[pc.name]=true;
+    }catch(e){ logToConsole(`Erro na linha ${lineNo}: ${e.message}`, 'error'); }
+    return;
+  }
+  if(/^\s*curvaAjuste\s*\(/i.test(stmt)){
+    try{
+      const v=evaluateExpression(stmt, env);
+      if(v!==undefined && v!=='' && v!==null){
+        let out;
+        if(Array.isArray(v)) out=willogDisplay(v);
+        else if(typeof v==='number') out=formatWillogNumber(v, stmt);
+        else out=willogDisplay(v);
+        if(out!=='' && out!==undefined && out!=='undefined'){
+          logToConsole(out);
+          hasOutputRef.value=true;
+        }
+      }
+    }catch(e){ logToConsole(`Erro na linha ${lineNo}: ${e.message}`, 'error'); }
+    return;
+  }
+  if(/^\s*resolver\s*\(/i.test(stmt)){
+    try{
+      const v=evaluateExpression(stmt, env);
+      if(v!==undefined && v!=='' && v!==null){
+        let out;
+        if(Array.isArray(v)) out=willogDisplay(v);
+        else if(typeof v==='number') out=formatWillogNumber(v, stmt);
+        else out=willogDisplay(v);
+        if(out!=='' && out!==undefined && out!=='undefined'){
+          logToConsole(out);
+          hasOutputRef.value=true;
+        }
+      }
     }catch(e){ logToConsole(`Erro na linha ${lineNo}: ${e.message}`, 'error'); }
     return;
   }
@@ -6869,7 +7314,7 @@ document.addEventListener('keydown', (e)=>{
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📢 <b>O que faz?</b> Mostra uma mensagem no console (a telinha escura). É como falar algo para o usuário!</div></div></div>`;
   }
   if(/leia/i.test(t) && t.includes('=')){
-    const varName = t.split('=')[0].trim();
+    const varName = t.split('=')[0].trim().replace(/:$/,'');
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">⌨️ <b>O que faz?</b> Abre uma janelinha pedindo para a pessoa digitar algo e guarda o que foi digitado na caixinha <code>${esc(varName)}</code>. Se digitar número, já vira número de verdade! É como perguntar "qual seu nome?" e anotar a resposta.</div></div></div>`;
   }
   if(/^\s*limpe\s*$/i.test(t)){
@@ -6891,7 +7336,7 @@ document.addEventListener('keydown', (e)=>{
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #ffeaa7; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🚀 <b>O que faz?</b> Pula direto para o marcador indicado. É como teletransporte!</div></div></div>`;
   }
   if(t.includes('=') && !t.includes('==') && !t.includes('>=') && !t.includes('<=') && !t.includes('!=')){
-    const varName = t.split('=')[0].trim().split(',').pop().trim();
+    const varName = t.split('=')[0].trim().replace(/:$/,'').split(',').pop().trim().replace(/:$/,'');
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c5ce7; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📦 <b>O que faz?</b> Guarda um valor na caixinha <code>${esc(varName)}</code>. É como colocar um brinquedo dentro de uma caixa com etiqueta!</div></div></div>`;
   }
   return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid var(--border-strong); border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🔍 <b>O que faz?</b> Executa essa linha. Se tiver conta ou texto, calcula e mostra o resultado!</div></div></div>`;
@@ -7057,6 +7502,19 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') document.getEle
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
