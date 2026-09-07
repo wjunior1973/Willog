@@ -712,6 +712,20 @@ tela.cor(corAleatória)
 tela.limpe</span>
 <span class="saida">-> fundo com cor aleatória</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Pode ser usado em <code>tela.cor(corAleatória)</code> e em todos <code>desenhe.*(...,corAleatória)</code>. Cada chamada sorteia uma cor diferente entre amarelo, vermelho, azul, verde, ciano, rosa, roxo, laranja, branco, cinza, marrom, preto.</p>
+        <h3>cronometro</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">cronometro.iniciar</span>
+<span class="syntax">cronometro.parar</span>
+<span class="syntax">cronometro.tempo()</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">cronometro.iniciar
+pausa(2)
+cronometro.parar
+mostre cronometro.tempo()</span>
+<span class="saida">-> Cronômetro iniciado
+-> Cronômetro parado: 2.0s (aproximado)
+-> 2.0 (segundos, aproximado)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px"><code>cronometro.iniciar</code> zera e começa a contar; <code>cronometro.parar</code> para e mostra os segundos; <code>cronometro.tempo()</code> diz quantos segundos passaram (use em contas ou <code>mostre</code>). Também aceita com acento: <code>cronômetro.iniciar</code>.</p>
         <h3>definir função</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">definir função</span> <span class="example">&lt;nome&gt;(&lt;parâmetro 1&gt;, &lt;parâmetro 2&gt;, ...):</span>
@@ -7238,8 +7252,12 @@ document.addEventListener('keydown', (e)=>{
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">👀 <b>O que faz?</b> Lê o que está escrito no arquivo e guarda em uma caixinha (variável). É como abrir o caderno e copiar o que está lá!</div></div></div>`;
   }
   if(/^janela\s*\(/i.test(t) || /^janela\s*$/i.test(t)){
-    const cent = /centraliza/i.test(t);
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #a29bfe; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🪟 <b>O que faz?</b> Abre uma janelinha flutuante ${cent? 'com texto no meio (centralizado)': 'bem grande'} para mostrar desenhos ou mensagens. É como abrir uma nova folha para desenhar!</div></div></div>`;
+    const arg=(t.match(/^\s*janela\s*\(\s*(.*?)\s*\)/i)?.[1]||"").trim();
+    let txt;
+    if(/centraliza/i.test(arg)) txt="maximizada com o texto no meio (centralizado), só para mensagens com <code>mostre</code>";
+    else if(arg!=="") txt="normal do tamanho pedido (ex: <code>janela(300,400)</code> = 300 de largura por 400 de altura), com coordenadas reais e só para desenhos (<code>desenhe.*</code>)";
+    else txt="maximizada como console, só para mensagens com <code>mostre</code>";
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #a29bfe; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🪟 <b>O que faz?</b> Abre uma janelinha flutuante ${txt}. Lembre: <code>janela()</code> é console e <code>janela(x,y)</code> é desenho!</div></div></div>`;
   }
   if(/^tela\.limpe/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🧹 <b>O que faz?</b> Apaga tudo que foi desenhado na janelinha e pinta o fundo de preto (ou da cor escolhida). É como apagar o quadro!</div></div></div>`;
@@ -7290,7 +7308,7 @@ document.addEventListener('keydown', (e)=>{
     const cond = t.replace(/^\s*enquanto\s+/i,'').replace(/:\s*$/,'');
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">⏳ <b>O que faz?</b> Repete <b>enquanto</b> <code>${esc(cond)}</code> for verdadeiro. Fica repetindo até a condição ficar falsa. É como "enquanto tiver doces, continue comendo!"</div></div></div>`;
   }
-  if(/^\s*repit(?:a|ir)\s*\(/i.test(t)){
+  if(/^\s*repit(?:a|ir)\s*\(.*?\)\s*:/i.test(t)){
     const n = t.match(/repit(?:a|ir)\s*\(\s*(.*?)\s*\)/i)?.[1]||"n";
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🔂 <b>O que faz?</b> Repete o que está indentado embaixo <b>${esc(n)}</b> vezes. É como carimbar ${esc(n)} vezes no papel!</div></div></div>`;
   }
@@ -7320,13 +7338,13 @@ document.addEventListener('keydown', (e)=>{
   if(/^\s*limpe\s*$/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🧼 <b>O que faz?</b> Limpa tudo que estava escrito no console. Deixa a telinha limpinha de novo!</div></div></div>`;
   }
-  if(/^\s*pausa\s*\(/i.test(t)){
+  if(/^\s*pausa\b/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">⏸️ <b>O que faz?</b> Faz o programa dar uma pausinha e esperar um pouquinho antes de continuar. É como contar até 2 antes de falar "já"!</div></div></div>`;
   }
   if(/^\s*pare\s*$/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #ff7675; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🛑 <b>O que faz?</b> Para o laço na hora, mesmo que ainda faltasse repetir. É como apertar o botão de parar!</div></div></div>`;
   }
-  if(/^\s*continue\s*$/i.test(t)){
+  if(/^\s*continue\s*$/i.test(t) || /^\s*continuar\s*$/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #fdcb6e; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">⏭️ <b>O que faz?</b> Pula essa volta do laço e vai direto para a próxima. É como pular uma vez na amarelinha!</div></div></div>`;
   }
   if(/^\s*:\w+/i.test(t)){
@@ -7335,9 +7353,71 @@ document.addEventListener('keydown', (e)=>{
   if(/^\s*v[áa]\s+para\b/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #ffeaa7; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🚀 <b>O que faz?</b> Pula direto para o marcador indicado. É como teletransporte!</div></div></div>`;
   }
+  if(/^\s*espereTecla\s*\(/i.test(t)){
+    const qual=t.match(/espereTecla\s*\(\s*["']?([^"')]*)/i)?.[1]||"";
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #fdcb6e; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">⏳ <b>O que faz?</b> Pausa o programa e espera apertarem uma tecla${qual?` (<code>${esc(qual)}</code>)`:""}. É como dizer "aperte qualquer tecla para continuar"! Depois use <code>captureTecla()</code> para saber qual foi.</div></div></div>`;
+  }
+  if(/captureTecla/i.test(t)){
+    const _vc=(t.includes('=')&&!t.includes('=='))?t.split('=')[0].trim().replace(/:$/,''):"";
+    const _vg=/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(_vc)?` e guarda na caixinha <code>${esc(_vc)}</code>`:"";
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #fdcb6e; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">⌨️ <b>O que faz?</b> Descobre qual tecla foi apertada no <code>espereTecla</code>${_vg}. É como perguntar "qual botão você apertou?"!</div></div></div>`;
+  }
+  if(/cronometro\.(iniciar|parar|tempo)/i.test(t)){
+    const sub=(t.match(/cronometro\.(iniciar|parar|tempo)/i)?.[1]||"").toLowerCase();
+    const txt=sub==='iniciar'?"▶️ <b>O que faz?</b> Liga o cronômetro (zera e começa a contar o tempo). Use com <code>cronometro.parar</code> e <code>cronometro.tempo()</code>.":sub==='parar'?"⏹️ <b>O que faz?</b> Para o cronômetro e mostra quantos segundos passaram. É como apertar o botão de parar!":"⏱️ <b>O que faz?</b> Diz quantos segundos o cronômetro marcou (use em contas ou <code>mostre</code>). É como olhar o relógio!";
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #fdcb6e; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">${txt}</div></div></div>`;
+  }
+  const _asg=(s)=>{ if(s.includes('=')&&!s.includes('==')&&!s.includes('>=')&&!s.includes('<=')&&!s.includes('!=')){ const _v=s.split('=')[0].trim().replace(/:$/,'').split(',').pop().trim().replace(/:$/,''); if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(_v)) return _v; } return null; };
+  const _norm=(s)=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const _propDesc={adicionar:"Acrescenta itens na lista (muda a lista). Ex: <code>a.adicionar[3]</code>",aleatorio:"Sorteia um item da lista. Ex: <code>[1,2,3].aleatório</code>",contar:"Conta quantas vezes o valor aparece. Ex: <code>[1,2,2,3].contar(2)</code> → 3",fatiar:"Pega um pedaço da lista (início e fim valem). Ex: <code>[1,2,3,4].fatiar(1,2)</code>",inverter:"Inverte a ordem. Ex: <code>[1,2,3].inverter</code>",ordenar:"Devolve uma cópia ordenada (a original não muda). Ex: <code>[3,1,2].ordenar</code>",posicao:"Pega o elemento do índice i (0 = primeiro). Ex: <code>[10,20,30].posição(1)</code> → 20",primeiro:"Pega o primeiro elemento. Ex: <code>[5,6].primeiro</code> → 5",tamanho:"Diz quantos itens ou letras tem. Ex: <code>[1,2,3].tamanho</code> → 3",ultimo:"Pega o último elemento. Ex: <code>[5,6].último</code> → 6"};
+  const _tSemAspas=t.replace(/"[^"]*"|'[^']*'/g,'');
+  const _pmm=_tSemAspas.match(/\.\s*([a-zA-ZÀ-ÿ]+)/i);
+  if(_pmm){
+    const _pd=_propDesc[_pmm[1].toLowerCase()]||_propDesc[_norm(_pmm[1])];
+    if(_pd){
+      const _pv=_asg(t);
+      return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #8e44ad; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🧩 <b>Propriedade ${esc(_pmm[1])}</b> — ${_pd}${_pv?` E guarda na caixinha <code>${esc(_pv)}</code>.`:""}</div></div></div>`;
+    }
+  }
+  const _funcDesc={abs:["abs","Valor absoluto (tira o sinal). Ex: <code>abs(-2)</code> → 2"],adicionardias:["adicionarDias","Soma dias a uma data. Ex: <code>adicionarDias(\"14/04/1973\",19269)</code>"],agora:["agora","Data e hora de agora. Ex: <code>agora()</code>"],aleatorio:["aleatório","Sorteia um número. Ex: <code>aleatório(6)</code> → de 1 a 6"],anosentre:["anosEntre","Quantos anos entre duas datas"],aparar:["aparar","Tira espaços do começo e do fim"],arccos:["arccos","Arco cosseno em graus. Ex: <code>arccos(0.5)</code> → 60"],arcsen:["arcsen","Arco seno em graus. Ex: <code>arcsen(0.5)</code> → 30"],arctan:["arctan","Arco tangente em graus. Ex: <code>arctan(1)</code> → 45"],arredondar:["arredondar","Arredonda as casas decimais. Ex: <code>arredondar(5.33333,2)</code> → 5.33"],amostra:["amostra","Sorteia itens sem repetir"],amostras:["amostras","Sorteia várias amostras"],capturetecla:["captureTecla","Descobre a tecla apertada (use após <code>espereTecla</code>)"],comecacom:["começaCom","Diz se o texto começa com algo"],contaritem:["contarItem","Conta quantas vezes o item aparece"],conte:["conte","Quantos itens tem. Ex: <code>conte([1,3,5,7])</code> → 4"],cos:["cos","Cosseno do ângulo em graus. Ex: <code>cos(60)</code> → 0.5"],cossec:["cossec","Cossecante em graus (1/sen). Ex: <code>cossec(30)</code> → 2"],cotan:["cotan","Cotangente em graus (1/tan). Ex: <code>cotan(45)</code> → 1"],curvaajuste:["curvaAjuste","Acha a fórmula que passa pelos pontos. Ex: <code>curvaAjuste(x=(-2..4),y=[11,6,3,2,3,6,11])</code>"],data:["data","Data de hoje. Ex: <code>data()</code>"],decimal:["decimal","Só a parte depois da vírgula. Ex: <code>decimal(2.5)</code> → 0.5"],diasemana:["diaSemana","Que dia da semana é a data"],diasentre:["diasEntre","Quantos dias entre duas datas"],distintos:["distintos","Tira os repetidos"],divida:["divida","Parte o texto em lista"],eimpar:["éÍmpar","Diz se é ímpar. Ex: <code>éÍmpar(511)</code>"],elista:["éLista","Diz se é lista"],embaralhe:["embaralhe","Mistura a ordem"],encontre:["encontre","Posição onde achou (-1 se não achou)"],enumero:["éNúmero","Diz se é número"],epar:["éPar","Diz se é par"],eprimo:["éPrimo","Diz se é primo"],etexto:["éTexto","Diz se é texto"],exp:["exp","Exponencial (e elevado a x)"],fatorial:["fatorial","Multiplica descendo. Ex: <code>fatorial(4)</code> → 24"],fibonacci:["fibonacci","Sequência 1,1,2,3,5... Ex: <code>fibonacci(5)</code>"],filtrar:["filtrar","Só os itens que passam na condição"],formate:["formate","Número com n casas. Ex: <code>formate(3.141502,3)</code>"],fracao:["fração","Vira fração. Ex: <code>fração(0.333)</code> → 1/3"],hipotenusa:["hipotenusa","Hipotenusa do triângulo retângulo"],hora:["hora","Hora de agora. Ex: <code>hora()</code>"],indicede:["indiceDe","Posição do valor na lista"],insira:["insira","Coloca o valor na posição"],inteiro:["inteiro","Só a parte inteira. Ex: <code>inteiro(2.7)</code> → 2"],inverta:["inverta","De trás para frente. Ex: <code>inverta(\"Willog\")</code>"],junte:["junte","Junta a lista em texto"],ln:["ln","Logaritmo natural. Ex: <code>ln(2)</code>"],log:["log","Logaritmo. Ex: <code>log(10,2)</code>"],log10:["log10","Logaritmo base 10. Ex: <code>log10(100)</code> → 2"],maiusculo:["maiúsculo","Deixa TUDO MAIÚSCULO"],mapear:["mapear","Aplica a conta em cada item. Ex: <code>mapear([1,2,3],\"x*2\")</code>"],maximo:["máximo","O maior valor. Ex: <code>máximo(2,4,7)</code> → 7"],mdc:["mdc","Maior divisor comum. Ex: <code>mdc(12,18)</code> → 6"],media:["média","Média dos valores. Ex: <code>média(2,4,6)</code> → 4"],mesesentre:["mesesEntre","Quantos meses entre duas datas"],minimo:["mínimo","O menor valor"],minusculo:["minúsculo","Deixa tudo minúsculo"],mmc:["mmc","Menor múltiplo comum. Ex: <code>mmc(2,3,5)</code> → 30"],ordenecrescente:["ordeneCrescente","Ordena do menor para o maior"],ordenedecrescente:["ordeneDecrescente","Ordena do maior para o menor"],paranumero:["paraNúmero","Texto vira número. Ex: <code>paraNúmero(\"12.5\")</code>"],paratexto:["paraTexto","Número vira texto"],piso:["piso","Arredonda para baixo. Ex: <code>piso(2.9)</code> → 2"],posicao:["posição","Posição da busca no texto"],primos:["primos","Primeiros n primos. Ex: <code>primos(6)</code>"],produto:["produto","Multiplica tudo. Ex: <code>produto([1,3,5,7])</code> → 105"],raiz:["raiz","Raiz de qualquer índice. Ex: <code>raiz(27,3)</code> → 3"],raizc:["raizc","Raiz cúbica. Ex: <code>raizc(27)</code> → 3"],raizq:["raizq","Raiz quadrada. Ex: <code>raizq(16)</code> → 4"],remova:["remova","Tira a primeira ocorrência"],repetir:["repetir","Repete o texto. Ex: <code>repetir(\"oi\",4)</code>"],romanos:["romanos","Vira algarismo romano. Ex: <code>romanos(5)</code> → V"],resolver:["resolver","Acha o x da equação (mostra x1, x2...). Ex: <code>resolver(x+2=3,x)</code>"],sec:["sec","Secante em graus (1/cos). Ex: <code>sec(60)</code> → 2"],semespacos:["semEspaços","Tira todos os espaços"],sen:["sen","Seno do ângulo em graus. Ex: <code>sen(30)</code> → 0.5"],soma:["soma","Soma tudo. Ex: <code>soma([1,2,3,4])</code> → 10"],substitua:["substitua","Troca um texto por outro"],tamanho:["tamanho","Quantos caracteres ou itens tem. Ex: <code>tamanho(\"Willog\")</code> → 6"],tan:["tan","Tangente do ângulo em graus"],terminacom:["terminaCom","Diz se o texto termina com algo"],teto:["teto","Arredonda para cima. Ex: <code>teto(2.9)</code> → 3"],tipo:["tipo","Diz se é número, texto, lista... Ex: <code>tipo(7)</code> → número"]};
+  const _fm=_tSemAspas.match(/([a-zA-ZÀ-ÿ_][a-zA-Z0-9_À-ÿ]*)\s*\(/);
+  if(_fm){
+    const _fd=_funcDesc[_fm[1].toLowerCase()]||_funcDesc[_norm(_fm[1])];
+    if(_fd){
+      const _fv=_asg(t);
+      return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0050a3; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🔧 <b>Função ${esc(_fd[0])}</b> — ${_fd[1]}${_fv?` E guarda na caixinha <code>${esc(_fv)}</code>.`:""}</div></div></div>`;
+    }
+  }
   if(t.includes('=') && !t.includes('==') && !t.includes('>=') && !t.includes('<=') && !t.includes('!=')){
     const varName = t.split('=')[0].trim().replace(/:$/,'').split(',').pop().trim().replace(/:$/,'');
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c5ce7; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📦 <b>O que faz?</b> Guarda um valor na caixinha <code>${esc(varName)}</code>. É como colocar um brinquedo dentro de uma caixa com etiqueta!</div></div></div>`;
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c5ce7; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📦 <b>O que faz?</b> Guarda um valor na caixinha <code>${esc(varName)}</code>. Com <code>:=</code> funciona igual a <code>=</code> e aceita listas (ex: <code>y:=2*x</code>). É como colocar um brinquedo dentro de uma caixa com etiqueta!</div></div></div>`;
+  }
+  const _ops=[];
+  if(t.includes('..')) _ops.push('<code>..</code> intervalo (vira lista)');
+  if(t.includes('**')) _ops.push('<code>**</code> potência');
+  else if(t.includes('*')) _ops.push('<code>*</code> multiplicação');
+  if(t.includes('//')) _ops.push('<code>//</code> divisão inteira');
+  else if(/(^|[^:])\/(?!\/)/.test(t)) _ops.push('<code>/</code> divisão');
+  if(/%\s*["']|["'][^"']*%/.test(t)) _ops.push('<code>%</code> percentual');
+  else if(t.includes('%')) _ops.push('<code>%</code> resto');
+  if(t.includes('\\')) _ops.push('<code>\\</code> quociente fracionário');
+  if(t.includes('+')) _ops.push('<code>+</code> soma');
+  if(t.includes('-')) _ops.push('<code>-</code> subtração');
+  if(t.includes('&')) _ops.push('<code>&</code> junta');
+  if(t.includes('>=')) _ops.push('<code>>=</code> maior ou igual');
+  else if(t.includes('<=')) _ops.push('<code><=</code> menor ou igual');
+  else if(t.includes('==')) _ops.push('<code>==</code> igual');
+  else if(t.includes('!=')) _ops.push('<code>!=</code> diferente');
+  else if(t.includes('>')) _ops.push('<code>></code> maior que');
+  else if(t.includes('<')) _ops.push('<code><</code> menor que');
+  if(/\be\b/i.test(t)&&!/mostre|senão|entre|verificar|repetir|escrever|ler/i.test(t)) _ops.push('<code>e</code> lógico (os dois precisam ser verdade)');
+  if(/\bou\b/i.test(t)) _ops.push('<code>ou</code> lógico (basta um ser verdade)');
+  if(/n[aã]o/i.test(t)) _ops.push('<code>não</code> negação (inverte)');
+  if(/uni[aã]o/i.test(t)) _ops.push('<code>união</code> junta conjuntos');
+  if(/intersec/i.test(t)) _ops.push('<code>intersecção</code> só o que tem nos dois');
+  if(/\bem\b/i.test(t)) _ops.push('<code>em</code> pertinência (está dentro)');
+  if(_ops.length>0){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c3483; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🧮 <b>Expressão com operadores</b> — calcula a conta e mostra o resultado. Aqui aparece: ${_ops.join('; ')}. Com listas, a conta vale para cada item (ex: <code>2*[1,2,3]</code> → 2,4,6)!</div></div></div>`;
   }
   return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid var(--border-strong); border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🔍 <b>O que faz?</b> Executa essa linha. Se tiver conta ou texto, calcula e mostra o resultado!</div></div></div>`;
 }
