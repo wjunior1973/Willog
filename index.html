@@ -7288,7 +7288,7 @@ document.addEventListener('keydown', (e)=>{
   }
   if(t.includes('=') && !t.includes('==') && !t.includes('>=') && !t.includes('<=') && !t.includes('!=')){
     const varName = t.split('=')[0].trim().replace(/:$/,'').split(',').pop().trim().replace(/:$/,'');
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c5ce7; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📦 <b>O que faz?</b> Guarda um valor na caixinha <code>${esc(varName)}</code>. Com <code>:=</code> funciona igual a <code>=</code> e aceita listas (ex: <code>y:=2*x</code>). É como colocar um brinquedo dentro de uma caixa com etiqueta!</div></div></div>`;
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c5ce7; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📦 <b>O que faz?</b> Guarda um valor na caixinha <code>${esc(varName)}</code>. É como colocar um brinquedo dentro de uma caixa com etiqueta!</div></div></div>`;
   }
   const _ops=[];
   if(t.includes('..')) _ops.push('<code>..</code> intervalo (vira lista)');
