@@ -36,6 +36,8 @@
     --hl-variable: #2d3436;
     --hl-property: #8e44ad;
     --hl-interpolation: #e17055;
+    --accent-dark: #4834a3;
+    --accent-soft: rgba(108,92,231,0.25);
   }
   [data-theme="dark"] {
     --bg: #12101a;
@@ -63,7 +65,36 @@
     --hl-variable: #dfe6e9;
     --hl-property: #81ecec;
     --hl-interpolation: #fdcb6e;
+    --accent-dark: #2d2460;
+    --accent-soft: rgba(162,155,254,0.30);
   }
+  /* Paletas de cores — sobrescrevem o tema base (valem no claro e no escuro; Padrão = cores originais) */
+  [data-paleta="dracula"] { --accent:#7048c8; --accent-2:#b39ddb; --accent-hover:#5a38a3; --accent-dark:#5a38a3; --accent-soft:rgba(112,72,200,0.20); --border-strong:#8464c4; --hl-keyword:#7048c8; --hl-function:#4c2e91; --hl-property:#0e7a5f; }
+  [data-theme="dark"][data-paleta="dracula"] { --accent:#bd93f9; --accent-2:#7048c8; --accent-hover:#d3b8ff; --accent-dark:#38265e; --accent-soft:rgba(189,147,249,0.30); --border-strong:#bd93f9; --hl-keyword:#bd93f9; --hl-function:#e3d3ff; --hl-property:#8be9c9; }
+  [data-paleta="floresta"] { --accent:#00916e; --accent-2:#00b894; --accent-hover:#00745a; --accent-dark:#00745a; --accent-soft:rgba(0,145,110,0.20); --border-strong:#3aa88f; --hl-keyword:#00916e; --hl-function:#00684d; --hl-property:#6c3483; }
+  [data-theme="dark"][data-paleta="floresta"] { --accent:#55efc4; --accent-2:#00b894; --accent-hover:#87f5d6; --accent-dark:#0a4a3e; --accent-soft:rgba(85,239,196,0.28); --border-strong:#55efc4; --hl-keyword:#55efc4; --hl-function:#a7f3e0; --hl-property:#c9a6ff; }
+  [data-paleta="github"] { --accent:#0969da; --accent-2:#54aeff; --accent-hover:#0757b3; --accent-dark:#0757b3; --accent-soft:rgba(9,105,218,0.18); --border-strong:#3d86d6; --hl-keyword:#0969da; --hl-function:#0550ae; --hl-property:#8250df; }
+  [data-theme="dark"][data-paleta="github"] { --accent:#58a6ff; --accent-2:#0969da; --accent-hover:#85c0ff; --accent-dark:#0c3366; --accent-soft:rgba(88,166,255,0.30); --border-strong:#58a6ff; --hl-keyword:#58a6ff; --hl-function:#a9d0ff; --hl-property:#d2a8ff; }
+  [data-paleta="monokai"] { --accent:#5e8f00; --accent-2:#a6e22e; --accent-hover:#4a7300; --accent-dark:#4a7300; --accent-soft:rgba(94,143,0,0.20); --border-strong:#7fa32e; --hl-keyword:#5e8f00; --hl-function:#3d5c00; --hl-property:#a4133c; }
+  [data-theme="dark"][data-paleta="monokai"] { --accent:#a6e22e; --accent-2:#5e8f00; --accent-hover:#c4f55e; --accent-dark:#42580c; --accent-soft:rgba(166,226,46,0.28); --border-strong:#a6e22e; --hl-keyword:#a6e22e; --hl-function:#e2f5a8; --hl-property:#f92672; }
+  [data-paleta="nord"] { --accent:#4c6a92; --accent-2:#88c0d0; --accent-hover:#3b5478; --accent-dark:#3b5478; --accent-soft:rgba(76,106,146,0.20); --border-strong:#5e7fa3; --hl-keyword:#4c6a92; --hl-function:#2e425e; --hl-property:#6c3483; }
+  [data-theme="dark"][data-paleta="nord"] { --accent:#88c0d0; --accent-2:#4c6a92; --accent-hover:#a9d3e3; --accent-dark:#263449; --accent-soft:rgba(136,192,208,0.28); --border-strong:#88c0d0; --hl-keyword:#88c0d0; --hl-function:#cfe3f2; --hl-property:#aeb9d6; }
+  [data-paleta="oceano"] { --accent:#0b7bda; --accent-2:#74b9ff; --accent-hover:#095f9e; --accent-dark:#095f9e; --accent-soft:rgba(11,123,218,0.22); --border-strong:#4a90c2; --hl-keyword:#0b7bda; --hl-function:#00549e; --hl-property:#7b2fbe; }
+  [data-theme="dark"][data-paleta="oceano"] { --accent:#74b9ff; --accent-2:#0b7bda; --accent-hover:#9fc9ff; --accent-dark:#164e7c; --accent-soft:rgba(116,185,255,0.28); --border-strong:#74b9ff; --hl-keyword:#74b9ff; --hl-function:#a8d4ff; --hl-property:#c9a6ff; }
+  [data-paleta="pordosol"] { --accent:#cf5b00; --accent-2:#f0a35e; --accent-hover:#a84800; --accent-dark:#a84800; --accent-soft:rgba(207,91,0,0.20); --border-strong:#c97a3a; --hl-keyword:#cf5b00; --hl-function:#8f3d00; --hl-property:#6c3483; }
+  [data-theme="dark"][data-paleta="pordosol"] { --accent:#fab1a0; --accent-2:#cf5b00; --accent-hover:#ffd0b8; --accent-dark:#55290e; --accent-soft:rgba(250,177,160,0.30); --border-strong:#fab1a0; --hl-keyword:#fab1a0; --hl-function:#ffe0cc; --hl-property:#e8b4ff; }
+  [data-paleta="rosa"] { --accent:#d63384; --accent-2:#f78fb3; --accent-hover:#b0255f; --accent-dark:#9c2557; --accent-soft:rgba(214,51,132,0.18); --border-strong:#c25a8a; --hl-keyword:#d63384; --hl-function:#8f1f57; --hl-property:#6c3483; }
+  [data-theme="dark"][data-paleta="rosa"] { --accent:#fd79a8; --accent-2:#d63384; --accent-hover:#ffa8c5; --accent-dark:#5c1f3a; --accent-soft:rgba(253,121,168,0.30); --border-strong:#fd79a8; --hl-keyword:#fd79a8; --hl-function:#ffc7da; --hl-property:#e8b4ff; }
+  [data-paleta="solarizado"] { --accent:#268bd2; --accent-2:#2aa198; --accent-hover:#1e6fa8; --accent-dark:#1e6fa8; --accent-soft:rgba(38,139,210,0.20); --border-strong:#4a93bd; --hl-keyword:#268bd2; --hl-function:#175d8f; --hl-property:#6c3483; }
+  [data-theme="dark"][data-paleta="solarizado"] { --accent:#2aa198; --accent-2:#268bd2; --accent-hover:#5cc4b6; --accent-dark:#0c4442; --accent-soft:rgba(42,161,152,0.30); --border-strong:#2aa198; --hl-keyword:#2aa198; --hl-function:#a5e3dc; --hl-property:#8fb8ff; }
+  [data-paleta="vermelho"] { --accent:#c92a2a; --accent-2:#ff8787; --accent-hover:#a32020; --accent-dark:#a32020; --accent-soft:rgba(201,42,42,0.20); --border-strong:#c25a5a; --hl-keyword:#c92a2a; --hl-function:#7f1d1d; --hl-property:#6c3483; }
+  [data-theme="dark"][data-paleta="vermelho"] { --accent:#ff8787; --accent-2:#c92a2a; --accent-hover:#ffa8a8; --accent-dark:#5c1a1a; --accent-soft:rgba(255,135,135,0.30); --border-strong:#ff8787; --hl-keyword:#ff8787; --hl-function:#ffc9c9; --hl-property:#e8b4ff; }
+  .paleta-grade { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:16px 18px 18px 18px; overflow:auto; }
+  .paleta-item { display:flex; align-items:center; gap:10px; padding:9px 12px; border:2px solid var(--border); border-radius:8px; background:var(--panel2); color:var(--text); font-family:'Inter',sans-serif; font-size:13px; cursor:pointer; text-align:left; }
+  .paleta-item:hover { border-color:var(--border-strong); }
+  .paleta-item.ativo { border-color:var(--accent); background:var(--panel); font-weight:600; }
+  .paleta-swatch { width:22px; height:22px; border-radius:50%; flex-shrink:0; border:2px solid rgba(0,0,0,0.15); }
+  .paleta-check { margin-left:auto; color:var(--accent); font-weight:700; }
   * { box-sizing: border-box; }
   html, body { height: 100%; margin:0; }
   body {
@@ -75,7 +106,7 @@
     overflow: hidden;
   }
   .header {
-    background: linear-gradient(135deg, var(--accent) 0%, #4834a3 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
     color: white;
     padding: 10px 18px;
     display: flex;
@@ -85,7 +116,7 @@
     position: relative;
     z-index: 10;
   }
-  [data-theme="dark"] .header { background: linear-gradient(135deg, #2d2460 0%, #1a1625 100%); border-bottom: 1px solid var(--border); }
+  [data-theme="dark"] .header { background: linear-gradient(135deg, var(--accent-dark) 0%, var(--bg2) 100%); border-bottom: 1px solid var(--border); }
   .logo {
     font-family: 'Inter', sans-serif;
     font-weight: 700;
@@ -95,7 +126,7 @@
     display: flex; align-items: center; gap:10px;
   }
   .logo-icon {
-    width: 36px; height: 36px; background: white; color: #6c5ce7; display:grid; place-items:center;
+    width: 36px; height: 36px; background: white; color: var(--accent); display:grid; place-items:center;
     font-family: 'JetBrains Mono', monospace; font-size: 19px; font-weight:700; border-radius: 6px; box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
     flex-shrink: 0;
   }
@@ -141,7 +172,7 @@
   }
   .pane {
     background: var(--panel);
-    border: 2px solid var(--border);
+    border: 2px solid var(--border-strong);
     border-radius:10px;
     display:flex; flex-direction:column; overflow:hidden;
     box-shadow: var(--shadow);
@@ -179,7 +210,7 @@
     letter-spacing:0.3px;
     text-transform: uppercase;
   }
-  .pane-header b { color: var(--text); font-weight:700; }
+  .pane-header b { color: var(--accent); font-weight:700; }
   .pane-header .hint { font-weight:400; font-size:11px; opacity:0.8; }
   .editor-wrap { flex:1; display:flex; overflow:hidden; position:relative; }
   .line-numbers {
@@ -246,7 +277,7 @@
     overflow:auto;
     overflow-wrap:normal;
   }
-  #editor::selection { background: rgba(108,92,231,0.25); }
+  #editor::selection { background: var(--accent-soft); }
   #editor::placeholder { color: var(--text-dim); opacity:0.6; }
   #editor:placeholder-shown { color: transparent; }
   .console-output {
@@ -283,6 +314,7 @@
   .status { margin-left:auto; font-family:'Inter', sans-serif; font-size:11px; }
   ::-webkit-scrollbar { width:10px; height:10px; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius:6px; border:2px solid var(--panel); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
   ::-webkit-scrollbar-track { background: var(--panel2); }
   @media (max-width: 900px) {
     .main { flex-direction:column; }
@@ -295,8 +327,9 @@
     position:fixed; inset:0; background:rgba(0,0,0,0.45); display:grid; place-items:center; z-index:1000; backdrop-filter: blur(2px);
   }
   #modalLeia { z-index: 3000; }
+  #modalMensagem { z-index: 3000; }
   .modal-box {
-    background: var(--panel); color: var(--text); border:2px solid var(--border); border-radius:12px; padding:28px 32px; min-width:340px; max-width:90vw; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,0.25); position:relative; text-align:center;
+    background: var(--panel); color: var(--text); border:2px solid var(--border-strong); border-radius:12px; padding:28px 32px; min-width:340px; max-width:90vw; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,0.25); position:relative; text-align:center;
   }
   .modal-content { font-family:'Inter',sans-serif; font-size:14px; line-height:1.6; text-align:center; }
   .modal-close {
@@ -317,7 +350,7 @@
   .menu-trigger:hover { background:var(--panel2); border-color:var(--border); }
   .menu.active .menu-trigger { background:var(--panel2); border-color:var(--border); }
   .menu-dropdown {
-    position:absolute; top:100%; left:0; min-width:180px; background:var(--panel); border:2px solid var(--border); border-radius:8px; box-shadow: var(--shadow), 0 8px 24px rgba(0,0,0,0.15); padding:6px; display:none; flex-direction:column; gap:2px; z-index:100;
+    position:absolute; top:100%; left:0; min-width:180px; background:var(--panel); border:2px solid var(--border-strong); border-radius:8px; box-shadow: var(--shadow), 0 8px 24px rgba(0,0,0,0.15); padding:6px; display:none; flex-direction:column; gap:2px; z-index:100;
   }
   .menu.active .menu-dropdown { display:flex; }
   .menu-dropdown button {
@@ -338,7 +371,7 @@
   .modal-manual-body th, .modal-manual-body td { border:1px solid var(--border); padding:6px 8px; text-align:left; }
   .modal-manual-body th { background:var(--panel2); font-weight:600; }
   .modal-manual-box {
-    background: var(--panel); color: var(--text); border:2px solid var(--border); border-radius:12px; padding:0; width:96vw; height:94vh; max-width:96vw; max-height:94vh; min-width:96vw; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,0.25); position:relative; display:flex; flex-direction:column; overflow:hidden;
+    background: var(--panel); color: var(--text); border:2px solid var(--border-strong); border-radius:12px; padding:0; width:96vw; height:94vh; max-width:96vw; max-height:94vh; min-width:96vw; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,0.25); position:relative; display:flex; flex-direction:column; overflow:hidden;
   }
   .modal-manual-header {
     display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border); background:var(--panel2);
@@ -425,7 +458,7 @@
   .autocomplete {
     position: absolute;
     background: var(--panel);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-strong);
     border-radius: 8px;
     box-shadow: var(--shadow), 0 8px 24px rgba(0,0,0,0.15);
     max-height: 260px;
@@ -495,7 +528,7 @@
 
 </style>
 </head>
-<body data-theme="light">
+<body data-theme="light" data-paleta="padrao">
   <header class="header">
     <div class="logo">
       <img class="logo-img" src="https://raw.githubusercontent.com/wjunior1973/Willog/main/Picture.png" alt="Willog Logo" onerror="this.style.display='none'; var fb=document.getElementById('logoFallback'); if(fb) fb.style.display='grid';">
@@ -521,6 +554,7 @@
       <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Exibir ▾</button>
       <div class="menu-dropdown">
         <button id="btnTema">🌓 Tema</button>
+        <button id="btnPaleta">🎨 Paleta de cores</button>
         <div class="menu-sep-dropdown"></div>
         <div style="display:flex; align-items:center; gap:6px; padding:6px 8px;">
           <span style="font-size:13px;flex:1;">Zoom</span>
@@ -877,18 +911,18 @@ fechar $notas
 # sem fechar, dados ficam em memória até fechar</span>
 <span class="saida">-> Arquivo com duas linhas; fechar persiste em disco/localStorage</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Use <code>fechar</code> para garantir gravação em disco. Arquivos virtuais ficam em <code>localStorage</code> sob chave <code>willog_file_&lt;nome&gt;</code>.</p>
-        <h3>figura.girar</h3>
+        <h3>&lt;figura&gt;.girar</h3>
         <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">figura.girar</span><span class="example">(ângulo, vezes, pausa)</span></pre>
+        <pre><span class="syntax">&lt;figura&gt;.girar</span><span class="example">(ângulo, vezes, pausa)</span></pre>
         <p class="code-label">Exemplo</p>
         <pre><span class="example">janela(600,600)
 figura=desenhe.polígono(200,200,5,50,vermelho)
 figura.girar(45,3,0.5)</span>
 <span class="saida">-> gira o polígono 45° à direita, 3 vezes com 0.5s de pausa (total 135°)</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Gira o desenho armazenado em variável (ex: <code>figura</code>) ao redor de seu centro. Requer <code>figura=desenhe.polígono(...)</code> ou outro <code>desenhe.*</code> atribuído. Cada chamada atualiza <code>figura.rotacao</code> e redesenha todos.</p>
-        <h3>figura.mover</h3>
+        <h3>&lt;figura&gt;.mover</h3>
         <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">figura.mover</span><span class="example">(x, y, passo)</span></pre>
+        <pre><span class="syntax">&lt;figura&gt;.mover</span><span class="example">(x, y, passo)</span></pre>
         <p class="code-label">Exemplo</p>
         <pre><span class="example">janela(600,600)
 figura=desenhe.polígono(200,200,5,50,azul)
@@ -992,6 +1026,13 @@ mostre "Mundo"
 limpe
 mostre "Console limpo"</span>
 <span class="saida">-> Console limpo (anteriores apagados)</span></pre>
+        <h3>mensagem</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">mensagem</span><span class="example">("título", "texto")</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">mensagem("Boas vindas","Olá, mundo!")</span>
+<span class="saida">-> mostra uma caixa de mensagem com "Boas vindas" na barra de título e "Olá, mundo!" no texto (o programa espera o OK)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Título e texto aceitam variáveis e expressões. Dentro do texto, <code>\n</code> quebra a linha.</p>
         <h3>mostre</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">mostre</span> <span class="example">&lt;valor&gt; [, &lt;valor&gt; ...]</span></pre>
@@ -1224,7 +1265,7 @@ verificar nota:
       <div class="manual-pane" id="pane-cores">
         <h3>Cores — ordem alfabética</h3>
         <table><tr><td><code>amarelo</code></td><td>#ffff00</td><td><code>desenhe.linha(0,0,100,100,amarelo)</code></td></tr><tr><td><code>azul</code></td><td>#0066ff</td><td><code>desenhe.linha(0,0,100,100,azul)</code></td></tr><tr><td><code>branco</code></td><td>#ffffff</td><td><code>desenhe.linha(0,0,100,100,branco)</code></td></tr><tr><td><code>ciano</code></td><td>#00ffff</td><td><code>desenhe.linha(0,0,100,100,ciano)</code></td></tr><tr><td><code>cinza</code></td><td>#808080</td><td><code>desenhe.linha(0,0,100,100,cinza)</code></td></tr><tr><td><code>corAleatória</code></td><td>aleatória</td><td><code>desenhe.circulo(100,100,50,corAleatória)</code> → cor aleatória a cada chamada<br><code>tela.cor(corAleatória)</code> → fundo aleatório<br><code>desenhe.linha(0,0,100,100,corAleatória)</code> → linha aleatória</td></tr><tr><td><code>laranja</code></td><td>#ff9800</td><td><code>desenhe.linha(0,0,100,100,laranja)</code></td></tr><tr><td><code>marrom</code></td><td>#8d5524</td><td><code>desenhe.linha(0,0,100,100,marrom)</code></td></tr><tr><td><code>preto</code></td><td>#000000</td><td><code>desenhe.linha(0,0,100,100,preto)</code></td></tr><tr><td><code>rosa</code></td><td>#ff69b4</td><td><code>desenhe.linha(0,0,100,100,rosa)</code></td></tr><tr><td><code>roxo</code></td><td>#9c27b0</td><td><code>desenhe.linha(0,0,100,100,roxo)</code></td></tr><tr><td><code>verde</code></td><td>#00c853</td><td><code>desenhe.linha(0,0,100,100,verde)</code></td></tr><tr><td><code>vermelho</code></td><td>#ff0000</td><td><code>desenhe.linha(0,0,100,100,vermelho)</code></td></tr></table>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Use <code>corAleatória</code> em qualquer <code>desenhe.*(...,cor)</code> ou <code>tela.cor(corAleatória)</code>. Cada chamada sorteia entre as 12 cores. Também aceita <code>coraleatoria</code> sem acento (ex: <code>coraleatoria</code>).</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Use <code>corAleatória</code> em qualquer <code>desenhe.*(...,cor)</code> ou <code>tela.cor(corAleatória)</code>. Cada chamada sorteia entre as 12 cores.</p>
       </div>
     </div>
   </div>
@@ -1243,6 +1284,17 @@ verificar nota:
         <p style="margin:2px 0 12px; font-size:13px; color:var(--accent);">wjunior1973@gmail.com</p>
         <p style="margin:0; font-size:13px; color:var(--text-dim);">2026</p>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal Paleta de cores -->
+  <div id="modalPaleta" class="modal-overlay" style="display:none">
+    <div class="modal-box" style="max-width:440px;">
+      <div class="modal-manual-header">
+        <b>🎨 Paleta de cores</b>
+        <button class="modal-close" id="btnFecharPaleta" title="Fechar">✕</button>
+      </div>
+      <div class="paleta-grade" id="paletaGrade"></div>
     </div>
   </div>
 
@@ -1276,6 +1328,22 @@ verificar nota:
     </div>
   </div>
 
+  <!-- Modal Mensagem -->
+  <div id="modalMensagem" class="modal-overlay" style="display:none">
+    <div class="modal-box" style="min-width:400px; max-width:480px; height:auto; max-height:280px; overflow:auto;">
+      <div class="modal-header" style="padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+        <b id="mensagemTitulo" style="font-family:'Inter',sans-serif; font-size:15px;"></b>
+        <button class="modal-close" id="btnFecharMensagem" type="button" title="Fechar">✕</button>
+      </div>
+      <div class="modal-body" style="padding:14px 20px 16px 20px;">
+        <p id="mensagemTexto" style="margin:0; font-family:'Inter',sans-serif; font-size:14px; color:var(--text); white-space:pre-wrap;"></p>
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:14px;">
+          <button class="btn primary" id="btnMensagemOk" type="button" style="padding:8px 16px;">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
 // ================================================================
 // CÓDIGO JAVASCRIPT COMPLETO DA WILLOG IDE
@@ -1304,6 +1372,68 @@ function applyTheme(theme){
 document.getElementById('btnTema').addEventListener('click', ()=>{
   const cur = document.body.getAttribute('data-theme');
   applyTheme(cur==='dark' ? 'light' : 'dark');
+});
+
+// --- Paleta de cores (vale no claro e no escuro; Padrão = cores originais) ---
+const PALETAS=[
+  {id:'dracula', nome:'Drácula', cor:'#7048c8'},
+  {id:'floresta', nome:'Floresta', cor:'#00916e'},
+  {id:'github', nome:'GitHub', cor:'#0969da'},
+  {id:'monokai', nome:'Monokai', cor:'#5e8f00'},
+  {id:'nord', nome:'Nord', cor:'#4c6a92'},
+  {id:'oceano', nome:'Oceano', cor:'#0b7bda'},
+  {id:'padrao', nome:'Padrão', cor:'#6c5ce7'},
+  {id:'pordosol', nome:'Pôr do Sol', cor:'#cf5b00'},
+  {id:'rosa', nome:'Rosa', cor:'#d63384'},
+  {id:'solarizado', nome:'Solarizado', cor:'#268bd2'},
+  {id:'vermelho', nome:'Vermelho', cor:'#c92a2a'}
+];
+function applyPaleta(p){
+  if(!PALETAS.some(x=>x.id===p)) p='padrao';
+  document.body.setAttribute('data-paleta', p);
+  try{ localStorage.setItem('willog-paleta', p); }catch(e){}
+  document.querySelectorAll('#paletaGrade .paleta-item').forEach(btn=>{
+    const on=btn.dataset.paleta===p;
+    btn.classList.toggle('ativo', on);
+    const chk=btn.querySelector('.paleta-check');
+    if(chk) chk.textContent=on?'✓':'';
+  });
+}
+(function(){
+  const grade=document.getElementById('paletaGrade');
+  if(grade){
+    PALETAS.forEach(p=>{
+      const btn=document.createElement('button');
+      btn.className='paleta-item';
+      btn.dataset.paleta=p.id;
+      btn.title=p.nome;
+      const sw=document.createElement('span');
+      sw.className='paleta-swatch';
+      sw.style.background=p.cor;
+      const nm=document.createElement('span');
+      nm.textContent=p.nome;
+      const chk=document.createElement('span');
+      chk.className='paleta-check';
+      btn.appendChild(sw); btn.appendChild(nm); btn.appendChild(chk);
+      btn.addEventListener('click', ()=> applyPaleta(p.id));
+      grade.appendChild(btn);
+    });
+  }
+  let saved=null;
+  try{ saved=localStorage.getItem('willog-paleta'); }catch(e){}
+  applyPaleta(saved||'padrao');
+})();
+document.getElementById('btnPaleta').addEventListener('click', ()=>{
+  document.getElementById('modalPaleta').style.display='grid';
+});
+document.getElementById('btnFecharPaleta').addEventListener('click', ()=>{
+  document.getElementById('modalPaleta').style.display='none';
+});
+document.getElementById('modalPaleta').addEventListener('click', (e)=>{
+  if(e.target.id==='modalPaleta') document.getElementById('modalPaleta').style.display='none';
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape') document.getElementById('modalPaleta').style.display='none';
 });
 
 // --- Fechar janela ---
@@ -1360,10 +1490,10 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
-  const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatoria','coraleatória']);
+  const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatória']);
   while(i<len){
     if(code.substr(i,2)==='#:'){
       let s=i;
@@ -1752,7 +1882,7 @@ updateLines(); updateHighlight();
   const acEl=document.getElementById('autocomplete');
   const ed=document.getElementById('editor');
   if(!acEl || !ed) return;
-  const comandos=['abrir','bipe','colar','constante','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.circulo','desenhe.linha','desenhe.polígono','desenhe.poligono','desenhe.ponto','desenhe.retangulo','desenhe.texto','enquanto','escrever','espereTecla','fechar','figura.girar','figura.mover','girar','intervalo','janela','leia','ler','limpe','mostre','mover','para cada','pare','pausa','recortar','repita','repetir','se','senão','tela.cor','tela.limpe','toque','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const comandos=['abrir','bipe','colar','constante','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.circulo','desenhe.linha','desenhe.polígono','desenhe.poligono','desenhe.ponto','desenhe.retangulo','desenhe.texto','enquanto','escrever','espereTecla','fechar','figura.girar','figura.mover','girar','intervalo','janela','leia','ler','limpe','mensagem','mostre','mover','para cada','pare','pausa','recortar','repita','repetir','se','senão','tela.cor','tela.limpe','toque','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','amostra','amostras','captureTecla','começaCom','contarItem','conte','cos','data','decimal','diaSemana','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','encontre','fatorial','arcsen','arccos','arctan','cotan','sec','cossec','log10','potencia','raiz','filtrar','formate','fração','hora','indiceDe','insira','inteiro','inverta','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','ordeneDecrescente','paraNúmero','paraTexto','piso','posição','primos','produto','raizc','raizq','remova','repetir','semEspaços','sen','soma','substitua','tamanho','tan','terminaCom','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const propriedades=['adicionar','aleatório','contar','fatiar','girar','inverter','mover','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const cores=['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','corAleatória'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
@@ -1995,8 +2125,7 @@ function _willogResolveCor(nome, env){
     if(typeof v==='string') s=v;
   }
   s=s.toLowerCase().trim();
-  const normCheck=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  if(normCheck==='coraleatoria'){
+  if(s==='coraleatória'){
     const cores=Object.values(_willogCores);
     return cores[Math.floor(Math.random()*cores.length)];
   }
@@ -2405,6 +2534,23 @@ async function execGirarGlobal(stmt, env, lineNo){
     tasks.push(task);
   }
   if(tasks.length>0) await Promise.all(tasks);
+}
+function isMensagemStmt(stmt){
+  return /^\s*mensagem\s*\(.*\)\s*(?:#.*)?$/i.test(stmt.trim());
+}
+async function execMensagem(stmt, env, lineNo){
+  const m=stmt.trim().match(/^\s*mensagem\s*\(\s*(.*)\s*\)\s*(?:#.*)?$/i);
+  if(!m){ logToConsole(`Erro na linha ${lineNo}: use mensagem("título","texto") ex: mensagem("Boas vindas","Olá, mundo!")`, 'error'); return; }
+  const args=splitWillogCommaArgs(m[1]);
+  if(args.length!==2){ logToConsole(`Erro na linha ${lineNo}: mensagem precisa de título e texto ex: mensagem("Boas vindas","Olá, mundo!")`, 'error'); return; }
+  let tit, txt;
+  try{
+    const vt=evaluateExpression(args[0].trim(), env);
+    const vx=evaluateExpression(args[1].trim(), env);
+    tit=(typeof vt==='number') ? formatWillogNumber(vt, args[0]) : willogDisplay(vt);
+    txt=(typeof vx==='number') ? formatWillogNumber(vx, args[1]) : willogDisplay(vx);
+  }catch(e){ logToConsole(`Erro na linha ${lineNo}: ${e.message}`, 'error'); return; }
+  await showMensagem(tit, txt);
 }
 function isMoverStmt(stmt){
   return /^\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\.mover\s*\(.*\)\s*(?:#.*)?$/i.test(stmt.trim());
@@ -3746,6 +3892,21 @@ function willogCoerceLeiaValue(raw){
 function hideLeia(result){
   document.getElementById('modalLeia').style.display='none';
   if(leiaResolver){ const r=leiaResolver; leiaResolver=null; r(willogCoerceLeiaValue(result ?? '')); }
+}
+
+let mensagemResolver = null;
+function showMensagem(titulo, texto){
+  return new Promise(resolve=>{
+    mensagemResolver = resolve;
+    document.getElementById('mensagemTitulo').textContent = titulo ?? '';
+    document.getElementById('mensagemTexto').textContent = texto ?? '';
+    document.getElementById('modalMensagem').style.display='grid';
+    setTimeout(()=> document.getElementById('btnMensagemOk').focus(), 50);
+  });
+}
+function hideMensagem(){
+  document.getElementById('modalMensagem').style.display='none';
+  if(mensagemResolver){ const r=mensagemResolver; mensagemResolver=null; r(); }
 }
 
 function preprocessIntervalos(expr, env){
@@ -6086,6 +6247,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
   if(isColarStmt(stmt)){ execColar(stmt, env, lineNo); hasOutputRef.value=true; return; }
   if(isGirarStmt(stmt)){ await execGirar(stmt, env, lineNo); hasOutputRef.value=true; return; }
   if(isMoverStmt(stmt)){ await execMover(stmt, env, lineNo); hasOutputRef.value=true; return; }
+  if(isMensagemStmt(stmt)){ await execMensagem(stmt, env, lineNo); hasOutputRef.value=true; return; }
   if(isConstanteStmt(stmt)){
     const pc=parseConstante(stmt);
     if(!pc){ logToConsole(`Erro na linha ${lineNo}: use constante NOME = valor ex: constante PI = 3.1415`, 'error'); return; }
@@ -6388,6 +6550,7 @@ async function runWillog(){
       if(isColarStmt(raw)){ execColar(raw, env, lineNo); hasOutputRef.value=true; i++; continue; }
       if(isGirarStmt(raw)){ await execGirar(raw, env, lineNo); hasOutputRef.value=true; i++; continue; }
       if(isMoverStmt(raw)){ await execMover(raw, env, lineNo); hasOutputRef.value=true; i++; continue; }
+      if(isMensagemStmt(raw)){ await execMensagem(raw, env, lineNo); hasOutputRef.value=true; i++; continue; }
       if(isAbrirStmt(raw)){
         const _fn=parseAbrirFilename(raw, env);
         await willogAbrir(_fn, env);
@@ -6902,6 +7065,14 @@ document.getElementById('leiaInput').addEventListener('keydown', (e)=>{
   if(e.key==='Escape'){ e.preventDefault(); hideLeia(''); }
 });
 
+// --- Mensagem modal ---
+document.getElementById('btnMensagemOk').addEventListener('click', ()=> hideMensagem());
+document.getElementById('btnFecharMensagem').addEventListener('click', ()=> hideMensagem());
+document.getElementById('modalMensagem').addEventListener('click', (e)=>{ if(e.target.id==='modalMensagem') hideMensagem(); });
+document.addEventListener('keydown', (e)=>{
+  if(document.getElementById('modalMensagem').style.display==='grid' && (e.key==='Enter' || e.key==='Escape')){ e.preventDefault(); hideMensagem(); }
+});
+
 // Atalho global F5
 document.addEventListener('keydown', (e)=>{
   if(e.key==='F5'){ e.preventDefault(); runWillog(); }
@@ -6972,6 +7143,9 @@ document.addEventListener('keydown', (e)=>{
   }
   if(/^\s*colar\s*\(/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #e17055; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📌 <b>O que faz?</b> Cola o desenho recortado em (x,y). Ex: <code>colar(a,300,300)</code>.</div></div></div>`;
+  }
+  if(/^\s*mensagem\s*\(/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #a29bfe; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">💬 <b>O que faz?</b> Mostra uma caixa de mensagem com título na barra e texto no corpo (ex: <code>mensagem("Boas vindas","Olá, mundo!")</code>). O programa espera apertar OK!</div></div></div>`;
   }
   if(/^bipe\s*$/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #fdcb6e; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🔔 <b>O que faz?</b> Faz um barulhinho "bipe" bem curtinho, igual de videogame!</div></div></div>`;
@@ -7267,6 +7441,7 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') document.getEle
 </script>
 </body>
 </html>
+
 
 
 
