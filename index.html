@@ -1921,9 +1921,10 @@ updateLines(); updateHighlight();
   const acEl=document.getElementById('autocomplete');
   const ed=document.getElementById('editor');
   if(!acEl || !ed) return;
-  const comandos=['abrir','bipe','colar','constante','comentários','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.circulo','desenhe.linha','desenhe.polígono','desenhe.poligono','desenhe.ponto','desenhe.retangulo','desenhe.texto','enquanto','escrever','espereTecla','fechar','figura.girar','figura.mover','girar','intervalo','janela','leia','ler','limpe','mensagem','mostre','mover','para cada','pare','pausa','recortar','repita','repetir','se','senão','tela.cor','tela.limpe','toque','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','amostra','amostras','captureTecla','começaCom','contarItem','conte','cos','data','decimal','diaSemana','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','encontre','fatorial','arcsen','arccos','arctan','cotan','sec','cossec','log10','potencia','raiz','filtrar','formate','fração','hora','indiceDe','insira','inteiro','inverta','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','ordeneDecrescente','paraNúmero','paraTexto','piso','posição','primos','produto','raizc','raizq','remova','repetir','semEspaços','sen','soma','substitua','tamanho','tan','terminaCom','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const propriedades=['adicionar','aleatório','contar','fatiar','girar','inverter','mover','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const comandos=['abrir','bipe','caso','colar','constante','comentários','continuar','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.circulo','desenhe.linha','desenhe.polígono','desenhe.poligono','desenhe.ponto','desenhe.retangulo','desenhe.texto','enquanto','escrever','espereTecla','fechar','figura.girar','figura.mover','girar','intervalo','janela','leia','ler','limpe','mensagem','mostre','mover','padrão','para cada','pare','pausa','recortar','repita','repetir','retorna','retorne','se','senão','tela.cor','tela.limpe','toque','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','amostra','amostras','capture','captureTecla','cbrt','começaCom','contarItem','conte','cos','data','decimal','diaSemana','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','encontre','fatorial','arcsen','arccos','arctan','cotan','sec','cossec','log10','potencia','raiz','filtrar','formate','fração','hora','indiceDe','insira','inteiro','inverta','inverter','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','ordeneCrescente','ordeneDecrescente','paraNúmero','paraTexto','piso','posição','primos','produto','raizc','raizq','remova','repetir','semEspaços','sen','soma','sqrt','substitua','tamanho','tan','terminaCom','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const propriedades=['adicionar','aleatório','contar','fatiar','inverter','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const operadores=['e','ou','não','em','existe','união','intersecção'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   const cores=['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','corAleatória'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
   let _varsCache=null; let _varsCacheText='';
   function getVariables(){
@@ -1962,25 +1963,44 @@ updateLines(); updateHighlight();
   }
   let activeIdx=-1; let currentItems=[];
   function hideAc(){ acEl.style.display='none'; acEl.classList.remove('visible'); activeIdx=-1; currentItems=[]; }
+  function norm(s){ return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+  function matchWord(item, lower, lowerNorm){
+    const il=item.toLowerCase();
+    const inorm=norm(item);
+    if(il.startsWith(lower) || inorm.startsWith(lowerNorm)) return true;
+    const parts=item.split(/[.\s]+/);
+    for(const part of parts){
+      const pl=part.toLowerCase();
+      const pn=norm(part);
+      if(pl.startsWith(lower) || pn.startsWith(lowerNorm)) return true;
+    }
+    return false;
+  }
   function showAc(){
     const {word}=getWordAtCaret();
     if(!word || word.length<1){ hideAc(); return; }
     const lower=word.toLowerCase();
-    const vars=getVariables().filter(v=>v.toLowerCase().startsWith(lower));
-    const cmds=comandos.filter(c=>c.toLowerCase().startsWith(lower));
-    const funcs=funcoes.filter(f=>f.toLowerCase().startsWith(lower));
-    const props=propriedades.filter(p=>p.toLowerCase().startsWith(lower));
+    const lowerNorm=norm(lower);
+    const vars=getVariables().filter(v=>matchWord(v, lower, lowerNorm));
+    const cmds=comandos.filter(c=>matchWord(c, lower, lowerNorm));
+    const funcs=funcoes.filter(f=>matchWord(f, lower, lowerNorm));
+    const props=propriedades.filter(p=>matchWord(p, lower, lowerNorm));
+    const ops=operadores.filter(o=>{
+      const ol=o.toLowerCase();
+      const on=ol.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      return ol.startsWith(lower) || on.startsWith(lowerNorm);
+    });
     const coresFiltered=cores.filter(c=>{
       const cl=c.toLowerCase();
       const nl=cl.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-      const ll=lower.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-      return cl.startsWith(lower) || nl.startsWith(ll);
+      return cl.startsWith(lower) || nl.startsWith(lowerNorm);
     });
     const groups=[];
     if(vars.length) groups.push({cat:'Variáveis', items:vars, icon:'🔹'});
     if(cmds.length) groups.push({cat:'Comandos', items:cmds, icon:'⚡'});
     if(funcs.length) groups.push({cat:'Funções', items:funcs, icon:'ƒ'});
     if(props.length) groups.push({cat:'Propriedades', items:props, icon:'🔧'});
+    if(ops.length) groups.push({cat:'Operadores', items:ops, icon:'🔣'});
     if(coresFiltered.length) groups.push({cat:'Cores', items:coresFiltered, icon:'🎨'});
     if(groups.length===0){ hideAc(); return; }
     acEl.innerHTML=''; currentItems=[];
@@ -2001,8 +2021,14 @@ updateLines(); updateHighlight();
     const {word, start}=getWordAtCaret();
     const before=ed.value.slice(0,start);
     const after=ed.value.slice(ed.selectionStart);
-    ed.value=before+value+after;
-    ed.selectionStart=ed.selectionEnd=start+value.length;
+    let insert=value;
+    const suffix=value.split(/[.\s]+/).pop();
+    const prefix=value.slice(0, value.length-suffix.length);
+    if(prefix && before.toLowerCase().endsWith(prefix.toLowerCase()) && suffix.toLowerCase().startsWith(word.toLowerCase())){
+      insert=suffix;
+    }
+    ed.value=before+insert+after;
+    ed.selectionStart=ed.selectionEnd=start+insert.length;
     hideAc(); updateLines(); updateHighlight(); ed.focus(); if(window._willogSave) window._willogSave();
   }
   function moveActive(dir){
