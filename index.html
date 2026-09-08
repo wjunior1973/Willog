@@ -606,7 +606,7 @@
       <div class="menu-dropdown">
         <button id="btnReferencia">📖 Referência rápida</button>
         <button id="btnCodigoComentado">💬 Código comentado</button>
-        <button id="btnCodigos">🗂️ Códigos (QBasic/Java/Python)</button>
+        <button id="btnCodigos">🗂️ Tradução (QBasic/Java/Python)</button>
         <div class="menu-sep-dropdown"></div>
         <button id="btnSobre">ℹ️ Sobre</button>
       </div>
@@ -1018,7 +1018,8 @@ mostre "Depois na janela"</span>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">&lt;variável&gt; = leia</span>
 <span class="syntax">&lt;variável&gt; = leia</span> <span class="example">"mensagem"</span>
-<span class="syntax">&lt;variável&gt; = leia</span><span class="example">("mensagem")</span></pre>
+<span class="syntax">&lt;variável&gt; = leia</span><span class="example">("mensagem")</span>
+<span class="syntax">&lt;var1,var2,var3&gt; = leia</span> <span class="example">"mensagem"</span>  <span class="comment">(várias de uma vez)</span></pre>
         <p class="code-label">Exemplo</p>
         <pre><span class="example">nome = leia "Digite seu nome:"
 mostre "Olá, {nome}!"</span>
@@ -1030,9 +1031,14 @@ mostre idade</span>
 <span class="saida">-> Digite sua idade: 25
 -> 25</span>
 
+<span class="example">nome, idade = leia "Digite seu nome e a sua idade:"
+mostre "Olá, {nome}, você tem {idade} anos!"</span>
+<span class="saida">-> Digite seu nome e a sua idade: Maria, 30
+-> Olá, Maria, você tem 30 anos!</span>
+
 <span class="example">nome = leia "linha1\nlinha2:"</span>
 <span class="saida">-> pergunta em 2 linhas (o \n dentro do texto quebra a linha)</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Dentro de qualquer texto entre aspas, <code>\n</code> quebra a linha (vale para <code>mostre</code>, <code>leia</code> e <code>desenhe.texto</code>).</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Com <code>&lt;var1,var2&gt; = leia</code> você digita vários valores de uma vez, separados por vírgula — cada um cai numa variável na ordem. Dentro de qualquer texto entre aspas, <code>\n</code> quebra a linha (vale para <code>mostre</code>, <code>leia</code> e <code>desenhe.texto</code>).</p>
         <h3>ler</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">ler $arquivo</span><span class="example">, &lt;variável&gt; [, &lt;variável2&gt; ...]</span></pre>
@@ -4006,7 +4012,7 @@ function willogCoerceLeiaValue(raw){
 
 function hideLeia(result){
   document.getElementById('modalLeia').style.display='none';
-  if(leiaResolver){ const r=leiaResolver; leiaResolver=null; r(willogCoerceLeiaValue(result ?? '')); }
+  if(leiaResolver){ const r=leiaResolver; leiaResolver=null; r(result ?? ''); }
 }
 
 let mensagemResolver = null;
@@ -5870,6 +5876,30 @@ function splitAssignmentParts(stmt){
   return parts;
 }
 
+// Divide um LHS de atribuição em alvos separados por vírgula (nível superior)
+function willogSplitLhs(s){
+  const out=[]; let cur=''; let inStr=false; let strCh=null; let esc=false; let depthParen=0, depthBracket=0;
+  for(let i=0;i<s.length;i++){
+    const ch=s[i];
+    if(inStr){
+      cur+=ch;
+      if(esc) esc=false;
+      else if(ch==='\\') esc=true;
+      else if(ch===strCh){ inStr=false; }
+    } else {
+      if(ch==='"' || ch==="'"){ inStr=true; strCh=ch; cur+=ch; }
+      else if(ch==='('){ depthParen++; cur+=ch; }
+      else if(ch===')'){ depthParen=Math.max(0,depthParen-1); cur+=ch; }
+      else if(ch==='['){ depthBracket++; cur+=ch; }
+      else if(ch===']'){ depthBracket=Math.max(0,depthBracket-1); cur+=ch; }
+      else if(ch===',' && depthParen===0 && depthBracket===0){ out.push(cur.trim()); cur=''; }
+      else cur+=ch;
+    }
+  }
+  if(cur.trim()!=='') out.push(cur.trim());
+  return out;
+}
+
 function splitMostreArgs(rest){
   const args=[];
   let cur='';
@@ -5913,7 +5943,7 @@ function isEmptyOrComment(line){
 }
 
 function isSeLine(line){
-  return /^\s*se\b/i.test(line) && line.includes(':');
+  return /^\s*se\b/i.test(line);
 }
 
 function isSenaoLine(line){
@@ -6383,8 +6413,23 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       const rhs=parts[parts.length-1].trim();
       if(rhs==='') return;
       try{
+        // Expande alvos separados por vírgula no lado esquerdo
+        const targets=[];
+        for(let pi=0;pi<parts.length-1;pi++){
+          for(const t of willogSplitLhs(parts[pi])){ const tt=t.trim(); if(tt!=='') targets.push(tt); }
+        }
         let val;
-        if(/^\s*leia\b/i.test(rhs)){ const pr=parseLeiaPrompt(rhs); val=willogCoerceLeiaValue(await showLeia(pr)); }
+        let valList=null;
+        if(/^\s*leia\b/i.test(rhs)){
+          const pr=parseLeiaPrompt(rhs);
+          const rawValue=await showLeia(pr);
+          if(targets.length>1){
+            const tokens=String(rawValue).split(',').map(s=>s.trim());
+            valList=targets.map((t,i)=> willogCoerceLeiaValue(tokens[i] !== undefined ? tokens[i] : ''));
+          } else {
+            val=willogCoerceLeiaValue(rawValue);
+          }
+        }
         else if(/^\s*desenhe\.pol[ií]gono/i.test(rhs)){
           const _a=parseDesenheArgs(rhs);
           if(_a.length<4){ logToConsole('Erro: desenhe.polígono precisa de x,y,n,raio[,cor]', 'error'); return; }
@@ -6393,8 +6438,9 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
           const _obj=_willogDrawPoligono(_x,_y,_n,_r,_c,env);
           val=_obj;
         } else { val=evaluateExpression(rhs, env); }
-        for(let i=0;i<parts.length-1;i++){
-          const varPath=parts[i].trim();
+        for(let ti=0;ti<targets.length;ti++){
+          const varPath=targets[ti];
+          const curVal=valList ? valList[ti] : val;
           if(varPath==='') continue;
           if(/^constante\b/i.test(varPath)){ logToConsole(`Erro na linha ${lineNo}: use constante NOME = valor (sem repetir "constante" na atribuição)`, 'error'); continue; }
           if(varPath.includes('.')){
@@ -6412,11 +6458,11 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
               obj=obj[key];
             }
             const lastKey=pathParts[pathParts.length-1];
-            obj[lastKey]=val;
+            obj[lastKey]=curVal;
           }else{
             if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(varPath)){
               if(isConstanteName(env, varPath)){ logToConsole(`Erro na linha ${lineNo}: "${varPath}" é constante e não pode ser alterada`, 'error'); continue; }
-              env[varPath]=val;
+              env[varPath]=curVal;
             }else if(varPath!==''){
               logToConsole(`Erro na linha ${lineNo}: nome de variável inválido "${varPath}"`, 'error');
             }
@@ -7268,7 +7314,7 @@ document.addEventListener('keydown', (e)=>{
   if(/^toque\s*\(/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #fdcb6e; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🎵 <b>O que faz?</b> Toca um som com a frequência e tempo escolhidos. É como tocar uma nota musical!</div></div></div>`;
   }
-  if(/^\s*se\b/i.test(t) && t.includes(':')){
+  if(/^\s*se\b/i.test(t)){
     const cond = t.replace(/^\s*se\s+/i,'').replace(/:\s*$/,'');
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #6c5ce7; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🤔 <b>O que faz?</b> Pergunta: <code>${esc(cond)}</code> é verdadeiro? Se for <b>Sim</b>, faz o que está indentado embaixo; se for <b>Não</b>, pula ou vai para o <code>senão</code>. É como decidir: "Se estiver chovendo, levo guarda-chuva!"</div></div></div>`;
   }
@@ -7306,8 +7352,11 @@ document.addEventListener('keydown', (e)=>{
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📢 <b>O que faz?</b> Mostra uma mensagem no console (a telinha escura). É como falar algo para o usuário!</div></div></div>`;
   }
   if(/leia/i.test(t) && t.includes('=')){
-    const varName = t.split('=')[0].trim().replace(/:$/,'');
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">⌨️ <b>O que faz?</b> Abre uma janelinha pedindo para a pessoa digitar algo e guarda o que foi digitado na caixinha <code>${esc(varName)}</code>. Se digitar número, já vira número de verdade! É como perguntar "qual seu nome?" e anotar a resposta.</div></div></div>`;
+    const varPart = t.split('=')[0].trim().replace(/:$/,'');
+    const varRoots = varPart.split(',').map(s=>s.trim()).filter(s=>s!=='');
+    const varNames = varRoots.map(v=>`<code>${esc(v)}</code>`).join(' e ');
+    const isMulti = varRoots.length>1;
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">⌨️ <b>O que faz?</b> Abre uma janelinha pedindo para a pessoa digitar algo e guarda o que foi digitado${isMulti?' (pelos valores separados por vírgula)':''} em ${varNames}. Se digitar número, já vira número de verdade! É como perguntar algo e anotar a resposta.</div></div></div>`;
   }
   if(/^\s*limpe\s*$/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🧼 <b>O que faz?</b> Limpa tudo que estava escrito no console. Deixa a telinha limpinha de novo!</div></div></div>`;
@@ -7721,7 +7770,7 @@ function willogTokenizar(src){
 
 // Detecta abertura de bloco em uma instrução e devolve {open:bool, inlineBody:bool}
 function willogClassifyStmt(t){
-  if(/^se\b/i.test(t) && t.includes(':')) return {open:true, inline:true};
+  if(/^se\b/i.test(t)) return {open:true, inline:true};
   if(/^sen[ãa]o\b/i.test(t)) return {open:true, inline:true};
   if(/^para\s+cada\b/i.test(t) && t.includes(':')) return {open:true, inline:true};
   if(/^repit[ae]\s*\(/i.test(t) && t.includes(':')) return {open:true, inline:true};
@@ -7782,8 +7831,9 @@ function willogLinePythonCore(s){
   if(m) return {lines:[willogInd(ind)+willogExpr(m[1],'python')+' = '+willogExpr(m[2],'python')+'  # constante'], flags:{}};
   // se
   m=t.match(/^se\s+(.+?):\s*(.*)$/i);
+  if(!m) m=t.match(/^se\s+(.+)$/i);
   if(m){
-    const cond=willogExpr(m[1],'python'); const inline=willogInlinePython(m[2]);
+    const cond=willogExpr(m[1],'python'); const inline=willogInlinePython(m[2]||'');
     return {lines:[willogInd(ind)+'if '+cond+':'+(inline?' '+inline:'')], flags:{}};
   }
   // senão se / senão
@@ -7812,6 +7862,13 @@ function willogLinePythonCore(s){
   if(m){ const name=m[1], params=willogCleanParams(m[2],'python'), inline=willogInlinePython((m[3]||'').trim()); return {lines:[willogInd(ind)+'def '+name+'('+params+'):'+(inline?' '+inline:'')], flags:{}}; }
   m=t.match(/^definir\s+fun[çc][ãa]o\s+([a-zA-Z_À-ÿ][\wÀ-ÿ]*)\s*:\s*(.*)$/i);
   if(m){ const name=m[1], inline=willogInlinePython((m[2]||'').trim()); return {lines:[willogInd(ind)+'def '+name+'():'+(inline?' '+inline:'')], flags:{}}; }
+  // leia múltiplo (a, b = leia "...")
+  m=t.match(/^([a-zA-Z_À-ÿ][\wÀ-ÿ]*(?:\s*,\s*[a-zA-Z_À-ÿ][\wÀ-ÿ]*)+)\s*=\s*leia\s*(?:\(\s*["']([^"']*)["']\s*\)|["']([^"']*)["']|\s*\(\s*\))?$/i);
+  if(m){
+    const names=m[1].split(',').map(v=>v.trim()).filter(Boolean).map(v=>willogExpr(v,'python')).join(', ');
+    const prompt=(m[2]!==undefined?m[2]:m[3])||'';
+    return {lines:[willogInd(ind)+names+' = [v.strip() for v in input("'+prompt.replace(/"/g,'\\"')+'").split(",")]'], flags:{}};
+  }
   // atribuição
   if(t.includes('=') && !/^[<>=!]=/.test(t)){
     const eq=willogFindTopAssign(t);
@@ -7897,6 +7954,7 @@ function willogLineBraceCore(t, lang){
   if(m){ const val=willogExpr(m[2],lang); const typ=/^\s*-?\d+(\.\d+)?\s*$/.test(m[2])?'double ':(/^["']/.test(m[2].trim())?'String ':'Object '); return {text:'final '+typ+willogExpr(m[1],lang)+' = '+val+';', open:false}; }
   // se
   m=t.match(/^se\s+(.+?):\s*(.*)$/i);
+  if(!m) m=t.match(/^se\s+(.+)$/i);
   if(m){ const cond=willogExpr(m[1],lang); const inline=willogInlineBrace((m[2]||'').trim(),lang); if(inline) return {text:'if ('+cond+') { '+inline+' }', open:false}; return {text:'if ('+cond+')', open:true}; }
   // senão se / senão
   m=t.match(/^sen[ãa]o\s+se\s+(.+?):\s*(.*)$/i);
@@ -7935,6 +7993,14 @@ function willogLineBraceCore(t, lang){
   if(m){ const name=m[1]; const inline=willogInlineBrace((m[2]||'').trim(),lang);
     const h='public static void '+name+'()';
     if(inline) return {text:h+' { '+inline+' }', open:false}; return {text:h, open:true}; }
+  // leia múltiplo (a, b = leia "...")
+  m=t.match(/^([a-zA-Z_À-ÿ][\wÀ-ÿ]*(?:\s*,\s*[a-zA-Z_À-ÿ][\wÀ-ÿ]*)+)\s*=\s*leia\s*(?:\(\s*["']([^"']*)["']\s*\)|["']([^"']*)["']|\s*\(\s*\))?$/i);
+  if(m){
+    const names=m[1].split(',').map(v=>v.trim()).filter(Boolean).map(v=>willogExpr(v,lang));
+    const prompt=(m[2]!==undefined?m[2]:m[3])||'';
+    const assigns=names.map((n,i)=> n+' = ___arr.length>'+i+'?___arr['+i+'].trim():""').join('; ');
+    return {text:'String ___lin = new java.util.Scanner(System.in).nextLine(); String[] ___arr = ___lin.split(","); '+assigns+';', open:false};
+  }
   // atribuição
   if(t.includes('=') && !/^[<>=!]=/.test(t)){
     const eq=willogFindTopAssign(t);
@@ -7994,6 +8060,7 @@ function willogLineQB(t){
   if(m) return {text:'CONST '+willogExpr(m[1],'qbasic')+' = '+willogExpr(m[2],'qbasic'), open:false, closer:null, isElse:false};
   // se
   m=t.match(/^se\s+(.+?):\s*(.*)$/i);
+  if(!m) m=t.match(/^se\s+(.+)$/i);
   if(m){
     const cond=willogExpr(m[1],'qbasic');
     const inline=willogInlineQB((m[2]||'').trim());
@@ -8051,6 +8118,14 @@ function willogLineQB(t){
   if(m){ const name=m[1]; const inline=willogInlineQB((m[2]||'').trim());
     if(inline) return {text:'SUB '+name+' () : '+inline, open:false, closer:'END SUB', isElse:false};
     return {text:'SUB '+name+' ()', open:true, closer:'END SUB', isElse:false}; }
+  // leia múltiplo (a, b = leia "...")
+  m=t.match(/^([a-zA-Z_À-ÿ][\wÀ-ÿ]*(?:\s*,\s*[a-zA-Z_À-ÿ][\wÀ-ÿ]*)+)\s*=\s*leia\s*(?:\(\s*["']([^"']*)["']\s*\)|["']([^"']*)["']|\s*\(\s*\))?$/i);
+  if(m){
+    const names=m[1].split(',').map(v=>v.trim()).filter(Boolean).map(v=>willogExpr(v,'qbasic')).join(', ');
+    const prompt=m[2]!==undefined?m[2]:m[3];
+    if(prompt!==undefined && prompt!==null) return {text:'INPUT "'+String(prompt).replace(/"/g,'""')+'"; '+names, open:false, closer:null, isElse:false};
+    return {text:'INPUT '+names, open:false, closer:null, isElse:false};
+  }
   // leia como atribuição
   m=t.match(/^([a-zA-Z_À-ÿ][\wÀ-ÿ]*)\s*=\s*leia\s*(?:\(\s*["']([^"']*)["']\s*\)|["']([^"']*)["']|\s*\(\s*\))?$/i);
   if(m){
