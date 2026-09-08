@@ -525,42 +525,6 @@
   }
   .autocomplete-item .icon { font-size:12px; opacity:0.7; }
   .editor-container { position:relative; }
-  #indentGuides {
-    position:absolute;
-    inset:0;
-    padding:10px 12px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:14px;
-    line-height:20px;
-    white-space:pre;
-    overflow:hidden;
-    pointer-events:none;
-    z-index:1;
-  }
-  .indent-guide {
-    position:absolute;
-    top:0;
-    bottom:0;
-    width:1px;
-    opacity:0.55;
-    pointer-events:none;
-  }
-  .indent-guide.level-1 { background:#6c5ce7; }
-  .indent-guide.level-2 { background:#00b894; }
-  .indent-guide.level-3 { background:#0984e3; }
-  .indent-guide.level-4 { background:#e17055; }
-  .indent-guide.level-5 { background:#a29bfe; }
-  .indent-guide.level-6 { background:#fdcb6e; }
-  .indent-guide.level-7 { background:#fd79a8; }
-  .indent-guide.level-8 { background:#636e72; }
-  [data-theme="dark"] .indent-guide.level-1 { background:#a29bfe; opacity:0.6; }
-  [data-theme="dark"] .indent-guide.level-2 { background:#55efc4; }
-  [data-theme="dark"] .indent-guide.level-3 { background:#74b9ff; }
-  [data-theme="dark"] .indent-guide.level-4 { background:#fab1a0; }
-  [data-theme="dark"] .indent-guide.level-5 { background:#ffeaa7; }
-  [data-theme="dark"] .indent-guide.level-6 { background:#fdcb6e; }
-  [data-theme="dark"] .indent-guide.level-7 { background:#ff7675; }
-  [data-theme="dark"] .indent-guide.level-8 { background:#dfe6e9; }
 
 
 </style>
@@ -626,7 +590,6 @@
       <div class="editor-wrap">
         <div class="line-numbers" id="lineNumbers">1</div>
         <div class="editor-container" id="editorContainer">
-          <div id="indentGuides" aria-hidden="true"></div>
           <pre id="highlight" aria-hidden="true"><code id="highlightCode"></code></pre>
           <textarea id="editor" spellcheck="false" placeholder="Digite seu código Willog aqui..." aria-label="Editor de código Willog"></textarea>
           <div id="autocomplete" class="autocomplete" style="display:none" role="listbox" aria-label="Sugestões de autocompletar"></div>
@@ -8204,126 +8167,6 @@ function willogTraduzir(src, lang){
 
 
 
-
-// ==================== INDENT GUIDES ====================
-(function(){
-  const editor = document.getElementById('editor');
-  const guidesEl = document.getElementById('indentGuides');
-  const highlight = document.getElementById('highlight');
-  if(!editor || !guidesEl) return;
-  const INDENT_SIZE = 2; // 2 espaços por nível (Tab insere 2 espaços)
-  const MAX_LEVELS = 8;
-  let charWidth = 8.4; // será medido
-  let lineHeight = 20;
-  function measure(){
-    const style = getComputedStyle(editor);
-    lineHeight = parseFloat(style.lineHeight) || 20;
-    // mede largura de um espaço com o mesmo font
-    const span = document.createElement('span');
-    span.style.position='absolute'; span.style.visibility='hidden'; span.style.whiteSpace='pre';
-    span.style.fontFamily = style.fontFamily;
-    span.style.fontSize = style.fontSize;
-    span.style.letterSpacing = style.letterSpacing;
-    span.textContent = 'M';
-    document.body.appendChild(span);
-    charWidth = span.getBoundingClientRect().width;
-    document.body.removeChild(span);
-    // fallback se medida falhar
-    if(!charWidth || charWidth < 4) charWidth = parseFloat(style.fontSize) * 0.6;
-  }
-  function updateGuides(){
-    const text = editor.value;
-    const lines = text.split('\n');
-    measure();
-    const editorStyle = getComputedStyle(editor);
-    const paddingLeft = parseFloat(editorStyle.paddingLeft) || 12;
-    const paddingTop = parseFloat(editorStyle.paddingTop) || 10;
-    guidesEl.style.fontFamily = editorStyle.fontFamily;
-    guidesEl.style.fontSize = editorStyle.fontSize;
-    guidesEl.style.lineHeight = editorStyle.lineHeight;
-    guidesEl.style.padding = editorStyle.padding;
-    guidesEl.style.letterSpacing = editorStyle.letterSpacing;
-    guidesEl.innerHTML = '';
-    // Calcula indentações por linha
-    const indents = lines.map(line=>{
-      if(line.trim()==='') return -1;
-      let spaces=0;
-      for(const ch of line){
-        if(ch===' ') spaces++;
-        else if(ch==='\t') spaces+=INDENT_SIZE;
-        else break;
-      }
-      return Math.floor(spaces/INDENT_SIZE);
-    });
-    // Para cada nível, encontra blocos contínuos onde indent >= nível
-    let hasAny=false;
-    for(let lvl=1; lvl<=MAX_LEVELS; lvl++){
-      let blockStart=-1;
-      for(let i=0;i<lines.length;i++){
-        const ind = indents[i];
-        if(ind >= lvl){
-          if(blockStart===-1) blockStart=i;
-        } else {
-          if(blockStart!==-1){
-            // Fecha bloco: inicia abaixo do 1º caractere e termina acima do último
-            const top = paddingTop + blockStart * lineHeight + lineHeight * 0.35;
-            const bottom = paddingTop + i * lineHeight - lineHeight * 0.35;
-            const h = bottom - top;
-            if(h > lineHeight*0.5){
-              const guide = document.createElement('div');
-              guide.className = 'indent-guide level-' + ((lvl-1)%MAX_LEVELS+1);
-              const x = paddingLeft + (lvl * INDENT_SIZE * charWidth);
-              guide.style.left = x + 'px';
-              guide.style.top = top + 'px';
-              guide.style.height = h + 'px';
-              guidesEl.appendChild(guide);
-              hasAny=true;
-            }
-            blockStart=-1;
-          }
-        }
-      }
-      if(blockStart!==-1){
-        const top = paddingTop + blockStart * lineHeight + lineHeight * 0.35;
-        const bottom = paddingTop + lines.length * lineHeight - lineHeight * 0.35;
-        const h = bottom - top;
-        if(h > lineHeight*0.5){
-          const guide = document.createElement('div');
-          guide.className = 'indent-guide level-' + ((lvl-1)%MAX_LEVELS+1);
-          const x = paddingLeft + (lvl * INDENT_SIZE * charWidth);
-          guide.style.left = x + 'px';
-          guide.style.top = top + 'px';
-          guide.style.height = h + 'px';
-          guidesEl.appendChild(guide);
-          hasAny=true;
-        }
-      }
-    }
-    guidesEl.style.display = hasAny ? 'block' : 'none';
-    syncScroll();
-  }
-  function syncScroll(){
-    if(!guidesEl) return;
-    guidesEl.scrollTop = editor.scrollTop;
-    guidesEl.scrollLeft = editor.scrollLeft;
-  }
-  // Atualiza em input, scroll e zoom
-  editor.addEventListener('input', updateGuides);
-  editor.addEventListener('scroll', syncScroll);
-  // Observa mudanças de estilo (zoom)
-  const ro = new ResizeObserver(updateGuides);
-  try{ ro.observe(editor); }catch(e){}
-  // MutationObserver para mudanças de fonte via zoom
-  const mo = new MutationObserver(updateGuides);
-  try{ mo.observe(editor, {attributes:true, attributeFilter:['style']}); }catch(e){}
-  // Atualiza periodicamente para pegar mudanças de tema/zoom
-  setInterval(updateGuides, 600);
-  // Inicial
-  setTimeout(()=>{ measure(); updateGuides(); }, 100);
-  window.addEventListener('resize', updateGuides);
-  // Expor para debug
-  window._willogUpdateGuides = updateGuides;
-})();
 
 </script>
 </body>
