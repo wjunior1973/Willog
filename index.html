@@ -1571,7 +1571,7 @@ function highlightWillog(code){
       }
       const raw=code.slice(s,i);
       let escRaw=escapeHtml(raw);
-      escRaw=escRaw.replace(/\{([a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*)\}/g, '<span class="hl-interpolation">{$1}</span>');
+      escRaw=escRaw.replace(/\{([^}]+)\}/g, '<span class="hl-interpolation">{$1}</span>');
       html+='<span class="hl-string">'+escRaw+'</span>';
       continue;
     }
