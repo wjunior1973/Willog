@@ -589,13 +589,13 @@
     <div id="splitter" title="Arraste para redimensionar" role="separator" aria-label="Redimensionar painéis" aria-orientation="horizontal"></div>
     <section class="pane console-pane">
       <div class="pane-header">
-        <span><b>CONSOLE</b> <span class="hint">— saída do programa</span></span>
+        <span><b>CONSOLE</b> <span class="hint">— saída do programa (duplo-clique amplia)</span></span>
         <div class="pane-header-actions">
           <button class="btn small" id="btnPosConsole" title="Mover console para baixo">⬇ Baixo</button>
           <button class="btn small" id="btnLimpar2" style="padding:3px 8px">Limpar</button>
         </div>
       </div>
-      <div class="console-output" id="console" role="log" aria-live="polite" aria-label="Saída do console"></div>
+      <div class="console-output" id="console" role="log" aria-live="polite" aria-label="Saída do console" title="Duplo-clique para exibir em janela flutuante"></div>
       <div class="console-input-row">
         <input id="consoleInput" placeholder="Digite um comando Willog e pressione Enter..." aria-label="Entrada do console">
       </div>
@@ -2141,6 +2141,38 @@ function fecharJanela(){
   _telaLogicalW=640; _telaLogicalH=400;
   janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
 }
+// Abre o console principal em janela flutuante (duplo-clique no console).
+// Reaproveita a janela flutuante em modo console sem apagar o conteúdo:
+// copia o console atual e as próximas saídas são espelhadas via logToConsole.
+// Não toca no estado gráfico (_telaBuffer/_willogDesenhos) nem em
+// _janelaAbertaNestaExec, para não afetar erros de desenho do programa.
+function abrirConsoleFlutuante(){
+  janelaEl=document.getElementById('janelaFlutuante');
+  janelaConsoleEl=document.getElementById('janelaConsole');
+  if(!janelaEl || !janelaConsoleEl || !consoleEl) return;
+  if(janelaModo==='desenho' && janelaEl.style.display!=='none') return;
+  if(janelaAtiva && janelaModo==='console' && janelaEl.style.display!=='none'){
+    janelaEl.classList.remove('minimized');
+    janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
+    return;
+  }
+  janelaEl.style.display='flex';
+  janelaAtiva=true;
+  janelaCentralizada=false;
+  janelaModo='console';
+  janelaEl.classList.remove('minimized');
+  janelaEl.classList.add('maximized');
+  janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
+  const janelaBodyEl=document.getElementById('janelaBody');
+  if(janelaBodyEl){ janelaBodyEl.style.width=''; janelaBodyEl.style.height=''; janelaBodyEl.style.flex=''; }
+  const _cv=document.getElementById('janelaCanvas');
+  if(_cv){ _cv.classList.remove('ativo'); _cv.style.display='none'; }
+  janelaConsoleEl.style.display='';
+  janelaConsoleEl.classList.remove('centralizado');
+  janelaConsoleEl.style.textAlign='';
+  janelaConsoleEl.innerHTML=consoleEl.innerHTML;
+  janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
+}
 // --- Willog Tela / Desenhe (gráficos na janela) --- com buffer escalonável ---
 const _willogCores = {
   'amarelo':'#ffff00','vermelho':'#ff0000','azul':'#0066ff','verde':'#00c853','ciano':'#00ffff','rosa':'#ff69b4','roxo':'#9c27b0','laranja':'#ff9800','branco':'#ffffff','cinza':'#808080','marrom':'#8d5524','preto':'#000000'
@@ -3413,6 +3445,18 @@ clearConsole();
     window.addEventListener('mouseup', ()=>{
       draggingWin=false;
       document.body.style.userSelect='';
+    });
+  }
+})();
+
+// --- Duplo-clique no console: exibe em janela flutuante ---
+(function(){
+  const cEl=document.getElementById('console');
+  if(cEl && !cEl.dataset.willogDbl){
+    cEl.dataset.willogDbl='1';
+    cEl.addEventListener('dblclick', (e)=>{
+      e.preventDefault();
+      try{ abrirConsoleFlutuante(); }catch(err){}
     });
   }
 })();
