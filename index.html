@@ -1138,15 +1138,19 @@ recortar(a)</span>
 <span class="saida">-> Olá!
 -> Olá!
 -> Olá!</span></pre>
-        <h3>se … senão</h3>
+        <h3>se … então … senão</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">se</span> <span class="example">&lt;condição&gt;:</span>
 <span class="example">    &lt;comandos&gt;</span>
 <span class="syntax">senão:</span>
 <span class="example">    &lt;comandos&gt;</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">O <code>então</code> (ou <code>entao</code>, sem acento) é opcional. As três formas abaixo são equivalentes — o bloco exige indentação:</p>
+        <pre><span class="syntax">se</span> <span class="example">&lt;condição&gt;:</span>
+<span class="syntax">se</span> <span class="example">&lt;condição&gt;</span> <span class="syntax">então:</span>
+<span class="syntax">se</span> <span class="example">&lt;condição&gt;</span> <span class="syntax">então</span></pre>
         <p class="code-label">Exemplo</p>
         <pre><span class="example">nota=8
-se nota >= 7:
+se nota >= 7 então:
     mostre "Aprovado"
 senão:
     mostre "Reprovado"</span>
@@ -4853,7 +4857,7 @@ function evalRPN(rpn, env){
                     } else { execAssignInFunc(elseAfter); }
                   } else {
                     let es= nxt+1, ee=es;
-                    while(ee<fLines.length && getIndent(fLines[ee])>seIndent) ee++;
+                    while(ee<fLines.length && getIndent(fLines[ee])>seIndent) ee;
                     for(let k=es;k<ee;k++){
                       const l=fLines[k];
                       if(isRetorneLine(l)){ const e=parseRetorne(l); foundRet=e===''?undefined:evaluateExpression(e,newEnv); break; }
@@ -5864,11 +5868,44 @@ function isSenaoLine(line){
 }
 
 function parseSe(line){
-  const m=line.match(/^\s*se\s+(.*?):\s*(.*)$/i);
-  if(m) return {cond:m[1].trim(), after:m[2]};
-  const m2=line.match(/^\s*se\s+(.*)$/i);
-  if(m2) return {cond:m2[1].trim(), after:''};
-  return {cond:'', after:''};
+  const mSe=line.match(/^\s*se\s+([\s\S]*)$/i);
+  if(!mSe) return {cond:'', after:''};
+  const rest=mSe[1]||'';
+  let inStr=null, esc=false, colonIdx=-1;
+  for(let k=0;k<rest.length;k++){
+    const ch=rest[k];
+    if(inStr){ if(esc) esc=false; else if(ch==='\\') esc=true; else if(ch===inStr) inStr=null; continue; }
+    if(ch==='"'||ch==="'"){ inStr=ch; continue; }
+    if(ch===':'){ colonIdx=k; break; }
+  }
+  let condPart, after;
+  if(colonIdx!==-1){
+    condPart=rest.slice(0,colonIdx);
+    after=rest.slice(colonIdx+1);
+    if(after.trim().match(/^ent[aã]o\s*$/i)) after='';
+  }else{
+    let inS=null, e2=false, found=-1, flen=0;
+    for(let k=0;k<rest.length;){
+      const ch=rest[k];
+      if(inS){ if(e2) e2=false; else if(ch==='\\') e2=true; else if(ch===inS) inS=null; k++; continue; }
+      if(ch==='"'||ch==="'"){ inS=ch; k++; continue; }
+      const mm=rest.slice(k).match(/^ent[aã]o\b/i);
+      if(mm){
+        const prev=k>0?rest[k-1]:' ';
+        if(k===0 || /[\s,;()]/.test(prev)){ found=k; flen=mm[0].length; break; }
+      }
+      k++;
+    }
+    if(found!==-1){
+      condPart=rest.slice(0,found);
+      after=rest.slice(found+flen).replace(/^:\s*/,'');
+    }else{
+      condPart=rest;
+      after='';
+    }
+  }
+  condPart=(condPart||'').trim().replace(/^(.*\S)\s+ent[aã]o\s*$/i,'$1').trim();
+  return {cond:condPart, after:after||''};
 }
 
 function parseSenao(line){
@@ -6029,6 +6066,7 @@ function findBlockEnd(lines, start, parentIndent){
   }
   return i;
 }
+
 
 function isGotoStmt(stmt){
   return /^\s*v[áa]\s+para\s+[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\s*$/i.test(stmt);
