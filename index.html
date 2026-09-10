@@ -1805,8 +1805,8 @@ function updateHighlight(){
       } else {
         const minW = 220;
         const maxConsoleW = Math.max(minW, mainW - minW - 12);
-        let curW = consolePane.getBoundingClientRect().width;
-        const storedW = parseInt(localStorage.getItem(W_KEY)||'0',10) || curW;
+        const storedW = parseInt(localStorage.getItem(W_KEY)||'0',10);
+        let curW = storedW || consolePane.getBoundingClientRect().width;
         const effectiveW = storedW || curW;
         if(effectiveW > maxConsoleW + 1 || effectiveW < minW - 1 || curW > maxConsoleW + 1){
           let targetW = Math.min(Math.max(minW, Math.round(mainW * 0.38)), maxConsoleW);
@@ -1828,7 +1828,7 @@ function updateHighlight(){
         if(editorPane.style.flex !== '1 1 0'){
           editorPane.style.flex = '1 1 0';
         }
-        const curW2 = consolePane.getBoundingClientRect().width;
+        const curW2 = storedW || consolePane.getBoundingClientRect().width;
         if(curW2 > maxConsoleW + 1 || curW2 < minW - 1){
           let targetW = Math.min(Math.max(minW, Math.round(mainW * 0.38)), maxConsoleW);
           consolePane.style.flex = '0 0 ' + targetW + 'px';
