@@ -5085,15 +5085,10 @@ function evalRPN(rpn, env){
         const a = stack.pop();
         let res;
         if(Array.isArray(a)){
-          const s=JSON.stringify(a);
-          if(s==="[123,234,234,456]"){
-            res=[123,456];
-          } else {
-            const seen=new Set(); res=[];
-            for(let el of a){
-              const key=String(el);
-              if(!seen.has(key)){ seen.add(key); res.push(el); }
-            }
+          const seen=new Set(); res=[];
+          for(let el of a){
+            const key=String(el);
+            if(!seen.has(key)){ seen.add(key); res.push(el); }
           }
         } else if(typeof a==='number'){
           const str=String(a);
@@ -5103,13 +5098,9 @@ function evalRPN(rpn, env){
           res=isNaN(num)||out===""?out:num;
         } else {
           const str=String(a===undefined?'':a);
-          if(str==="paralelepípedo"){
-            res="parlepído";
-          } else {
-            const seen=new Set(); let out="";
-            for(let ch of str){ if(!seen.has(ch)){ seen.add(ch); out+=ch; } }
-            res=out;
-          }
+          const seen=new Set(); let out="";
+          for(let ch of str){ if(!seen.has(ch)){ seen.add(ch); out+=ch; } }
+          res=out;
         }
         stack.push(res);
       } else if(fn==='mapear'){
