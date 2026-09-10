@@ -514,6 +514,9 @@
     background: var(--panel2); color: var(--accent);
   }
   .autocomplete-item .icon { font-size:12px; opacity:0.7; }
+  .autocomplete-item .ac-text { display:flex; flex-direction:column; gap:1px; min-width:0; flex:1; }
+  .autocomplete-item .ac-hint { font-size:11px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; }
+  .autocomplete-item .ac-desc { font-size:10px; color:var(--text-dim); opacity:0.7; }
   .editor-container { position:relative; }
 
 
@@ -1894,11 +1897,168 @@ updateLines(); updateHighlight();
   const acEl=document.getElementById('autocomplete');
   const ed=document.getElementById('editor');
   if(!acEl || !ed) return;
-  const comandos=['abrir','bipe','caso','colar','constante','comentários','continuar','cronometro.iniciar','cronometro.parar','cronometro.tempo','continue','definir função','desenhe.circulo','desenhe.linha','desenhe.polígono','desenhe.poligono','desenhe.ponto','desenhe.retangulo','desenhe.texto','enquanto','escrever','espereTecla','fechar','figura.girar','figura.mover','girar','intervalo','janela','leia','ler','limpe','mensagem','mostre','mover','padrão','para cada','pare','pausa','recortar','repita','repetir','retorna','retorne','se','senão','tela.cor','tela.limpe','toque','vá para','verificar'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const funcoes=['abs','adicionarDias','agora','aleatório','anosEntre','aparar','arredondar','amostra','amostras','capture','captureTecla','cbrt','começaCom','contarItem','conte','cos','data','decimal','diaSemana','diasEntre','distintos','divida','éÍmpar','éLista','éNúmero','éPar','éPrimo','éTexto','embaralhe','encontre','fatorial','arcsen','arccos','arctan','cotan','sec','cossec','log10','potencia','raiz','filtrar','formate','fração','hora','indiceDe','insira','inteiro','inverta','inverter','junte','ln','log','maiúsculo','mapear','máximo','mdc','média','mesesEntre','mínimo','minúsculo','mmc','ordeneCrescente','ordeneDecrescente','paraNúmero','paraTexto','piso','posição','primos','produto','raizc','raizq','remova','repetir','semEspaços','sen','soma','sqrt','substitua','tamanho','tan','terminaCom','teto','tipo','exp','hipotenusa'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const propriedades=['adicionar','aleatório','contar','fatiar','inverter','ordenar','posição','primeiro','tamanho','último'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const operadores=['e','ou','não','em','existe','união','intersecção'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
-  const cores=['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','corAleatória'].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'pt'));
+  const comandos=[
+    {name:'abrir',hint:'abrir(url)',desc:'Abre URL externa'},
+    {name:'bipe',hint:'bipe()',desc:'Emite som de bipe'},
+    {name:'captureTecla',hint:'captureTecla()',desc:'Retorna última tecla capturada'},
+    {name:'colar',hint:'colar()',desc:'Cola da área de transferência'},
+    {name:'constante',hint:'constante nome=valor',desc:'Declara constante'},
+    {name:'continue',hint:'continue',desc:'Pula para próxima iteração'},
+    {name:'cronometro.iniciar',hint:'cronometro.iniciar()',desc:'Inicia cronômetro'},
+    {name:'cronometro.parar',hint:'cronometro.parar()',desc:'Para cronômetro'},
+    {name:'cronometro.tempo',hint:'cronometro.tempo()',desc:'Retorna tempo decorrido'},
+    {name:'definir função',hint:'definir função nome(parâmetros)',desc:'Define função personalizada'},
+    {name:'desenhe.circulo',hint:'desenhe.circulo(x,y,raio,cor)',desc:'Desenha círculo'},
+    {name:'desenhe.linha',hint:'desenhe.linha(x1,y1,x2,y2,cor)',desc:'Desenha linha'},
+    {name:'desenhe.polígono',hint:'desenhe.polígono(x,y,lados,raio,cor)',desc:'Desenha polígono regular'},
+    {name:'desenhe.ponto',hint:'desenhe.ponto(x,y,cor)',desc:'Desenha ponto'},
+    {name:'desenhe.retangulo',hint:'desenhe.retangulo(x1,y1,x2,y2,cor)',desc:'Desenha retângulo'},
+    {name:'desenhe.texto',hint:'desenhe.texto(texto,x,y,cor)',desc:'Desenha texto na tela'},
+    {name:'enquanto',hint:'enquanto condição:',desc:'Laço enquanto condição for verdadeira'},
+    {name:'escrever',hint:'escrever(valor)',desc:'Escreve no console (sem quebra)'},
+    {name:'espereTecla',hint:'espereTecla(tecla?)',desc:'Espera pressionar uma tecla'},
+    {name:'fechar',hint:'fechar()',desc:'Fecha janela/página'},
+    {name:'figura.girar',hint:'figura.girar(ângulo,vezes,pausa)',desc:'Gira um desenho'},
+    {name:'figura.mover',hint:'figura.mover(x,y,pausa)',desc:'Move um desenho'},
+    {name:'girar',hint:'girar(a(âng,vez,pausa),b(...))',desc:'Gira múltiplos desenhos'},
+    {name:'intervalo',hint:'(início..fim)',desc:'Cria intervalo/lista de números'},
+    {name:'janela',hint:'janela(largura,altura,cor)',desc:'Cria janela/gráfico'},
+    {name:'leia',hint:'leia(texto?)',desc:'Lê entrada do usuário (prompt)'},
+    {name:'ler',hint:'ler(tipo,texto?)',desc:'Lê entrada com tipo específico'},
+    {name:'limpe',hint:'limpe()',desc:'Limpa saída/console'},
+    {name:'mensagem',hint:'mensagem(texto,cor,duração)',desc:'Exibe mensagem temporizada'},
+    {name:'mostre',hint:'mostre(valor)',desc:'Mostra valor no console'},
+    {name:'mover',hint:'mover(x,y,pausa)',desc:'Move último desenho'},
+    {name:'para cada',hint:'para cada item em lista:',desc:'Percorre cada item da lista'},
+    {name:'pare',hint:'pare',desc:'Para execução (break)'},
+    {name:'pausa',hint:'pausa(segundos)',desc:'Pausa execução'},
+    {name:'recortar',hint:'recortar()',desc:'Recorta da área de transferência'},
+    {name:'repetir',hint:'repetir n vezes:',desc:'Repete bloco n vezes'},
+    {name:'retorne',hint:'retorne(valor)',desc:'Retorna valor da função'},
+    {name:'se',hint:'se condição então:',desc:'Condicional se/senão'},
+    {name:'senão',hint:'senão:',desc:'Alternativa do se'},
+    {name:'tela.cor',hint:'tela.cor(cor)',desc:'Define cor de fundo da tela'},
+    {name:'tela.limpe',hint:'tela.limpe()',desc:'Limpa a tela/desenho'},
+    {name:'toque',hint:'toque()',desc:'Verifica clique na tela'},
+    {name:'vá para',hint:'vá para(x,y)',desc:'Posiciona cursor na tela'},
+    {name:'verificar',hint:'verificar caso valor:',desc:'Estrutura caso/padrão (switch)'}
+  ].sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase(),'pt'));
+  const funcoes=[
+    {name:'abs',hint:'abs(x)',desc:'Valor absoluto'},
+    {name:'adicionarDias',hint:'adicionarDias(data,dias)',desc:'Adiciona dias a uma data'},
+    {name:'agora',hint:'agora()',desc:'Data e hora atuais'},
+    {name:'aleatório',hint:'aleatório() / aleatório(n) / aleatório(a,b)',desc:'Número aleatório'},
+    {name:'anosEntre',hint:'anosEntre(data1,data2)',desc:'Anos entre duas datas'},
+    {name:'aparar',hint:'aparar(texto)',desc:'Remove espaços no início e fim'},
+    {name:'arccos',hint:'arccos(x)',desc:'Arco cosseno em graus'},
+    {name:'arcsen',hint:'arcsen(x)',desc:'Arco seno em graus'},
+    {name:'arctan',hint:'arctan(x)',desc:'Arco tangente em graus'},
+    {name:'arredondar',hint:'arredondar(x,casas)',desc:'Arredonda para n casas'},
+    {name:'amostra',hint:'amostra(lista,n)',desc:'Amostra aleatória sem repetição'},
+    {name:'amostras',hint:'amostras(lista,tam,qtd)',desc:'Qtd amostras de tamanho tam'},
+    {name:'captureTecla',hint:'captureTecla()',desc:'Retorna última tecla capturada'},
+    {name:'começaCom',hint:'começaCom(texto,prefixo)',desc:'Verifica se começa com prefixo'},
+    {name:'contarItem',hint:'contarItem(lista,item)',desc:'Conta ocorrências de item'},
+    {name:'conte',hint:'conte(lista)',desc:'Quantidade de elementos'},
+    {name:'cos',hint:'cos(x)',desc:'Cosseno (graus)'},
+    {name:'cossec',hint:'cossec(x)',desc:'Cossecante (graus)'},
+    {name:'cotan',hint:'cotan(x)',desc:'Cotangente (graus)'},
+    {name:'data',hint:'data()',desc:'Data atual'},
+    {name:'decimal',hint:'decimal(x)',desc:'Parte decimal'},
+    {name:'diaSemana',hint:'diaSemana(data)',desc:'Dia da semana'},
+    {name:'diasEntre',hint:'diasEntre(data1,data2)',desc:'Dias entre duas datas'},
+    {name:'distintos',hint:'distintos(valor)',desc:'Remove duplicatas mantendo ordem'},
+    {name:'divida',hint:'divida(texto,separador)',desc:'Divide texto em lista'},
+    {name:'embaralhe',hint:'embaralhe(valor)',desc:'Embaralha lista/texto/número'},
+    {name:'encontre',hint:'encontre(texto,busca)',desc:'Posição da primeira ocorrência'},
+    {name:'éÍmpar',hint:'éÍmpar(x)',desc:'Verifica se é ímpar'},
+    {name:'éLista',hint:'éLista(x)',desc:'Verifica se é lista'},
+    {name:'éNúmero',hint:'éNúmero(x)',desc:'Verifica se é número'},
+    {name:'éPar',hint:'éPar(x)',desc:'Verifica se é par'},
+    {name:'éPrimo',hint:'éPrimo(x)',desc:'Verifica se é primo'},
+    {name:'éTexto',hint:'éTexto(x)',desc:'Verifica se é texto'},
+    {name:'fatorial',hint:'fatorial(x)',desc:'Fatorial'},
+    {name:'filtrar',hint:'filtrar(lista,condição)',desc:'Filtra por condição ou valor'},
+    {name:'formate',hint:'formate(valor,casas)',desc:'Trunca para n casas decimais'},
+    {name:'fração',hint:'fração(x)',desc:'Converte para fração'},
+    {name:'hora',hint:'hora()',desc:'Hora atual'},
+    {name:'indiceDe',hint:'indiceDe(lista,valor)',desc:'Índice do valor na lista'},
+    {name:'insira',hint:'insira(lista,pos,valor)',desc:'Insere valor após posição'},
+    {name:'inteiro',hint:'inteiro(x)',desc:'Parte inteira'},
+    {name:'inverta',hint:'inverta(texto)',desc:'Inverte texto/lista'},
+    {name:'junte',hint:'junte(lista,separador)',desc:'Junta lista em texto'},
+    {name:'ln',hint:'ln(x)',desc:'Logaritmo natural'},
+    {name:'log',hint:'log(base,valor)',desc:'Logaritmo'},
+    {name:'log10',hint:'log10(x)',desc:'Logaritmo base 10'},
+    {name:'maiúsculo',hint:'maiúsculo(texto)',desc:'Converte para maiúsculas'},
+    {name:'mapear',hint:'mapear(lista,expressão)',desc:'Aplica expressão a cada item'},
+    {name:'máximo',hint:'máximo(...valores)',desc:'Maior valor'},
+    {name:'mdc',hint:'mdc(a,b,...)',desc:'Máximo divisor comum'},
+    {name:'média',hint:'média(...valores)',desc:'Média aritmética'},
+    {name:'mesesEntre',hint:'mesesEntre(data1,data2)',desc:'Meses entre duas datas'},
+    {name:'mínimo',hint:'mínimo(...valores)',desc:'Menor valor'},
+    {name:'minúsculo',hint:'minúsculo(texto)',desc:'Converte para minúsculas'},
+    {name:'mmc',hint:'mmc(a,b,...)',desc:'Mínimo múltiplo comum'},
+    {name:'ordeneDecrescente',hint:'ordeneDecrescente(lista)',desc:'Ordena decrescente'},
+    {name:'paraNúmero',hint:'paraNúmero(x)',desc:'Converte texto para número'},
+    {name:'paraTexto',hint:'paraTexto(x)',desc:'Converte número para texto'},
+    {name:'piso',hint:'piso(x)',desc:'Arredonda para baixo'},
+    {name:'posição',hint:'posição(texto,busca)',desc:'Posição da busca ou caractere'},
+    {name:'potencia',hint:'potencia(base,exp)',desc:'Potência'},
+    {name:'primos',hint:'primos(n)',desc:'Primeiros n primos'},
+    {name:'produto',hint:'produto(lista)',desc:'Produto dos elementos'},
+    {name:'raiz',hint:'raiz(x,n)',desc:'Raiz n-ésima'},
+    {name:'raizc',hint:'raizc(x)',desc:'Raiz cúbica'},
+    {name:'raizq',hint:'raizq(x)',desc:'Raiz quadrada'},
+    {name:'remova',hint:'remova(lista,valor)',desc:'Remove primeira ocorrência'},
+    {name:'repetir',hint:'repetir(texto,n)',desc:'Repete texto n vezes'},
+    {name:'sec',hint:'sec(x)',desc:'Secante (graus)'},
+    {name:'semEspaços',hint:'semEspaços(texto)',desc:'Remove todos os espaços'},
+    {name:'sen',hint:'sen(x)',desc:'Seno (graus)'},
+    {name:'soma',hint:'soma(lista)',desc:'Soma dos elementos'},
+    {name:'substitua',hint:'substitua(texto,antigo,novo)',desc:'Substitui texto'},
+    {name:'tamanho',hint:'tamanho(texto)',desc:'Tamanho do texto/lista'},
+    {name:'tan',hint:'tan(x)',desc:'Tangente (graus)'},
+    {name:'terminaCom',hint:'terminaCom(texto,sufixo)',desc:'Verifica se termina com sufixo'},
+    {name:'teto',hint:'teto(x)',desc:'Arredonda para cima'},
+    {name:'tipo',hint:'tipo(x)',desc:'Retorna tipo do valor'}
+  ].sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase(),'pt'));
+  const propriedades=[
+    {name:'adicionar',hint:'lista.adicionar[...itens]',desc:'Acrescenta itens à lista'},
+    {name:'aleatório',hint:'lista.aleatório',desc:'Item aleatório da lista'},
+    {name:'contar',hint:'lista.contar(valor)',desc:'Conta ocorrências'},
+    {name:'fatiar',hint:'lista.fatiar(início,fim)',desc:'Fatia inclusiva'},
+    {name:'inverter',hint:'lista.inverter',desc:'Inverte ordem'},
+    {name:'ordenar',hint:'lista.ordenar',desc:'Cópia ordenada'},
+    {name:'posição',hint:'lista.posição(i)',desc:'Elemento no índice i'},
+    {name:'primeiro',hint:'lista.primeiro',desc:'Primeiro elemento'},
+    {name:'tamanho',hint:'lista.tamanho',desc:'Quantidade de itens/caracteres'},
+    {name:'último',hint:'lista.último',desc:'Último elemento'}
+  ].sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase(),'pt'));
+  const operadores=[
+    {name:'e',hint:'a e b',desc:'Conjunção lógica (AND)'},
+    {name:'ou',hint:'a ou b',desc:'Disjunção lógica (OR)'},
+    {name:'não',hint:'não a',desc:'Negação lógica (NOT)'},
+    {name:'em',hint:'x em lista/texto',desc:'Pertinência em texto/lista'},
+    {name:'existe',hint:'existe x em y',desc:'Verifica existência'},
+    {name:'união',hint:'lista união lista',desc:'União de conjuntos'},
+    {name:'intersecção',hint:'lista intersecção lista',desc:'Intersecção de conjuntos'}
+  ].sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase(),'pt'));
+  const cores=[
+    {name:'amarelo',hint:'#ffff00',desc:'Amarelo'},
+    {name:'vermelho',hint:'#ff0000',desc:'Vermelho'},
+    {name:'azul',hint:'#0066ff',desc:'Azul'},
+    {name:'verde',hint:'#00c853',desc:'Verde'},
+    {name:'ciano',hint:'#00ffff',desc:'Ciano'},
+    {name:'rosa',hint:'#ff69b4',desc:'Rosa'},
+    {name:'roxo',hint:'#9c27b0',desc:'Roxo'},
+    {name:'laranja',hint:'#ff9800',desc:'Laranja'},
+    {name:'branco',hint:'#ffffff',desc:'Branco'},
+    {name:'cinza',hint:'#808080',desc:'Cinza'},
+    {name:'marrom',hint:'#8d5524',desc:'Marrom'},
+    {name:'preto',hint:'#000000',desc:'Preto'},
+    {name:'corAleatória',hint:'corAleatória',desc:'Cor aleatória a cada chamada'}
+  ].sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase(),'pt'));
   let _varsCache=null; let _varsCacheText='';
   function getVariables(){
     const text=ed.value;
@@ -1955,21 +2115,21 @@ updateLines(); updateHighlight();
     const lower=word.toLowerCase();
     const lowerNorm=norm(lower);
     const vars=getVariables().filter(v=>matchWord(v, lower, lowerNorm));
-    const cmds=comandos.filter(c=>matchWord(c, lower, lowerNorm));
-    const funcs=funcoes.filter(f=>matchWord(f, lower, lowerNorm));
-    const props=propriedades.filter(p=>matchWord(p, lower, lowerNorm));
+    const cmds=comandos.filter(c=>matchWord(c.name, lower, lowerNorm));
+    const funcs=funcoes.filter(f=>matchWord(f.name, lower, lowerNorm));
+    const props=propriedades.filter(p=>matchWord(p.name, lower, lowerNorm));
     const ops=operadores.filter(o=>{
-      const ol=o.toLowerCase();
+      const ol=o.name.toLowerCase();
       const on=ol.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
       return ol.startsWith(lower) || on.startsWith(lowerNorm);
     });
     const coresFiltered=cores.filter(c=>{
-      const cl=c.toLowerCase();
+      const cl=c.name.toLowerCase();
       const nl=cl.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
       return cl.startsWith(lower) || nl.startsWith(lowerNorm);
     });
     const groups=[];
-    if(vars.length) groups.push({cat:'Variáveis', items:vars, icon:'🔹'});
+    if(vars.length) groups.push({cat:'Variáveis', items:vars.map(v=>({name:v,hint:v,desc:''})), icon:'🔹'});
     if(cmds.length) groups.push({cat:'Comandos', items:cmds, icon:'⚡'});
     if(funcs.length) groups.push({cat:'Funções', items:funcs, icon:'ƒ'});
     if(props.length) groups.push({cat:'Propriedades', items:props, icon:'🔧'});
@@ -1982,10 +2142,20 @@ updateLines(); updateHighlight();
       g.items.forEach(item=>{
         const div=document.createElement('div'); div.className='autocomplete-item';
         const iconSpan=document.createElement('span'); iconSpan.className='icon'; iconSpan.textContent=g.icon;
-        const textSpan=document.createElement('span'); textSpan.textContent=item;
-        div.appendChild(iconSpan); div.appendChild(textSpan);
-        div.addEventListener('mousedown', (e)=>{ e.preventDefault(); selectItem(item); });
-        acEl.appendChild(div); currentItems.push({el:div, value:item});
+        const textWrap=document.createElement('span'); textWrap.className='ac-text';
+        const nameSpan=document.createElement('span'); nameSpan.textContent=item.name;
+        textWrap.appendChild(nameSpan);
+        if(item.hint && item.hint!==item.name){
+          const hintSpan=document.createElement('span'); hintSpan.className='ac-hint'; hintSpan.textContent=item.hint;
+          textWrap.appendChild(hintSpan);
+        }
+        if(item.desc){
+          const descSpan=document.createElement('span'); descSpan.className='ac-desc'; descSpan.textContent=item.desc;
+          textWrap.appendChild(descSpan);
+        }
+        div.appendChild(iconSpan); div.appendChild(textWrap);
+        div.addEventListener('mousedown', (e)=>{ e.preventDefault(); selectItem(item.name); });
+        acEl.appendChild(div); currentItems.push({el:div, value:item.name});
       });
     });
     const coords=getCaretCoords(); acEl.style.top=coords.top+'px'; acEl.style.left=coords.left+'px'; acEl.style.display='flex'; acEl.classList.add('visible'); activeIdx=-1; acEl.scrollTop=0;
