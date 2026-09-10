@@ -482,6 +482,42 @@
   .floating-body { flex:1; display:flex; flex-direction:column; overflow:hidden; background:#000; position:relative; min-height:0; }
   #janelaCanvas { display:none; width:100%; height:100%; flex:1; background:#000; min-height:0; }
   #janelaCanvas.ativo { display:block; }
+  .tartaruga-painel {
+    width:260px; min-width:200px; max-width:70%;
+    display:flex; flex-direction:column; background:var(--panel);
+    border-right:1px solid var(--border); padding:10px; gap:8px; overflow:hidden; box-sizing:border-box;
+  }
+  .tartaruga-resizer { display:none; width:6px; cursor:col-resize; flex:0 0 auto; background:transparent; border-left:1px solid var(--border); }
+  .tartaruga-resizer:hover { background:var(--border-strong); }
+  .floating-window.tartaruga-mod .tartaruga-resizer { display:block; }
+  .floating-window.tartaruga-mod .floating-body { flex-direction:row; }
+  .floating-window.tartaruga-mod #btnMinJanela,
+  .floating-window.tartaruga-mod #btnMaxJanela { display:none; }
+  .floating-window.tartaruga-mod #janelaCanvas { flex:1 1 0 !important; width:auto !important; min-width:0; cursor:grab; }
+  .floating-window.tartaruga-mod #janelaCanvas.panning { cursor:grabbing; }
+  .tartaruga-painel .tartaruga-titulo { font-family:'Inter',sans-serif; font-size:12px; font-weight:700; color:var(--accent); letter-spacing:0.3px; }
+  .tartaruga-entrada {
+    flex:1 1 auto; width:100%; min-height:120px; resize:vertical; box-sizing:border-box;
+    background:var(--console-bg); color:var(--console-fg);
+    border:1px solid var(--border); border-radius:8px; padding:8px 10px;
+    font-family:'JetBrains Mono',monospace; font-size:13px; line-height:19px;
+  }
+  .tartaruga-velocidade { flex:0 0 auto; display:flex; align-items:center; gap:4px; }
+  .tartaruga-velocidade .tartaruga-vel-label { font-family:'Inter',sans-serif; font-size:11px; color:var(--text-dim); font-weight:600; white-space:nowrap; }
+  .tartaruga-velocidade .vel-btn {
+    flex:1; padding:5px 6px; border-radius:6px; border:1px solid var(--border);
+    background:var(--panel); color:var(--text); cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
+  }
+  .tartaruga-velocidade .vel-btn:hover { background:var(--panel2); }
+  .tartaruga-velocidade .vel-btn.ativo { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .tartaruga-botoes { flex:0 0 auto; display:flex; gap:6px; }
+  .tartaruga-botoes button {
+    flex:1; padding:7px 10px; border-radius:8px; border:1px solid var(--border);
+    background:var(--panel2); color:var(--text); cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:12px; font-weight:600;
+  }
+  .tartaruga-botoes button:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
   .autocomplete {
     position: absolute;
     background: var(--panel);
@@ -615,6 +651,22 @@
       </div>
     </div>
     <div class="floating-body" id="janelaBody">
+      <div id="tartarugaPainel" class="tartaruga-painel" style="display:none">
+        <div class="tartaruga-titulo">🐢 Editor de comandos:</div>
+        <textarea class="tartaruga-entrada" id="tartarugaInput" spellcheck="false" placeholder="Digite aqui todos os comandos (um por linha, separados por Enter):&#10;avance 100&#10;direita 30&#10;avance 100&#10;---&#10;TAB insere indentação&#10;Ctrl+Enter executa tudo"></textarea>
+        <div class="tartaruga-velocidade">
+          <span class="tartaruga-vel-label">velocidades:</span>
+          <button class="vel-btn" data-vel="1" title="1 — Lento (25% da velocidade Rápida)">1</button>
+          <button class="vel-btn ativo" data-vel="2" title="2 — Normal (50% da velocidade Rápida)">2</button>
+          <button class="vel-btn" data-vel="3" title="3 — 75% da velocidade Rápida">3</button>
+          <button class="vel-btn" data-vel="4" title="4 — Rápido (velocidade atual)">4</button>
+        </div>
+        <div class="tartaruga-botoes">
+          <button id="btnTartarugaExecutar" title="Executa tudo o que está escrito (suporta blocos repita/se/enquanto)">▶ Executar tudo</button>
+          <button id="btnTartarugaLimpar" title="Limpa o histórico">🧹 Limpar</button>
+        </div>
+      </div>
+      <div class="tartaruga-resizer" id="tartarugaResizer" title="Arraste para redimensionar a coluna de comandos"></div>
       <canvas id="janelaCanvas" width="640" height="400"></canvas>
       <div class="floating-console" id="janelaConsole"></div>
     </div>
@@ -637,6 +689,7 @@
         <button class="manual-tab" data-tab="operadores">Operadores</button>
         <button class="manual-tab" data-tab="propriedades">Propriedades</button>
         <button class="manual-tab" data-tab="cores">Cores</button>
+        <button class="manual-tab" data-tab="tartaruga">🐢 Tartaruga</button>
       </div>
       <div class="manual-pane active" id="pane-comandos"><h3>abrir</h3>
         <p class="code-label">Sintaxe</p>
@@ -1270,6 +1323,73 @@ verificar nota:
         <table><tr><td><code>amarelo</code></td><td>#ffff00</td><td><code>desenhe.linha(0,0,100,100,amarelo)</code></td></tr><tr><td><code>azul</code></td><td>#0066ff</td><td><code>desenhe.linha(0,0,100,100,azul)</code></td></tr><tr><td><code>branco</code></td><td>#ffffff</td><td><code>desenhe.linha(0,0,100,100,branco)</code></td></tr><tr><td><code>ciano</code></td><td>#00ffff</td><td><code>desenhe.linha(0,0,100,100,ciano)</code></td></tr><tr><td><code>cinza</code></td><td>#808080</td><td><code>desenhe.linha(0,0,100,100,cinza)</code></td></tr><tr><td><code>corAleatória</code></td><td>aleatória</td><td><code>desenhe.circulo(100,100,50,corAleatória)</code> → cor aleatória a cada chamada<br><code>tela.cor(corAleatória)</code> → fundo aleatório<br><code>desenhe.linha(0,0,100,100,corAleatória)</code> → linha aleatória</td></tr><tr><td><code>laranja</code></td><td>#ff9800</td><td><code>desenhe.linha(0,0,100,100,laranja)</code></td></tr><tr><td><code>marrom</code></td><td>#8d5524</td><td><code>desenhe.linha(0,0,100,100,marrom)</code></td></tr><tr><td><code>preto</code></td><td>#000000</td><td><code>desenhe.linha(0,0,100,100,preto)</code></td></tr><tr><td><code>rosa</code></td><td>#ff69b4</td><td><code>desenhe.linha(0,0,100,100,rosa)</code></td></tr><tr><td><code>roxo</code></td><td>#9c27b0</td><td><code>desenhe.linha(0,0,100,100,roxo)</code></td></tr><tr><td><code>verde</code></td><td>#00c853</td><td><code>desenhe.linha(0,0,100,100,verde)</code></td></tr><tr><td><code>vermelho</code></td><td>#ff0000</td><td><code>desenhe.linha(0,0,100,100,vermelho)</code></td></tr></table>
         <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Use <code>corAleatória</code> em qualquer <code>desenhe.*(...,cor)</code> ou <code>tela.cor(corAleatória)</code>. Cada chamada sorteia entre as 12 cores.</p>
       </div>
+      <div class="manual-pane" id="pane-tartaruga">
+        <h3>tartaruga</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">tartaruga</span><span class="example">()</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">tartaruga()</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Abre a janela <code>🐢 Editor de comandos:</code> numa coluna flutuante cheia de tela: à esquerda, a coluna de comandos; à direita, o desenho. A tartaruga começa no centro (400, 300), apontando para o norte (0°). O ângulo cresce no sentido horário.</p>
+        <h3>corFundo</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">corFundo</span> <span class="example">&lt;cor&gt;</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">corFundo azul
+corFundo corAleatória</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Pinta o fundo do desenho da tartaruga. As cores são as mesmas da aba <code>Cores</code> (azul, verde, vermelho, etc.).</p>
+        <h3>cor</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">cor</span> <span class="example">&lt;cor&gt;</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">cor amarela
+cor branca</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Define a cor da caneta da tartaruga (por onde ela anda, deixa um rastro).</p>
+        <h3>avance / recue</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">avance</span> <span class="example">&lt;distância&gt;</span>
+<span class="syntax">recue</span> <span class="example">&lt;distância&gt;</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">avance 100
+recue 50</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Move a tartaruga para frente/trás pixels, desenhando uma linha (se a caneta estiver abaixada).</p>
+        <h3>direita / esquerda</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">direita</span> <span class="example">&lt;graus&gt;</span>
+<span class="syntax">esquerda</span> <span class="example">&lt;graus&gt;</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">direita 30
+esquerda 45</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Gira a tartaruga no sentido horário (direita) ou anti-horário (esquerda).</p>
+        <h3>levanta caneta / abaixa caneta</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">levanta caneta</span>
+<span class="syntax">abaixa caneta</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">levanta caneta
+avance 150
+abaixa caneta</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px"><code>levanta caneta</code> para de desenhar; <code>abaixa caneta</code> volta a desenhar.</p>
+        <h3>Programa de exemplo</h3>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">tartaruga()
+corFundo azul
+cor amarela
+avance 100
+direita 30
+avance 100
+esquerda 45
+recue 50
+levanta caneta
+direita 60
+avance 150
+abaixa caneta
+esquerda 30
+avance 50
+repita(5):
+  direita 30
+  avance 60</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Os comandos da tartaruga também podem ser digitados direto na coluna de comandos da janela tartaruga (um comando por linha). <code>Ctrl+Enter</code> executa tudo. <code>TAB</code> indenta; <code>Ctrl</code>+roda do mouse (em cima da coluna) ou <code>Ctrl+</code>+/<code>-</code> ajusta o tamanho da fonte. A largura da coluna é ajustável arrastando a alça vertical. No desenho, a roda do mouse dá zoom (sobre o cursor) e o arrasto com o mouse (mãozinha) move o desenho. Os botões <code>Lento / Normal / Rápido</code> controlam a velocidade da animação.</p>
+      </div>
     </div>
   </div>
 
@@ -1505,7 +1625,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatória']);
@@ -1923,6 +2043,15 @@ updateLines(); updateHighlight();
     {name:'girar',hint:'girar(a(âng,vez,pausa),b(...))',desc:'Gira múltiplos desenhos'},
     {name:'intervalo',hint:'(início..fim)',desc:'Cria intervalo/lista de números'},
     {name:'janela',hint:'janela(largura,altura,cor)',desc:'Cria janela/gráfico'},
+    {name:'tartaruga',hint:'tartaruga()',desc:'Abre a tartaruga - editor de comandos'},
+    {name:'avance',hint:'avance distância',desc:'Move a tartaruga para frente'},
+    {name:'recue',hint:'recue distância',desc:'Move a tartaruga para trás'},
+    {name:'direita',hint:'direita ângulo',desc:'Gira a tartaruga para a direita'},
+    {name:'esquerda',hint:'esquerda ângulo',desc:'Gira a tartaruga para a esquerda'},
+    {name:'corFundo',hint:'corFundo cor',desc:'Define cor de fundo da tela da tartaruga'},
+    {name:'cor',hint:'cor cor',desc:'Define a cor do traço da tartaruga'},
+    {name:'levanta caneta',hint:'levanta caneta',desc:'Para de desenhar'},
+    {name:'abaixa caneta',hint:'abaixa caneta',desc:'Volta a desenhar'},
     {name:'leia',hint:'leia(texto?)',desc:'Lê entrada do usuário (prompt)'},
     {name:'ler',hint:'ler(tipo,texto?)',desc:'Lê entrada com tipo específico'},
     {name:'limpe',hint:'limpe()',desc:'Limpa saída/console'},
@@ -2211,6 +2340,7 @@ let janelaModo=null; // 'console' | 'desenho'
 let janelaEl=document.getElementById('janelaFlutuante');
 let janelaConsoleEl=document.getElementById('janelaConsole');
 function ativarJanela(centraliza){
+  _esconderPainelTartaruga();
   janelaEl=document.getElementById('janelaFlutuante');
   janelaConsoleEl=document.getElementById('janelaConsole');
   if(!janelaEl) return;
@@ -2250,6 +2380,7 @@ function ativarJanela(centraliza){
   }
 }
 function ativarJanelaDesenho(w,h){
+  _esconderPainelTartaruga();
   janelaEl=document.getElementById('janelaFlutuante');
   janelaConsoleEl=document.getElementById('janelaConsole');
   if(!janelaEl) return;
@@ -2290,6 +2421,8 @@ function ativarJanelaDesenho(w,h){
   requestAnimationFrame(()=>{ const c=document.getElementById('janelaCanvas'); if(c){ const r=c.getBoundingClientRect(); if(r.width>0){ _willogResizeCanvas(); }}});
 }
 function fecharJanela(){
+  _esconderPainelTartaruga();
+  tartaruga=null;
   if(janelaEl){
     janelaEl.style.display='none';
     janelaEl.classList.remove('maximized','minimized');
@@ -2311,12 +2444,180 @@ function fecharJanela(){
   _telaLogicalW=640; _telaLogicalH=400;
   janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
 }
+// --- Tartaruga (estilo Logo) ---
+let tartaruga = null;
+const _tartarugaVelocidade = { fator: 0.5 }; // 1=Rápido (velocidade atual), 0.5=Normal, 0.25=Lento
+let _tartarugaZoom = 1;
+let _tartarugaPanX = 0;
+let _tartarugaPanY = 0;
+let _tartarugaPanning = false;
+const tartarugaEnv = {};
+try{ willogInitConstantes(tartarugaEnv); }catch(e){ tartarugaEnv.__tartarugaEnvsafe=true; }
+function _esconderPainelTartaruga(){
+  const _j=document.getElementById('janelaFlutuante');
+  if(_j) _j.classList.remove('tartaruga-mod');
+  const _h=document.getElementById('janelaHeader');
+  if(_h){ const _s=_h.querySelector('span'); if(_s) _s.textContent='🪟 Janela Willog — Console'; }
+  const _p=document.getElementById('tartarugaPainel');
+  if(_p) _p.style.display='none';
+}
+function abrirJanelaTartaruga(){
+  janelaEl=document.getElementById('janelaFlutuante');
+  janelaConsoleEl=document.getElementById('janelaConsole');
+  if(!janelaEl) return;
+  janelaEl.style.display='flex';
+  janelaAtiva=true;
+  janelaCentralizada=false;
+  janelaModo='tartaruga';
+  _janelaAbertaNestaExec=true;
+  _graficoErroJaMostrado=false;
+  janelaEl.classList.remove('minimized');
+  janelaEl.classList.add('maximized');
+  janelaEl.classList.add('tartaruga-mod');
+  janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
+  const janelaBodyEl=document.getElementById('janelaBody');
+  if(janelaBodyEl){ janelaBodyEl.style.width=''; janelaBodyEl.style.height=''; janelaBodyEl.style.flex=''; }
+  const _h=document.getElementById('janelaHeader');
+  if(_h){ const _s=_h.querySelector('span'); if(_s) _s.textContent='🐢 Tartaruga Willog'; }
+  const _p=document.getElementById('tartarugaPainel');
+  if(_p) _p.style.display='flex';
+  const _cv=document.getElementById('janelaCanvas');
+  _telaBgColor='#000000';
+  _telaFgColor='#ffffff';
+  if(_cv){ _cv.style.background='#000000'; _cv.classList.remove('ativo'); _cv.style.display='none'; }
+  _telaLogicalW=800; _telaLogicalH=600;
+  _tartarugaZoom=1; _tartarugaPanX=0; _tartarugaPanY=0;
+  _telaBuffer=null; _telaBufferCtx=null;
+  _willogInitBuffer();
+  tartaruga={x:400,y:300,angulo:0,caneta:true,cor:'branco',corHex:'#ffffff',segmentos:[],ativo:true};
+  _tartarugaRedesenhar();
+  requestAnimationFrame(()=>{ const c=document.getElementById('janelaCanvas'); if(c){ const r=c.getBoundingClientRect(); if(r.width>0){ _willogResizeCanvas(); }}});
+}
+function _tartarugaRedesenhar(){
+  if(!tartaruga || !tartaruga.ativo) return;
+  _willogInitBuffer();
+  _willogEnsureTela();
+  const ctx=_telaBufferCtx;
+  ctx.fillStyle=_telaBgColor;
+  ctx.fillRect(0,0,_telaLogicalW,_telaLogicalH);
+  ctx.fillStyle='rgba(255,255,255,0.07)';
+  for(let gx=20; gx<_telaLogicalW; gx+=40){ for(let gy=20; gy<_telaLogicalH; gy+=40){ ctx.fillRect(gx,gy,2,2); } }
+  ctx.lineCap='round';
+  for(const seg of tartaruga.segmentos){
+    ctx.strokeStyle=seg.cor;
+    ctx.lineWidth=2.5;
+    ctx.beginPath();
+    ctx.moveTo(seg.x1,seg.y1);
+    ctx.lineTo(seg.x2,seg.y2);
+    ctx.stroke();
+  }
+  ctx.save();
+  ctx.translate(tartaruga.x,tartaruga.y);
+  ctx.rotate(tartaruga.angulo*Math.PI/180);
+  ctx.beginPath();
+  ctx.moveTo(0,-11);
+  ctx.lineTo(7,8);
+  ctx.lineTo(-7,8);
+  ctx.closePath();
+  ctx.fillStyle = tartaruga.caneta ? '#00c853' : '#78909c';
+  ctx.fill();
+  ctx.strokeStyle='#ffffff';
+  ctx.lineWidth=1;
+  ctx.stroke();
+  ctx.restore();
+  _willogSyncVisible();
+  requestAnimationFrame(()=>_willogSyncVisible());
+}
+function _tartarugaAndar(dist){
+  if(!tartaruga || !tartaruga.ativo) return Promise.resolve();
+  const rad=tartaruga.angulo*Math.PI/180;
+  const nx=tartaruga.x + Math.sin(rad)*dist;
+  const ny=tartaruga.y - Math.cos(rad)*dist;
+  const corHex=tartaruga.corHex || _telaFgColor;
+  if(tartaruga.caneta){
+    tartaruga.segmentos.push({x1:tartaruga.x,y1:tartaruga.y,x2:nx,y2:ny,cor:corHex});
+  }
+  tartaruga.x=nx; tartaruga.y=ny;
+  _tartarugaRedesenhar();
+  return new Promise(r=> setTimeout(r, _tartarugaPausa()));
+}
+function _tartarugaGirar(ang){
+  if(!tartaruga || !tartaruga.ativo) return Promise.resolve();
+  tartaruga.angulo=((tartaruga.angulo+(ang%360))%360+360)%360;
+  _tartarugaRedesenhar();
+  return new Promise(r=> setTimeout(r, _tartarugaPausa()));
+}
+function _tartarugaPausa(){
+  const f=_tartarugaVelocidade.fator;
+  if(f>=1) return 0;
+  return Math.round(300/f - 300);
+}
+function _tartarugaReset(){
+  if(!tartaruga || !tartaruga.ativo) return;
+  _tartarugaZoom=1; _tartarugaPanX=0; _tartarugaPanY=0;
+  tartaruga.x=400; tartaruga.y=300; tartaruga.angulo=0;
+  tartaruga.caneta=true;
+  tartaruga.cor='branco'; tartaruga.corHex=_telaFgColor;
+  tartaruga.segmentos=[];
+  _tartarugaRedesenhar();
+}
+function _tartarugaResolverCor(nome, env){
+  return _willogResolveCor(nome, env);
+}
+function _tartarugaNumeral(v, env){
+  if(typeof v==='number') return v;
+  let s=String(v||'').trim().replace(/^(\d+),(\d+)$/,'$1.$2');
+  let n=Number(s);
+  if(isNaN(n)){ try{ n=Number(evaluateExpression(v, env)); }catch(e){ n=NaN; } }
+  return isNaN(n)?0:n;
+}
+async function execTartarugaComando(stmt, env){
+  const s=stmt.trim();
+  let m;
+  if(/^\s*tartaruga\s*\(\s*\)\s*(?:#.*)?$/i.test(s)){
+    abrirJanelaTartaruga();
+    return true;
+  }
+  if((m=s.match(/^\s*corFundo\s+(.+?)\s*$/i))){
+    const hex=_tartarugaResolverCor(m[1].trim(), env);
+    if(hex){
+      _telaBgColor=hex;
+      const cv=document.getElementById('janelaCanvas');
+      if(cv) cv.style.background=hex;
+      if(tartaruga && tartaruga.ativo){ _tartarugaRedesenhar(); }
+    }else{
+      logToConsole('Erro: cor desconhecida "'+m[1].trim()+'". Use: amarelo, vermelho, azul, verde, ciano, rosa, roxo, laranja, branco, cinza, marrom, preto', 'error');
+    }
+    return true;
+  }
+  if((m=s.match(/^\s*cor\s+(.+?)\s*$/i))){
+    const hex=_tartarugaResolverCor(m[1].trim(), env);
+    if(hex){
+      if(tartaruga && tartaruga.ativo){ tartaruga.cor=m[1].trim(); tartaruga.corHex=hex; _tartarugaRedesenhar(); }
+    }else{
+      logToConsole('Erro: cor desconhecida "'+m[1].trim()+'". Use: amarelo, vermelho, azul, verde, ciano, rosa, roxo, laranja, branco, cinza, marrom, preto', 'error');
+    }
+    return true;
+  }
+  if((m=s.match(/^\s*avance\s+(.+?)\s*$/i))){ await _tartarugaAndar(_tartarugaNumeral(m[1], env)); return false; }
+  if((m=s.match(/^\s*recue\s+(.+?)\s*$/i))){ await _tartarugaAndar(-_tartarugaNumeral(m[1], env)); return false; }
+  if((m=s.match(/^\s*direita\s+(.+?)\s*$/i))){ await _tartarugaGirar(_tartarugaNumeral(m[1], env)); return false; }
+  if((m=s.match(/^\s*esquerda\s+(.+?)\s*$/i))){ await _tartarugaGirar(-_tartarugaNumeral(m[1], env)); return false; }
+  if(/^\s*levanta\s+caneta\b/i.test(s)){ if(tartaruga && tartaruga.ativo){ tartaruga.caneta=false; _tartarugaRedesenhar(); } await new Promise(r=> setTimeout(r, _tartarugaPausa())); return false; }
+  if(/^\s*(abaixa|abaixe)\s+caneta\b/i.test(s)){ if(tartaruga && tartaruga.ativo){ tartaruga.caneta=true; _tartarugaRedesenhar(); } await new Promise(r=> setTimeout(r, _tartarugaPausa())); return false; }
+  return null;
+}
+function isTartarugaStmt(stmt){ return /^\s*tartaruga\s*\(\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function isTartarugaComandoStmt(stmt){
+  return /^\s*(corFundo|avance|recue|direita|esquerda|cor)\s+/i.test(stmt.trim()) || /^\s*(levanta|abaixa|abaixe)\s+caneta\b/i.test(stmt.trim());
+}
 // Abre o console principal em janela flutuante (duplo-clique no console).
 // Reaproveita a janela flutuante em modo console sem apagar o conteúdo:
 // copia o console atual e as próximas saídas são espelhadas via logToConsole.
 // Não toca no estado gráfico (_telaBuffer/_willogDesenhos) nem em
 // _janelaAbertaNestaExec, para não afetar erros de desenho do programa.
 function abrirConsoleFlutuante(){
+  _esconderPainelTartaruga();
   janelaEl=document.getElementById('janelaFlutuante');
   janelaConsoleEl=document.getElementById('janelaConsole');
   if(!janelaEl || !janelaConsoleEl || !consoleEl) return;
@@ -2411,12 +2712,15 @@ function _willogSyncVisible(){
   ctx.fillStyle=_telaBgColor;
   ctx.fillRect(0,0,w,h);
   // escalonamento proporcional (preserva aspecto) — coordenadas reais, (0,0) topo-esquerda em janela normal, centralizado quando maximizada
+  const _useZoom = (janelaModo==='tartaruga');
   const scale=Math.min(w/_telaLogicalW, h/_telaLogicalH);
-  const destW=_telaLogicalW*scale;
-  const destH=_telaLogicalH*scale;
-  const isMaxDesenho = janelaEl && janelaEl.classList.contains('maximized') && janelaModo==='desenho';
-  const dx=isMaxDesenho ? (w-destW)/2 : 0;
-  const dy=isMaxDesenho ? (h-destH)/2 : 0;
+  const k = scale * (_useZoom ? _tartarugaZoom : 1);
+  const destW=_telaLogicalW*k;
+  const destH=_telaLogicalH*k;
+  const isMaxDesenho = janelaEl && janelaEl.classList.contains('maximized') && (janelaModo==='desenho'||janelaModo==='tartaruga');
+  let dx=isMaxDesenho ? (w-destW)/2 : 0;
+  let dy=isMaxDesenho ? (h-destH)/2 : 0;
+  if(_useZoom){ dx+=_tartarugaPanX; dy+=_tartarugaPanY; }
   ctx.drawImage(_telaBuffer, 0,0, _telaLogicalW, _telaLogicalH, dx, dy, destW, destH);
 }
 function _willogEnsureTela(){
@@ -2441,6 +2745,10 @@ function _willogResizeCanvas(){
   _willogSyncVisible();
 }
 function _willogTelaLimpe(){
+  if(janelaModo==='tartaruga'){
+    if(tartaruga){ tartaruga.segmentos=[]; _tartarugaRedesenhar(); return true; }
+    return false;
+  }
   if(janelaModo!=='desenho'){
     if(_janelaAbertaNestaExec) return false;
     if(_graficoErroJaMostrado) return false;
@@ -2460,7 +2768,7 @@ function _willogTelaLimpe(){
   return true;
 }
 function _willogTelaCor(argRaw, env){
-  if(janelaModo!=='desenho'){
+  if(janelaModo!=='desenho' && janelaModo!=='tartaruga'){
     if(_janelaAbertaNestaExec) return false;
     if(_graficoErroJaMostrado) return false;
     if(!janelaAtiva) logToConsole('Erro: use janela(largura,altura) antes de tela.cor() (ex: janela(300,400))', 'error');
@@ -2484,6 +2792,7 @@ function _willogTelaCor(argRaw, env){
     return false;
   }
   _telaBgColor=hex;
+  if(janelaModo==='tartaruga' && tartaruga && tartaruga.ativo){ _tartarugaRedesenhar(); }
   const cv=_willogGetCanvas();
   if(cv){ cv.style.background=hex; }
   // não apaga desenhos existentes no buffer; apenas define cor para próximo limpe
@@ -3617,6 +3926,161 @@ clearConsole();
       document.body.style.userSelect='';
     });
   }
+})();
+
+// --- Painel da Tartaruga (janela flutuante em modo tartaruga) ---
+(function(){
+  const inputEl=document.getElementById('tartarugaInput');
+  const btnExec=document.getElementById('btnTartarugaExecutar');
+  const btnLimpar=document.getElementById('btnTartarugaLimpar');
+  const velBtns=document.querySelectorAll('.tartaruga-velocidade .vel-btn');
+  const panelEl=document.getElementById('tartarugaPainel');
+  const resizerEl=document.getElementById('tartarugaResizer');
+  let tartarugaFontSize = parseFloat(getComputedStyle(inputEl||document.body).fontSize) || 13;
+  let fontPadrao = tartarugaFontSize;
+  function setTartarugaFont(){
+    if(!inputEl) return;
+    const escala = tartarugaFontSize / fontPadrao;
+    inputEl.style.fontSize = tartarugaFontSize+'px';
+    inputEl.style.lineHeight = (escala*1.35).toFixed(3);
+  }
+  function zoomTartarugaFont(delta){
+    tartarugaFontSize = Math.max(fontPadrao*0.75, Math.min(fontPadrao*2.25, Math.round(tartarugaFontSize + delta)));
+    setTartarugaFont();
+  }
+  function tartarugaExecutarTudo(){
+    const text=inputEl ? inputEl.value : '';
+    if(!text.trim()) return;
+    try{ executarPrograma(text); }catch(err){ console.error(err); }
+  }
+  if(panelEl){
+    let resizing=false, rStartX=0, rStartW=0;
+    resizerEl && resizerEl.addEventListener('mousedown', (e)=>{
+      if(e.button!==0) return;
+      resizing=true; rStartX=e.clientX; rStartW=panelEl.offsetWidth;
+      e.preventDefault();
+      document.body.style.userSelect='none';
+    });
+    window.addEventListener('mousemove', (e)=>{
+      if(!resizing) return;
+      const maxW=Math.round(window.innerWidth*0.7);
+      const w=Math.max(200, Math.min(maxW, rStartW + (e.clientX-rStartX)));
+      panelEl.style.width=w+'px';
+    });
+    window.addEventListener('mouseup', ()=>{
+      if(resizing){ resizing=false; document.body.style.userSelect=''; }
+    });
+    panelEl.addEventListener('wheel', (e)=>{
+      if(!(e.ctrlKey||e.metaKey)) return;
+      e.preventDefault();
+      zoomTartarugaFont(e.deltaY<0 ? 1 : -1);
+    }, {passive:false});
+  }
+  if(btnExec){
+    btnExec.addEventListener('click', tartarugaExecutarTudo);
+  }
+  if(btnLimpar){
+    btnLimpar.addEventListener('click', ()=>{
+      if(inputEl) inputEl.value='';
+      try{ localStorage.removeItem('willog-tartaruga-codigo'); }catch(_){}
+    });
+  }
+  if(velBtns.length){
+    velBtns.forEach(b=> b.addEventListener('click', ()=>{
+      const f=b.dataset.vel==='1'?0.25 : b.dataset.vel==='2'?0.5 : b.dataset.vel==='3'?0.75 : 1;
+      _tartarugaVelocidade.fator=f;
+      velBtns.forEach(x=> x.classList.toggle('ativo', x===b));
+    }));
+  }
+  if(inputEl){
+    try{
+      const tartarugaSalvo = localStorage.getItem('willog-tartaruga-codigo');
+      if(tartarugaSalvo !== null && tartarugaSalvo !== ''){
+        inputEl.value = tartarugaSalvo;
+      }
+    }catch(_){}
+    let saveTartarugaTimer=null;
+    function salvarTartaruga(){
+      try{ localStorage.setItem('willog-tartaruga-codigo', inputEl.value); }catch(_){}
+    }
+    inputEl.addEventListener('input', ()=>{
+      clearTimeout(saveTartarugaTimer);
+      saveTartarugaTimer=setTimeout(salvarTartaruga, 300);
+    });
+    inputEl.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey||e.metaKey) && (e.key==='+'||e.key==='=')){
+        e.preventDefault(); zoomTartarugaFont(1); return;
+      }
+      if((e.ctrlKey||e.metaKey) && (e.key==='-'||e.key==='_')){
+        e.preventDefault(); zoomTartarugaFont(-1); return;
+      }
+      if(e.key==='Tab'){
+        e.preventDefault();
+        const s=inputEl.selectionStart, ed=inputEl.selectionEnd;
+        inputEl.value=inputEl.value.substring(0,s)+'  '+inputEl.value.substring(ed);
+        inputEl.selectionStart=inputEl.selectionEnd=s+2;
+        return;
+      }
+      if((e.ctrlKey||e.metaKey) && e.key==='Enter'){
+        e.preventDefault();
+        tartarugaExecutarTudo();
+      }
+    });
+    setTartarugaFont();
+  }
+})();
+
+// --- Zoom & arrastar (mãozinha) no desenho da tartaruga ---
+(function(){
+  const cv=document.getElementById('janelaCanvas');
+  if(!cv) return;
+  let startX=0, startY=0, basePanX=0, basePanY=0;
+  function tartarugaModAtivo(){ return janelaModo==='tartaruga' && tartaruga && tartaruga.ativo && cv.classList.contains('ativo'); }
+  cv.addEventListener('wheel', (e)=>{
+    if(!tartarugaModAtivo()) return;
+    e.preventDefault();
+    const delta = e.deltaY<0 ? 1.15 : 1/1.15;
+    const zNew = Math.max(0.2, Math.min(10, _tartarugaZoom * delta));
+    if(zNew===_tartarugaZoom) return;
+    const rect=cv.getBoundingClientRect();
+    const dpr=window.devicePixelRatio||1;
+    const w=rect.width*dpr, h=rect.height*dpr;
+    const mx=(e.clientX-rect.left)*dpr, my=(e.clientY-rect.top)*dpr;
+    const base=Math.min(w/_telaLogicalW, h/_telaLogicalH);
+    const isMax = janelaEl && janelaEl.classList.contains('maximized') && (janelaModo==='desenho'||janelaModo==='tartaruga');
+    const kOld=base*_tartarugaZoom, kNew=base*zNew;
+    const cXOld = isMax ? (w-_telaLogicalW*kOld)/2 : 0;
+    const cYOld = isMax ? (h-_telaLogicalH*kOld)/2 : 0;
+    const dxOld = cXOld + _tartarugaPanX;
+    const dyOld = cYOld + _tartarugaPanY;
+    const dxNew = mx - (mx - dxOld)*(kNew/kOld);
+    const dyNew = my - (my - dyOld)*(kNew/kOld);
+    const cXNew = isMax ? (w-_telaLogicalW*kNew)/2 : 0;
+    const cYNew = isMax ? (h-_telaLogicalH*kNew)/2 : 0;
+    _tartarugaZoom=zNew;
+    _tartarugaPanX = dxNew - cXNew;
+    _tartarugaPanY = dyNew - cYNew;
+    _willogSyncVisible();
+  }, {passive:false});
+  cv.addEventListener('mousedown', (e)=>{
+    if(!tartarugaModAtivo()) return;
+    if(e.button!==0) return;
+    e.preventDefault();
+    _tartarugaPanning=true;
+    startX=e.clientX; startY=e.clientY;
+    basePanX=_tartarugaPanX; basePanY=_tartarugaPanY;
+    cv.classList.add('panning');
+  });
+  window.addEventListener('mousemove', (e)=>{
+    if(!_tartarugaPanning) return;
+    const dpr=window.devicePixelRatio||1;
+    _tartarugaPanX = basePanX + (e.clientX-startX)*dpr;
+    _tartarugaPanY = basePanY + (e.clientY-startY)*dpr;
+    _willogSyncVisible();
+  });
+  window.addEventListener('mouseup', ()=>{
+    if(_tartarugaPanning){ _tartarugaPanning=false; cv.classList.remove('panning'); }
+  });
 })();
 
 // --- Duplo-clique no console: exibe em janela flutuante ---
@@ -6630,6 +7094,12 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       return;
     }
   }
+  // --- Tartaruga (estilo Logo) ---
+  const _tartRes=await execTartarugaComando(stmt, env);
+  if(_tartRes!==null){
+    hasOutputRef.value=true;
+    return;
+  }
   try{
     const v=evaluateExpression(stmt, env);
     if(v!==undefined && v!=='' && v!==null){
@@ -6676,11 +7146,13 @@ function buildLabelMap(lines){
   return map;
 }
 
-async function runWillog(){
+async function executarPrograma(src){
   clearConsole();
   _janelaAbertaNestaExec=false;
   _graficoErroJaMostrado=false;
-  const src=editor.value;
+  if(janelaModo==='tartaruga' && tartaruga && tartaruga.ativo && /(?:^|\s)(tartaruga|corFundo|cor|avance|recue|direita|esquerda)\s|(?:^|\s)(levanta|abaixa|abaixe)\s+caneta\b/i.test(src)){
+    _tartarugaReset();
+  }
   let srcNoBlock=src.replace(/#:[\s\S]*?:#/g, '');
   srcNoBlock=srcNoBlock.replace(/#:[\s\S]*$/g, '');
   const env={};
@@ -7314,6 +7786,8 @@ async function runWillog(){
   document.getElementById('statusBar').textContent = 'Executado • ' + new Date().toLocaleTimeString('pt-BR');
   setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 3000);
 }
+
+function runWillog(){ executarPrograma(editor.value); }
 
 document.getElementById('btnExecutar').addEventListener('click', runWillog);
 
