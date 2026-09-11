@@ -1440,7 +1440,10 @@ repita(5):
     <div class="modal-manual-box" style="width:98vw; height:98vh; max-width:98vw; max-height:98vh;">
       <div class="modal-manual-header">
         <b>💬 Código Comentado</b>
-        <button class="modal-close" id="btnFecharCodigoComentado" title="Fechar">✕</button>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button id="btnCopiarCodigoComentado" title="Copiar código comentado como texto plano" style="font-family:'Inter',sans-serif; font-size:12px; font-weight:600; padding:5px 10px; border-radius:6px; border:1px solid var(--border); background:var(--panel2); color:var(--text); cursor:pointer;">📋 Copiar texto</button>
+          <button class="modal-close" id="btnFecharCodigoComentado" title="Fechar">✕</button>
+        </div>
       </div>
       <div id="codigoComentadoContainer" style="flex:1; overflow:auto; background:var(--panel); padding:0; display:flex; flex-direction:column;">
         <div id="codigoComentadoContent" style="flex:1; overflow:auto; padding:22px 24px; font-family:'Inter',sans-serif; line-height:1.7;"></div>
@@ -8246,7 +8249,41 @@ function willogMostrarCodigoComentado(){
   if(box){ box.style.width='98vw'; box.style.height='98vh'; box.classList.add('maximized'); }
   willogGerarCodigoComentado();
 }
+function _willogCopiarCodigoComentadoPlano(){
+  const container=document.getElementById('codigoComentadoContent');
+  if(!container) return;
+  const cards=container.querySelectorAll('div[style*="display:flex"][style*="gap:12px"]');
+  let out='';
+  cards.forEach(card=>{
+    const children=card.children;
+    if(children.length<2) return;
+    const lineNum=(children[0].textContent||'').trim();
+    const content=children[1];
+    const lineCard=content.firstElementChild;
+    let code='', expl='';
+    if(lineCard){
+      code=lineCard.textContent.trim();
+      const explDiv=lineCard.nextElementSibling;
+      if(explDiv && explDiv.tagName==='DIV') expl=explDiv.textContent.trim();
+    } else {
+      expl=content.textContent.trim();
+    }
+    if(code && expl) out+=lineNum+'  '+code+' → '+expl+'\n';
+    else if(code) out+=lineNum+'  '+code+'\n';
+    else if(expl) out+=lineNum+'  '+expl+'\n';
+  });
+  if(!out){ out='(nenhum código para copiar)'; }
+  navigator.clipboard.writeText(out.trim()).then(()=>{
+    const btn=document.getElementById('btnCopiarCodigoComentado');
+    if(!btn) return;
+    const old=btn.textContent;
+    btn.textContent='✔ Copiado!';
+    btn.disabled=true;
+    setTimeout(()=>{ btn.textContent=old; btn.disabled=false; }, 1600);
+  }).catch(()=>{});
+}
 document.getElementById('btnCodigoComentado')?.addEventListener('click', willogMostrarCodigoComentado);
+document.getElementById('btnCopiarCodigoComentado')?.addEventListener('click', _willogCopiarCodigoComentadoPlano);
 document.getElementById('btnFecharCodigoComentado')?.addEventListener('click', ()=>{ document.getElementById('modalCodigoComentado').style.display='none'; });
 document.getElementById('modalCodigoComentado')?.addEventListener('click', (e)=>{ if(e.target.id==='modalCodigoComentado') document.getElementById('modalCodigoComentado').style.display='none'; });
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') document.getElementById('modalCodigoComentado').style.display='none'; });
