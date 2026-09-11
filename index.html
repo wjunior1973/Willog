@@ -511,6 +511,15 @@
   }
   .tartaruga-velocidade .vel-btn:hover { background:var(--panel2); }
   .tartaruga-velocidade .vel-btn.ativo { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .tartaruga-modo3d { flex:0 0 auto; display:flex; align-items:center; gap:4px; }
+  .tartaruga-modo3d .tartaruga-vel-label { font-family:'Inter',sans-serif; font-size:11px; color:var(--text-dim); font-weight:600; white-space:nowrap; }
+  .tartaruga-modo3d .vel-btn {
+    padding:5px 8px; border-radius:6px; border:1px solid var(--border);
+    background:var(--panel); color:var(--text); cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
+  }
+  .tartaruga-modo3d .vel-btn:hover { background:var(--panel2); }
+  .tartaruga-modo3d .vel-btn.ativo { background:var(--accent); color:#fff; border-color:var(--accent); }
   .tartaruga-botoes { flex:0 0 auto; display:flex; gap:6px; }
   .tartaruga-botoes button {
     flex:1; padding:7px 10px; border-radius:8px; border:1px solid var(--border);
@@ -660,6 +669,11 @@
           <button class="vel-btn ativo" data-vel="2" title="2 — Normal (50% da velocidade Rápida)">2</button>
           <button class="vel-btn" data-vel="3" title="3 — 75% da velocidade Rápida">3</button>
           <button class="vel-btn" data-vel="4" title="4 — Rápido (velocidade atual)">4</button>
+        </div>
+        <div class="tartaruga-modo3d">
+          <span class="tartaruga-vel-label">vista:</span>
+          <button id="btnTartaruga3D" class="vel-btn" title="Alterna para a vista 3-D: arraste no desenho para girar (Shift ou botão direito do mouse gira em Z)">3-D</button>
+          <button id="btnTartaruga2D" class="vel-btn ativo" title="Volta para a vista normal 2-D">2-D</button>
         </div>
         <div class="tartaruga-botoes">
           <button id="btnTartarugaExecutar" title="Executa tudo o que está escrito (suporta blocos repita/se/enquanto)">▶ Executar tudo</button>
@@ -2453,6 +2467,11 @@ let _tartarugaZoom = 1;
 let _tartarugaPanX = 0;
 let _tartarugaPanY = 0;
 let _tartarugaPanning = false;
+let _tartaruga3D = false;
+let _tartarugaRotando = false;
+let _tartarugaRotX = 0;
+let _tartarugaRotY = 0;
+let _tartarugaRotZ = 0;
 const tartarugaEnv = {};
 try{ willogInitConstantes(tartarugaEnv); }catch(e){ tartarugaEnv.__tartarugaEnvsafe=true; }
 function _esconderPainelTartaruga(){
@@ -2489,6 +2508,7 @@ function abrirJanelaTartaruga(){
   if(_cv){ _cv.style.background='#000000'; _cv.classList.remove('ativo'); _cv.style.display='none'; }
   _telaLogicalW=800; _telaLogicalH=600;
   _tartarugaZoom=1; _tartarugaPanX=0; _tartarugaPanY=0;
+  _tartarugaSetModo3D(false);
   _telaBuffer=null; _telaBufferCtx=null;
   _willogInitBuffer();
   tartaruga={x:400,y:300,angulo:0,caneta:true,cor:'branco',corHex:'#ffffff',segmentos:[],ativo:true};
@@ -2557,11 +2577,78 @@ function _tartarugaPausa(){
 function _tartarugaReset(){
   if(!tartaruga || !tartaruga.ativo) return;
   _tartarugaZoom=1; _tartarugaPanX=0; _tartarugaPanY=0;
+  _tartarugaSetModo3D(false);
   tartaruga.x=400; tartaruga.y=300; tartaruga.angulo=0;
   tartaruga.caneta=true;
   tartaruga.cor='branco'; tartaruga.corHex=_telaFgColor;
   tartaruga.segmentos=[];
   _tartarugaRedesenhar();
+}
+function _tartarugaSetModo3D(on){
+  _tartaruga3D = !!on;
+  _tartarugaRotX=0; _tartarugaRotY=0; _tartarugaRotZ=0;
+  const b3=document.getElementById('btnTartaruga3D');
+  const b2=document.getElementById('btnTartaruga2D');
+  if(b3) b3.classList.toggle('ativo', _tartaruga3D);
+  if(b2) b2.classList.toggle('ativo', !_tartaruga3D);
+  _willogSyncVisible();
+}
+function _tartarugaProjetar(x,y){
+  const rx=_tartarugaRotX*Math.PI/180, ry=_tartarugaRotY*Math.PI/180, rz=_tartarugaRotZ*Math.PI/180;
+  let X=x-400, Y=y-300, Z=0;
+  const cx=Math.cos(rz), sx=Math.sin(rz);
+  let X1=X*cx - Y*sx;
+  let Y1=X*sx + Y*cx;
+  X=X1; Y=Y1;
+  const cy=Math.cos(ry), sy=Math.sin(ry);
+  let X2=X*cy + Z*sy;
+  let Z2=-X*sy + Z*cy;
+  X=X2; Z=Z2;
+  const cz=Math.cos(rx), sz=Math.sin(rx);
+  let Y3=Y*cz - Z*sz;
+  let Z3=Y*sz + Z*cz;
+  Y=Y3; Z=Z3;
+  const f=1000;
+  const p=f/(f+Z);
+  return { x:400+X*p, y:300+Y*p, p:p };
+}
+function _tartarugaRender3D(ctx, offX, offY, k){
+  ctx.lineCap='round';
+  ctx.fillStyle='rgba(255,255,255,0.07)';
+  for(let gx=20; gx<_telaLogicalW; gx+=40){
+    for(let gy=20; gy<_telaLogicalH; gy+=40){
+      const g=_tartarugaProjetar(gx,gy);
+      ctx.fillRect(offX+g.x*k, offY+g.y*k, 2, 2);
+    }
+  }
+  for(const seg of tartaruga.segmentos){
+    const a=_tartarugaProjetar(seg.x1,seg.y1);
+    const b=_tartarugaProjetar(seg.x2,seg.y2);
+    ctx.strokeStyle=seg.cor;
+    ctx.lineWidth=2.5*(0.7+0.6*(a.p+b.p)/2);
+    ctx.beginPath();
+    ctx.moveTo(offX+a.x*k, offY+a.y*k);
+    ctx.lineTo(offX+b.x*k, offY+b.y*k);
+    ctx.stroke();
+  }
+  const rad=tartaruga.angulo*Math.PI/180;
+  const pts=[[0,-11],[7,8],[-7,8]].map(l=>{
+    const lx=l[0], ly=l[1];
+    const wx=tartaruga.x + lx*Math.cos(rad) - ly*Math.sin(rad);
+    const wy=tartaruga.y + lx*Math.sin(rad) + ly*Math.cos(rad);
+    const p=_tartarugaProjetar(wx,wy);
+    return [offX+p.x*k, offY+p.y*k];
+  });
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  ctx.lineTo(pts[1][0], pts[1][1]);
+  ctx.lineTo(pts[2][0], pts[2][1]);
+  ctx.closePath();
+  ctx.fillStyle = tartaruga.caneta ? '#00c853' : '#78909c';
+  ctx.fill();
+  ctx.strokeStyle='#ffffff';
+  ctx.lineWidth=1;
+  ctx.stroke();
 }
 function _tartarugaResolverCor(nome, env){
   return _willogResolveCor(nome, env);
@@ -2723,7 +2810,11 @@ function _willogSyncVisible(){
   let dx=isMaxDesenho ? (w-destW)/2 : 0;
   let dy=isMaxDesenho ? (h-destH)/2 : 0;
   if(_useZoom){ dx+=_tartarugaPanX; dy+=_tartarugaPanY; }
-  ctx.drawImage(_telaBuffer, 0,0, _telaLogicalW, _telaLogicalH, dx, dy, destW, destH);
+  if(_useZoom && _tartaruga3D && tartaruga && tartaruga.ativo){
+    _tartarugaRender3D(ctx, dx, dy, k);
+  } else {
+    ctx.drawImage(_telaBuffer, 0,0, _telaLogicalW, _telaLogicalH, dx, dy, destW, destH);
+  }
 }
 function _willogEnsureTela(){
   _willogInitBuffer();
@@ -3994,6 +4085,10 @@ clearConsole();
       velBtns.forEach(x=> x.classList.toggle('ativo', x===b));
     }));
   }
+  const btn3D=document.getElementById('btnTartaruga3D');
+  const btn2D=document.getElementById('btnTartaruga2D');
+  btn3D && btn3D.addEventListener('click', ()=> _tartarugaSetModo3D(true));
+  btn2D && btn2D.addEventListener('click', ()=> _tartarugaSetModo3D(false));
   if(inputEl){
     try{
       const tartarugaSalvo = localStorage.getItem('willog-tartaruga-codigo');
@@ -4037,6 +4132,7 @@ clearConsole();
   const cv=document.getElementById('janelaCanvas');
   if(!cv) return;
   let startX=0, startY=0, basePanX=0, basePanY=0;
+  let rotStartX=0, rotStartY=0, rotBaseX=0, rotBaseY=0, rotBaseZ=0, rotMode='xy';
   function tartarugaModAtivo(){ return janelaModo==='tartaruga' && tartaruga && tartaruga.ativo && cv.classList.contains('ativo'); }
   cv.addEventListener('wheel', (e)=>{
     if(!tartarugaModAtivo()) return;
@@ -4066,14 +4162,29 @@ clearConsole();
   }, {passive:false});
   cv.addEventListener('mousedown', (e)=>{
     if(!tartarugaModAtivo()) return;
-    if(e.button!==0) return;
     e.preventDefault();
+    if(_tartaruga3D){
+      _tartarugaRotando=true;
+      rotStartX=e.clientX; rotStartY=e.clientY;
+      rotBaseX=_tartarugaRotX; rotBaseY=_tartarugaRotY; rotBaseZ=_tartarugaRotZ;
+      rotMode=(e.shiftKey || e.button===2) ? 'z' : 'xy';
+      cv.classList.add('panning');
+      return;
+    }
+    if(e.button!==0) return;
     _tartarugaPanning=true;
     startX=e.clientX; startY=e.clientY;
     basePanX=_tartarugaPanX; basePanY=_tartarugaPanY;
     cv.classList.add('panning');
   });
   window.addEventListener('mousemove', (e)=>{
+    if(_tartarugaRotando){
+      const dx=e.clientX-rotStartX, dy=e.clientY-rotStartY;
+      if(rotMode==='z'){ _tartarugaRotZ = ((rotBaseZ + dx*0.3)%360+360)%360; }
+      else { _tartarugaRotY = rotBaseY + dx*0.5; _tartarugaRotX = rotBaseX + dy*0.5; }
+      _willogSyncVisible();
+      return;
+    }
     if(!_tartarugaPanning) return;
     const dpr=window.devicePixelRatio||1;
     _tartarugaPanX = basePanX + (e.clientX-startX)*dpr;
@@ -4081,8 +4192,10 @@ clearConsole();
     _willogSyncVisible();
   });
   window.addEventListener('mouseup', ()=>{
+    if(_tartarugaRotando){ _tartarugaRotando=false; cv.classList.remove('panning'); }
     if(_tartarugaPanning){ _tartarugaPanning=false; cv.classList.remove('panning'); }
   });
+  cv.addEventListener('contextmenu', (e)=>{ if(_tartaruga3D && tartarugaModAtivo()) e.preventDefault(); });
 })();
 
 // --- Duplo-clique no console: exibe em janela flutuante ---
