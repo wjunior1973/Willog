@@ -563,6 +563,52 @@
   .autocomplete-item .ac-hint { font-size:11px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; }
   .autocomplete-item .ac-desc { font-size:10px; color:var(--text-dim); opacity:0.7; }
   .editor-container { position:relative; }
+  /* --- Polígonos (plano cartesiano estilo GeoGebra) --- */
+  .floating-window.poligonos-mod #btnMinJanela,
+  .floating-window.poligonos-mod #btnMaxJanela { display:none; }
+  .floating-window.poligonos-mod .floating-body { flex-direction:row; }
+  .floating-window.poligonos-mod .tartaruga-resizer { display:none; }
+  .floating-window.poligonos-mod #janelaCanvas { display:none !important; }
+  .floating-window.poligonos-mod #janelaConsole { display:none !important; }
+  .floating-window.poligonos-mod .poligonos-root { display:flex; }
+  #poligonosRoot { flex:1 1 0; min-width:0; min-height:0; align-self:stretch; display:none; flex-direction:row; background:#ffffff; position:relative; }
+  .poligonos-toolbar {
+    width:160px; min-width:140px; max-width:220px; background:var(--panel);
+    border-right:1px solid var(--border); padding:10px; display:flex;
+    flex-direction:column; gap:6px; overflow:hidden; box-sizing:border-box;
+  }
+  .poligonos-toolbar button {
+    width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border);
+    background:var(--panel2); color:var(--text); cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:12px; font-weight:600; text-align:left;
+  }
+  .poligonos-toolbar button:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .poligonos-toolbar button.ativo { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .poligonos-toolbar .pol-btn-fechar { border-left:4px solid #00b894; }
+  .poligonos-toolbar .pol-btn-limpar { border-left:4px solid #e17055; }
+  .poligonos-hint {
+    margin-top:6px; font-family:'Inter',sans-serif; font-size:11px; line-height:1.5;
+    color:var(--text-dim); background:var(--panel2); border:1px solid var(--border);
+    border-radius:8px; padding:8px;
+  }
+  .poligonos-canvas-wrap { flex:1 1 0; min-width:0; position:relative; background:#ffffff; }
+  .poligonos-canvas-wrap canvas { position:absolute; inset:0; width:100%; height:100%; display:block; cursor:crosshair; touch-action:none; }
+  .poligonos-canvas-wrap canvas.pol-grab { cursor:grab; }
+  .poligonos-canvas-wrap canvas.pol-grab.pol-panning { cursor:grabbing; }
+  .poligonos-dados {
+    width:220px; min-width:180px; max-width:320px; background:var(--panel);
+    border-left:1px solid var(--border); padding:10px; display:flex;
+    flex-direction:column; gap:12px; overflow-y:auto; box-sizing:border-box;
+  }
+  .pol-dados-sec { display:flex; flex-direction:column; gap:4px; }
+  .pol-dados-titulo {
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.4px;
+    color:var(--accent); text-transform:uppercase; border-bottom:1px solid var(--border); padding-bottom:3px;
+  }
+  .pol-dados-conteudo { display:flex; flex-direction:column; gap:2px; }
+  .pol-dados-item { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text); padding:2px 4px; border-radius:4px; white-space:nowrap; }
+  .pol-dados-item:hover { background:var(--panel2); }
+  .pol-dados-vazio { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-dim); opacity:0.6; padding:2px 4px; }
 
 
 </style>
@@ -683,7 +729,45 @@
       <div class="tartaruga-resizer" id="tartarugaResizer" title="Arraste para redimensionar a coluna de comandos"></div>
       <canvas id="janelaCanvas" width="640" height="400"></canvas>
       <div class="floating-console" id="janelaConsole"></div>
+      <div id="poligonosRoot" class="poligonos-root" style="display:none">
+    <div class="poligonos-toolbar">
+      <button data-tool="mover" class="ativo" title="Move pontos à vontade e arrasta o fundo para deslizar o plano">↔️ Mover</button>
+      <button data-tool="ponto" title="Clique para criar um ponto (ele gruda na coordenada inteira quando você clica bem perto de um inteiro; caso contrário, permite decimais)">⚫ Ponto</button>
+      <button data-tool="reta" title="Escolha dois pontos e crie a reta infinita que passa por eles">➖ Reta</button>
+      <button data-tool="segmento" title="Escolha dois pontos para criar um segmento (mostra o comprimento)">📏 Segmento</button>
+      <button data-tool="poligono" title="Clique para colocar cada vértice; feche para calcular perímetro e área">📐 Polígono</button>
+      <button data-tool="circunferencia" title="Clique no centro e depois em um ponto da circunferência (esse ponto define o raio)">⭕ Circunferência</button>
+      <button id="polBtnFecharPoli" class="pol-btn-fechar" title="Fecha o polígono em construção e calcula perímetro e área">🔒 Fechar polígono</button>
+      <button id="polBtnLimpar" class="pol-btn-limpar" title="Apaga todos os pontos, segmentos e polígonos">🧹 Limpar</button>
+      <div class="poligonos-hint" id="polHint"></div>
     </div>
+    <div class="poligonos-canvas-wrap">
+      <canvas id="poligonosCanvas"></canvas>
+    </div>
+    <div class="poligonos-dados">
+      <div class="pol-dados-sec">
+        <div class="pol-dados-titulo">Pontos</div>
+        <div class="pol-dados-conteudo" id="polDadosPontos"></div>
+      </div>
+      <div class="pol-dados-sec">
+        <div class="pol-dados-titulo">Segmentos</div>
+        <div class="pol-dados-conteudo" id="polDadosSegmentos"></div>
+      </div>
+      <div class="pol-dados-sec">
+        <div class="pol-dados-titulo">Retas</div>
+        <div class="pol-dados-conteudo" id="polDadosRetas"></div>
+      </div>
+      <div class="pol-dados-sec">
+        <div class="pol-dados-titulo">Circunferências</div>
+        <div class="pol-dados-conteudo" id="polDadosCircunf"></div>
+      </div>
+      <div class="pol-dados-sec">
+        <div class="pol-dados-titulo">Polígonos</div>
+        <div class="pol-dados-conteudo" id="polDadosPoligonos"></div>
+      </div>
+    </div>
+    </div>
+  </div>
   </div>
 
   <div class="help-bar">
@@ -1268,6 +1352,13 @@ desenhe.circulo(100,100,40,amarelo)</span>
 toque(freq,0.3)</span>
 <span class="saida">-> Dó 523 Hz por 0,3s</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Toca frequência sonora entre <code>20</code> e <code>20000</code> Hz durante <code>n</code> segundos (máx. 10s). Usa Web Audio API. Frequência e duração podem ser variáveis/expressões. Aguarda a duração antes de prosseguir.</p>
+        <h3>polígonos</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">polígonos</span><span class="example">()</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">polígonos()</span>
+<span class="saida">-> Abre o plano cartesiano: clique para criar pontos, use Segmento para medir comprimentos e Polígono para desenhar figuras fechadas (perímetro e área aparecem na coluna da direita)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Abre uma janela maximizada com o plano cartesiano estilo GeoGebra. Ferramentas: <b>Mover</b> (arrasta pontos e desloca o plano), <b>Ponto</b>, <b>Segmento</b> (mostra o comprimento) e <b>Polígono</b> (perímetro e área). Um ponto cola na coordenada inteira mais próxima quando você clica bem perto de um inteiro; caso contrário, ele aceita coordenadas decimais. Os pontos são nomeados A, B, C… Rodinha do mouse faz zoom; arrastar o fundo na ferramenta Mover desloca o plano. <code>poligonos()</code> (sem acento) também funciona.</p>
       <h3>vá para</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">:rótulo</span>
@@ -1642,7 +1733,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','polígonos','poligonos','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatória']);
@@ -2078,6 +2169,7 @@ updateLines(); updateHighlight();
     {name:'para cada',hint:'para cada item em lista:',desc:'Percorre cada item da lista'},
     {name:'pare',hint:'pare',desc:'Para execução (break)'},
     {name:'pausa',hint:'pausa(segundos)',desc:'Pausa execução'},
+    {name:'polígonos',hint:'polígonos()',desc:'Abre o plano cartesiano de polígonos (pontos, segmentos e áreas)'},
     {name:'recortar',hint:'recortar()',desc:'Recorta da área de transferência'},
     {name:'repetir',hint:'repetir n vezes:',desc:'Repete bloco n vezes'},
     {name:'retorne',hint:'retorne(valor)',desc:'Retorna valor da função'},
@@ -2360,6 +2452,7 @@ let janelaEl=document.getElementById('janelaFlutuante');
 let janelaConsoleEl=document.getElementById('janelaConsole');
 function ativarJanela(centraliza){
   _esconderPainelTartaruga();
+  _esconderPoligonos();
   janelaEl=document.getElementById('janelaFlutuante');
   janelaConsoleEl=document.getElementById('janelaConsole');
   if(!janelaEl) return;
@@ -2400,6 +2493,7 @@ function ativarJanela(centraliza){
 }
 function ativarJanelaDesenho(w,h){
   _esconderPainelTartaruga();
+  _esconderPoligonos();
   janelaEl=document.getElementById('janelaFlutuante');
   janelaConsoleEl=document.getElementById('janelaConsole');
   if(!janelaEl) return;
@@ -2441,6 +2535,7 @@ function ativarJanelaDesenho(w,h){
 }
 function fecharJanela(){
   _esconderPainelTartaruga();
+  _esconderPoligonos();
   tartaruga=null;
   if(janelaEl){
     janelaEl.style.display='none';
@@ -2486,6 +2581,7 @@ function _esconderPainelTartaruga(){
   if(_p) _p.style.display='none';
 }
 function abrirJanelaTartaruga(){
+  _esconderPoligonos();
   janelaEl=document.getElementById('janelaFlutuante');
   janelaConsoleEl=document.getElementById('janelaConsole');
   if(!janelaEl) return;
@@ -2710,10 +2806,12 @@ function isTartarugaComandoStmt(stmt){
 // _janelaAbertaNestaExec, para não afetar erros de desenho do programa.
 function abrirConsoleFlutuante(){
   _esconderPainelTartaruga();
+  _esconderPoligonos();
   janelaEl=document.getElementById('janelaFlutuante');
   janelaConsoleEl=document.getElementById('janelaConsole');
   if(!janelaEl || !janelaConsoleEl || !consoleEl) return;
   if(janelaModo==='desenho' && janelaEl.style.display!=='none') return;
+  if(janelaModo==='poligonos' && janelaEl.style.display!=='none') return;
   if(janelaAtiva && janelaModo==='console' && janelaEl.style.display!=='none'){
     janelaEl.classList.remove('minimized');
     janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
@@ -3418,6 +3516,9 @@ function getJanelaCentraliza(stmt){
   if(!m) return false;
   let a=m[1].trim().toLowerCase().replace(/["']/g,'');
   return a==='centraliza';
+}
+function isPoligonosStmt(stmt){
+  return /^\s*pol[ií]gonos\s*\(\s*\)\s*(?:#.*)?$/i.test(stmt.trim());
 }
 function isJanelaDesenhoStmt(stmt){
   const t=stmt.trim();
@@ -4293,6 +4394,686 @@ if(consoleInputEl){
   });
 }
 
+// ==================== Polígonos (plano cartesiano estilo GeoGebra) ====================
+const _polEstado = {
+  ativo:false,
+  ferramenta:'mover', // mover | ponto | reta | segmento | poligono | circunferencia
+  pontos:[],          // {x,y,rotulo}
+  segmentos:[],       // {a:idx,b:idx}
+  retas:[],           // {a:idx,b:idx,nome} retas infinitas
+  circunferencias:[], // {centro:idx, ponto:idx, nome}
+  poligonos:[],       // {ids:[...]}
+  rascunhoPoli:[],    // índices dos vértices do polígono em construção
+  segA:-1,            // índice do 1º ponto escolhido na ferramenta segmento
+  retaA:-1,           // índice do 1º ponto escolhido na ferramenta reta
+  circA:-1,           // índice do centro escolhido na ferramenta circunferência
+  view:{cx:0, cy:0, scale:60},
+  panning:false, panSX:0, panSY:0, viewCX0:0, viewCY0:0,
+  arrastando:-1,
+  cursorDentro:false,
+  curX:0, curY:0,
+  _msgTimer:null
+};
+function _polEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function _polFmt(n){ if(!isFinite(n)) return '—'; return String(Math.round(n*100)/100); }
+function _polDist(x1,y1,x2,y2){ return Math.hypot(x2-x1, y2-y1); }
+const _polSnapPx=6; // cola no inteiro só quando está a poucos pixels da linha da grade
+function _polCoord(v, s){
+  const r=Math.round(v);
+  return (Math.abs(v-r)*s <= _polSnapPx) ? r : Math.round(v*100)/100;
+}
+function _polProximaLetra(){
+  const i=_polEstado.pontos.length;
+  const n=Math.floor(i/26);
+  const c=String.fromCharCode(65+(i%26));
+  return n>0 ? c+n : c;
+}
+function _polNomeObj(offset, idx){
+  const letras='abcdefghijklmnopqrstuvwxyz';
+  const total=letras.length;
+  const c=letras[(offset + (idx%total)) % total];
+  const n=Math.floor((offset+idx)/total);
+  return n>0 ? c+n : c;
+}
+function _polSegVisivel(a,b,x0,y0,x1,y1){
+  let t0=-Infinity, t1=Infinity;
+  const dx=b.x-a.x, dy=b.y-a.y;
+  const p=[-dx, dx, -dy, dy];
+  const q=[a.x-x0, x1-a.x, a.y-y0, y1-a.y];
+  for(let i=0;i<4;i++){
+    if(p[i]===0){
+      if(q[i]<0) return null;
+    }else{
+      const r=q[i]/p[i];
+      if(p[i]<0){
+        if(r>t1) return null;
+        if(r>t0) t0=r;
+      }else{
+        if(r<t0) return null;
+        if(r<t1) t1=r;
+      }
+    }
+  }
+  if(!isFinite(t0) || !isFinite(t1)) return null;
+  return {a:{x:a.x+t0*dx, y:a.y+t0*dy}, b:{x:a.x+t1*dx, y:a.y+t1*dy}};
+}
+function _polTraçarReta(ctx, pA, pB, cor, largura){
+  const cv=document.getElementById('poligonosCanvas');
+  if(!cv) return;
+  const v=_polEstado.view, s=v.scale;
+  const W=cv.width, H=cv.height;
+  if(pA.x===pB.x && pA.y===pB.y) return;
+  const x0=v.cx - W/(2*s), x1=v.cx + W/(2*s);
+  const y0=v.cy - H/(2*s), y1=v.cy + H/(2*s);
+  const clip=_polSegVisivel(pA,pB,x0,y0,x1,y1);
+  if(!clip) return;
+  ctx.strokeStyle=cor; ctx.lineWidth=largura; ctx.lineCap='round';
+  ctx.beginPath();
+  ctx.moveTo((clip.a.x-v.cx)*s+W/2, H/2-(clip.a.y-v.cy)*s);
+  ctx.lineTo((clip.b.x-v.cx)*s+W/2, H/2-(clip.b.y-v.cy)*s);
+  ctx.stroke();
+}
+function _polS2W(sx,sy){
+  const cv=document.getElementById('poligonosCanvas');
+  if(!cv) return {x:0,y:0};
+  const s=_polEstado.view.scale;
+  return {
+    x: (sx - cv.width/2)/s + _polEstado.view.cx,
+    y: _polEstado.view.cy - (sy - cv.height/2)/s
+  };
+}
+function _polHitPonto(sx,sy){
+  const cv=document.getElementById('poligonosCanvas');
+  if(!cv) return -1;
+  const cx=cv.width/2, cy=cv.height/2, s=_polEstado.view.scale;
+  let best=-1, bestD=Infinity;
+  for(let i=0;i<_polEstado.pontos.length;i++){
+    const p=_polEstado.pontos[i];
+    const px=(p.x-_polEstado.view.cx)*s+cx;
+    const py=cy-(p.y-_polEstado.view.cy)*s;
+    const d=Math.hypot(px-sx, py-sy);
+    if(d<=10 && d<bestD){ best=i; bestD=d; }
+  }
+  return best;
+}
+function _polRedimensionar(cv){
+  if(!cv) return;
+  const r=cv.parentElement.getBoundingClientRect();
+  const w=Math.max(80, Math.round(r.width));
+  const h=Math.max(80, Math.round(r.height));
+  if(cv.width!==w) cv.width=w;
+  if(cv.height!==h) cv.height=h;
+}
+function _polPassoGrid(s){
+  const passos=[1,2,5,10,20,50,100,200,500,1000,2000,5000];
+  for(let i=0;i<passos.length;i++) if(passos[i]*s>=20) return passos[i];
+  return passos[passos.length-1];
+}
+function _polPassoNum(s){
+  const passos=[1,2,5,10,20,50,100,200,500,1000,2000,5000];
+  for(let i=0;i<passos.length;i++) if(passos[i]*s>=70) return passos[i];
+  return passos[passos.length-1];
+}
+function _polPerimetroIds(ids){
+  let p=0;
+  for(let i=0;i<ids.length;i++){
+    const a=_polEstado.pontos[ids[i]], b=_polEstado.pontos[ids[(i+1)%ids.length]];
+    p+=_polDist(a.x,a.y,b.x,b.y);
+  }
+  return p;
+}
+function _polAreaIds(ids){
+  let soma=0;
+  for(let i=0;i<ids.length;i++){
+    const a=_polEstado.pontos[ids[i]], b=_polEstado.pontos[ids[(i+1)%ids.length]];
+    soma += a.x*b.y - b.x*a.y;
+  }
+  return Math.abs(soma)/2;
+}
+function _polAtualizarHint(){
+  const el=document.getElementById('polHint');
+  if(!el) return;
+  const h={
+    mover:'Clique em um ponto e arraste para movê-lo. Arraste o fundo para deslizar o plano. Rodinha do mouse dá zoom.',
+    ponto:'Clique em qualquer lugar para criar um ponto. Ele cola na coordenada inteira mais próxima quando você clica bem perto de um inteiro; caso contrário, o ponto fica com coordenadas decimais. Ex: (2, 3) ou (2.3, 4.7).',
+    reta:'Clique em dois pontos (crie-os se precisar) para traçar a reta infinita que passa por eles.',
+    segmento:'Clique em um ponto existente (ou no fundo para criar) e depois clique de novo para formar o segmento. O comprimento aparece na coluna da direita.',
+    poligono:'Clique para colocar cada vértice. Depois use "Fechar polígono" para calcular perímetro e área.',
+    circunferencia:'Clique no centro e depois em um ponto da circunferência. A distância entre eles é o raio.'
+  };
+  el.textContent = h[_polEstado.ferramenta] || '';
+}
+function _polAtualizarHintMsg(msg){
+  const el=document.getElementById('polHint');
+  if(!el) return;
+  el.textContent=msg;
+  clearTimeout(_polEstado._msgTimer);
+  _polEstado._msgTimer=setTimeout(()=>{ _polAtualizarHint(); }, 2600);
+}
+function _polAtualizarDados(){
+  const elP=document.getElementById('polDadosPontos');
+  const elS=document.getElementById('polDadosSegmentos');
+  const elR=document.getElementById('polDadosRetas');
+  const elC=document.getElementById('polDadosCircunf');
+  const elG=document.getElementById('polDadosPoligonos');
+  if(elP){
+    elP.innerHTML = _polEstado.pontos.length
+      ? _polEstado.pontos.map(p=>`<div class="pol-dados-item">${_polEsc(p.rotulo)} — (${p.x}, ${p.y})</div>`).join('')
+      : '<div class="pol-dados-vazio">—</div>';
+  }
+  if(elS){
+    elS.innerHTML = _polEstado.segmentos.length
+      ? _polEstado.segmentos.map(se=>{
+          const a=_polEstado.pontos[se.a], b=_polEstado.pontos[se.b];
+          if(!a || !b) return '';
+          return `<div class="pol-dados-item">${_polEsc(a.rotulo)}${_polEsc(b.rotulo)} — ${_polFmt(_polDist(a.x,a.y,b.x,b.y))}</div>`;
+        }).join('')
+      : '<div class="pol-dados-vazio">—</div>';
+  }
+  if(elR){
+    elR.innerHTML = _polEstado.retas.length
+      ? _polEstado.retas.map(re=>{
+          const a=_polEstado.pontos[re.a], b=_polEstado.pontos[re.b];
+          if(!a || !b) return '';
+          return `<div class="pol-dados-item">${_polEsc(re.nome)} — por ${_polEsc(a.rotulo)}(${a.x}, ${a.y}) e ${_polEsc(b.rotulo)}(${b.x}, ${b.y})</div>`;
+        }).join('')
+      : '<div class="pol-dados-vazio">—</div>';
+  }
+  if(elC){
+    elC.innerHTML = _polEstado.circunferencias.length
+      ? _polEstado.circunferencias.map(ci=>{
+          const c=_polEstado.pontos[ci.centro], p=_polEstado.pontos[ci.ponto];
+          if(!c || !p) return '';
+          const r=_polDist(c.x,c.y,p.x,p.y);
+          const comp=r*2*Math.PI, area=r*r*Math.PI;
+          return `<div class="pol-dados-item">${_polEsc(ci.nome)} — r=${_polFmt(r)}, C=${_polFmt(comp)}, A=${_polFmt(area)}</div>`;
+        }).join('')
+      : '<div class="pol-dados-vazio">—</div>';
+  }
+  if(elG){
+    elG.innerHTML = _polEstado.poligonos.length
+      ? _polEstado.poligonos.map((pg,i)=>{
+          if(pg.ids.length<3) return '';
+          const rot=pg.ids.map(id=>_polEstado.pontos[id]?_polEsc(_polEstado.pontos[id].rotulo):'?').join('');
+          return `<div class="pol-dados-item">${rot} — P=${_polFmt(_polPerimetroIds(pg.ids))}  A=${_polFmt(_polAreaIds(pg.ids))}</div>`;
+        }).join('')
+      : '<div class="pol-dados-vazio">—</div>';
+  }
+}
+function _polRedesenhar(){
+  const cv=document.getElementById('poligonosCanvas');
+  if(!cv || !_polEstado.ativo) return;
+  const ctx=cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  const v=_polEstado.view, s=v.scale;
+  cv.classList.toggle('pol-grab', _polEstado.ferramenta==='mover');
+  cv.classList.toggle('pol-panning', _polEstado.panning);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(0,0,W,H);
+  const x0=v.cx - W/(2*s), x1=v.cx + W/(2*s);
+  const y0=v.cy - H/(2*s), y1=v.cy + H/(2*s);
+  // grade
+  const passo=_polPassoGrid(s);
+  ctx.strokeStyle='#e9edf2';
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  for(let gx=Math.floor(x0/passo)*passo; gx<=x1; gx+=passo){
+    const px=(gx-v.cx)*s+W/2;
+    ctx.moveTo(px,0); ctx.lineTo(px,H);
+  }
+  for(let gy=Math.floor(y0/passo)*passo; gy<=y1; gy+=passo){
+    const py=H/2-(gy-v.cy)*s;
+    ctx.moveTo(0,py); ctx.lineTo(W,py);
+  }
+  ctx.stroke();
+  // eixos
+  ctx.strokeStyle='#b7bfca';
+  ctx.lineWidth=1.5;
+  ctx.beginPath();
+  const ax=(0-v.cx)*s+W/2;
+  ctx.moveTo(ax,0); ctx.lineTo(ax,H);
+  const ay=H/2-(0-v.cy)*s;
+  ctx.moveTo(0,ay); ctx.lineTo(W,ay);
+  ctx.stroke();
+  // setas e rótulos dos eixos
+  ctx.fillStyle='#98a1ad';
+  ctx.font='11px Inter, sans-serif';
+  ctx.fillText('x', W-16, ay-6);
+  ctx.fillText('y', ax+6, 15);
+  // números dos eixos
+  const numPasso=_polPassoNum(s);
+  for(let gx=Math.floor(x0/numPasso)*numPasso; gx<=x1; gx+=numPasso){
+    if(gx===0) continue;
+    ctx.fillText(String(gx), (gx-v.cx)*s+W/2+4, ay+13);
+  }
+  for(let gy=Math.floor(y0/numPasso)*numPasso; gy<=y1; gy+=numPasso){
+    if(gy===0) continue;
+    ctx.fillText(String(gy), ax+5, H/2-(gy-v.cy)*s-5);
+  }
+  // polígonos fechados
+  for(const pg of _polEstado.poligonos){
+    const ids=pg.ids;
+    if(ids.length<3) continue;
+    ctx.beginPath();
+    for(let i=0;i<ids.length;i++){
+      const p=_polEstado.pontos[ids[i]];
+      if(!p) continue;
+      const px=(p.x-v.cx)*s+W/2, py=H/2-(p.y-v.cy)*s;
+      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.closePath();
+    ctx.fillStyle='rgba(51,153,255,0.12)';
+    ctx.fill();
+    ctx.strokeStyle='#3399ff';
+    ctx.lineWidth=2;
+    ctx.stroke();
+  }
+  // rascunho do polígono em construção
+  if(_polEstado.rascunhoPoli.length>0){
+    ctx.setLineDash([6,4]);
+    ctx.strokeStyle='#3399ff';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    for(let i=0;i<_polEstado.rascunhoPoli.length;i++){
+      const p=_polEstado.pontos[_polEstado.rascunhoPoli[i]];
+      if(!p) continue;
+      const px=(p.x-v.cx)*s+W/2, py=H/2-(p.y-v.cy)*s;
+      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    if(_polEstado.cursorDentro && _polEstado.ferramenta==='poligono'){
+      ctx.lineTo((_polEstado.curX-v.cx)*s+W/2, H/2-(_polEstado.curY-v.cy)*s);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  // retas infinitas
+  for(const re of _polEstado.retas){
+    const a=_polEstado.pontos[re.a], b=_polEstado.pontos[re.b];
+    if(!a || !b) continue;
+    _polTraçarReta(ctx, a, b, '#ff9f43', 1.8);
+    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+    ctx.fillStyle='#d07d17';
+    ctx.font='600 12px Inter, sans-serif';
+    ctx.fillText(re.nome, (mx-v.cx)*s+W/2+5, H/2-(my-v.cy)*s-5);
+  }
+  // circunferências
+  for(const ci of _polEstado.circunferencias){
+    const c=_polEstado.pontos[ci.centro], p=_polEstado.pontos[ci.ponto];
+    if(!c || !p) continue;
+    const r=_polDist(c.x,c.y,p.x,p.y);
+    if(r<=0) continue;
+    const px=(c.x-v.cx)*s+W/2, py=H/2-(c.y-v.cy)*s;
+    const pr=r*s;
+    ctx.setLineDash([4,4]);
+    ctx.strokeStyle='rgba(0,184,148,0.45)';
+    ctx.lineWidth=1.2;
+    ctx.beginPath();
+    ctx.moveTo(px,py);
+    ctx.lineTo((p.x-v.cx)*s+W/2, H/2-(p.y-v.cy)*s);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.arc(px,py,pr,0,Math.PI*2);
+    ctx.strokeStyle='#00b894';
+    ctx.lineWidth=2;
+    ctx.stroke();
+    ctx.fillStyle='#00b894';
+    ctx.font='600 12px Inter, sans-serif';
+    ctx.fillText(ci.nome, px+4, py-pr-6);
+  }
+  // segmentos
+  ctx.lineCap='round';
+  ctx.lineJoin='round';
+  ctx.strokeStyle='#2d3436';
+  ctx.lineWidth=2.5;
+  for(const se of _polEstado.segmentos){
+    const a=_polEstado.pontos[se.a], b=_polEstado.pontos[se.b];
+    if(!a || !b) continue;
+    ctx.beginPath();
+    ctx.moveTo((a.x-v.cx)*s+W/2, H/2-(a.y-v.cy)*s);
+    ctx.lineTo((b.x-v.cx)*s+W/2, H/2-(b.y-v.cy)*s);
+    ctx.stroke();
+  }
+  // guia do segmento em construção
+  if(_polEstado.ferramenta==='segmento' && _polEstado.segA>=0 && _polEstado.cursorDentro){
+    const a=_polEstado.pontos[_polEstado.segA];
+    if(a){
+      ctx.setLineDash([5,4]);
+      ctx.strokeStyle='#74b9ff';
+      ctx.lineWidth=1.5;
+      ctx.beginPath();
+      ctx.moveTo((a.x-v.cx)*s+W/2, H/2-(a.y-v.cy)*s);
+      ctx.lineTo((_polEstado.curX-v.cx)*s+W/2, H/2-(_polEstado.curY-v.cy)*s);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+  // guia da reta em construção
+  if(_polEstado.ferramenta==='reta' && _polEstado.retaA>=0 && _polEstado.cursorDentro){
+    const a=_polEstado.pontos[_polEstado.retaA];
+    if(a){
+      const curso={x:_polEstado.curX, y:_polEstado.curY};
+      ctx.setLineDash([6,5]);
+      _polTraçarReta(ctx, a, curso, '#ff9f43', 1.5);
+      ctx.setLineDash([]);
+    }
+  }
+  // guia da circunferência em construção
+  if(_polEstado.ferramenta==='circunferencia' && _polEstado.circA>=0 && _polEstado.cursorDentro){
+    const c=_polEstado.pontos[_polEstado.circA];
+    if(c){
+      const r=_polDist(c.x,c.y,_polEstado.curX,_polEstado.curY);
+      if(r>0){
+        const px=(c.x-v.cx)*s+W/2, py=H/2-(c.y-v.cy)*s;
+        ctx.setLineDash([6,5]);
+        ctx.beginPath();
+        ctx.arc(px,py,r*s,0,Math.PI*2);
+        ctx.strokeStyle='rgba(0,184,148,0.55)';
+        ctx.lineWidth=1.5;
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+  }
+  // pontos
+  for(let i=0;i<_polEstado.pontos.length;i++){
+    const p=_polEstado.pontos[i];
+    const px=(p.x-v.cx)*s+W/2, py=H/2-(p.y-v.cy)*s;
+    ctx.beginPath();
+    ctx.arc(px,py, (i===_polEstado.arrastando || i===_polEstado.segA || i===_polEstado.retaA || i===_polEstado.circA) ? 6 : 4.5, 0, Math.PI*2);
+    ctx.fillStyle = _polEstado.arrastando===i ? '#3399ff' : '#e74c3c';
+    ctx.fill();
+    ctx.strokeStyle='#ffffff';
+    ctx.lineWidth=1.5;
+    ctx.stroke();
+    ctx.fillStyle='#2d3436';
+    ctx.font='600 12px Inter, sans-serif';
+    ctx.fillText(p.rotulo, px+7, py-7);
+  }
+  // coordenadas do cursor
+  if(_polEstado.cursorDentro && (_polEstado.ferramenta==='ponto'||_polEstado.ferramenta==='reta'||_polEstado.ferramenta==='segmento'||_polEstado.ferramenta==='poligono'||_polEstado.ferramenta==='circunferencia')){
+    const cx=(_polEstado.curX-v.cx)*s+W/2;
+    const cy=H/2-(_polEstado.curY-v.cy)*s;
+    const tx='('+_polEstado.curX+', '+_polEstado.curY+')';
+    ctx.font='11px JetBrains Mono, monospace';
+    const tw=ctx.measureText(tx).width;
+    const bxp=Math.min(cx+8, W-tw-12);
+    ctx.fillStyle='rgba(45,52,54,0.75)';
+    ctx.fillRect(bxp, cy+8, tw+8, 18);
+    ctx.fillStyle='#ffffff';
+    ctx.fillText(tx, bxp+4, cy+21);
+  }
+}
+function _polCriarPonto(sx,sy){
+  const hit=_polHitPonto(sx,sy);
+  if(hit>=0) return hit;
+  const w=_polS2W(sx,sy);
+  const nx=_polCoord(w.x, _polEstado.view.scale), ny=_polCoord(w.y, _polEstado.view.scale);
+  const rotulo=_polProximaLetra();
+  _polEstado.pontos.push({x:nx, y:ny, rotulo:rotulo});
+  _polAtualizarDados();
+  _polRedesenhar();
+  return _polEstado.pontos.length-1;
+}
+function _polFecharPoligono(){
+  if(_polEstado.rascunhoPoli.length<3){
+    _polAtualizarHintMsg('São necessários ao menos 3 vértices para fechar o polígono.');
+    return;
+  }
+  _polEstado.poligonos.push({ids:_polEstado.rascunhoPoli.slice()});
+  _polEstado.rascunhoPoli=[];
+  _polAtualizarDados();
+  _polAtualizarHint();
+  _polRedesenhar();
+}
+function _polLimpar(){
+  _polEstado.pontos=[];
+  _polEstado.segmentos=[];
+  _polEstado.retas=[];
+  _polEstado.circunferencias=[];
+  _polEstado.poligonos=[];
+  _polEstado.rascunhoPoli=[];
+  _polEstado.segA=-1;
+  _polEstado.retaA=-1;
+  _polEstado.circA=-1;
+  _polAtualizarDados();
+  _polAtualizarHint();
+  _polRedesenhar();
+}
+function _polMousedown(sx,sy){
+  const e=_polEstado;
+  if(e.ferramenta==='mover'){
+    const h=_polHitPonto(sx,sy);
+    if(h>=0){ e.arrastando=h; e.curX=e.pontos[h].x; e.curY=e.pontos[h].y; }
+    else{
+      e.panning=true; e.panSX=sx; e.panSY=sy;
+      e.viewCX0=e.view.cx; e.viewCY0=e.view.cy;
+    }
+    _polRedesenhar();
+    return;
+  }
+  if(e.ferramenta==='ponto'){ _polCriarPonto(sx,sy); return; }
+  if(e.ferramenta==='reta'){
+    let idx=_polHitPonto(sx,sy);
+    if(idx<0) idx=_polCriarPonto(sx,sy);
+    if(idx<0) return;
+    if(e.retaA<0) e.retaA=idx;
+    else if(idx===e.retaA) e.retaA=-1;
+    else{
+      if(_polDist(e.pontos[e.retaA].x,e.pontos[e.retaA].y,e.pontos[idx].x,e.pontos[idx].y)>0){
+        e.retas.push({a:e.retaA, b:idx, nome:_polNomeObj(5, e.retas.length)});
+      }
+      e.retaA=-1;
+    }
+    _polAtualizarDados();
+    _polRedesenhar();
+    return;
+  }
+  if(e.ferramenta==='segmento'){
+    let idx=_polHitPonto(sx,sy);
+    if(idx<0) idx=_polCriarPonto(sx,sy);
+    if(idx<0) return;
+    if(e.segA<0) e.segA=idx;
+    else if(idx===e.segA) e.segA=-1;
+    else{
+      const ja=e.segmentos.some(se=>(se.a===e.segA&&se.b===idx)||(se.a===idx&&se.b===e.segA));
+      if(!ja) e.segmentos.push({a:e.segA, b:idx});
+      e.segA=-1;
+    }
+    _polAtualizarDados();
+    _polRedesenhar();
+    return;
+  }
+  if(e.ferramenta==='circunferencia'){
+    let idx=_polHitPonto(sx,sy);
+    if(idx<0) idx=_polCriarPonto(sx,sy);
+    if(idx<0) return;
+    if(e.circA<0) e.circA=idx;
+    else if(idx===e.circA) e.circA=-1;
+    else{
+      if(_polDist(e.pontos[e.circA].x,e.pontos[e.circA].y,e.pontos[idx].x,e.pontos[idx].y)>0){
+        e.circunferencias.push({centro:e.circA, ponto:idx, nome:'c'+(e.circunferencias.length+1)});
+      }
+      e.circA=-1;
+    }
+    _polAtualizarDados();
+    _polRedesenhar();
+    return;
+  }
+  if(e.ferramenta==='poligono'){
+    let idx=_polHitPonto(sx,sy);
+    if(idx<0) idx=_polCriarPonto(sx,sy);
+    if(idx<0) return;
+    const ult=e.rascunhoPoli[e.rascunhoPoli.length-1];
+    if(ult!==idx) e.rascunhoPoli.push(idx);
+    _polAtualizarDados();
+    _polRedesenhar();
+    return;
+  }
+}
+function _polMousemove(sx,sy){
+  const e=_polEstado;
+  const w=_polS2W(sx,sy);
+  e.curX=_polCoord(w.x, e.view.scale);
+  e.curY=_polCoord(w.y, e.view.scale);
+  if(e.panning){
+    const s=e.view.scale;
+    e.view.cx=e.viewCX0 - (sx-e.panSX)/s;
+    e.view.cy=e.viewCY0 + (sy-e.panSY)/s;
+    _polRedesenhar();
+    return;
+  }
+  if(e.arrastando>=0 && e.pontos[e.arrastando]){
+    e.pontos[e.arrastando].x=e.curX;
+    e.pontos[e.arrastando].y=e.curY;
+    _polAtualizarDados();
+    _polRedesenhar();
+    return;
+  }
+  _polRedesenhar();
+}
+function _polZoom(e){
+  const cv=document.getElementById('poligonosCanvas');
+  if(!cv) return;
+  const r=cv.getBoundingClientRect();
+  const sx=e.clientX-r.left, sy=e.clientY-r.top;
+  const w=_polS2W(sx,sy);
+  const fator=e.deltaY<0?1.15:(1/1.15);
+  let nova=_polEstado.view.scale*fator;
+  nova=Math.max(8, Math.min(400, nova));
+  _polEstado.view.scale=nova;
+  _polEstado.view.cx=w.x - (sx-cv.width/2)/nova;
+  _polEstado.view.cy=w.y + (sy-cv.height/2)/nova;
+  _polRedesenhar();
+}
+function _esconderPoligonos(){
+  const _j=document.getElementById('janelaFlutuante');
+  if(_j) _j.classList.remove('poligonos-mod');
+  const _h=document.getElementById('janelaHeader');
+  if(_h){ const _s=_h.querySelector('span'); if(_s && _s.textContent.includes('Polígonos')) _s.textContent='🪟 Janela Willog — Console'; }
+  const _p=document.getElementById('poligonosRoot');
+  if(_p) _p.style.display='none';
+  _polEstado.ativo=false;
+  _polEstado.panning=false;
+  _polEstado.arrastando=-1;
+}
+function abrirJanelaPoligonos(){
+  _esconderPainelTartaruga();
+  janelaEl=document.getElementById('janelaFlutuante');
+  janelaConsoleEl=document.getElementById('janelaConsole');
+  if(!janelaEl) return;
+  janelaEl.style.display='flex';
+  janelaAtiva=true;
+  janelaCentralizada=false;
+  janelaModo='poligonos';
+  _janelaAbertaNestaExec=true;
+  _graficoErroJaMostrado=false;
+  janelaEl.classList.remove('minimized');
+  janelaEl.classList.add('maximized');
+  janelaEl.classList.remove('tartaruga-mod');
+  janelaEl.classList.add('poligonos-mod');
+  janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
+  const janelaBodyEl=document.getElementById('janelaBody');
+  if(janelaBodyEl){ janelaBodyEl.style.width=''; janelaBodyEl.style.height=''; janelaBodyEl.style.flex=''; }
+  const _h=document.getElementById('janelaHeader');
+  if(_h){ const _s=_h.querySelector('span'); if(_s) _s.textContent='📐 Polígonos — plano cartesiano'; }
+  const _cv=document.getElementById('janelaCanvas');
+  if(_cv){ _cv.classList.remove('ativo'); _cv.style.display='none'; }
+  const _cs=document.getElementById('janelaConsole');
+  if(_cs){ _cs.style.display='none'; }
+  const _root=document.getElementById('poligonosRoot');
+  if(_root) _root.style.display='flex';
+  _polEstado.ativo=true;
+  if(_polEstado.pontos.length===0 && _polEstado.segmentos.length===0 && _polEstado.poligonos.length===0){
+    _polEstado.view.cx=0; _polEstado.view.cy=0; _polEstado.view.scale=60;
+  }
+  _polEstado.rascunhoPoli=[];
+  _polEstado.segA=-1;
+  _polEstado.retaA=-1;
+  _polEstado.circA=-1;
+  _polAtualizarHint();
+  _polAtualizarDados();
+  const cv=document.getElementById('poligonosCanvas');
+  if(cv){
+    _polRedimensionar(cv);
+    _polRedesenhar();
+  }
+  requestAnimationFrame(()=>{ if(cv){ _polRedimensionar(cv); _polRedesenhar(); } });
+}
+(function(){
+  const root=document.getElementById('poligonosRoot');
+  const cv=document.getElementById('poligonosCanvas');
+  if(!root || !cv) return;
+  root.querySelectorAll('.poligonos-toolbar button[data-tool]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      _polEstado.ferramenta=btn.dataset.tool;
+      _polEstado.segA=-1; _polEstado.retaA=-1; _polEstado.circA=-1;
+      root.querySelectorAll('.poligonos-toolbar button[data-tool]').forEach(b=>b.classList.toggle('ativo', b===btn));
+      _polAtualizarHint();
+      _polRedesenhar();
+    });
+  });
+  const btnF=document.getElementById('polBtnFecharPoli');
+  if(btnF) btnF.addEventListener('click', ()=>{ _polFecharPoligono(); });
+  const btnL=document.getElementById('polBtnLimpar');
+  if(btnL) btnL.addEventListener('click', ()=>{ _polLimpar(); });
+  function _pos(e){
+    const r=cv.getBoundingClientRect();
+    return {sx:(e.clientX||0)-r.left, sy:(e.clientY||0)-r.top};
+  }
+  cv.addEventListener('mousedown', (e)=>{
+    if(!_polEstado.ativo) return;
+    e.preventDefault();
+    const {sx,sy}=_pos(e);
+    _polMousedown(sx,sy);
+  });
+  cv.addEventListener('mousemove', (e)=>{
+    if(!_polEstado.ativo) return;
+    _polEstado.cursorDentro=true;
+    const {sx,sy}=_pos(e);
+    _polMousemove(sx,sy);
+  });
+  window.addEventListener('mousemove', (e)=>{
+    if(!_polEstado.ativo) return;
+    if(_polEstado.panning || _polEstado.arrastando>=0){
+      const r=cv.getBoundingClientRect();
+      _polMousemove(e.clientX-r.left, e.clientY-r.top);
+    }
+  });
+  window.addEventListener('mouseup', ()=>{
+    _polEstado.panning=false;
+    _polEstado.arrastando=-1;
+  });
+  cv.addEventListener('mouseenter', ()=>{ _polEstado.cursorDentro=true; });
+  cv.addEventListener('mouseleave', ()=>{ _polEstado.cursorDentro=false; _polRedesenhar(); });
+  cv.addEventListener('wheel', (e)=>{ if(!_polEstado.ativo) return; e.preventDefault(); _polZoom(e); }, {passive:false});
+  cv.addEventListener('touchstart', (e)=>{
+    if(!_polEstado.ativo || e.touches.length!==1) return;
+    e.preventDefault();
+    const t=e.touches[0], r=cv.getBoundingClientRect();
+    _polMousedown(t.clientX-r.left, t.clientY-r.top);
+  }, {passive:false});
+  cv.addEventListener('touchmove', (e)=>{
+    if(!_polEstado.ativo || e.touches.length!==1) return;
+    e.preventDefault();
+    const t=e.touches[0], r=cv.getBoundingClientRect();
+    _polMousemove(t.clientX-r.left, t.clientY-r.top);
+  }, {passive:false});
+  cv.addEventListener('touchend', (e)=>{
+    if(_polEstado.ativo && e.touches.length===0){
+      _polEstado.panning=false;
+      _polEstado.arrastando=-1;
+    }
+  });
+  window.addEventListener('resize', ()=>{ if(_polEstado.ativo){ _polRedimensionar(cv); _polRedesenhar(); } });
+  if(window.ResizeObserver){
+    try{
+      const ro=new ResizeObserver(()=>{ if(_polEstado.ativo){ _polRedimensionar(cv); _polRedesenhar(); } });
+      ro.observe(cv.parentElement);
+    }catch(e){}
+  }
+})();
 // --- Arquivos .wil ---
 document.getElementById('btnNovo').addEventListener('click', ()=>{
   if(confirm('Criar novo arquivo? Alterações não salvas serão perdidas.')){
@@ -6953,6 +7734,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
     return;
   }
   if(isJanelaStmt(stmt)){ const cent=getJanelaCentraliza(stmt); ativarJanela(cent); if(!cent) hasOutputRef.value=true; return; }
+  if(isPoligonosStmt(stmt)){ abrirJanelaPoligonos(); hasOutputRef.value=true; return; }
   // --- Tela / Desenhe (gráficos na janela) ---
   if(isTelaLimpeStmt(stmt)){ if(_willogTelaLimpe()) hasOutputRef.value=true; return; }
   if(isTelaCorStmt(stmt)){ const _arg=parseTelaCorArg(stmt); if(_willogTelaCor(_arg, env)) hasOutputRef.value=true; return; }
@@ -7362,6 +8144,7 @@ async function executarPrograma(src){
         hasOutputRef.value=true; i++; continue;
       }
       if(isJanelaLine(raw)){ const cent=getJanelaCentraliza(raw); ativarJanela(cent); if(!cent) hasOutputRef.value=true; i++; continue; }
+      if(isPoligonosStmt(raw)){ abrirJanelaPoligonos(); hasOutputRef.value=true; i++; continue; }
       if(isTelaLimpeStmt(raw)){ if(_willogTelaLimpe()) hasOutputRef.value=true; i++; continue; }
       if(isTelaCorStmt(raw)){ const _a=parseTelaCorArg(raw); if(_willogTelaCor(_a, env)) hasOutputRef.value=true; i++; continue; }
       if(isDesenheLinhaStmt(raw)){
@@ -8029,6 +8812,10 @@ document.addEventListener('keydown', (e)=>{
   }
   if(/^tela\.cor/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🎨 <b>O que faz?</b> Escolhe a cor do fundo da janelinha para o próximo <code>tela.limpe</code>. É como escolher a cor do papel!</div></div></div>`;
+  }
+  // --- Polígonos (plano cartesiano) ---
+  if(/^\s*pol[ií]gonos\s*\(\s*\)/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #3399ff; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📐 <b>O que faz?</b> Abre o plano cartesiano de polígonos (estilo GeoGebra): clique para criar pontos (grudam no inteiro quando clicados bem perto; caso contrário, ficam decimais), use <code>Segmento</code> para medir comprimentos e <code>Polígono</code> para ver perímetro e área. Os pontos ganham letras A, B, C…</div></div></div>`;
   }
   // --- Tartaruga (estilo Logo) ---
   if(/^tartaruga\s*\(\s*\)/i.test(t)){
