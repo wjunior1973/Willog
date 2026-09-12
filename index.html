@@ -791,6 +791,7 @@
         <button class="manual-tab" data-tab="propriedades">Propriedades</button>
         <button class="manual-tab" data-tab="cores">Cores</button>
         <button class="manual-tab" data-tab="tartaruga">🐢 Tartaruga</button>
+        <button class="manual-tab" data-tab="poligonos">📐 Polígonos</button>
       </div>
       <div class="manual-pane active" id="pane-comandos"><h3>abrir</h3>
         <p class="code-label">Sintaxe</p>
@@ -1497,6 +1498,37 @@ repita(5):
   direita 30
   avance 60</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Os comandos da tartaruga também podem ser digitados direto na coluna de comandos da janela tartaruga (um comando por linha). <code>Ctrl+Enter</code> executa tudo. <code>TAB</code> indenta; <code>Ctrl</code>+roda do mouse (em cima da coluna) ou <code>Ctrl+</code>+/<code>-</code> ajusta o tamanho da fonte. A largura da coluna é ajustável arrastando a alça vertical. No desenho, a roda do mouse dá zoom (sobre o cursor) e o arrasto com o mouse (mãozinha) move o desenho. Os botões <code>Lento / Normal / Rápido</code> controlam a velocidade da animação.</p>
+      </div>
+      <div class="manual-pane" id="pane-poligonos">
+        <h3>polígonos()</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">polígonos()</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">polígonos()</span> <span class="saida">→ abre o plano cartesiano estilo GeoGebra</span>
+
+<span class="example">poligonos()</span> <span class="saida">→ o mesmo comando sem acento também funciona</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Abre uma janela maximizada com um plano cartesiano. Você constrói pontos, segmentos, retas, polígonos e circunferências clicando no desenho; cada objeto é criado e analisado em uma coluna à direita. É possível usar os <code>comandos do módulo</code> só na janela dos polígonos — os demais comandos (console/desenho) não interferem.</p>
+        <h3>Ferramentas</h3>
+        <table>
+          <tr><th>Ferramenta</th><th>O que faz</th></tr>
+          <tr><td><b>↔️ Mover</b></td><td>Arrasta pontos já criados. Arraste o fundo para deslizar o plano.</td></tr>
+          <tr><td><b>⚫ Ponto</b></td><td>Um clique cria um ponto, nomeado automaticamente (A, B, C…).</td></tr>
+          <tr><td><b>➖ Reta</b></td><td>Dois cliques (em pontos existentes ou no fundo) criam a reta infinita que passa por eles (f, g, h…).</td></tr>
+          <tr><td><b>📏 Segmento</b></td><td>Dois cliques criam um segmento; o comprimento aparece na coluna de dados.</td></tr>
+          <tr><td><b>📐 Polígono</b></td><td>Cada clique adiciona um vértice; feche com <b>🔒 Fechar polígono</b> para calcular perímetro e área.</td></tr>
+          <tr><td><b>⭕ Circunferência</b></td><td>1º clique define o centro; 2º clique define o ponto na circunferência (o raio é a distância entre eles). Nomeada c1, c2…</td></tr>
+          <tr><td><b>🔒 Fechar polígono</b></td><td>Fecha o polígono em construção e calcula perímetro e área.</td></tr>
+          <tr><td><b>🧹 Limpar</b></td><td>Apaga todos os pontos, segmentos, retas, circunferências e polígonos.</td></tr>
+        </table>
+        <h3>Cola na grade (coordenadas inteiras)</h3>
+        <p>Um ponto é <b>puxado para a coordenada inteira mais próxima</b> quando você clica bem perto dela (a poucos pixels da linha da grade). Caso contrário, o ponto assume <b>coordenadas decimais</b> (com 2 casas). Cada eixo é ajustado separadamente: perto de uma vertical, o <code>x</code> cola; perto de uma horizontal, o <code>y</code> cola.</p>
+        <h3>Navegação</h3>
+        <p>Rodinha do mouse: <b>zoom</b> (centralizado no cursor). Com a ferramenta <b>Mover</b>, arrastar o fundo <b>desloca o plano</b>. A posição do cursor é mostrada num selo sobre o desenho enquanto você cria objetos.</p>
+        <h3>Coluna de dados</h3>
+        <pre><span class="saida">Pontos · Segmentos (comprimento) · Retas · Circunferências (centro, raio) · Polígonos (perímetro e área)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Todos os objetos criados aparecem na coluna à direita com seus valores atualizados em tempo real. A largura da coluna pode ser ajustada arrastando a alça entre o desenho e a coluna (min 160px, max 520px).</p>
+        <h3>Observações</h3>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Pontos são nomeados <code>A, B, C…</code> e retas <code>f, g, h…</code> (reiniciando em <code>f1, g1…</code> quando as 26 letras se esgotam); circunferências recebem <code>c1, c2…</code>. Ao fechar a janela, tudo o que foi construído é apagado.</p>
       </div>
     </div>
   </div>
