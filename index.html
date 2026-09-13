@@ -387,6 +387,29 @@
   .menu-dropdown button.primary { background:var(--accent); color:white; }
   .menu-dropdown button.primary:hover { background:var(--accent-hover); }
   .menu-sep-dropdown { height:1px; background:var(--border); margin:4px 0; }
+  .calc-box { min-width:270px; max-width:330px; padding:14px 16px 18px; touch-action:none; }
+  .calc-box .modal-header { cursor:grab; user-select:none; }
+  .calc-box.dragging .modal-header { cursor:grabbing; }
+  .calc-box.dragging { transition:none; }
+  .calc-box .modal-header button { cursor:pointer; }
+  .calc-display {
+    font-family:'JetBrains Mono',monospace; font-size:26px; font-weight:700; color:var(--text);
+    background:var(--panel2); border:2px solid var(--border); border-radius:8px; padding:10px 14px;
+    margin-bottom:12px; text-align:right; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+    min-height:50px; line-height:1.2; display:flex; align-items:center; justify-content:flex-end;
+  }
+  .calc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .calc-btn {
+    font-family:'Inter',sans-serif; font-size:16px; font-weight:600; padding:11px 0; border:2px solid var(--border);
+    background:var(--panel2); color:var(--text); border-radius:8px; cursor:pointer; user-select:none; line-height:1;
+  }
+  .calc-btn:hover { background:var(--bg2); border-color:var(--border-strong); }
+  .calc-btn:active { transform:translateY(1px); }
+  .calc-btn.op { color:var(--accent); }
+  .calc-btn.op.ativo { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .calc-btn.fn { color:var(--text-dim); font-size:14px; }
+  .calc-btn.eq { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .calc-btn.eq:hover { background:var(--accent-hover); border-color:var(--accent-hover); }
   .modal-manual-body {
     padding:20px 22px; overflow:auto; font-family:'Inter',sans-serif; font-size:17px; line-height:1.6; color:var(--text);
   }
@@ -649,6 +672,15 @@
           <button class="btn small" id="btnZoomIn" style="padding:4px 8px;">A+</button>
           <span id="zoomLabel" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">100%</span>
         </div>
+      </div>
+    </div>
+    <div class="menu" id="menuFerramentas">
+      <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Ferramentas ▾</button>
+      <div class="menu-dropdown">
+        <button id="btnFerTartaruga">🐢 Tartaruga</button>
+        <button id="btnFerPoligonos">📐 Polígonos</button>
+        <div class="menu-sep-dropdown"></div>
+        <button id="btnFerCalculadora">🧮 Calculadora</button>
       </div>
     </div>
     <div class="menu" id="menuAjuda">
@@ -1547,6 +1579,39 @@ repita(5):
         <p style="margin:0; font-size:14px; font-weight:600; color:var(--text);">Wilson José Andriolli Junior</p>
         <p style="margin:2px 0 12px; font-size:13px; color:var(--accent);">wjunior1973@gmail.com</p>
         <p style="margin:0; font-size:13px; color:var(--text-dim);">2026</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Calculadora -->
+  <div id="modalCalculadora" class="modal-overlay" style="display:none">
+    <div class="modal-box calc-box">
+      <div class="modal-header" style="padding:0 0 10px; border:none; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-family:'Inter',sans-serif; font-size:14px; font-weight:700; color:var(--text);">🧮 Calculadora</span>
+        <button class="modal-close" id="btnFecharCalculadora" title="Fechar" style="position:static;">✕</button>
+      </div>
+      <div class="calc-display" id="calcDisplay">0</div>
+      <div class="calc-grid">
+        <button class="calc-btn fn" data-a="ac">AC</button>
+        <button class="calc-btn fn" data-a="bs">⌫</button>
+        <button class="calc-btn fn" data-a="pct">%</button>
+        <button class="calc-btn op" data-a="div">÷</button>
+        <button class="calc-btn" data-a="7">7</button>
+        <button class="calc-btn" data-a="8">8</button>
+        <button class="calc-btn" data-a="9">9</button>
+        <button class="calc-btn op" data-a="mul">×</button>
+        <button class="calc-btn" data-a="4">4</button>
+        <button class="calc-btn" data-a="5">5</button>
+        <button class="calc-btn" data-a="6">6</button>
+        <button class="calc-btn op" data-a="sub">−</button>
+        <button class="calc-btn" data-a="1">1</button>
+        <button class="calc-btn" data-a="2">2</button>
+        <button class="calc-btn" data-a="3">3</button>
+        <button class="calc-btn op" data-a="add">+</button>
+        <button class="calc-btn" data-a="neg">±</button>
+        <button class="calc-btn" data-a="0">0</button>
+        <button class="calc-btn" data-a="dot">.</button>
+        <button class="calc-btn eq" data-a="eq">=</button>
       </div>
     </div>
   </div>
@@ -8801,6 +8866,115 @@ document.getElementById('modalSobre').addEventListener('click', (e)=>{
 document.addEventListener('keydown', (e)=>{
   if(e.key==='Escape') document.getElementById('modalSobre').style.display='none';
 });
+
+// --- Ferramentas: Tartaruga e Polígonos ---
+document.getElementById('btnFerTartaruga').addEventListener('click', ()=>{ abrirJanelaTartaruga(); });
+document.getElementById('btnFerPoligonos').addEventListener('click', ()=>{ abrirJanelaPoligonos(); });
+
+// --- Calculadora flutuante ---
+(function(){
+  const modal=document.getElementById('modalCalculadora');
+  if(!modal) return;
+  const display=document.getElementById('calcDisplay');
+  let acc=0, oper=null, entrada='0', novo=true, erro=false;
+  const fmt=n=>{ if(!Number.isFinite(n)) return 'Erro'; return String(parseFloat(n.toPrecision(12))); };
+  const atualizar=()=>{ display.textContent = erro ? 'Erro' : entrada; };
+  const highlightOp=(op)=>{ modal.querySelectorAll('.calc-btn.op').forEach(x=> x.classList.toggle('ativo', x.dataset.a===op)); };
+  function limparTotal(){ acc=0; oper=null; entrada='0'; novo=true; erro=false; atualizar(); highlightOp(null); }
+  function digito(ch){
+    if(erro) limparTotal();
+    if(novo){ entrada = (ch==='.') ? '0.' : ch; novo=false; }
+    else if(ch==='.'){ if(!entrada.includes('.')) entrada+='.'; }
+    else if(entrada==='0'){ entrada=ch; }
+    else{ if(entrada.replace(/[-.]/g,'').length>=15) return; entrada+=ch; }
+    atualizar();
+  }
+  function calcular(){
+    const b=parseFloat(entrada);
+    let r;
+    switch(oper){
+      case 'add': r=acc+b; break;
+      case 'sub': r=acc-b; break;
+      case 'mul': r=acc*b; break;
+      case 'div': r=(b===0)?NaN:(acc/b); break;
+      default: r=b; break;
+    }
+    if(!Number.isFinite(r)){ erro=true; atualizar(); highlightOp(null); return null; }
+    acc=r; entrada=fmt(r); novo=true; atualizar(); return r;
+  }
+  function setOper(op){
+    if(!novo){ if(calcular()===null) return; }
+    else if(oper===null){ acc=parseFloat(entrada); }
+    oper=op; novo=true; highlightOp(op); atualizar();
+  }
+  function iguala(){
+    if(erro) return;
+    if(oper!==null){ if(calcular()!==null){ oper=null; highlightOp(null); } }
+    else novo=true;
+  }
+  modal.querySelectorAll('.calc-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const a=btn.dataset.a;
+      if(erro){
+        if(a==='ac'){ limparTotal(); return; }
+        if(!/^[0-9]$/.test(a) && a!=='dot') return;
+        limparTotal();
+      }
+      if(/^[0-9]$/.test(a)) digito(a);
+      else if(a==='dot') digito('.');
+      else if(a==='neg'){ if(entrada!=='0' && entrada!=='0.'){ entrada = entrada.startsWith('-') ? entrada.slice(1) : '-'+entrada; atualizar(); } }
+      else if(a==='bs'){ if(!novo){ if(entrada.length>1){ entrada=entrada.slice(0,-1); if(entrada==='-'||entrada==='') entrada='0'; } else entrada='0'; atualizar(); } }
+      else if(a==='pct'){ const v=parseFloat(entrada)/100; entrada=fmt(v); novo=true; atualizar(); }
+      else if(a==='ac'){ limparTotal(); }
+      else if(a==='add'||a==='sub'||a==='mul'||a==='div'){ setOper(a); }
+      else if(a==='eq'){ iguala(); }
+    });
+  });
+  document.addEventListener('keydown', (e)=>{
+    if(modal.style.display!=='grid') return;
+    if(/^[0-9]$/.test(e.key)){ digito(e.key); e.preventDefault(); return; }
+    if(e.key==='.'){ digito('.'); e.preventDefault(); return; }
+    if(e.key==='+'){ setOper('add'); e.preventDefault(); return; }
+    if(e.key==='-'){ setOper('sub'); e.preventDefault(); return; }
+    if(e.key==='*'){ setOper('mul'); e.preventDefault(); return; }
+    if(e.key==='/'){ setOper('div'); e.preventDefault(); return; }
+    if(e.key==='Enter'||e.key==='='){ iguala(); e.preventDefault(); return; }
+    if(e.key==='Backspace'){ if(!novo){ if(entrada.length>1){ entrada=entrada.slice(0,-1); if(entrada==='-'||entrada==='') entrada='0'; } else entrada='0'; atualizar(); } e.preventDefault(); return; }
+    if(e.key==='Escape'){ modal.style.display='none'; return; }
+    if(e.key==='Delete'){ limparTotal(); }
+  });
+  document.getElementById('btnFerCalculadora').addEventListener('click', ()=>{ modal.style.display='grid'; });
+  document.getElementById('btnFecharCalculadora').addEventListener('click', ()=>{ modal.style.display='none'; });
+  modal.addEventListener('click', (e)=>{ if(e.target.id==='modalCalculadora') modal.style.display='none'; });
+  const box=modal.querySelector('.calc-box');
+  const cab=modal.querySelector('.modal-header');
+  let arrastando=false, offX=0, offY=0;
+  cab.addEventListener('pointerdown', (e)=>{
+    if(e.target.closest('button')) return;
+    e.preventDefault();
+    const r=box.getBoundingClientRect();
+    box.style.position='fixed';
+    box.style.margin='0';
+    box.style.left=r.left+'px';
+    box.style.top=r.top+'px';
+    arrastando=true;
+    offX=e.clientX-r.left;
+    offY=e.clientY-r.top;
+    box.classList.add('dragging');
+    cab.setPointerCapture(e.pointerId);
+  });
+  cab.addEventListener('pointermove', (e)=>{
+    if(!arrastando) return;
+    let x=e.clientX-offX, y=e.clientY-offY;
+    x=Math.max(0, Math.min(x, window.innerWidth-box.offsetWidth));
+    y=Math.max(0, Math.min(y, window.innerHeight-box.offsetHeight));
+    box.style.left=x+'px';
+    box.style.top=y+'px';
+  });
+  function pararArrasto(){ arrastando=false; box.classList.remove('dragging'); }
+  cab.addEventListener('pointerup', pararArrasto);
+  cab.addEventListener('pointercancel', pararArrasto);
+})();
 
 // --- Leia modal ---
 document.getElementById('btnLeiaOk').addEventListener('click', ()=> hideLeia(document.getElementById('leiaInput').value));
