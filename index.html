@@ -324,6 +324,8 @@
   .console-output .line.success { color: #55efc4; }
   .console-output .line.info { color: #74b9ff; opacity:0.9; }
   .console-output .welcome { opacity:0.95; border:1px dashed rgba(255,255,255,0.15); padding:10px; border-radius:6px; margin-bottom:10px; background: rgba(255,255,255,0.03); }
+  .console-output.centralizado { text-align:center; }
+  .console-output.centralizado .line { text-align:center; }
   .console-input-row { display:flex; gap:8px; padding:8px; background: var(--panel2); border-top:2px solid var(--border); }
   .console-input-row input {
     flex:1; font-family:'JetBrains Mono', monospace; font-size:14px; padding:6px 10px; border:2px solid var(--border); border-radius:6px; background:var(--panel); color:var(--text); outline:none;
@@ -492,6 +494,7 @@
   }
   .floating-controls button:hover { background: var(--panel2); }
   .floating-controls button.close:hover { background:#ff4757; color:white; border-color:#ff4757; }
+  .floating-controls button.zoom-btn { width:32px; font-size:12px; font-weight:600; font-family:'Inter',sans-serif; padding:0; }
   .floating-console {
     flex:1; background: var(--console-bg); color: var(--console-fg);
     font-family:'JetBrains Mono',monospace; font-size:26px; line-height:38px;
@@ -515,7 +518,8 @@
   .floating-window.tartaruga-mod .tartaruga-resizer { display:block; }
   .floating-window.tartaruga-mod .floating-body { flex-direction:row; }
   .floating-window.tartaruga-mod #btnMinJanela,
-  .floating-window.tartaruga-mod #btnMaxJanela { display:none; }
+  .floating-window.tartaruga-mod #btnMaxJanela,
+  .floating-window.tartaruga-mod .zoom-btn { display:none; }
   .floating-window.tartaruga-mod #janelaCanvas { flex:1 1 0 !important; width:auto !important; min-width:0; cursor:grab; }
   .floating-window.tartaruga-mod #janelaCanvas.panning { cursor:grabbing; }
   .tartaruga-painel .tartaruga-titulo { font-family:'Inter',sans-serif; font-size:12px; font-weight:700; color:var(--accent); letter-spacing:0.3px; }
@@ -607,7 +611,8 @@
   .editor-container { position:relative; }
   /* --- Polígonos (plano cartesiano estilo GeoGebra) --- */
   .floating-window.poligonos-mod #btnMinJanela,
-  .floating-window.poligonos-mod #btnMaxJanela { display:none; }
+  .floating-window.poligonos-mod #btnMaxJanela,
+  .floating-window.poligonos-mod .zoom-btn { display:none; }
   .floating-window.poligonos-mod .floating-body { flex-direction:row; }
   .floating-window.poligonos-mod .tartaruga-resizer { display:none; }
   .floating-window.poligonos-mod #janelaCanvas { display:none !important; }
@@ -757,6 +762,8 @@
     <div class="floating-header" id="janelaHeader">
       <span>🪟 Janela Willog — Console</span>
       <div class="floating-controls">
+        <button id="btnJanelaZoomOut" class="zoom-btn" title="Diminuir a fonte da janela (Ctrl + roda do mouse)">A−</button>
+        <button id="btnJanelaZoomIn" class="zoom-btn" title="Aumentar a fonte da janela (Ctrl + roda do mouse)">A+</button>
         <button id="btnMinJanela" title="Minimizar">─</button>
         <button id="btnMaxJanela" title="Maximizar">□</button>
         <button id="btnFecharJanela" class="close" title="Fechar">✕</button>
@@ -880,6 +887,18 @@ mostre "Tecla: {tecla}"</span>
 se captureTecla()=="Enter":
     mostre "Enter confirmado"</span>
 <span class="saida">-> Enter confirmado</span></pre>
+        <h3>centralizaTexto</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">centralizaTexto</span><span class="example">()</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">janela()
+centralizaTexto()
+mostre "Texto centralizado"</span>
+<span class="saida">-> Exibe "Texto centralizado" centralizado na janela (e no console principal)</span>
+
+<span class="example">centralizaTexto()
+mostre "Centralizado no console"</span>
+<span class="saida">-> Centraliza o texto exibido no console principal</span></pre>
         <h3>colar</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">colar</span><span class="example">(variável, x, y)</span></pre>
@@ -1178,6 +1197,18 @@ desenhe.circulo(150,200,50,vermelho)</span>
 janela()
 mostre "Depois na janela"</span>
 <span class="saida">-> Antes (console principal) → Depois na janela (console maximizado)</span></pre>
+        <h3>centralizaTexto</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">centralizaTexto</span><span class="example">()</span> <span class="saida">→ centraliza horizontalmente o texto do console</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">janela()
+centralizaTexto()
+mostre "Texto centralizado"</span>
+<span class="saida">-> Exibe "Texto centralizado" centralizado na janela (e no console principal)</span>
+
+<span class="example">centralizaTexto()
+mostre "Centralizado no console"</span>
+<span class="saida">-> Centraliza o texto exibido no console principal</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px"><b>Exclusividade:</b> <code>janela()</code> e <code>janela(centraliza)</code> são exclusivos para <code>mostre</code>/<code>leia</code> (console). <code>janela(largura,altura)</code> é exclusivo para <code>tela.*</code> e <code>desenhe.*</code> (desenho). Tentar misturar gera erro.</p>
         <h3>leia</h3>
         <p class="code-label">Sintaxe</p>
@@ -1656,7 +1687,7 @@ repita(5):
       <div class="modal-manual-header">
         <b>💬 Código Comentado</b>
         <div style="display:flex; align-items:center; gap:6px;">
-          <button id="btnCopiarCodigoComentado" title="Copiar código comentado como texto plano" style="font-family:'Inter',sans-serif; font-size:12px; font-weight:600; padding:5px 10px; border-radius:6px; border:1px solid var(--border); background:var(--panel2); color:var(--text); cursor:pointer;">📋 Copiar texto</button>
+          <button id="btnCopiarCodigoComentado" title="Copiar código comentado como texto plano" style="font-family:'Inter',sans-serif; font-size:12px; font-weight:600; padding:5px 10px; border-radius:6px; border:1px solid var(--border); background:var(--panel2); color:var(--text); cursor:pointer; margin-right:26px;">📋 Copiar texto</button>
           <button class="modal-close" id="btnFecharCodigoComentado" title="Fechar">✕</button>
         </div>
       </div>
@@ -1844,9 +1875,20 @@ document.getElementById('btnFechar').addEventListener('click', ()=>{
   btnIn.addEventListener('click', ()=> applyZoom(zoom + 10));
   btnOut.addEventListener('click', ()=> applyZoom(zoom - 10));
   document.addEventListener('keydown', (e)=>{
-    if((e.ctrlKey||e.metaKey) && (e.key==='+' || e.key==='=')){ e.preventDefault(); applyZoom(zoom+10); }
-    if((e.ctrlKey||e.metaKey) && e.key==='-'){ e.preventDefault(); applyZoom(zoom-10); }
-    if((e.ctrlKey||e.metaKey) && e.key==='0'){ e.preventDefault(); applyZoom(100); }
+    if((e.ctrlKey||e.metaKey) && (e.key==='+' || e.key==='=' || e.key==='-' || e.key==='0')){
+      e.preventDefault();
+      const flutuante = document.getElementById('janelaFlutuante');
+      const janConsole = document.getElementById('janelaConsole');
+      const janelaVisivel = flutuante && flutuante.style.display && flutuante.style.display!=='none';
+      const consoleFlutVisivel = janConsole && janConsole.style.display && janConsole.style.display!=='none';
+      if(janelaVisivel && consoleFlutVisivel && window._willogJanelaZoom && window._willogApplyJanelaZoom){
+        if(e.key==='0') window._willogApplyJanelaZoom(100);
+        else window._willogApplyJanelaZoom(window._willogJanelaZoom() + (e.key==='-' ? -10 : 10));
+      } else {
+        if(e.key==='0') applyZoom(100);
+        else applyZoom(zoom + (e.key==='-' ? -10 : 10));
+      }
+    }
   });
   window._willogApplyZoom = applyZoom;
   applyZoom(zoom);
@@ -1857,7 +1899,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','polígonos','poligonos','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','polígonos','poligonos','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta','centralizaTexto']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatória']);
@@ -2253,6 +2295,7 @@ updateLines(); updateHighlight();
     {name:'abrir',hint:'abrir(url)',desc:'Abre URL externa'},
     {name:'bipe',hint:'bipe()',desc:'Emite som de bipe'},
     {name:'captureTecla',hint:'captureTecla()',desc:'Retorna última tecla capturada'},
+    {name:'centralizaTexto',hint:'centralizaTexto()',desc:'Centraliza horizontalmente o texto do console'},
     {name:'colar',hint:'colar()',desc:'Cola da área de transferência'},
     {name:'constante',hint:'constante nome=valor',desc:'Declara constante'},
     {name:'continue',hint:'continue',desc:'Pula para próxima iteração'},
@@ -2573,9 +2616,10 @@ updateLines(); updateHighlight();
   const _ttAdd=(cat,arr)=>arr.forEach(x=>_ttMap.set(x.name,{cat,hint:x.hint,desc:x.desc}));
   _ttAdd('Comando',comandos);
   _ttAdd('Função',funcoes);
-  _ttAdd('Propriedade',propriedades);
   _ttAdd('Operador',operadores);
   _ttAdd('Cor',cores);
+  const _ttPropMap=new Map();
+  propriedades.forEach(x=>_ttPropMap.set(x.name,{cat:'Propriedade',hint:x.hint,desc:x.desc}));
   _ttMap.set('Verdadeiro',{cat:'Valor lógico',hint:'Verdadeiro',desc:'Constante lógica verdadeira'});
   _ttMap.set('Falso',{cat:'Valor lógico',hint:'Falso',desc:'Constante lógica falsa'});
   _ttMap.set('verdadeiro',{cat:'Valor lógico',hint:'verdadeiro',desc:'Constante lógica verdadeira'});
@@ -2605,7 +2649,9 @@ updateLines(); updateHighlight();
   }
   function _ttShow(x,y,segs){
     const word=segs[segs.length-1];
-    const entry=_ttLookup(segs);
+    let entry=null;
+    if(segs.length>1 && _ttPropMap.has(word)) entry=_ttPropMap.get(word);
+    if(!entry) entry=_ttLookup(segs);
     let cat=null, hint=null, desc=null;
     if(entry){ cat=entry.cat; hint=entry.hint; desc=entry.desc; }
     else if(getVariables().includes(word)){ cat='Variável'; hint=word; desc='Variável definida neste código'; }
@@ -3060,6 +3106,10 @@ function abrirConsoleFlutuante(){
   janelaConsoleEl.classList.remove('centralizado');
   janelaConsoleEl.style.textAlign='';
   janelaConsoleEl.innerHTML=consoleEl.innerHTML;
+  if(consoleEl.classList.contains('centralizado')){
+    janelaConsoleEl.classList.add('centralizado');
+    janelaConsoleEl.style.textAlign='center';
+  }
   janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
 }
 // --- Willog Tela / Desenhe (gráficos na janela) --- com buffer escalonável ---
@@ -3745,6 +3795,10 @@ function getJanelaCentraliza(stmt){
   let a=m[1].trim().toLowerCase().replace(/["']/g,'');
   return a==='centraliza';
 }
+function isCentralizaTextoStmt(stmt){
+  const t=stmt.trim();
+  return /^\s*centralizaTexto\s*(\(\s*\))?\s*(?:#.*)?$/i.test(t);
+}
 function isPoligonosStmt(stmt){
   return /^\s*pol[ií]gonos\s*\(\s*\)\s*(?:#.*)?$/i.test(stmt.trim());
 }
@@ -4284,6 +4338,10 @@ function clearConsole(){
   consoleEl.innerHTML = '';
   if(janelaConsoleEl) janelaConsoleEl.innerHTML='';
 }
+function centralizarTexto(){
+  if(consoleEl){ consoleEl.classList.add('centralizado'); consoleEl.style.textAlign='center'; }
+  if(janelaModo==='console' && janelaAtiva && janelaConsoleEl){ janelaConsoleEl.classList.add('centralizado'); janelaConsoleEl.style.textAlign='center'; }
+}
 clearConsole();
 (function(){
   const flutuante=document.getElementById('janelaFlutuante');
@@ -4351,6 +4409,34 @@ clearConsole();
       document.body.style.userSelect='';
     });
   }
+})();
+
+// --- Zoom da fonte na janela flutuante (janela() / duplo-clique no console) ---
+(function(){
+  const janConsole = document.getElementById('janelaConsole');
+  if(!janConsole) return;
+  const btnIn = document.getElementById('btnJanelaZoomIn');
+  const btnOut = document.getElementById('btnJanelaZoomOut');
+  let janZoom = parseInt(localStorage.getItem('willog-janela-zoom') || '100', 10);
+  if(isNaN(janZoom)) janZoom = 100;
+  const baseFS = 26, baseLH = 38;
+  function applyJanelaZoom(z){
+    janZoom = Math.max(50, Math.min(300, Math.round(z)));
+    try{ localStorage.setItem('willog-janela-zoom', String(janZoom)); }catch(e){}
+    const s = janZoom/100;
+    janConsole.style.fontSize = (baseFS*s).toFixed(1)+'px';
+    janConsole.style.lineHeight = (baseLH*s).toFixed(1)+'px';
+  }
+  if(btnIn) btnIn.addEventListener('click', ()=> applyJanelaZoom(janZoom+10));
+  if(btnOut) btnOut.addEventListener('click', ()=> applyJanelaZoom(janZoom-10));
+  janConsole.addEventListener('wheel', (e)=>{
+    if(!(e.ctrlKey||e.metaKey)) return;
+    e.preventDefault();
+    applyJanelaZoom(e.deltaY<0 ? janZoom+5 : janZoom-5);
+  }, {passive:false});
+  applyJanelaZoom(janZoom);
+  window._willogApplyJanelaZoom = applyJanelaZoom;
+  window._willogJanelaZoom = ()=> janZoom;
 })();
 
 // --- Painel da Tartaruga (janela flutuante em modo tartaruga) ---
@@ -7973,6 +8059,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
     hasOutputRef.value=true;
     return;
   }
+  if(isCentralizaTextoStmt(stmt)){ centralizarTexto(); hasOutputRef.value=true; return; }
   if(isJanelaDesenhoStmt(stmt)){
     const p=parseJanelaDesenho(stmt, env);
     if(!p){ logToConsole('Erro: janela(largura,altura) precisa de dois números (ex: janela(300,400))', 'error'); return; }
@@ -9180,12 +9267,10 @@ document.addEventListener('keydown', (e)=>{
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #0984e3; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">👀 <b>O que faz?</b> Lê o que está escrito no arquivo e guarda em uma caixinha (variável). É como abrir o caderno e copiar o que está lá!</div></div></div>`;
   }
   if(/^janela\s*\(/i.test(t) || /^janela\s*$/i.test(t)){
-    const arg=(t.match(/^\s*janela\s*\(\s*(.*?)\s*\)/i)?.[1]||"").trim();
-    let txt;
-    if(/centraliza/i.test(arg)) txt="maximizada com o texto no meio (centralizado), só para mensagens com <code>mostre</code>";
-    else if(arg!=="") txt="normal do tamanho pedido (ex: <code>janela(300,400)</code> = 300 de largura por 400 de altura), com coordenadas reais e só para desenhos (<code>desenhe.*</code>)";
-    else txt="maximizada como console, só para mensagens com <code>mostre</code>";
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #a29bfe; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🪟 <b>O que faz?</b> Abre uma janelinha flutuante ${txt}. Lembre: <code>janela()</code> é console e <code>janela(x,y)</code> é desenho!</div></div></div>`;
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #a29bfe; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🪟 <b>O que faz?</b> Permite que o código seja executado em uma janela, como se fosse o console.</div></div></div>`;
+  }
+  if(/^centralizaTexto/i.test(t)){
+    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00cec9; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📐 <b>O que faz?</b> Centraliza o texto horizontalmente no console ou na janela.</div></div></div>`;
   }
   if(/^tela\.limpe/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🧹 <b>O que faz?</b> Apaga tudo que foi desenhado na janelinha e pinta o fundo de preto (ou da cor escolhida). É como apagar o quadro!</div></div></div>`;
