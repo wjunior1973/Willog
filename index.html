@@ -585,6 +585,25 @@
   .autocomplete-item .ac-text { display:flex; flex-direction:column; gap:1px; min-width:0; flex:1; }
   .autocomplete-item .ac-hint { font-size:11px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; }
   .autocomplete-item .ac-desc { font-size:10px; color:var(--text-dim); opacity:0.7; }
+  .editor-tooltip {
+    position:absolute; z-index:1600; pointer-events:none; display:none;
+    max-width:340px; min-width:140px;
+    background:var(--panel); color:var(--text);
+    border:1px solid var(--border-strong); border-radius:8px;
+    box-shadow:var(--shadow), 0 8px 24px rgba(0,0,0,0.2);
+    padding:8px 10px; font-family:'Inter',sans-serif; font-size:12px; line-height:1.4;
+  }
+  .editor-tooltip .et-title { display:flex; align-items:center; gap:8px; font-weight:700; margin-bottom:4px; }
+  .editor-tooltip .et-name { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent); word-break:break-all; }
+  .editor-tooltip .et-type {
+    font-size:10px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim);
+    background:var(--panel2); border:1px solid var(--border); border-radius:4px; padding:1px 6px; white-space:nowrap;
+  }
+  .editor-tooltip .et-hint {
+    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent);
+    background:var(--panel2); border-radius:4px; padding:2px 6px; margin-bottom:4px; word-break:break-word;
+  }
+  .editor-tooltip .et-desc { color:var(--text-dim); }
   .editor-container { position:relative; }
   /* --- Polígonos (plano cartesiano estilo GeoGebra) --- */
   .floating-window.poligonos-mod #btnMinJanela,
@@ -709,6 +728,11 @@
           <pre id="highlight" aria-hidden="true"><code id="highlightCode"></code></pre>
           <textarea id="editor" spellcheck="false" placeholder="Digite seu código Willog aqui..." aria-label="Editor de código Willog"></textarea>
           <div id="autocomplete" class="autocomplete" style="display:none" role="listbox" aria-label="Sugestões de autocompletar"></div>
+          <div id="editorTooltip" class="editor-tooltip" role="tooltip" style="display:none">
+            <div class="et-title"><span class="et-name"></span><span class="et-type"></span></div>
+            <div class="et-hint"></div>
+            <div class="et-desc"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -2543,6 +2567,110 @@ updateLines(); updateHighlight();
   document.addEventListener('mousedown', _foraTooltip, true);
   document.addEventListener('touchstart', _foraTooltip, {passive:true, capture:true});
   window.addEventListener('blur', hideAc);
+
+  // --- Tooltip do editor (hover sobre comando/função/propriedade/variável) ---
+  const _ttMap=new Map();
+  const _ttAdd=(cat,arr)=>arr.forEach(x=>_ttMap.set(x.name,{cat,hint:x.hint,desc:x.desc}));
+  _ttAdd('Comando',comandos);
+  _ttAdd('Função',funcoes);
+  _ttAdd('Propriedade',propriedades);
+  _ttAdd('Operador',operadores);
+  _ttAdd('Cor',cores);
+  _ttMap.set('Verdadeiro',{cat:'Valor lógico',hint:'Verdadeiro',desc:'Constante lógica verdadeira'});
+  _ttMap.set('Falso',{cat:'Valor lógico',hint:'Falso',desc:'Constante lógica falsa'});
+  _ttMap.set('verdadeiro',{cat:'Valor lógico',hint:'verdadeiro',desc:'Constante lógica verdadeira'});
+  _ttMap.set('falso',{cat:'Valor lógico',hint:'falso',desc:'Constante lógica falsa'});
+  _ttMap.forEach((v,k)=>{ if(k.indexOf(' ')>0){ const f=k.split(' ')[0]; if(!_ttMap.has(f)) _ttMap.set(f,v); } });
+  const _ttEl=document.getElementById('editorTooltip');
+  const _ttName=_ttEl.querySelector('.et-name');
+  const _ttType=_ttEl.querySelector('.et-type');
+  const _ttHint=_ttEl.querySelector('.et-hint');
+  const _ttDesc=_ttEl.querySelector('.et-desc');
+  function _ttSegments(offset){
+    const str=ed.value;
+    if(offset<0||offset>str.length) return null;
+    const re=/[a-zA-Z0-9_À-ÿ]+(?:\.[a-zA-Z0-9_À-ÿ]+)*/g;
+    let m;
+    while((m=re.exec(str))!==null){
+      if(offset>=m.index && offset<m.index+m[0].length) return m[0].split('.');
+    }
+    return null;
+  }
+  function _ttLookup(segs){
+    for(let drop=0; drop<segs.length; drop++){
+      const key=segs.slice(drop).join('.');
+      if(_ttMap.has(key)) return _ttMap.get(key);
+    }
+    return null;
+  }
+  function _ttShow(x,y,segs){
+    const word=segs[segs.length-1];
+    const entry=_ttLookup(segs);
+    let cat=null, hint=null, desc=null;
+    if(entry){ cat=entry.cat; hint=entry.hint; desc=entry.desc; }
+    else if(getVariables().includes(word)){ cat='Variável'; hint=word; desc='Variável definida neste código'; }
+    if(!cat) return;
+    _ttName.textContent=word;
+    _ttType.textContent=cat;
+    _ttHint.style.display=hint?'':'none';
+    _ttHint.textContent=hint||'';
+    _ttDesc.style.display=desc?'':'none';
+    _ttDesc.textContent=desc||'';
+    const cRect=document.getElementById('editorContainer').getBoundingClientRect();
+    let left=x-cRect.left, top=y-cRect.top;
+    _ttEl.style.left=(left+16)+'px';
+    _ttEl.style.top=(top+18)+'px';
+    _ttEl.style.display='block';
+    const tw=_ttEl.offsetWidth, th=_ttEl.offsetHeight;
+    if(left+16+tw>cRect.width-4) _ttEl.style.left=Math.max(4,left-16-tw)+'px';
+    if(top+18+th>cRect.height-4) _ttEl.style.top=Math.max(4,top-th-12)+'px';
+  }
+  function _ttHide(){ _ttEl.style.display='none'; }
+  let _cwCache={fs:'',w:0};
+  function _charWidth(){
+    const fs=getComputedStyle(ed).fontSize;
+    if(_cwCache.fs===fs && _cwCache.w) return _cwCache.w;
+    const probe=document.createElement('span');
+    probe.textContent='0000000000';
+    probe.style.cssText='position:absolute;visibility:hidden;white-space:pre;font-family:"JetBrains Mono",monospace;font-size:'+fs+';';
+    document.body.appendChild(probe);
+    _cwCache.w=probe.offsetWidth/10;
+    _cwCache.fs=fs;
+    probe.remove();
+    return _cwCache.w;
+  }
+  function _ttOffsetFromXY(x,y){
+    const r=ed.getBoundingClientRect();
+    const st=getComputedStyle(ed);
+    const lineH=parseFloat(st.lineHeight)||20;
+    const pt=parseFloat(st.paddingTop)||0;
+    const pl=parseFloat(st.paddingLeft)||0;
+    const x0=(x-r.left)-ed.clientLeft-pl+ed.scrollLeft;
+    const y0=(y-r.top)-ed.clientTop-pt+ed.scrollTop;
+    if(x0<0||y0<0) return -1;
+    let line=Math.floor(y0/lineH);
+    let col=Math.floor(x0/_charWidth());
+    const lines=ed.value.split('\n');
+    if(line<0) return -1;
+    if(line>=lines.length) line=lines.length-1;
+    if(col<0) col=0;
+    if(col>lines[line].length) col=lines[line].length;
+    let off=0;
+    for(let i=0;i<line;i++) off+=lines[i].length+1;
+    off+=col;
+    return off;
+  }
+  ed.addEventListener('mousemove',(e)=>{
+    const off=_ttOffsetFromXY(e.clientX,e.clientY);
+    if(off<0){ _ttHide(); return; }
+    const segs=_ttSegments(off);
+    if(!segs){ _ttHide(); return; }
+    _ttShow(e.clientX,e.clientY,segs);
+  });
+  ed.addEventListener('mouseleave',_ttHide);
+  ed.addEventListener('mousedown',_ttHide);
+  ed.addEventListener('scroll',_ttHide);
+  ed.addEventListener('keydown',_ttHide);
 })();
 // --- Console helpers ---
 let janelaAtiva=false;
