@@ -1215,19 +1215,8 @@ desenhe.circulo(150,200,50,vermelho)</span>
 janela()
 mostre "Depois na janela"</span>
 <span class="saida">-> Antes (console principal) → Depois na janela (console maximizado)</span></pre>
-        <h3>centralizaTexto</h3>
-        <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">centralizaTexto</span><span class="example">()</span> <span class="saida">→ centraliza horizontalmente o texto do console</span></pre>
-        <p class="code-label">Exemplo</p>
-        <pre><span class="example">janela()
-centralizaTexto()
-mostre "Texto centralizado"</span>
-<span class="saida">-> Exibe "Texto centralizado" centralizado na janela (e no console principal)</span>
-
-<span class="example">centralizaTexto()
-mostre "Centralizado no console"</span>
-<span class="saida">-> Centraliza o texto exibido no console principal</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px"><b>Exclusividade:</b> <code>janela()</code> e <code>janela(centraliza)</code> são exclusivos para <code>mostre</code>/<code>leia</code> (console). <code>janela(largura,altura)</code> é exclusivo para <code>tela.*</code> e <code>desenhe.*</code> (desenho). Tentar misturar gera erro.</p>
+<p style="font-size:12px;color:var(--text-dim);margin-top:4px"><b>Fechar janela:</b> fechar a janela com <code>✕</code> interrompe a execução do programa em andamento.</p>
         <h3>leia</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">&lt;variável&gt; = leia</span>
@@ -1380,6 +1369,13 @@ mostre "Mundo"</span>
     mostre n
     pausa(1)</span>
 <span class="saida">-> 1 (pausa 1s) -> 2 (pausa 1s) -> 3</span></pre>
+        <h3>polígonos</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">polígonos</span><span class="example">()</span></pre>
+        <p class="code-label">Exemplo</p>
+        <pre><span class="example">polígonos()</span>
+<span class="saida">-> Abre o plano cartesiano: clique para criar pontos, use Segmento para medir comprimentos e Polígono para desenhar figuras fechadas (perímetro e área aparecem na coluna da direita)</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Abre uma janela maximizada com o plano cartesiano estilo GeoGebra. Ferramentas: <b>Mover</b> (arrasta pontos e desloca o plano), <b>Ponto</b>, <b>Segmento</b> (mostra o comprimento) e <b>Polígono</b> (perímetro e área). Um ponto cola na coordenada inteira mais próxima quando você clica bem perto de um inteiro; caso contrário, ele aceita coordenadas decimais. Os pontos são nomeados A, B, C… Rodinha do mouse faz zoom; arrastar o fundo na ferramenta Mover desloca o plano. <code>poligonos()</code> (sem acento) também funciona.</p>
         <h3>recortar</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">recortar</span><span class="example">(variável)</span></pre>
@@ -1460,13 +1456,6 @@ desenhe.circulo(100,100,40,amarelo)</span>
 toque(freq,0.3)</span>
 <span class="saida">-> Dó 523 Hz por 0,3s</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Toca frequência sonora entre <code>20</code> e <code>20000</code> Hz durante <code>n</code> segundos (máx. 10s). Usa Web Audio API. Frequência e duração podem ser variáveis/expressões. Aguarda a duração antes de prosseguir.</p>
-        <h3>polígonos</h3>
-        <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">polígonos</span><span class="example">()</span></pre>
-        <p class="code-label">Exemplo</p>
-        <pre><span class="example">polígonos()</span>
-<span class="saida">-> Abre o plano cartesiano: clique para criar pontos, use Segmento para medir comprimentos e Polígono para desenhar figuras fechadas (perímetro e área aparecem na coluna da direita)</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Abre uma janela maximizada com o plano cartesiano estilo GeoGebra. Ferramentas: <b>Mover</b> (arrasta pontos e desloca o plano), <b>Ponto</b>, <b>Segmento</b> (mostra o comprimento) e <b>Polígono</b> (perímetro e área). Um ponto cola na coordenada inteira mais próxima quando você clica bem perto de um inteiro; caso contrário, ele aceita coordenadas decimais. Os pontos são nomeados A, B, C… Rodinha do mouse faz zoom; arrastar o fundo na ferramenta Mover desloca o plano. <code>poligonos()</code> (sem acento) também funciona.</p>
       <h3>vá para</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">:rótulo</span>
@@ -2827,6 +2816,7 @@ function ativarJanelaDesenho(w,h){
   requestAnimationFrame(()=>{ const c=document.getElementById('janelaCanvas'); if(c){ const r=c.getBoundingClientRect(); if(r.width>0){ _willogResizeCanvas(); }}});
 }
 function fecharJanela(){
+  if(janelaAtiva) _janelaFechadaDuranteExec=true;
   _esconderPainelTartaruga();
   _esconderPoligonos();
   tartaruga=null;
@@ -3143,6 +3133,7 @@ let _telaBufferCtx = null;
 let _telaLogicalW = 640;
 let _telaLogicalH = 400;
 let _janelaAbertaNestaExec = false;
+let _janelaFechadaDuranteExec = false;
 let _graficoErroJaMostrado = false;
 let _willogDesenhos = [];
 function _willogResolveCor(nome, env){
@@ -4696,7 +4687,9 @@ if(consoleInputEl){
           }
         }
       }catch(err){
-        if(err && (err.type==='pare' || err.type==='continue')){
+        if(err && err.type==='abortar'){
+          logToConsole('(execução interrompida — janela fechada)', 'info');
+        } else if(err && (err.type==='pare' || err.type==='continue')){
           logToConsole('(fora de laço: ' + err.type + ')', 'info');
         } else {
           logToConsole('Erro: ' + (err.message||err), 'error');
@@ -8054,9 +8047,11 @@ function getPausaSeconds(stmt, env){
 }
 const WILLLOG_BREAK = {type:'pare'};
 const WILLLOG_CONTINUE = {type:'continue'};
+const WILLLOG_ABORT = {type:'abortar'};
 
 async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
   stmt=stmt.trim();
+  if(_janelaAbertaNestaExec && _janelaFechadaDuranteExec) throw WILLLOG_ABORT;
   if(stmt==='') return;
   if(stmt.startsWith('#')) return;
   if(isPareStmt(stmt)) throw WILLLOG_BREAK;
@@ -8437,6 +8432,7 @@ async function executarPrograma(src){
   clearConsole();
   _willogTextoCor = '#ffffff';
   _janelaAbertaNestaExec=false;
+  _janelaFechadaDuranteExec=false;
   _graficoErroJaMostrado=false;
   if(janelaModo==='tartaruga' && tartaruga && tartaruga.ativo && /(?:^|\s)(tartaruga|corFundo|cor|avance|recue|direita|esquerda)\s|(?:^|\s)(levanta|abaixa|abaixe)\s+caneta\b/i.test(src)){
     _tartarugaReset();
@@ -8487,6 +8483,7 @@ async function executarPrograma(src){
   async function execBlock(start, end, baseIndent){
     let i=start;
     while(i<end){
+      if(_janelaAbertaNestaExec && _janelaFechadaDuranteExec) throw WILLLOG_ABORT;
       if(env.__gotoDest!==undefined){
         const d=env.__gotoDest;
         if(d>=start && d<end){ i=d; env.__gotoDest=undefined; env.__goto=undefined; continue; }
@@ -9075,7 +9072,17 @@ async function executarPrograma(src){
     }
     return i;
   }
-  await execBlock(0, lines.length, 0);
+  try{
+    await execBlock(0, lines.length, 0);
+  }catch(e){
+    if(e && e.type==='abortar'){
+      logToConsole('> execução interrompida — janela fechada.','info');
+      document.getElementById('statusBar').textContent = 'Interrompido • janela fechada';
+      setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 3000);
+      return;
+    }
+    throw e;
+  }
   if(!hasOutputRef.value){
     logToConsole('> programa executado — sem saída.','info');
   }
