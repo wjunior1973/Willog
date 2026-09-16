@@ -1518,7 +1518,7 @@ verificar nota:
         <h3>Propriedades — ordem alfabética</h3>
         <table>
 <tr><th>Sintaxe</th><th>O que faz</th><th>Exemplo → Saída</th></tr>
-<tr><td><code class="syntax">lista.adicionar[item 1, item 2, ... ]</code></td><td>Acrescenta itens (altera a lista)</td><td><code class="example">a=[1,2]; a.adicionar[3]; mostre a</code> <span class="saida">→ 1, 2, 3</span></td></tr>
+<tr><td><code class="syntax">lista.adicionar(item 1, item 2, ...)</code></td><td>Acrescenta itens (altera a lista)</td><td><code class="example">a=[1,2]; a.adicionar(3); mostre a</code> <span class="saida">→ 1, 2, 3</span></td></tr>
 <tr><td><code class="syntax">lista.aleatório</code></td><td>Item aleatório</td><td><code class="example">[1,2,3].aleatório</code> <span class="saida">→ 2</span></td></tr>
 <tr><td><code class="syntax">lista.contar(valor)</code></td><td>Conta ocorrências</td><td><code class="example">[1,2,2,3,4,2].contar(2)</code> <span class="saida">→ 3</span><br><code class="example">"bananada".contar("a")</code> <span class="saida">→ 4</span><br><code class="example">12341234432121342413.contar(3)</code> <span class="saida">→ 5</span></td></tr>
 <tr><td><code class="syntax">lista.fatiar(início,fim)</code></td><td>Fatia inclusiva</td><td><code class="example">[1,2,3,4].fatiar(1,2)</code> <span class="saida">→ 2, 3</span></td></tr>
@@ -2450,7 +2450,7 @@ updateLines(); updateHighlight();
     {name:'tipo',hint:'tipo(x)',desc:'Retorna tipo do valor'}
   ].sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase(),'pt'));
   const propriedades=[
-    {name:'adicionar',hint:'lista.adicionar[...itens]',desc:'Acrescenta itens à lista'},
+    {name:'adicionar',hint:'lista.adicionar(itens)',desc:'Acrescenta itens à lista'},
     {name:'aleatório',hint:'lista.aleatório',desc:'Item aleatório da lista'},
     {name:'contar',hint:'lista.contar(valor)',desc:'Conta ocorrências'},
     {name:'fatiar',hint:'lista.fatiar(início,fim)',desc:'Fatia inclusiva'},
@@ -5803,7 +5803,6 @@ function preprocessMethods(expr){
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*posi[çc][aã]o\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'posicao($1,$2)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*posicao\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'posicao($1,$2)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*fatiar\\s*\\(\\s*(.*?)\\s*,\\s*(.*?)\\s*\\)', 'gi'), 'fatiar($1,$2,$3)');
-  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*adicionar\\s*(\\[.*?\\])', 'gi'), 'adicionar($1,$2)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*adicionar\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'adicionar($1,$2)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*contar\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), (m,r,arg)=>{ let rr=r.trim(); if(/^-?\d+(\.\d+)?$/.test(rr)) rr='"'+rr+'"'; return 'contar('+rr+','+arg+')'; });
   return expr;
@@ -7865,7 +7864,7 @@ function isMostreBlockStart(line){
 }
 
 function isAdicionarLine(line){
-  return /^\s*[\wÀ-ÿ]+(?:\.[\wÀ-ÿ]+)*\.adicionar\s*(\[.*?\]|\(.*?\))\s*$/i.test(line);
+  return /^\s*[\wÀ-ÿ]+(?:\.[\wÀ-ÿ]+)*\.adicionar\s*\(\s*(.*?)\s*\)\s*$/i.test(line);
 }
 
 function isVerificarLine(line){
@@ -9456,7 +9455,7 @@ document.addEventListener('keydown', (e)=>{
   }
   const _asg=(s)=>{ if(s.includes('=')&&!s.includes('==')&&!s.includes('>=')&&!s.includes('<=')&&!s.includes('!=')){ const _v=s.split('=')[0].trim().replace(/:$/,'').split(',').pop().trim().replace(/:$/,''); if(/^[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*$/.test(_v)) return _v; } return null; };
   const _norm=(s)=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  const _propDesc={adicionar:"Acrescenta itens na lista (muda a lista). Ex: <code>a.adicionar[3]</code>",aleatorio:"Sorteia um item da lista. Ex: <code>[1,2,3].aleatório</code>",contar:"Conta quantas vezes o valor aparece. Ex: <code>[1,2,2,3].contar(2)</code> → 3",fatiar:"Pega um pedaço da lista (início e fim valem). Ex: <code>[1,2,3,4].fatiar(1,2)</code>",inverter:"Inverte a ordem. Ex: <code>[1,2,3].inverter</code>",ordenar:"Devolve uma cópia ordenada (a original não muda). Ex: <code>[3,1,2].ordenar</code>",posicao:"Pega o elemento do índice i (0 = primeiro). Ex: <code>[10,20,30].posição(1)</code> → 20",primeiro:"Pega o primeiro elemento. Ex: <code>[5,6].primeiro</code> → 5",tamanho:"Diz quantos itens ou letras tem. Ex: <code>[1,2,3].tamanho</code> → 3",ultimo:"Pega o último elemento. Ex: <code>[5,6].último</code> → 6"};
+  const _propDesc={adicionar:"Acrescenta itens na lista (muda a lista). Ex: <code>a.adicionar(3)</code>",aleatorio:"Sorteia um item da lista. Ex: <code>[1,2,3].aleatório</code>",contar:"Conta quantas vezes o valor aparece. Ex: <code>[1,2,2,3].contar(2)</code> → 3",fatiar:"Pega um pedaço da lista (início e fim valem). Ex: <code>[1,2,3,4].fatiar(1,2)</code>",inverter:"Inverte a ordem. Ex: <code>[1,2,3].inverter</code>",ordenar:"Devolve uma cópia ordenada (a original não muda). Ex: <code>[3,1,2].ordenar</code>",posicao:"Pega o elemento do índice i (0 = primeiro). Ex: <code>[10,20,30].posição(1)</code> → 20",primeiro:"Pega o primeiro elemento. Ex: <code>[5,6].primeiro</code> → 5",tamanho:"Diz quantos itens ou letras tem. Ex: <code>[1,2,3].tamanho</code> → 3",ultimo:"Pega o último elemento. Ex: <code>[5,6].último</code> → 6"};
   const _tSemAspas=t.replace(/"[^"]*"|'[^']*'/g,'');
   const _pmm=_tSemAspas.match(/\.\s*([a-zA-ZÀ-ÿ]+)/i);
   if(_pmm){
