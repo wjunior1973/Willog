@@ -5772,7 +5772,7 @@ function preprocessObjects(expr, env){
 }
 
 function preprocessMethods(expr){
-  const recv = '(\\[.*?\\]|".*?"|\u0027.*?\u0027|\\b\\w+(?:\\.\\w+)*)';
+  const recv = '(\\[.*?\\]|".*?"|\u0027.*?\u0027|(?<![a-zA-Z0-9_À-ÿ])[a-zA-Z0-9_À-ÿ]+(?:\\.[a-zA-Z0-9_À-ÿ]+)*)';
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*ordenar\\b', 'gi'), 'ordenar($1)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*aleat[óo]rio\\b', 'gi'), 'aleatorio($1)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*primeiro\\b', 'gi'), 'primeiro($1)');
@@ -5978,6 +5978,14 @@ function evaluateExpression(expr, env){
     const parts=splitArrayElements(inside);
     if(parts.length===1){
       const v=evaluateExpression(parts[0].trim(), env);
+      if(Array.isArray(v)){
+        if(v.length===0) return undefined;
+        return v[Math.floor(Math.random()*v.length)];
+      }
+      if(typeof v==='string'){
+        if(v.length===0) return '';
+        return v[Math.floor(Math.random()*v.length)];
+      }
       const n=Number(v);
       if(isNaN(n) || !isFinite(n) || n<=0) return 0;
       return Math.floor(Math.random()*Math.trunc(n))+1;
