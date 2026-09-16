@@ -968,6 +968,24 @@ tela.cor(corAleatória)
 tela.limpe</span>
 <span class="saida">-> fundo com cor aleatória</span></pre>
         <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Pode ser usado em <code>tela.cor(corAleatória)</code> e em todos <code>desenhe.*(...,corAleatória)</code>. Cada chamada sorteia uma cor diferente entre amarelo, vermelho, azul, verde, ciano, rosa, roxo, laranja, branco, cinza, marrom, preto.</p>
+        <h3>corTexto</h3>
+        <p class="code-label">Sintaxe</p>
+        <pre><span class="syntax">corTexto</span><span class="example">(cor)</span></pre>
+        <p class="code-label">Exemplos</p>
+        <pre><span class="example">corTexto(vermelho)
+mostre "Alerta vermelho"</span>
+<span class="saida">-> saída do console fica vermelha</span>
+
+<span class="example">janela()
+corTexto(azul)
+mostre "Janela em azul"</span>
+<span class="saida">-> texto azul no console e na janela de console</span>
+
+<span class="example">janela(300,400)
+corTexto(verde)
+desenhe.texto("Olá",20,20)</span>
+<span class="saida">-> texto verde desenhado na tela</span></pre>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Define a cor do texto impresso no console (<code>mostre</code>), na janela de console (<code>janela()</code>) e no texto desenhado sem cor (<code>desenhe.texto</code>). Padrão <code>branco</code>. Usa as cores da aba Cores, incluindo <code>corAleatória</code>.</p>
         <h3>cronometro</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">cronometro.iniciar</span>
@@ -1064,7 +1082,7 @@ desenhe.texto("Olá, Willog!", 100, 100, 20, vermelho)</span>
 
 <span class="example">desenhe.texto("linha1\nlinha2", 10, 10)</span>
 <span class="saida">-> escreve em 2 linhas (o \n dentro do texto quebra a linha)</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Tamanho padrão <code>12</code>, cor padrão <code>branco</code>. Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Tamanho padrão <code>12</code>, cor padrão <code>branco</code> (definida por <code>corTexto(cor)</code> quando nenhuma cor é informada). Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
         <h3>enquanto</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">enquanto</span> <span class="example">&lt;condição&gt;:</span>
@@ -1418,7 +1436,7 @@ desenhe.linha(0,0,100,100,branco)</span>
 tela.cor(corAleatória)
 tela.limpe</span>
 <span class="saida">-> fundo com cor aleatória a cada execução</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Cor padrão de fundo <code>preto</code>. Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Cores: <code>amarelo</code>, <code>vermelho</code>, <code>azul</code>, <code>verde</code>, <code>ciano</code>, <code>rosa</code>, <code>roxo</code>, <code>laranja</code>, <code>branco</code>, <code>cinza</code>, <code>marrom</code>, <code>preto</code>, <code>corAleatória</code>. Cor padrão de fundo <code>preto</code>. Para a cor do texto no console e em <code>desenhe.texto</code> sem cor, veja <code>corTexto(cor)</code>. Exige <code>janela(largura,altura)</code> (ex: janela(300,400)) — não funciona após <code>janela()</code> ou <code>janela(centraliza)</code> (console).</p>
         <h3>tela.limpe</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">tela.limpe</span></pre>
@@ -1516,7 +1534,7 @@ verificar nota:
       <div class="manual-pane" id="pane-cores">
         <h3>Cores — ordem alfabética</h3>
         <table><tr><td><code>amarelo</code></td><td>#ffff00</td><td><code>desenhe.linha(0,0,100,100,amarelo)</code></td></tr><tr><td><code>azul</code></td><td>#0066ff</td><td><code>desenhe.linha(0,0,100,100,azul)</code></td></tr><tr><td><code>branco</code></td><td>#ffffff</td><td><code>desenhe.linha(0,0,100,100,branco)</code></td></tr><tr><td><code>ciano</code></td><td>#00ffff</td><td><code>desenhe.linha(0,0,100,100,ciano)</code></td></tr><tr><td><code>cinza</code></td><td>#808080</td><td><code>desenhe.linha(0,0,100,100,cinza)</code></td></tr><tr><td><code>corAleatória</code></td><td>aleatória</td><td><code>desenhe.circulo(100,100,50,corAleatória)</code> → cor aleatória a cada chamada<br><code>tela.cor(corAleatória)</code> → fundo aleatório<br><code>desenhe.linha(0,0,100,100,corAleatória)</code> → linha aleatória</td></tr><tr><td><code>laranja</code></td><td>#ff9800</td><td><code>desenhe.linha(0,0,100,100,laranja)</code></td></tr><tr><td><code>marrom</code></td><td>#8d5524</td><td><code>desenhe.linha(0,0,100,100,marrom)</code></td></tr><tr><td><code>preto</code></td><td>#000000</td><td><code>desenhe.linha(0,0,100,100,preto)</code></td></tr><tr><td><code>rosa</code></td><td>#ff69b4</td><td><code>desenhe.linha(0,0,100,100,rosa)</code></td></tr><tr><td><code>roxo</code></td><td>#9c27b0</td><td><code>desenhe.linha(0,0,100,100,roxo)</code></td></tr><tr><td><code>verde</code></td><td>#00c853</td><td><code>desenhe.linha(0,0,100,100,verde)</code></td></tr><tr><td><code>vermelho</code></td><td>#ff0000</td><td><code>desenhe.linha(0,0,100,100,vermelho)</code></td></tr></table>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Use <code>corAleatória</code> em qualquer <code>desenhe.*(...,cor)</code> ou <code>tela.cor(corAleatória)</code>. Cada chamada sorteia entre as 12 cores.</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Use <code>corAleatória</code> em qualquer <code>desenhe.*(...,cor)</code>, <code>corTexto(corAleatória)</code> ou <code>tela.cor(corAleatória)</code>. Cada chamada sorteia entre as 12 cores.</p>
       </div>
       <div class="manual-pane" id="pane-tartaruga">
         <h3>tartaruga</h3>
@@ -1899,7 +1917,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','polígonos','poligonos','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta','centralizaTexto']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','polígonos','poligonos','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta','centralizaTexto','corTexto']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatória']);
@@ -2298,6 +2316,7 @@ updateLines(); updateHighlight();
     {name:'centralizaTexto',hint:'centralizaTexto()',desc:'Centraliza horizontalmente o texto do console'},
     {name:'colar',hint:'colar()',desc:'Cola da área de transferência'},
     {name:'constante',hint:'constante nome=valor',desc:'Declara constante'},
+    {name:'corTexto',hint:'corTexto(cor)',desc:'Define a cor do texto (console e desenho)'},
     {name:'continue',hint:'continue',desc:'Pula para próxima iteração'},
     {name:'cronometro.iniciar',hint:'cronometro.iniciar()',desc:'Inicia cronômetro'},
     {name:'cronometro.parar',hint:'cronometro.parar()',desc:'Para cronômetro'},
@@ -3118,6 +3137,7 @@ const _willogCores = {
 };
 let _telaBgColor = '#000000';
 let _telaFgColor = '#ffffff';
+let _willogTextoCor = '#ffffff';
 let _telaBuffer = null;
 let _telaBufferCtx = null;
 let _telaLogicalW = 640;
@@ -3364,7 +3384,7 @@ function _willogDrawTexto(texto,x,y,tamanho,corStr,env){
   const nx=Number(x), ny=Number(y);
   let tam=Number(tamanho);
   if(isNaN(tam) || tam<=0) tam=12;
-  let hex=_willogResolveCor(corStr, env) || _telaFgColor;
+  let hex=_willogResolveCor(corStr, env) || _willogTextoCor;
   // se tamanho veio como cor (ex.: desenhe.texto("Olá",10,10,vermelho) com 4 args)
   if(typeof tamanho==='string' && _willogResolveCor(tamanho, env) && (corStr===undefined || corStr==='branco' || !_willogResolveCor(corStr, env))){
     // tamanho na verdade é cor
@@ -3756,6 +3776,30 @@ function parseTelaCorArg(stmt){
   const m=stmt.match(/^\s*tela\.cor\s*\(\s*(.+?)\s*\)\s*(?:#.*)?$/i);
   return m? m[1].trim(): '';
 }
+function isCorTextoStmt(stmt){ return /^\s*corTexto\s*\(\s*.+?\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
+function parseCorTextoArg(stmt){
+  const m=stmt.match(/^\s*corTexto\s*\(\s*(.*?)\s*\)\s*(?:#.*)?$/i);
+  return m? m[1].trim(): '';
+}
+function _willogCorTexto(argRaw, env){
+  let corStr=argRaw.trim();
+  let hex=null;
+  let tryRaw=corStr.replace(/^["']|["']$/g,'').trim();
+  hex=_willogResolveCor(tryRaw, env);
+  if(!hex){
+    try{
+      const v=evaluateExpression(corStr, env);
+      if(v!==undefined&&v!==null) hex=_willogResolveCor(String(v), env);
+    }catch(e){}
+  }
+  if(!hex) hex=_willogResolveCor(corStr, env);
+  if(!hex){
+    logToConsole('Erro: cor desconhecida "'+corStr+'". Use: amarelo, vermelho, azul, verde, ciano, rosa, roxo, laranja, branco, cinza, marrom, preto', 'error');
+    return false;
+  }
+  _willogTextoCor=hex;
+  return true;
+}
 function parseDesenheArgs(stmt){
   const m=stmt.match(/^\s*desenhe\.[a-zA-ZÀ-ÿ]+\s*\(\s*(.*)\s*\)\s*(?:#.*)?$/i);
   if(!m) return [];
@@ -3878,20 +3922,6 @@ function isCaptureTeclaExpr(expr){
 }
 function waitForKey(expectedRaw){
   const expectedNorm=_normalizeTecla(expectedRaw);
-  const display=expectedRaw ? `'${expectedRaw}'` : 'qualquer tecla';
-  logToConsole(`⏸ Aguardando tecla ${display} — pressione a tecla...`, 'info');
-  // overlay visual
-  let overlay=document.getElementById('espereOverlay');
-  if(!overlay){
-    overlay=document.createElement('div');
-    overlay.id='espereOverlay';
-    overlay.style.cssText='position:fixed;inset:0;background:rgba(20,15,40,0.55);display:grid;place-items:center;z-index:2500;backdrop-filter:blur(2px);';
-    overlay.innerHTML='<div style="background:var(--panel);border:2px solid var(--border-strong);border-radius:12px;padding:22px 28px;box-shadow:0 12px 40px rgba(0,0,0,0.35);text-align:center;max-width:90vw"><div style="font-family:Inter,sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:8px">⏸ Aguardando tecla</div><div id="espereOverlayMsg" style="font-family:JetBrains Mono,monospace;font-size:13px;color:var(--text-dim)"></div><div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--text-dim);margin-top:10px;opacity:0.7">Pressione ESC para cancelar (retorna vazio)</div></div>';
-    document.body.appendChild(overlay);
-  }
-  overlay.style.display='grid';
-  const msgEl=document.getElementById('espereOverlayMsg');
-  if(msgEl) msgEl.textContent= expectedRaw ? `Pressione '${expectedRaw}' para continuar` : 'Pressione qualquer tecla para continuar';
   return new Promise(resolve=>{
     function handler(e){
       // ignora se for tecla de atalho do editor? mas captura tudo
@@ -3901,7 +3931,6 @@ function waitForKey(expectedRaw){
       if(key==="Escape"){
         cleanup();
         _willogLastKey="";
-        logToConsole('↩ Espera cancelada (ESC)', 'info');
         resolve("");
         return;
       }
@@ -3916,26 +3945,15 @@ function waitForKey(expectedRaw){
         matches=keyNorm.toLowerCase()===expectedNorm.toLowerCase() || key.toLowerCase()===expectedNorm.toLowerCase();
       }
       if(matches){
-        // evita que Enter acione botões
         e.preventDefault(); e.stopPropagation();
         cleanup();
         _willogLastKey=key;
-        // também espelha no env global para REPL
         try{ if(typeof replEnv!=="undefined") replEnv["__ultimaTecla"]=key; }catch(_){}
-        logToConsole(`⌨ Tecla capturada: '${key}'`, 'success');
         resolve(key);
-      } else {
-        // feedback sutil: mostra tecla errada mas continua esperando
-        if(msgEl) {
-          msgEl.textContent=`Esperando '${expectedRaw}' — você pressionou '${key}'`;
-          msgEl.style.color='var(--error)';
-          setTimeout(()=>{ if(msgEl){ msgEl.textContent=`Pressione '${expectedRaw}' para continuar`; msgEl.style.color='var(--text-dim)'; } }, 800);
-        }
       }
     }
     function cleanup(){
       document.removeEventListener('keydown', handler, true);
-      if(overlay) overlay.style.display='none';
     }
     document.addEventListener('keydown', handler, true);
     // foco no body para garantir captura
@@ -4282,6 +4300,7 @@ function logToConsole(text, cls=''){
   div.className = 'line ' + cls;
   div.style.whiteSpace='pre-wrap';
   div.style.wordBreak='break-word';
+  if(!cls) div.style.color=_willogTextoCor;
   const str=String(text);
   if(str.includes('\n')){
     const parts=str.split('\n');
@@ -4301,6 +4320,7 @@ function logToConsole(text, cls=''){
     d2.className='line ' + cls;
     d2.style.whiteSpace='pre-wrap';
     d2.style.wordBreak='break-word';
+    if(!cls) d2.style.color=_willogTextoCor;
     if(str.includes('\n')){
       const parts=str.split('\n');
       parts.forEach((part,i)=>{
@@ -4319,6 +4339,7 @@ function logToConsole(text, cls=''){
     d2.className='line ' + cls;
     d2.style.whiteSpace='pre-wrap';
     d2.style.wordBreak='break-word';
+    if(!cls) d2.style.color=_willogTextoCor;
     if(str.includes('\n')){
       const parts=str.split('\n');
       parts.forEach((part,i)=>{
@@ -8080,6 +8101,7 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
   // --- Tela / Desenhe (gráficos na janela) ---
   if(isTelaLimpeStmt(stmt)){ if(_willogTelaLimpe()) hasOutputRef.value=true; return; }
   if(isTelaCorStmt(stmt)){ const _arg=parseTelaCorArg(stmt); if(_willogTelaCor(_arg, env)) hasOutputRef.value=true; return; }
+  if(isCorTextoStmt(stmt)){ const _arg=parseCorTextoArg(stmt); if(_willogCorTexto(_arg, env)) hasOutputRef.value=true; return; }
   if(isDesenheLinhaStmt(stmt)){
     const _args=parseDesenheArgs(stmt);
     if(_args.length<4){ logToConsole('Erro: desenhe.linha precisa de x1,y1,x2,y2[,cor]','error'); return; }
@@ -8414,6 +8436,7 @@ function buildLabelMap(lines){
 
 async function executarPrograma(src){
   clearConsole();
+  _willogTextoCor = '#ffffff';
   _janelaAbertaNestaExec=false;
   _graficoErroJaMostrado=false;
   if(janelaModo==='tartaruga' && tartaruga && tartaruga.ativo && /(?:^|\s)(tartaruga|corFundo|cor|avance|recue|direita|esquerda)\s|(?:^|\s)(levanta|abaixa|abaixe)\s+caneta\b/i.test(src)){
@@ -8492,6 +8515,7 @@ async function executarPrograma(src){
         env["__ultimaTecla"]=key;
         env["__lastKey"]=key;
         try{ if(typeof replEnv!=="undefined") replEnv["__ultimaTecla"]=key; }catch(_){}
+        if(key==='') env.__escGotoExit = true;
         i++; continue;
       }
       if(isCronometroIniciarStmt(raw)){ cronometroIniciar(); i++; continue; }
@@ -8513,6 +8537,7 @@ async function executarPrograma(src){
       if(isPoligonosStmt(raw)){ abrirJanelaPoligonos(); hasOutputRef.value=true; i++; continue; }
       if(isTelaLimpeStmt(raw)){ if(_willogTelaLimpe()) hasOutputRef.value=true; i++; continue; }
       if(isTelaCorStmt(raw)){ const _a=parseTelaCorArg(raw); if(_willogTelaCor(_a, env)) hasOutputRef.value=true; i++; continue; }
+      if(isCorTextoStmt(raw)){ const _a=parseCorTextoArg(raw); if(_willogCorTexto(_a, env)) hasOutputRef.value=true; i++; continue; }
       if(isDesenheLinhaStmt(raw)){
         const _args=parseDesenheArgs(raw);
         if(_args.length<4){ logToConsole('Erro na linha '+lineNo+': desenhe.linha precisa de x1,y1,x2,y2[,cor]','error'); i++; continue; }
@@ -8639,6 +8664,11 @@ async function executarPrograma(src){
         const dest = labelMap[target] ?? labelMap[target.toLowerCase()];
         if(dest!==undefined && dest>=0 && dest<lines.length){
           if(dest>=start && dest<end){
+            if(env.__escGotoExit && dest < i){
+              env.__escGotoExit = false;
+              i++;
+              continue;
+            }
             i=dest;
             continue;
           } else {
