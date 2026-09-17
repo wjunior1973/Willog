@@ -652,11 +652,6 @@
                      linear-gradient(45deg,#c8d0da 25%,transparent 25%,transparent 75%,#c8d0da 75%);
     background-size:10px 10px; background-position:0 0,5px 5px;
   }
-  .poligonos-hint {
-    margin-top:6px; font-family:'Inter',sans-serif; font-size:11px; line-height:1.5;
-    color:var(--text-dim); background:var(--panel2); border:1px solid var(--border);
-    border-radius:8px; padding:8px;
-  }
   .poligonos-canvas-wrap { flex:1 1 0; min-width:0; position:relative; background:#ffffff; }
   .poligonos-canvas-wrap canvas { position:absolute; inset:0; width:100%; height:100%; display:block; cursor:crosshair; touch-action:none; }
   .poligonos-canvas-wrap canvas.pol-grab { cursor:grab; }
@@ -814,30 +809,29 @@
       <div class="floating-console" id="janelaConsole"></div>
       <div id="poligonosRoot" class="poligonos-root" style="display:none">
     <div class="poligonos-toolbar">
-      <button data-tool="mover" class="ativo" title="Move pontos à vontade e arrasta o fundo para deslizar o plano">↔️ Mover</button>
-      <button data-tool="ponto" title="Clique para criar um ponto (ele gruda na coordenada inteira quando você clica bem perto de um inteiro; caso contrário, permite decimais)">⚫ Ponto</button>
-      <button data-tool="reta" title="Escolha dois pontos e crie a reta infinita que passa por eles">➖ Reta</button>
-      <button data-tool="segmento" title="Escolha dois pontos para criar um segmento (mostra o comprimento)">📏 Segmento</button>
-      <button data-tool="poligono" title="Clique para colocar cada vértice; feche para calcular perímetro e área">📐 Polígono</button>
-      <button data-tool="circunferencia" title="Clique no centro e depois em um ponto da circunferência (esse ponto define o raio)">⭕ Circunferência</button>
-      <button id="polBtnFecharPoli" class="pol-btn-fechar" title="Fecha o polígono em construção e calcula perímetro e área">🔒 Fechar polígono</button>
-      <button data-tool="balde" class="pol-btn-balde" title="Escolha uma cor na paleta e clique dentro de uma figura. Preenche apenas a região clicada — polígono, circunferência e também as interseções entre elas, cada uma de forma independente">🪣 Preencher</button>
+      <button data-tool="mover" class="ativo">↔️ Mover</button>
+      <button data-tool="ponto">⚫ Ponto</button>
+      <button data-tool="reta">➖ Reta</button>
+      <button data-tool="segmento">📏 Segmento</button>
+      <button data-tool="poligono">📐 Polígono</button>
+      <button data-tool="circunferencia">⭕ Circunferência</button>
+      <button id="polBtnFecharPoli" class="pol-btn-fechar">🔒 Fechar polígono</button>
+      <button data-tool="balde" class="pol-btn-balde">🪣 Preencher</button>
       <div class="pol-cores-titulo">Cor do preenchimento</div>
       <div class="pol-cores" id="polCores">
-        <button class="pol-cor sem-cor" data-cor="" title="Sem preenchimento (transparente)"></button>
-        <button class="pol-cor" data-cor="#ff7675" style="background:#ff7675" title="Vermelho"></button>
-        <button class="pol-cor ativo" data-cor="#fdcb6e" style="background:#fdcb6e" title="Amarelo"></button>
-        <button class="pol-cor" data-cor="#55efc4" style="background:#55efc4" title="Verde"></button>
-        <button class="pol-cor" data-cor="#74b9ff" style="background:#74b9ff" title="Azul"></button>
-        <button class="pol-cor" data-cor="#a29bfe" style="background:#a29bfe" title="Roxo"></button>
-        <button class="pol-cor" data-cor="#fd79a8" style="background:#fd79a8" title="Rosa"></button>
-        <button class="pol-cor" data-cor="#dfe6e9" style="background:#dfe6e9" title="Cinza claro"></button>
-        <button class="pol-cor" data-cor="#636e72" style="background:#636e72" title="Grafite"></button>
+        <button class="pol-cor sem-cor" data-cor=""></button>
+        <button class="pol-cor" data-cor="#ff7675" style="background:#ff7675"></button>
+        <button class="pol-cor ativo" data-cor="#fdcb6e" style="background:#fdcb6e"></button>
+        <button class="pol-cor" data-cor="#55efc4" style="background:#55efc4"></button>
+        <button class="pol-cor" data-cor="#74b9ff" style="background:#74b9ff"></button>
+        <button class="pol-cor" data-cor="#a29bfe" style="background:#a29bfe"></button>
+        <button class="pol-cor" data-cor="#fd79a8" style="background:#fd79a8"></button>
+        <button class="pol-cor" data-cor="#dfe6e9" style="background:#dfe6e9"></button>
+        <button class="pol-cor" data-cor="#636e72" style="background:#636e72"></button>
       </div>
-      <button id="polBtnPontos" class="pol-btn-toggle ativo" title="Mostra/oculta os pontos e seus rótulos">🔘 Pontos</button>
-      <button id="polBtnGrade" class="pol-btn-toggle ativo" title="Mostra/oculta as linhas de grade">▦ Grade</button>
-      <button id="polBtnLimpar" class="pol-btn-limpar" title="Apaga todos os pontos, segmentos e polígonos">🧹 Limpar</button>
-      <div class="poligonos-hint" id="polHint"></div>
+      <button id="polBtnPontos" class="pol-btn-toggle ativo">🔘 Pontos</button>
+      <button id="polBtnGrade" class="pol-btn-toggle ativo">▦ Grade</button>
+      <button id="polBtnLimpar" class="pol-btn-limpar">🧹 Limpar</button>
     </div>
     <div class="poligonos-canvas-wrap">
       <canvas id="poligonosCanvas"></canvas>
@@ -4780,7 +4774,6 @@ const _polEstado = {
   arrastando:-1,
   cursorDentro:false,
   curX:0, curY:0,
-  _msgTimer:null
 };
 function _polEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function _polFmt(n){ if(!isFinite(n)) return '—'; return String(Math.round(n*100)/100); }
@@ -5012,27 +5005,8 @@ function _polPintarRegiao(img, reg, cor){
     d[o]=r; d[o+1]=g; d[o+2]=b; d[o+3]=a;
   }
 }
-function _polAtualizarHint(){
-  const el=document.getElementById('polHint');
-  if(!el) return;
-  const h={
-    mover:'Clique em um ponto e arraste para movê-lo. Arraste o fundo para deslizar o plano. Rodinha do mouse dá zoom.',
-    ponto:'Clique em qualquer lugar para criar um ponto. Ele cola na coordenada inteira mais próxima quando você clica bem perto de um inteiro; caso contrário, o ponto fica com coordenadas decimais. Ex: (2, 3) ou (2.3, 4.7).',
-    reta:'Clique em dois pontos (crie-os se precisar) para traçar a reta infinita que passa por eles.',
-    segmento:'Clique em um ponto existente (ou no fundo para criar) e depois clique de novo para formar o segmento. O comprimento aparece na coluna da direita.',
-    poligono:'Clique para colocar cada vértice. Depois use "Fechar polígono" para calcular perímetro e área.',
-    circunferencia:'Clique no centro e depois em um ponto da circunferência. A distância entre eles é o raio.',
-    balde:'Escolha uma cor na paleta e clique dentro de uma figura. O balde preenche somente a região clicada, delimitada pelas bordas: polígono, circunferência e, quando um polígono corta uma circunferência (ou se sobrepõem), as regiões de interseção são preenchidas de forma independente. O quadradinho xadrez remove o preenchimento.'
-  };
-  el.textContent = h[_polEstado.ferramenta] || '';
-}
-function _polAtualizarHintMsg(msg){
-  const el=document.getElementById('polHint');
-  if(!el) return;
-  el.textContent=msg;
-  clearTimeout(_polEstado._msgTimer);
-  _polEstado._msgTimer=setTimeout(()=>{ _polAtualizarHint(); }, 2600);
-}
+function _polAtualizarHint(){}
+function _polAtualizarHintMsg(msg){}
 function _polAtualizarDados(){
   const elP=document.getElementById('polDadosPontos');
   const elS=document.getElementById('polDadosSegmentos');
