@@ -634,6 +634,7 @@
   .poligonos-toolbar .pol-btn-fechar { border-left:4px solid #00b894; }
   .poligonos-toolbar .pol-btn-balde { border-left:4px solid #fdcb6e; }
   .poligonos-toolbar .pol-btn-limpar { border-left:4px solid #e17055; }
+  .poligonos-toolbar .pol-btn-toggle { border-left:4px solid #6c5ce7; }
   .pol-cores-titulo {
     font-family:'Inter',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.4px;
     color:var(--text-dim); text-transform:uppercase; margin:4px 0 0;
@@ -819,6 +820,7 @@
       <button data-tool="segmento" title="Escolha dois pontos para criar um segmento (mostra o comprimento)">📏 Segmento</button>
       <button data-tool="poligono" title="Clique para colocar cada vértice; feche para calcular perímetro e área">📐 Polígono</button>
       <button data-tool="circunferencia" title="Clique no centro e depois em um ponto da circunferência (esse ponto define o raio)">⭕ Circunferência</button>
+      <button id="polBtnFecharPoli" class="pol-btn-fechar" title="Fecha o polígono em construção e calcula perímetro e área">🔒 Fechar polígono</button>
       <button data-tool="balde" class="pol-btn-balde" title="Escolha uma cor na paleta e clique dentro de uma figura. Preenche apenas a região clicada — polígono, circunferência e também as interseções entre elas, cada uma de forma independente">🪣 Preencher</button>
       <div class="pol-cores-titulo">Cor do preenchimento</div>
       <div class="pol-cores" id="polCores">
@@ -832,7 +834,8 @@
         <button class="pol-cor" data-cor="#dfe6e9" style="background:#dfe6e9" title="Cinza claro"></button>
         <button class="pol-cor" data-cor="#636e72" style="background:#636e72" title="Grafite"></button>
       </div>
-      <button id="polBtnFecharPoli" class="pol-btn-fechar" title="Fecha o polígono em construção e calcula perímetro e área">🔒 Fechar polígono</button>
+      <button id="polBtnPontos" class="pol-btn-toggle ativo" title="Mostra/oculta os pontos e seus rótulos">🔘 Pontos</button>
+      <button id="polBtnGrade" class="pol-btn-toggle ativo" title="Mostra/oculta as linhas de grade">▦ Grade</button>
       <button id="polBtnLimpar" class="pol-btn-limpar" title="Apaga todos os pontos, segmentos e polígonos">🧹 Limpar</button>
       <div class="poligonos-hint" id="polHint"></div>
     </div>
@@ -4770,6 +4773,8 @@ const _polEstado = {
   retaA:-1,           // índice do 1º ponto escolhido na ferramenta reta
   circA:-1,           // índice do centro escolhido na ferramenta circunferência
   corPintar:'#fdcb6e',// cor usada pela ferramenta balde ('' = sem preenchimento)
+  verPontos:true,     // mostra/oculta os pontos e seus rótulos
+  verGrade:true,      // mostra/oculta as linhas de grade
   view:{cx:0, cy:0, scale:60},
   panning:false, panSX:0, panSY:0, viewCX0:0, viewCY0:0,
   arrastando:-1,
@@ -5092,42 +5097,46 @@ function _polRedesenhar(){
   const x0=v.cx - W/(2*s), x1=v.cx + W/(2*s);
   const y0=v.cy - H/(2*s), y1=v.cy + H/(2*s);
   // grade
-  const passo=_polPassoGrid(s);
-  ctx.strokeStyle='#e9edf2';
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  for(let gx=Math.floor(x0/passo)*passo; gx<=x1; gx+=passo){
-    const px=(gx-v.cx)*s+W/2;
-    ctx.moveTo(px,0); ctx.lineTo(px,H);
+  if(_polEstado.verGrade){
+    const passo=_polPassoGrid(s);
+    ctx.strokeStyle='#d9dfe7';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    for(let gx=Math.floor(x0/passo)*passo; gx<=x1; gx+=passo){
+      const px=(gx-v.cx)*s+W/2;
+      ctx.moveTo(px,0); ctx.lineTo(px,H);
+    }
+    for(let gy=Math.floor(y0/passo)*passo; gy<=y1; gy+=passo){
+      const py=H/2-(gy-v.cy)*s;
+      ctx.moveTo(0,py); ctx.lineTo(W,py);
+    }
+    ctx.stroke();
   }
-  for(let gy=Math.floor(y0/passo)*passo; gy<=y1; gy+=passo){
-    const py=H/2-(gy-v.cy)*s;
-    ctx.moveTo(0,py); ctx.lineTo(W,py);
-  }
-  ctx.stroke();
-  // eixos
-  ctx.strokeStyle='#b7bfca';
-  ctx.lineWidth=1.5;
-  ctx.beginPath();
-  const ax=(0-v.cx)*s+W/2;
-  ctx.moveTo(ax,0); ctx.lineTo(ax,H);
-  const ay=H/2-(0-v.cy)*s;
-  ctx.moveTo(0,ay); ctx.lineTo(W,ay);
-  ctx.stroke();
-  // setas e rótulos dos eixos
-  ctx.fillStyle='#98a1ad';
-  ctx.font='11px Inter, sans-serif';
-  ctx.fillText('x', W-16, ay-6);
-  ctx.fillText('y', ax+6, 15);
-  // números dos eixos
-  const numPasso=_polPassoNum(s);
-  for(let gx=Math.floor(x0/numPasso)*numPasso; gx<=x1; gx+=numPasso){
-    if(gx===0) continue;
-    ctx.fillText(String(gx), (gx-v.cx)*s+W/2+4, ay+13);
-  }
-  for(let gy=Math.floor(y0/numPasso)*numPasso; gy<=y1; gy+=numPasso){
-    if(gy===0) continue;
-    ctx.fillText(String(gy), ax+5, H/2-(gy-v.cy)*s-5);
+  // eixos (linhas principais)
+  if(_polEstado.verGrade){
+    ctx.strokeStyle='#b7bfca';
+    ctx.lineWidth=1.5;
+    ctx.beginPath();
+    const ax=(0-v.cx)*s+W/2;
+    ctx.moveTo(ax,0); ctx.lineTo(ax,H);
+    const ay=H/2-(0-v.cy)*s;
+    ctx.moveTo(0,ay); ctx.lineTo(W,ay);
+    ctx.stroke();
+    // setas e rótulos dos eixos
+    ctx.fillStyle='#98a1ad';
+    ctx.font='11px Inter, sans-serif';
+    ctx.fillText('x', W-16, ay-6);
+    ctx.fillText('y', ax+6, 15);
+    // números dos eixos
+    const numPasso=_polPassoNum(s);
+    for(let gx=Math.floor(x0/numPasso)*numPasso; gx<=x1; gx+=numPasso){
+      if(gx===0) continue;
+      ctx.fillText(String(gx), (gx-v.cx)*s+W/2+4, ay+13);
+    }
+    for(let gy=Math.floor(y0/numPasso)*numPasso; gy<=y1; gy+=numPasso){
+      if(gy===0) continue;
+      ctx.fillText(String(gy), ax+5, H/2-(gy-v.cy)*s-5);
+    }
   }
   // preenchimentos com o balde (regiões independentes, incluindo interseções)
   if(_polEstado.pinturas.length){
@@ -5199,22 +5208,26 @@ function _polRedesenhar(){
     if(r<=0) continue;
     const px=(c.x-v.cx)*s+W/2, py=H/2-(c.y-v.cy)*s;
     const pr=r*s;
-    ctx.setLineDash([4,4]);
-    ctx.strokeStyle='rgba(0,184,148,0.45)';
-    ctx.lineWidth=1.2;
-    ctx.beginPath();
-    ctx.moveTo(px,py);
-    ctx.lineTo((p.x-v.cx)*s+W/2, H/2-(p.y-v.cy)*s);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    if(_polEstado.verPontos){
+      ctx.setLineDash([4,4]);
+      ctx.strokeStyle='rgba(0,184,148,0.45)';
+      ctx.lineWidth=1.2;
+      ctx.beginPath();
+      ctx.moveTo(px,py);
+      ctx.lineTo((p.x-v.cx)*s+W/2, H/2-(p.y-v.cy)*s);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
     ctx.beginPath();
     ctx.arc(px,py,pr,0,Math.PI*2);
     ctx.strokeStyle='#00b894';
     ctx.lineWidth=2;
     ctx.stroke();
-    ctx.fillStyle='#00b894';
-    ctx.font='600 12px Inter, sans-serif';
-    ctx.fillText(ci.nome, px+4, py-pr-6);
+    if(_polEstado.verPontos){
+      ctx.fillStyle='#00b894';
+      ctx.font='600 12px Inter, sans-serif';
+      ctx.fillText(ci.nome, px+4, py-pr-6);
+    }
   }
   // segmentos
   ctx.lineCap='round';
@@ -5271,19 +5284,21 @@ function _polRedesenhar(){
     }
   }
   // pontos
-  for(let i=0;i<_polEstado.pontos.length;i++){
-    const p=_polEstado.pontos[i];
-    const px=(p.x-v.cx)*s+W/2, py=H/2-(p.y-v.cy)*s;
-    ctx.beginPath();
-    ctx.arc(px,py, (i===_polEstado.arrastando || i===_polEstado.segA || i===_polEstado.retaA || i===_polEstado.circA) ? 6 : 4.5, 0, Math.PI*2);
-    ctx.fillStyle = _polEstado.arrastando===i ? '#3399ff' : '#e74c3c';
-    ctx.fill();
-    ctx.strokeStyle='#ffffff';
-    ctx.lineWidth=1.5;
-    ctx.stroke();
-    ctx.fillStyle='#2d3436';
-    ctx.font='600 12px Inter, sans-serif';
-    ctx.fillText(p.rotulo, px+7, py-7);
+  if(_polEstado.verPontos){
+    for(let i=0;i<_polEstado.pontos.length;i++){
+      const p=_polEstado.pontos[i];
+      const px=(p.x-v.cx)*s+W/2, py=H/2-(p.y-v.cy)*s;
+      ctx.beginPath();
+      ctx.arc(px,py, (i===_polEstado.arrastando || i===_polEstado.segA || i===_polEstado.retaA || i===_polEstado.circA) ? 6 : 4.5, 0, Math.PI*2);
+      ctx.fillStyle = _polEstado.arrastando===i ? '#3399ff' : '#e74c3c';
+      ctx.fill();
+      ctx.strokeStyle='#ffffff';
+      ctx.lineWidth=1.5;
+      ctx.stroke();
+      ctx.fillStyle='#2d3436';
+      ctx.font='600 12px Inter, sans-serif';
+      ctx.fillText(p.rotulo, px+7, py-7);
+    }
   }
   // coordenadas do cursor
   if(_polEstado.cursorDentro && (_polEstado.ferramenta==='ponto'||_polEstado.ferramenta==='reta'||_polEstado.ferramenta==='segmento'||_polEstado.ferramenta==='poligono'||_polEstado.ferramenta==='circunferencia')){
@@ -5328,6 +5343,7 @@ function _polLimpar(){
   _polEstado.circunferencias=[];
   _polEstado.poligonos=[];
   _polEstado.rascunhoPoli=[];
+  _polEstado.pinturas=[];
   _polEstado.segA=-1;
   _polEstado.retaA=-1;
   _polEstado.circA=-1;
@@ -5572,6 +5588,18 @@ function abrirJanelaPoligonos(){
   if(btnF) btnF.addEventListener('click', ()=>{ _polFecharPoligono(); });
   const btnL=document.getElementById('polBtnLimpar');
   if(btnL) btnL.addEventListener('click', ()=>{ _polLimpar(); });
+  const btnPt=document.getElementById('polBtnPontos');
+  if(btnPt) btnPt.addEventListener('click', ()=>{
+    _polEstado.verPontos=!_polEstado.verPontos;
+    btnPt.classList.toggle('ativo', _polEstado.verPontos);
+    _polRedesenhar();
+  });
+  const btnGr=document.getElementById('polBtnGrade');
+  if(btnGr) btnGr.addEventListener('click', ()=>{
+    _polEstado.verGrade=!_polEstado.verGrade;
+    btnGr.classList.toggle('ativo', _polEstado.verGrade);
+    _polRedesenhar();
+  });
   const resizerEl=document.getElementById('poligonosResizer');
   const dadosEl=document.querySelector('#poligonosRoot .poligonos-dados');
   if(resizerEl && dadosEl){
