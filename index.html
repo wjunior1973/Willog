@@ -1790,7 +1790,7 @@ function applyTheme(theme){
 (function(){
   const saved = localStorage.getItem('willog-theme');
   if(saved) applyTheme(saved);
-  else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) applyTheme('dark');
+  else applyTheme('dark');
 })();
 document.getElementById('btnTema').addEventListener('click', ()=>{
   const cur = document.body.getAttribute('data-theme');
@@ -1856,7 +1856,7 @@ function applyPaleta(p){
   }
   let saved=null;
   try{ saved=localStorage.getItem('willog-paleta'); }catch(e){}
-  applyPaleta(saved||'padrao');
+  applyPaleta(saved||'github');
 })();
 document.getElementById('btnPaleta').addEventListener('click', ()=>{
   document.getElementById('modalPaleta').style.display='grid';
