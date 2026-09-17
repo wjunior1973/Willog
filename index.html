@@ -1936,7 +1936,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','polígonos','poligonos','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta','centralizaTexto','corTexto']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','vá','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','polígonos','poligonos','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta','centralizaTexto','corTexto']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatória']);
@@ -2383,7 +2383,7 @@ updateLines(); updateHighlight();
     {name:'tela.cor',hint:'tela.cor(cor)',desc:'Define cor de fundo da tela'},
     {name:'tela.limpe',hint:'tela.limpe()',desc:'Limpa a tela/desenho'},
     {name:'toque',hint:'toque()',desc:'Verifica clique na tela'},
-    {name:'vá para',hint:'vá para(x,y)',desc:'Posiciona cursor na tela'},
+    {name:'vá para',hint:'vá para <rótulo>',desc:'Pula para o rótulo definido com :nome'},
     {name:'verificar',hint:'verificar caso valor:',desc:'Estrutura caso/padrão (switch)'}
   ].sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase(),'pt'));
   const funcoes=[
@@ -2674,7 +2674,14 @@ updateLines(); updateHighlight();
     const re=/[a-zA-Z0-9_À-ÿ]+(?:\.[a-zA-Z0-9_À-ÿ]+)*/g;
     let m;
     while((m=re.exec(str))!==null){
-      if(offset>=m.index && offset<m.index+m[0].length) return m[0].split('.');
+      if(offset>=m.index && offset<m.index+m[0].length){
+        const segs=m[0].split('.');
+        if(segs.length===1){
+          const pm=str.slice(0,m.index).match(/([a-zA-Z0-9_À-ÿ]+)\s+$/);
+          if(pm && _ttMap.has(pm[1]+' '+segs[0])) return [pm[1]+' '+segs[0]];
+        }
+        return segs;
+      }
     }
     return null;
   }
