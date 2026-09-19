@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual — Linguagem Willog</title>
+<meta name="description" content="Manual completo da linguagem Willog: comandos, funções, operadores, propriedades, cores, tartaruga e polígonos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0b16;
+    --bg-2:#141125;
+    --panel:rgba(255,255,255,.045);
+    --panel-hover:rgba(255,255,255,.08);
+    --border:rgba(255,255,255,.10);
+    --border-strong:rgba(162,155,254,.45);
+    --text:#eef0ff;
+    --text-dim:#a9a8c4;
+    --accent:#a29bfe;
+    --accent-2:#6c5ce7;
+    --accent-3:#ff7aa8;
+    --accent-4:#57e6d0;
+    --danger:#ff6b6b;
+    --ok:#57e6d0;
+    --warn:#ffeaa7;
+    --hl-keyword:#a29bfe;
+    --hl-string:#55efc4;
+    --hl-number:#74b9ff;
+    --hl-comment:#7a7a96;
+    --hl-function:#ffeaa7;
+    --hl-variable:#e6e8ff;
+    --hl-operator:#fab1a0;
+    --shadow:0 24px 70px rgba(0,0,0,.45);
+    --radius:18px;
+    --mono:'JetBrains Mono',monospace;
+    --sans:'Inter',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;scroll-padding-top:86px;}
+  body{
+    font-family:var(--sans);
+    color:var(--text);
+    background:var(--bg);
+    background-image:
+      radial-gradient(1200px 600px at 85% -10%, rgba(108,92,231,.22), transparent 60%),
+      radial-gradient(900px 500px at -10% 15%, rgba(87,230,208,.10), transparent 60%),
+      radial-gradient(700px 500px at 50% 110%, rgba(255,122,168,.12), transparent 60%);
+    background-attachment:fixed;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  ::selection{background:rgba(162,155,254,.35);}
+  .container{width:min(1120px,92%);margin-inline:auto;}
+  section{padding:76px 0;position:relative;}
+  .tag{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--accent);background:rgba(162,155,254,.10);
+    border:1px solid rgba(162,155,254,.30);border-radius:999px;padding:7px 16px;
+  }
+  h2{
+    font-size:clamp(28px,4.5vw,42px);font-weight:800;letter-spacing:-.02em;line-height:1.12;
+    margin:18px 0 14px;
+  }
+  h2 .grad{
+    background:linear-gradient(100deg,var(--accent),var(--accent-3));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .lead{color:var(--text-dim);font-size:clamp(16px,2.2vw,19px);max-width:680px;}
+  .sec-head{max-width:760px;}
+  .sec-head.center{margin-inline:auto;text-align:center;}
+  .sec-head.center .lead{margin-inline:auto;}
+
+  /* ---------- Barra de navegação ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    background:rgba(13,11,22,.78);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{display:flex;align-items:center;gap:18px;padding:12px 0;flex-wrap:wrap;}
+  .logo{
+    display:flex;align-items:center;gap:11px;color:var(--text);
+    font-weight:800;font-size:19px;letter-spacing:-.01em;text-decoration:none;
+  }
+  .logo:hover{text-decoration:none;}
+  .logo-mark{
+    width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+    font-family:var(--mono);font-weight:700;font-size:20px;color:#fff;
+    background:linear-gradient(135deg,var(--accent-2),var(--accent));
+    box-shadow:0 8px 24px rgba(108,92,231,.4);
+  }
+  .nav-links{display:flex;gap:2px;margin-left:auto;align-items:center;flex-wrap:wrap;}
+  .nav-links a{
+    color:var(--text-dim);font-size:14px;font-weight:500;padding:8px 11px;border-radius:9px;
+    transition:color .2s,background .2s;
+  }
+  .nav-links a:hover{color:var(--text);background:var(--panel);text-decoration:none;}
+  .nav-burger{display:none;margin-left:auto;background:var(--panel);border:1px solid var(--border);color:var(--text);font-size:18px;padding:8px 13px;border-radius:10px;cursor:pointer;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    font-family:var(--sans);font-weight:600;font-size:15px;cursor:pointer;
+    border:1px solid transparent;border-radius:12px;padding:12px 22px;
+    transition:transform .18s,box-shadow .18s,background .18s,color .18s;
+    text-decoration:none;
+  }
+  .btn:hover{text-decoration:none;transform:translateY(-2px);}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;
+    box-shadow:0 10px 30px rgba(108,92,231,.4);
+  }
+  .btn-primary:hover{box-shadow:0 16px 40px rgba(108,92,231,.55);}
+  .btn-ghost{background:var(--panel);color:var(--text);border-color:var(--border);}
+  .btn-ghost:hover{background:var(--panel-hover);}
+  .btn-sm{padding:9px 16px;font-size:14px;border-radius:10px;}
+  .nav-cta{padding:9px 18px;font-size:14px;border-radius:10px;}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:96px 0 80px;overflow:hidden;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center;}
+  .hero h1{
+    font-size:clamp(42px,7vw,68px);font-weight:800;letter-spacing:-.035em;line-height:1;
+    margin:22px 0 20px;
+  }
+  .hero h1 .grad{
+    background:linear-gradient(100deg,var(--accent) 0%,var(--accent-3) 55%,var(--accent-4) 110%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    padding-right:.08em;
+  }
+  .hero p.sub{font-size:clamp(17px,2.4vw,21px);color:var(--text);max-width:560px;}
+  .hero p.sub b{color:var(--accent);}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px;}
+  .hero-stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:42px;}
+  .stat{
+    background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    padding:14px 22px;min-width:132px;
+  }
+  .stat b{font-size:26px;font-weight:800;font-family:var(--mono);color:#fff;display:block;}
+  .stat span{font-size:12.5px;color:var(--text-dim);}
+  .hero-visual{position:relative;max-width:560px;width:100%;margin-inline:auto;}
+  .code-card{
+    position:relative;background:#151228;border:1px solid var(--border);
+    border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+  }
+  .code-card .bar{
+    display:flex;align-items:center;gap:8px;padding:13px 16px;
+    background:rgba(255,255,255,.035);border-bottom:1px solid var(--border);
+  }
+  .code-card .dot{width:12px;height:12px;border-radius:50%;}
+  .code-card .bar span.fname{margin-left:10px;font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+  .code-card pre{
+    font-family:var(--mono);font-size:13.5px;line-height:1.75;padding:20px 22px 6px;
+    overflow:auto;white-space:pre;
+  }
+  .code-card .console{
+    font-family:var(--mono);font-size:13px;line-height:1.7;padding:8px 22px 20px;
+    border-top:1px solid var(--border);color:#9ef3de;
+  }
+  .code-card .console .p{color:#7b79a0;}
+  .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;z-index:-1;pointer-events:none;}
+  .hero-visual .blob.b1{width:300px;height:300px;background:#6c5ce7;top:-40px;right:-40px;}
+  .hero-visual .blob.b2{width:250px;height:250px;background:#ff7aa8;bottom:-50px;left:-60px;opacity:.35;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+  /* ---------- Destaques de sintaxe ---------- */
+  .tok-kw{color:var(--hl-keyword);font-weight:600;}
+  .tok-string{color:var(--hl-string);}
+  .tok-num{color:var(--hl-number);}
+  .tok-comment{color:var(--hl-comment);font-style:italic;}
+  .tok-fn{color:var(--hl-function);}
+  .tok-var{color:var(--hl-variable);}
+  .tok-op{color:var(--hl-operator);}
+  .tok-prop{color:#81ecec;}
+  .tok-boolean{color:#ff7675;}
+  .tok-interp{color:#fdcb6e;}
+  .tok-label{color:#f78fb3;font-style:italic;}
+
+  /* ---------- Cartões base ---------- */
+  .card{
+    background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:26px 24px;transition:transform .22s,background .22s,border-color .22s;
+  }
+  .card:hover{transform:translateY(-6px);background:var(--panel-hover);border-color:var(--border-strong);}
+  .card .ic{font-size:30px;display:block;margin-bottom:12px;}
+  .card h3{font-size:18px;font-weight:700;margin-bottom:8px;}
+  .card p{color:var(--text-dim);font-size:14.5px;}
+  .card b{color:var(--accent);font-weight:600;}
+
+  .about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px;}
+  .res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px;}
+  .res-grid .card{padding:22px 20px;}
+
+  .exemplos{background:linear-gradient(180deg,transparent,rgba(108,92,231,.06) 30%,rgba(108,92,231,.06) 70%,transparent);}
+
+  /* ---------- Caixas de código (exemplos) ---------- */
+  .box{
+    border:1px solid var(--border);border-radius:14px;overflow:hidden;
+    background:#151228;margin:12px 0;
+  }
+  .box-head{
+    display:flex;align-items:center;gap:8px;padding:9px 14px;
+    background:rgba(255,255,255,.035);border-bottom:1px solid var(--border);
+  }
+  .box-head .fname{font-family:var(--mono);font-size:12px;color:var(--text-dim);margin-left:4px;}
+  .box-head .copy{
+    margin-left:auto;background:var(--panel);border:1px solid var(--border);border-radius:8px;
+    color:var(--text-dim);font-size:12px;padding:4px 10px;cursor:pointer;font-family:var(--sans);transition:color .2s,background .2s,border-color .2s;
+  }
+  .box-head .copy:hover{color:var(--text);background:var(--panel-hover);border-color:var(--border-strong);}
+  .box pre.code{
+    font-family:var(--mono);font-size:13px;line-height:1.7;padding:14px 16px;
+    overflow:auto;white-space:pre;
+  }
+  .box .out{
+    font-family:var(--mono);font-size:12.5px;line-height:1.7;padding:10px 16px 13px;
+    border-top:1px solid var(--border);color:#9ef3de;white-space:pre-wrap;word-break:break-word;
+  }
+  .box .out .p{color:#7b79a0;}
+
+  /* ---------- Fichas de comando ---------- */
+  .cmd-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px;}
+  .cmd{
+    background:var(--panel);border:1px solid var(--border);border-radius:15px;
+    padding:20px 20px 14px;display:flex;flex-direction:column;
+    transition:border-color .2s,background .2s;
+  }
+  .cmd:hover{border-color:var(--border-strong);background:var(--panel-hover);}
+  .cmd-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .cmd h4{font-family:var(--mono);font-size:15.5px;font-weight:700;color:var(--accent);}
+  .cmd .chip{
+    font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--text-dim);background:rgba(255,255,255,.05);border:1px solid var(--border);
+    border-radius:999px;padding:2px 9px;
+  }
+  .cmd .syn{
+    font-family:var(--mono);font-size:12.5px;color:var(--text);margin:10px 0 2px;line-height:1.6;
+  }
+  .cmd .syn code{background:rgba(162,155,254,.10);border:1px solid rgba(162,155,254,.25);border-radius:6px;padding:1px 7px;color:var(--accent);}
+  .cmd p.note{color:var(--text-dim);font-size:12.5px;margin-top:8px;}
+  .cmd .box{margin-top:10px;border-radius:10px;}
+  .cmd .box pre.code{font-size:12px;padding:12px 14px;}
+
+  .cat-title{
+    display:flex;align-items:center;gap:10px;margin:44px 0 6px;
+    font-size:20px;font-weight:800;letter-spacing:-.01em;
+  }
+  .cat-title .line{flex:1;height:1px;background:var(--border);}
+  .cat-sub{color:var(--text-dim);font-size:14.5px;}
+
+  /* ---------- Tabelas ---------- */
+  .tbl-wrap{border:1px solid var(--border);border-radius:14px;overflow:auto;margin-top:16px;background:var(--panel);}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px;}
+  thead th{
+    text-align:left;background:rgba(255,255,255,.04);color:var(--text-dim);
+    font-size:12px;letter-spacing:.05em;text-transform:uppercase;
+    padding:12px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;
+  }
+  tbody td{padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:rgba(255,255,255,.03);}
+  td code{font-family:var(--mono);font-size:12.5px;color:var(--accent);}
+  td .d{color:var(--text-dim);}
+  td .e{color:#c9f7ea;font-family:var(--mono);font-size:12.5px;}
+  .fn-filter{
+    display:flex;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap;
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 14px;
+  }
+  .fn-filter input{
+    flex:1;min-width:200px;background:rgba(255,255,255,.05);border:1px solid var(--border);
+    color:var(--text);font-family:var(--sans);font-size:14px;padding:8px 12px;border-radius:9px;outline:none;
+  }
+  .fn-filter input:focus{border-color:var(--border-strong);}
+  .fn-filter span{color:var(--text-dim);font-size:12.5px;white-space:nowrap;}
+  tr.hidden{display:none;}
+
+  /* ---------- Cores ---------- */
+  .cores-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px;}
+  .swatch{
+    display:flex;align-items:center;gap:12px;background:var(--panel);
+    border:1px solid var(--border);border-radius:14px;padding:14px;transition:transform .2s,border-color .2s;
+  }
+  .swatch:hover{transform:translateY(-3px);border-color:var(--border-strong);}
+  .chip-color{width:46px;height:46px;border-radius:12px;border:1px solid rgba(255,255,255,.18);flex-shrink:0;}
+  .sw-info b{display:block;font-size:15px;font-weight:700;}
+  .sw-info code{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+
+  /* ---------- Índice lateral / dicas ---------- */
+  .banner{
+    margin-top:26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+    background:linear-gradient(120deg,rgba(108,92,231,.18),rgba(255,122,168,.12));
+    border:1px solid var(--border-strong);border-radius:var(--radius);padding:26px 30px;
+  }
+  .banner .txt{flex:1;min-width:240px;}
+  .banner h3{font-size:20px;font-weight:800;margin-bottom:6px;}
+  .banner p{color:var(--text-dim);font-size:14.5px;}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px;counter-reset:step;}
+  .step{position:relative;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:30px 26px 26px;}
+  .step::before{
+    counter-increment:step;content:"0" counter(step);
+    position:absolute;top:-20px;left:22px;
+    font-family:var(--mono);font-weight:700;font-size:26px;
+    background:linear-gradient(135deg,var(--accent-2),var(--accent));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .step h3{font-size:18px;font-weight:700;margin-bottom:8px;}
+  .step p{color:var(--text-dim);font-size:14.5px;}
+  .step code{font-family:var(--mono);font-size:12.5px;color:var(--accent);background:rgba(162,155,254,.10);border:1px solid rgba(162,155,254,.25);padding:2px 7px;border-radius:6px;}
+
+  .mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:12px;}
+  .mini{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+  .mini h4{font-size:14.5px;font-weight:700;margin-bottom:6px;color:var(--text);}
+  .mini h4 .ic{margin-right:6px;}
+  .mini pre{font-family:var(--mono);font-size:12.5px;line-height:1.65;margin-top:8px;white-space:pre;overflow:auto;color:var(--text);}
+  .mini p{color:var(--text-dim);font-size:13px;margin-top:8px;}
+
+  /* ---------- Rodapé ---------- */
+  footer{border-top:1px solid var(--border);padding:40px 0 34px;background:rgba(13,11,22,.6);}
+  .foot{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;justify-content:space-between;}
+  .foot .brand{max-width:330px;}
+  .foot .brand p{color:var(--text-dim);font-size:13.5px;margin-top:10px;}
+  .foot h5{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;}
+  .foot ul{list-style:none;}
+  .foot ul li{margin-bottom:8px;}
+  .foot ul a{color:var(--text-dim);font-size:13.5px;}
+  .foot ul a:hover{color:var(--text);}
+  .copy{border-top:1px solid var(--border);margin-top:30px;padding-top:20px;text-align:center;color:var(--text-dim);font-size:13px;}
+
+  /* ---------- animações ---------- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.visible{opacity:1;transform:none;}
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;}
+    .reveal{opacity:1;transform:none;}
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:960px){
+    .hero-grid{grid-template-columns:1fr;gap:46px;}
+    .about-grid,.res-grid,.steps{grid-template-columns:1fr 1fr;}
+    .cmd-grid{grid-template-columns:1fr;}
+    .cores-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:640px){
+    .nav-links{display:none;width:100%;flex-direction:column;align-items:stretch;}
+    .nav-links.open{display:flex;}
+    .nav-burger{display:block;}
+    .nav-cta{order:9;}
+    .about-grid,.res-grid,.steps,.cores-grid,.mini-grid{grid-template-columns:1fr;}
+    .hero{padding:64px 0 56px;}
+    section{padding:60px 0;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Navegação -->
+<nav>
+  <div class="container nav-inner">
+    <a class="logo" href="#inicio"><span class="logo-mark">W</span> Willog · Manual</a>
+    <button class="nav-burger" id="navBurger" aria-label="Menu">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="#inicio">Início</a>
+      <a href="#comecando">Começando</a>
+      <a href="#comandos">Comandos</a>
+      <a href="#funcoes">Funções</a>
+      <a href="#operadores">Operadores</a>
+      <a href="#propriedades">Propriedades</a>
+      <a href="#cores">Cores</a>
+      <a href="#tartaruga">🐢 Tartaruga</a>
+      <a href="#poligonos">📐 Polígonos</a>
+    </div>
+    <a class="btn btn-primary nav-cta" href="index.html">▶ Abrir a IDE</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero" id="inicio">
+  <div class="container hero-grid">
+    <div>
+      <span class="tag">📘 Manual completo da linguagem</span>
+      <h1>Tudo sobre a <span class="grad">Willog</span></h1>
+      <p class="sub">Comandos, funções, operadores, propriedades, cores, desenho e muito mais — <b>tudo em português</b>, com exemplos prontos para colar na IDE.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#comandos">📖 Ver comandos</a>
+        <a class="btn btn-ghost" href="#comecando">🚀 Começando</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b>56</b><span>comandos</span></div>
+        <div class="stat"><b>80</b><span>funções prontas</span></div>
+        <div class="stat"><b>12</b><span>cores + aleatória</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="code-card" style="animation:float 5s ease-in-out infinite;">
+        <div class="bar">
+          <span class="dot" style="background:#ff5f57"></span>
+          <span class="dot" style="background:#febc2e"></span>
+          <span class="dot" style="background:#28c840"></span>
+          <span class="fname">manual.wil</span>
+        </div>
+        <pre>janela(500, 400)
+tela.cor(azul)
+tela.limpe
+desenhe.circulo(250, 200, 90, amarelo)
+desenhe.retangulo(205, 165, 295, 235, vermelho)
+mostre "Pronto! 🎨"</pre>
+        <div class="console">&gt; Pronto! 🎨</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Começando -->
+<section id="comecando">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="tag">🚀 Primeiros passos</span>
+      <h2>Escreva seu primeiro <span class="grad">programa</span></h2>
+      <p class="lead">A Willog é simples, gratuita e roda no navegador. Escreva, aperte <b>F5</b> ou clique em <b>Executar</b> e veja o resultado na hora.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="card reveal">
+        <span class="ic">🇧🇷</span>
+        <h3>Português de verdade</h3>
+        <p><b>mostre</b>, <b>se…então</b>, <b>enquanto</b>, <b>para cada</b>… A sintaxe acompanha a língua materna — foque no raciocínio, não na tradução.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ic">🌐</span>
+        <h3>Roda no navegador</h3>
+        <p>Nenhuma instalação. O código é executado na própria tela, com era específica <code style="font-family:var(--mono);color:var(--accent);font-size:13px">janela()</code>, <code style="font-family:var(--mono);color:var(--accent);font-size:13px">tartaruga()</code> e <code style="font-family:var(--mono);color:var(--accent);font-size:13px">polígonos()</code>.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ic">🎓</span>
+        <h3>Feita para aprender</h3>
+        <p>Mensagens de erro claras, autocompletar, referência rápida e o salvamento automático guarda seu código entre sessões.</p>
+      </div>
+    </div>
+
+    <div class="mini-grid">
+      <div class="mini reveal">
+        <h4><span class="ic">✏️</span>Variáveis</h4>
+        <pre>x = 10
+nome = "Ana"
+y := 2 * x</pre>
+        <p>Atribuição com <code style="font-family:var(--mono);color:var(--accent)">=</code> ou <code style="font-family:var(--mono);color:var(--accent)">:=</code>. Aceita vetores.</p>
+      </div>
+      <div class="mini reveal">
+        <h4><span class="ic">🧊</span>Constantes</h4>
+        <pre>constante PI = 3.1415
+constante Valor = 5000</pre>
+        <p>Não podem ser alteradas — <code style="font-family:var(--mono);color:var(--accent)">PI = 5</code> gera erro.</p>
+      </div>
+      <div class="mini reveal">
+        <h4><span class="ic">💬</span>Interpolação</h4>
+        <pre>nome = "Wilson"
+mostre "Olá, {nome}!"</pre>
+        <p><code style="font-family:var(--mono);color:var(--accent)">{…}</code> insere valores dentro de textos.</p>
+      </div>
+      <div class="mini reveal">
+        <h4><span class="ic">⌨️</span>Entrada</h4>
+        <pre>nome = leia "Digite seu nome:"
+mostre "Olá, {nome}!"</pre>
+        <p>Vários valores de uma vez: <code style="font-family:var(--mono);color:var(--accent)">a, b = leia "…"</code>.</p>
+      </div>
+      <div class="mini reveal">
+        <h4><span class="ic">🔀</span>Decisão</h4>
+        <pre>se nota >= 7 então:
+    mostre "Aprovado"
+senão:
+    mostre "Reprovado"</pre>
+        <p><code style="font-family:var(--mono);color:var(--accent)">então</code> é opcional. Blocos usam indentação.</p>
+      </div>
+      <div class="mini reveal">
+        <h4><span class="ic">🔁</span>Repetição</h4>
+        <pre>para cada n entre 1 e 5:
+    mostre n
+repita(3):
+    mostre "Oi!"</pre>
+        <p>Também <code style="font-family:var(--mono);color:var(--accent)">enquanto</code>, <code style="font-family:var(--mono);color:var(--accent)">pulando passo</code> e percorrer listas com <code style="font-family:var(--mono);color:var(--accent)">em</code>.</p>
+      </div>
+      <div class="mini reveal">
+        <h4><span class="ic">🧩</span>Listas</h4>
+        <pre>A = [1, 2, 3]
+A.adicionar(4)
+mostre A.tamanho</pre>
+        <p>Operações vetorizadas, propriedades e muitas funções prontas.</p>
+      </div>
+      <div class="mini reveal">
+        <h4><span class="ic">⚙️</span>Funções</h4>
+        <pre>definir função soma(a, b):
+    retorne a + b
+mostre soma(10, 20)</pre>
+        <p>Reutilize código e chame quantas vezes quiser.</p>
+      </div>
+    </div>
+
+    <div class="tbl-wrap reveal" style="overflow:hidden">
+      <div class="box" style="margin:0;border:none;border-radius:0;">
+        <div class="box-head"><span class="fname" style="color:#9ef3de">◉ Programa completo</span></div>
+        <pre class="code">nome = leia "Como você se chama?"
+idade = 14
+mostre "Olá, {nome}!"
+se idade >= 18:
+    mostre "Maior de idade 😎"
+senão:
+    mostre "Você ainda é jovem 😄"
+para cada letra em nome:
+    mostre "Letra: {letra}"</pre>
+        <div class="out">> Ana
+Olá, Ana!
+Você ainda é jovem 😄
+Letra: A
+Letra: n
+Letra: a</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Comandos -->
+<section class="exemplos" id="comandos">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="tag">📖 Comandos</span>
+      <h2>Todos os <span class="grad">comandos</span></h2>
+      <p class="lead">Cada comando com sua sintaxe, um exemplo real e a saída esperada. Clique em ⧉ para copiar o código.</p>
+    </div>
+
+    <div class="cat-title reveal"><span>🖥️ Entrada, saída e interação</span><span class="line"></span></div>
+    <div class="cmd-grid">
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>mostre</h4><span class="chip">Saída</span></div>
+        <div class="syn">mostre <code>&lt;valor&gt;</code> [, <code>&lt;valor&gt;</code> …]</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">nome = "Wilson"
+mostre "Olá, {nome}!"
+mostre 10 + 5
+mostre 10 & 5</pre>
+          <div class="out">Olá, Wilson!
+15
+105</div>
+        </div>
+        <p class="note"><code>{…}</code> interpola valores; <code>&amp;</code> concatena como texto; vários valores separados por vírgula.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>mostre { … }</h4><span class="chip">Saída</span></div>
+        <div class="syn">mostre { <code>&lt;expressão&gt;</code> … }</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">A = [1, 2, 3]
+mostre {
+A
+"A é uma lista"
+}</pre>
+          <div class="out">1, 2, 3
+A é uma lista</div>
+        </div>
+        <p class="note">Exibe várias coisas de uma vez.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>leia</h4><span class="chip">Entrada</span></div>
+        <div class="syn"><code>&lt;var&gt;</code> = leia <code>"mensagem"</code> &nbsp;·&nbsp; <code>&lt;a, b&gt;</code> = leia <code>"…"</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">nome, idade = leia "Nome e idade:"
+mostre "Olá, {nome}, você tem {idade} anos!"</pre>
+          <div class="out">Nome e idade: <span class="p">Maria, 30</span>
+Olá, Maria, você tem 30 anos!</div>
+        </div>
+        <p class="note">Com várias variáveis, digite os valores separados por vírgula. <code>\n</code> quebra a linha no texto da pergunta.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>limpe</h4><span class="chip">Saída</span></div>
+        <div class="syn">limpe</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">mostre "Olá"
+limpe
+mostre "Console limpo"</pre>
+          <div class="out">Console limpo</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>corTexto</h4><span class="chip">Saída</span></div>
+        <div class="syn">corTexto <code>(cor)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">corTexto(vermelho)
+mostre "Alerta!"
+corTexto(corAleatória)
+mostre "Colorido!"</pre>
+          <div class="out">💡 saída em vermelho / cor aleatória</div>
+        </div>
+        <p class="note">Cor do texto no console, na janela e em <code>desenhe.texto</code> sem cor. Padrão <code>branco</code>.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>centralizaTexto</h4><span class="chip">Saída</span></div>
+        <div class="syn">centralizaTexto <code>()</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela()
+centralizaTexto()
+mostre "No centro"</pre>
+          <div class="out">🔝 texto centralizado na janela</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>mensagem</h4><span class="chip">Interação</span></div>
+        <div class="syn">mensagem <code>("título", "texto")</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">mensagem("Boas vindas", "Olá, mundo!")</pre>
+          <div class="out">🪟 caixa com título e texto; o programa espera o OK</div>
+        </div>
+        <p class="note">Título e texto aceitam variáveis e expressões. <code>\n</code> quebra linha.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>espereTecla / captureTecla</h4><span class="chip">Interação</span></div>
+        <div class="syn">espereTecla <code>()</code> · espereTecla <code>("enter")</code> · <code>tecla</code> = captureTecla <code>()</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">mostre "Pressione ENTER"
+espereTecla("enter")
+tecla = captureTecla()
+mostre "Você pressionou {tecla}"</pre>
+          <div class="out">Pressione ENTER <span class="p">[enter]</span>
+Você pressionou Enter</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>bipe</h4><span class="chip">Som</span></div>
+        <div class="syn">bipe</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">bipe</pre>
+          <div class="out">🔊 bipe padrão (800 Hz por 0,2 s)</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>toque</h4><span class="chip">Som</span></div>
+        <div class="syn">toque <code>(frequência, duração)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">toque(440, 1)
+toque(523, 0.3)</pre>
+          <div class="out">🎵 440 Hz (Lá) por 1 s · Dó 523 Hz por 0,3 s</div>
+        </div>
+        <p class="note">Frequência entre 20 e 20000 Hz; duração máxima 10 s. Aguarda o fim do som.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>pausa</h4><span class="chip">Tempo</span></div>
+        <div class="syn">pausa <code>(segundos)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">para cada n entre 1 e 3:
+    mostre n
+    pausa(1)</pre>
+          <div class="out">1 [1s] → 2 [1s] → 3</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>cronometro</h4><span class="chip">Tempo</span></div>
+        <div class="syn">cronometro.iniciar · cronometro.parar · cronometro.tempo<code>()</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">cronometro.iniciar
+pausa(2)
+cronometro.parar
+mostre cronometro.tempo()</pre>
+          <div class="out">Cronômetro parado: 2.0s (aproximado)
+2.0</div>
+        </div>
+        <p class="note">Também aceita <code>cronômetro</code>, com acento. <code>iniciar</code> zera a contagem.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>comentários</h4><span class="chip">Código</span></div>
+        <div class="syn"><code>#</code> linha · <code>#'</code> linha · <code>#:</code> bloco <code>:#</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code"># comentário de linha
+mostre "Olá" #' comentário após o código
+#:
+  mostre "isto não executa"
+  x = 10
+:#
+mostre "executa"</pre>
+          <div class="out">Olá
+executa</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cat-title reveal"><span>🔀 Decisão e repetição</span><span class="line"></span></div>
+    <div class="cmd-grid">
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>se … então … senão</h4><span class="chip">Decisão</span></div>
+        <div class="syn">se <code>&lt;condição&gt;</code> então: <code>comandos</code> · senão: <code>comandos</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">nota = 8
+se nota >= 7 então:
+    mostre "Aprovado"
+senão:
+    mostre "Reprovado"</pre>
+          <div class="out">Aprovado</div>
+        </div>
+        <p class="note"><code>então</code>/<code>entao</code> é opcional — basta os dois-pontos. O bloco exige indentação.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>verificar … caso … padrão</h4><span class="chip">Decisão</span></div>
+        <div class="syn">verificar <code>&lt;valor&gt;:</code> · caso <code>X:</code> <code>expr</code> · padrão: <code>expr</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">nota = 9
+verificar nota:
+    caso 10: "Excelente!"
+    caso 9: "Ótimo!"
+    padrão: "Estude mais!"</pre>
+          <div class="out">Ótimo!</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>enquanto</h4><span class="chip">Repetição</span></div>
+        <div class="syn">enquanto <code>&lt;condição&gt;:</code> <code>comandos</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">n = 0
+enquanto n < 10:
+    n = n + 1
+mostre "n = {n}. Fim!"</pre>
+          <div class="out">n = 10. Fim!</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>para cada</h4><span class="chip">Repetição</span></div>
+        <div class="syn">para cada <code>x</code> entre <code>a</code> e <code>b</code> [pulando <code>p</code>]: · para cada <code>x</code> em <code>lista</code>:</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">para cada n entre 2 e 10 pulando 2:
+    mostre n
+para cada letra em "willog":
+    mostre letra</pre>
+          <div class="out">2 4 6 8 10
+w i l l o g</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>repita</h4><span class="chip">Repetição</span></div>
+        <div class="syn">repita <code>(n):</code> <code>comandos</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">repita(3):
+    mostre "Olá!"</pre>
+          <div class="out">Olá!
+Olá!
+Olá!</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>pare / continue</h4><span class="chip">Repetição</span></div>
+        <div class="syn">pare · continue</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">para cada n entre 1 e 10:
+    se n == 5:
+        pare
+    se n == 2:
+        continue
+    mostre n</pre>
+          <div class="out">1 3 4</div>
+        </div>
+        <p class="note"><code>pare</code> sai do laço; <code>continue</code> pula para a próxima iteração.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>vá para / rótulos</h4><span class="chip">Repetição</span></div>
+        <div class="syn">:rótulo · vá para <code>rótulo</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">:início
+a = aleatório(10)
+se a != 7:
+    vá para início
+mostre "Fim!"</pre>
+          <div class="out">Fim! (quando a == 7)</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>intervalo</h4><span class="chip">Dados</span></div>
+        <div class="syn">(<code>início..fim</code>) · (<code>início..fim</code>,passo)</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">x = (1..5)
+mostre x
+y = (-5..5, 2)
+mostre y</pre>
+          <div class="out">1, 2, 3, 4, 5
+-5, -3, -1, 1, 3, 5</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>definir função</h4><span class="chip">Funções</span></div>
+        <div class="syn">definir função <code>&lt;nome&gt;</code>(p1, p2…): · retorne <code>&lt;expressão&gt;</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">definir função dobro(x):
+    retorne x * 2
+mostre dobro(21)</pre>
+          <div class="out">42</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>constante</h4><span class="chip">Dados</span></div>
+        <div class="syn">constante <code>NOME</code> = valor</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">constante PI = 3.1415
+mostre PI</pre>
+          <div class="out">3.1415</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cat-title reveal"><span>🪟 Janela e desenho</span><span class="line"></span></div>
+    <div class="cmd-grid">
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>janela</h4><span class="chip">Janela</span></div>
+        <div class="syn">janela <code>()</code> · janela <code>(centraliza)</code> · janela <code>(largura, altura)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(300, 400)
+tela.limpe
+desenhe.circulo(150, 200, 50, vermelho)</pre>
+          <div class="out">🪟 janela 300×400 para desenho</div>
+        </div>
+        <p class="note"><code>janela()</code> e <code>janela(centraliza)</code> são para console; <code>janela(largura, altura)</code> é para desenho. Fechar com ✕ interrompe o programa.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>tela.cor / tela.limpe</h4><span class="chip">Janela</span></div>
+        <div class="syn">tela.cor <code>(cor)</code> · tela.limpe</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(300, 400)
+tela.cor(azul)
+tela.limpe
+desenhe.circulo(100, 100, 40, amarelo)</pre>
+          <div class="out">🎨 fundo azul + círculo amarelo</div>
+        </div>
+        <p class="note">Fundo padrão <code>preto</code>; <code>tela.limpe</code> usa a cor atual definida por <code>tela.cor</code>.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>desenhe.circulo</h4><span class="chip">Desenho</span></div>
+        <div class="syn">desenhe.circulo <code>(x, y, raio, cor)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(300, 400)
+tela.limpe
+desenhe.circulo(150, 150, 50, vermelho)</pre>
+          <div class="out">⭕ círculo vermelho, centro (150,150), raio 50</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>desenhe.retangulo</h4><span class="chip">Desenho</span></div>
+        <div class="syn">desenhe.retangulo <code>(x1, y1, x2, y2, cor)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(300, 400)
+tela.limpe
+desenhe.retangulo(20, 30, 140, 110, verde)</pre>
+          <div class="out">▭ retângulo verde de (20,30) a (140,110)</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>desenhe.linha</h4><span class="chip">Desenho</span></div>
+        <div class="syn">desenhe.linha <code>(x1, y1, x2, y2, cor)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(300, 400)
+tela.limpe
+desenhe.linha(10, 10, 200, 100, azul)</pre>
+          <div class="out">╱ linha azul de (10,10) a (200,100)</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>desenhe.polígono</h4><span class="chip">Desenho</span></div>
+        <div class="syn">desenhe.polígono <code>(x, y, n, raio, cor)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(300, 400)
+tela.limpe
+desenhe.polígono(150, 150, 5, 50, vermelho)</pre>
+          <div class="out">⬠ pentágono regular com centro (150,150), raio 50</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>desenhe.ponto</h4><span class="chip">Desenho</span></div>
+        <div class="syn">desenhe.ponto <code>(x, y, cor)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(300, 400)
+tela.limpe
+desenhe.ponto(100, 100, amarelo)</pre>
+          <div class="out">● ponto amarelo em (100,100)</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>desenhe.texto</h4><span class="chip">Desenho</span></div>
+        <div class="syn">desenhe.texto <code>("texto", x, y [, tamanho] [, cor])</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(300, 400)
+tela.limpe
+desenhe.texto("Olá, Willog!", 100, 100, 20, vermelho)</pre>
+          <div class="out">🅰️ "Olá, Willog!" em (100,100), tamanho 20, vermelho</div>
+        </div>
+        <p class="note">Tamanho padrão 12; cor padrão <code>branco</code> (ou a de <code>corTexto</code>). <code>\n</code> quebra linha.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>corAleatória</h4><span class="chip">Desenho</span></div>
+        <div class="syn">qualquer cor do desenho = corAleatóória</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(300, 400)
+tela.cor(corAleatória)
+tela.limpe
+desenhe.circulo(150, 150, 50, corAleatória)</pre>
+          <div class="out">🎲 fundo e círculo em cores aleatórias a cada execução</div>
+        </div>
+        <p class="note">Sorteia entre as 12 cores em cada chamada. Vale em <code>tela.cor</code>, <code>corTexto</code> e todos <code>desenhe.*(…, cor)</code>.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>&lt;figura&gt;.girar / &lt;figura&gt;.mover</h4><span class="chip">Animação</span></div>
+        <div class="syn">figura.girar <code>(ângulo, vezes, pausa)</code> · figura.mover <code>(x, y, passo)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(600, 600)
+figura = desenhe.polígono(200, 200, 5, 50, vermelho)
+figura.girar(45, 3, 0.5)
+figura.mover(400, 300, 2)</pre>
+          <div class="out">🔄 gira 45° por 3 vezes (0,5 s de pausa) e move para (400,300)</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>girar / mover (vários)</h4><span class="chip">Animação</span></div>
+        <div class="syn">girar <code>(a(ângulo, vezes, pausa), b(…))</code> · mover <code>(a(x, y, passo), b(…))</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(400, 400)
+a = desenhe.polígono(200, 200, 5, 50)
+b = desenhe.polígono(200, 200, 4, 100)
+girar(a(30, 5, 0.125), b(-15, 5, 0.25))</pre>
+          <div class="out">🧩 gira vários desenhos ao mesmo tempo</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>recortar / colar</h4><span class="chip">Desenho</span></div>
+        <div class="syn">recortar <code>(variável)</code> · colar <code>(variável, x, y)</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">janela(400, 400)
+a = desenhe.polígono(200, 200, 5, 50)
+recortar(a)
+colar(a, 300, 300)</pre>
+          <div class="out">✂️ recorta o desenho e cola em (300,300)</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cat-title reveal"><span>📁 Arquivos</span><span class="line"></span></div>
+    <div class="cmd-grid">
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>abrir</h4><span class="chip">Arquivo</span></div>
+        <div class="syn">abrir <code>"arquivo.txt"</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">abrir "arquivo.txt"
+mostre "arquivo pronto para uso"</pre>
+          <div class="out">📄 arquivo criado/aberto como $arquivo</div>
+        </div>
+        <p class="note">O handle vem do nome sem extensão: <code>arquivo.txt</code> → <code>$arquivo</code>. Também aceita <code>$1</code>, <code>$2</code>…</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>escrever</h4><span class="chip">Arquivo</span></div>
+        <div class="syn">escrever <code>$arquivo</code>, <code>&lt;var&gt;</code> [, <code>&lt;var2&gt;</code> …]</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">abrir "arquivo.txt"
+nome = "Wilson"
+idade = 53
+escrever $arquivo, nome, idade
+fechar $arquivo</pre>
+          <div class="out">📝 grava "Wilson,53" no arquivo</div>
+        </div>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>ler</h4><span class="chip">Arquivo</span></div>
+        <div class="syn">ler <code>$arquivo</code>, <code>&lt;var&gt;</code> [, <code>&lt;var2&gt;</code> …]</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">abrir "arquivo.txt"
+ler $arquivo, nome, idade
+mostre "{nome}, {idade}"
+fechar $arquivo</pre>
+          <div class="out">Wilson, 53</div>
+        </div>
+        <p class="note">Lê linha a linha quando o arquivo tem várias linhas.</p>
+      </div>
+
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>fechar</h4><span class="chip">Arquivo</span></div>
+        <div class="syn">fechar <code>$arquivo</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">abrir "notas.txt"
+escrever $notas, "linha1"
+fechar $notas</pre>
+          <div class="out">💾 garante a gravação (disco real ou localStorage virtual)</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Funções -->
+<section id="funcoes">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="tag">🧮 Funções prontas</span>
+      <h2>80 funções em <span class="grad">ordem alfabética</span></h2>
+      <p class="lead">Digite para filtrar, ou use os chips categoriais. Todas aceitam variáveis e expressões.</p>
+    </div>
+
+    <div class="fn-filter reveal">
+      <input id="fnFilter" type="search" placeholder="🔎 Buscar função, descrição ou exemplo…" autocomplete="off">
+      <span id="fnCount"></span>
+    </div>
+
+    <div class="tbl-wrap reveal">
+      <table id="fnTable">
+        <thead>
+          <tr><th style="width:30%">Função</th><th style="width:40%">O que faz</th><th>Exemplo → Saída</th></tr>
+        </thead>
+        <tbody>
+<tr data-s="abs(x) valor absoluto abs(-2) -&gt; 2"><td><code class="fn">abs(x)</code></td><td class="d">Valor absoluto</td><td class="e">abs(-2) -> 2</td></tr>
+<tr data-s="adicionardias(data, dias) adiciona dias a uma data adicionardias(&quot;14/04/1973&quot;,19269) -&gt; 15/01/2026"><td><code class="fn">adicionarDias(data, dias)</code></td><td class="d">Adiciona dias a uma data</td><td class="e">adicionarDias("14/04/1973",19269) -> 15/01/2026</td></tr>
+<tr data-s="agora() data e hora atuais agora() -&gt; 15/01/2026 14:30:07"><td><code class="fn">agora()</code></td><td class="d">Data e hora atuais</td><td class="e">agora() -> 15/01/2026 14:30:07</td></tr>
+<tr data-s="aleatório()aleatório(n)aleatório(a,b) número aleatório 0-1, 1..n ou a..b aleatório(6) -&gt; 1..6
+aleatório(3,12) -&gt; 3..12"><td><code class="fn">aleatório()aleatório(n)aleatório(a,b)</code></td><td class="d">Número aleatório 0-1, 1..n ou a..b</td><td class="e">aleatório(6) -> 1..6aleatório(3,12) -> 3..12</td></tr>
+<tr data-s="amostra(lista, n) amostra aleatória sem repetição amostra([1,2,3,4,5,6],2) -&gt; 5,3"><td><code class="fn">amostra(lista, n)</code></td><td class="d">Amostra aleatória sem repetição</td><td class="e">amostra([1,2,3,4,5,6],2) -> 5,3</td></tr>
+<tr data-s="amostras(lista, tam, qtd) qtd amostras de tamanho tam amostras([1,2,3,4,5,6],3,2) -&gt; 6,1,2 | 5,6,3"><td><code class="fn">amostras(lista, tam, qtd)</code></td><td class="d">Qtd amostras de tamanho tam</td><td class="e">amostras([1,2,3,4,5,6],3,2) -> 6,1,2 | 5,6,3</td></tr>
+<tr data-s="anosentre(data1, data2) anos entre duas datas anosentre(&quot;14/04/1973&quot;,&quot;15/01/2026&quot;) -&gt; 52.7917808219"><td><code class="fn">anosEntre(data1, data2)</code></td><td class="d">Anos entre duas datas</td><td class="e">anosEntre("14/04/1973","15/01/2026") -> 52.7917808219</td></tr>
+<tr data-s="aparar(texto) remove espaços no início e fim aparar(&quot;     olá    &quot;) -&gt; olá"><td><code class="fn">aparar(texto)</code></td><td class="d">Remove espaços no início e fim</td><td class="e">aparar("     olá    ") -> olá</td></tr>
+<tr data-s="arccos(x) arco cosseno em graus (inversa do cosseno) arccos(0.5) -&gt; 60"><td><code class="fn">arccos(x)</code></td><td class="d">Arco cosseno em graus (inversa do cosseno)</td><td class="e">arccos(0.5) -> 60</td></tr>
+<tr data-s="arcsen(x) arco seno em graus (inversa do seno) arcsen(0.5) -&gt; 30"><td><code class="fn">arcsen(x)</code></td><td class="d">Arco seno em graus (inversa do seno)</td><td class="e">arcsen(0.5) -> 30</td></tr>
+<tr data-s="arctan(x) arco tangente em graus (inversa da tangente) arctan(1) -&gt; 45"><td><code class="fn">arctan(x)</code></td><td class="d">Arco tangente em graus (inversa da tangente)</td><td class="e">arctan(1) -> 45</td></tr>
+<tr data-s="arredondar(x, casas) arredonda para n casas decimais arredondar(5.33333,2) -&gt; 5.33
+arredondar(1.66666,3) -&gt; 1.667"><td><code class="fn">arredondar(x, casas)</code></td><td class="d">Arredonda para n casas decimais</td><td class="e">arredondar(5.33333,2) -> 5.33arredondar(1.66666,3) -> 1.667</td></tr>
+<tr data-s="capturetecla() retorna a última tecla capturada por esperetecla() esperetecla(); tecla=capturetecla() -&gt; &quot;a&quot;
+esperetecla(&quot;enter&quot;); capturetecla() -&gt; &quot;enter&quot;"><td><code class="fn">captureTecla()</code></td><td class="d">Retorna a última tecla capturada por espereTecla()</td><td class="e">espereTecla(); tecla=captureTecla() -> "a"espereTecla("enter"); captureTecla() -> "Enter"</td></tr>
+<tr data-s="começacom(texto, prefixo) verifica se texto começa com prefixo (ignora maiúsculas/minúsculas) começacom(&quot;willog&quot;,&quot;wil&quot;) -&gt; verdadeiro
+começacom(&quot;willog&quot;,&quot;log&quot;) -&gt; falso"><td><code class="fn">começaCom(texto, prefixo)</code></td><td class="d">Verifica se texto começa com prefixo (ignora maiúsculas/minúsculas)</td><td class="e">começaCom("Willog","wil") -> verdadeirocomeçaCom("Willog","log") -> falso</td></tr>
+<tr data-s="contaritem(lista, item) conta ocorrências de item contaritem(&quot;especialidade&quot;,&quot;e&quot;) -&gt; 3
+contaritem([&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;b&quot;],&quot;b&quot;) -&gt; 2"><td><code class="fn">contarItem(lista, item)</code></td><td class="d">Conta ocorrências de item</td><td class="e">contarItem("especialidade","e") -> 3contarItem(["a","b","c","b"],"b") -> 2</td></tr>
+<tr data-s="conte(lista) quantidade de elementos conte([1,3,5,7]) -&gt; 4"><td><code class="fn">conte(lista)</code></td><td class="d">Quantidade de elementos</td><td class="e">conte([1,3,5,7]) -> 4</td></tr>
+<tr data-s="cos(x) cosseno (graus) cos(60) -&gt; 0.5"><td><code class="fn">cos(x)</code></td><td class="d">Cosseno (graus)</td><td class="e">cos(60) -> 0.5</td></tr>
+<tr data-s="cossec(x) cossecante (graus, 1/sen) cossec(30) -&gt; 2"><td><code class="fn">cossec(x)</code></td><td class="d">Cossecante (graus, 1/sen)</td><td class="e">cossec(30) -> 2</td></tr>
+<tr data-s="cotan(x) cotangente (graus, 1/tan) cotan(45) -&gt; 1"><td><code class="fn">cotan(x)</code></td><td class="d">Cotangente (graus, 1/tan)</td><td class="e">cotan(45) -> 1</td></tr>
+<tr data-s="data() data atual data() -&gt; 15/01/2026"><td><code class="fn">data()</code></td><td class="d">Data atual</td><td class="e">data() -> 15/01/2026</td></tr>
+<tr data-s="decimal(x) parte decimal decimal(2.5) -&gt; 0.5"><td><code class="fn">decimal(x)</code></td><td class="d">Parte decimal</td><td class="e">decimal(2.5) -> 0.5</td></tr>
+<tr data-s="diasemana(data) dia da semana (domingo a sábado) diasemana(&quot;15/01/2026&quot;) -&gt; quinta"><td><code class="fn">diaSemana(data)</code></td><td class="d">Dia da semana (domingo a sábado)</td><td class="e">diaSemana("15/01/2026") -> quinta</td></tr>
+<tr data-s="diasentre(data1, data2) dias entre duas datas diasentre(&quot;14/04/1973&quot;,&quot;15/01/2026&quot;) -&gt; 19269"><td><code class="fn">diasEntre(data1, data2)</code></td><td class="d">Dias entre duas datas</td><td class="e">diasEntre("14/04/1973","15/01/2026") -> 19269</td></tr>
+<tr data-s="distintos(valor) remove duplicatas mantendo ordem distintos(&quot;banana&quot;) -&gt; ban
+distintos(123345456) -&gt; 123456"><td><code class="fn">distintos(valor)</code></td><td class="d">Remove duplicatas mantendo ordem</td><td class="e">distintos("banana") -> bandistintos(123345456) -> 123456</td></tr>
+<tr data-s="divida(texto, separador) divide texto em lista divida(&quot;a,b,c&quot;,&quot;,&quot;) -&gt; a,b,c
+divida(&quot;abc&quot;,&quot;,&quot;) -&gt; a,b,c"><td><code class="fn">divida(texto, separador)</code></td><td class="d">Divide texto em lista</td><td class="e">divida("a,b,c",",") -> a,b,cdivida("abc",",") -> a,b,c</td></tr>
+<tr data-s="éímpar(x) verifica se é ímpar éímpar(511) -&gt; verdadeiro"><td><code class="fn">éÍmpar(x)</code></td><td class="d">Verifica se é ímpar</td><td class="e">éÍmpar(511) -> verdadeiro</td></tr>
+<tr data-s="élista(x) verifica se é lista élista([1,3,5,7]) -&gt; verdadeiro"><td><code class="fn">éLista(x)</code></td><td class="d">Verifica se é lista</td><td class="e">éLista([1,3,5,7]) -> verdadeiro</td></tr>
+<tr data-s="embaralhe(valor) embaralha lista/texto/número embaralhe([1,2,3,4,5]) -&gt; 3,1,5,2,4
+embaralhe(&quot;banana&quot;) -&gt; annaba"><td><code class="fn">embaralhe(valor)</code></td><td class="d">Embaralha lista/texto/número</td><td class="e">embaralhe([1,2,3,4,5]) -> 3,1,5,2,4embaralhe("banana") -> annaba</td></tr>
+<tr data-s="encontre(texto, busca) posição da primeira ocorrência (0 = primeiro caractere, -1 se não encontrar) encontre(&quot;willog&quot;,&quot;llog&quot;) -&gt; 2
+encontre(&quot;willog&quot;,&quot;x&quot;) -&gt; -1
+encontre([1,2,3,2],2) -&gt; 1"><td><code class="fn">encontre(texto, busca)</code></td><td class="d">Posição da primeira ocorrência (0 = primeiro caractere, -1 se não encontrar)</td><td class="e">encontre("Willog","llog") -> 2encontre("Willog","x") -> -1encontre([1,2,3,2],2) -> 1</td></tr>
+<tr data-s="énúmero(x) verifica se é número énúmero(234) -&gt; verdadeiro
+énúmero(&quot;123&quot;) -&gt; falso"><td><code class="fn">éNúmero(x)</code></td><td class="d">Verifica se é número</td><td class="e">éNúmero(234) -> verdadeiroéNúmero("123") -> falso</td></tr>
+<tr data-s="épar(x) verifica se é par épar(1023) -&gt; falso"><td><code class="fn">éPar(x)</code></td><td class="d">Verifica se é par</td><td class="e">éPar(1023) -> falso</td></tr>
+<tr data-s="éprimo(x) verifica se é primo éprimo(3) -&gt; verdadeiro"><td><code class="fn">éPrimo(x)</code></td><td class="d">Verifica se é primo</td><td class="e">éPrimo(3) -> verdadeiro</td></tr>
+<tr data-s="étexto(x) verifica se é texto étexto(&quot;willog&quot;) -&gt; verdadeiro"><td><code class="fn">éTexto(x)</code></td><td class="d">Verifica se é texto</td><td class="e">éTexto("Willog") -> verdadeiro</td></tr>
+<tr data-s="exp(x) exponencial (e elevado a x) exp(1) -&gt; 2.71828182846"><td><code class="fn">exp(x)</code></td><td class="d">Exponencial (e elevado a x)</td><td class="e">exp(1) -> 2.71828182846</td></tr>
+<tr data-s="fatorial(x) fatorial fatorial(4) -&gt; 24"><td><code class="fn">fatorial(x)</code></td><td class="d">Fatorial</td><td class="e">fatorial(4) -> 24</td></tr>
+<tr data-s="filtrar(lista, condição) filtra por condição ou valor filtrar([1,2,3,4],&quot;x&gt;2&quot;) -&gt; 3,4
+filtrar(&quot;maçaneta&quot;,&quot;a&quot;) -&gt; mçnet"><td><code class="fn">filtrar(lista, condição)</code></td><td class="d">Filtra por condição ou valor</td><td class="e">filtrar([1,2,3,4],"x>2") -> 3,4filtrar("maçaneta","a") -> mçnet</td></tr>
+<tr data-s="formate(valor, casas) formata número truncando para n casas decimais formate(3.141502,3) -&gt; 3.141
+formate(3.1,3) -&gt; 3.100"><td><code class="fn">formate(valor, casas)</code></td><td class="d">Formata número truncando para n casas decimais</td><td class="e">formate(3.141502,3) -> 3.141formate(3.1,3) -> 3.100</td></tr>
+<tr data-s="fração(x) converte para fração fração(0.333) -&gt; 1/3"><td><code class="fn">fração(x)</code></td><td class="d">Converte para fração</td><td class="e">fração(0.333) -> 1/3</td></tr>
+<tr data-s="hipotenusa(a, b) hipotenusa do triângulo retângulo (também hipotenúsa) hipotenusa(3,4) -&gt; 5"><td><code class="fn">hipotenusa(a, b)</code></td><td class="d">Hipotenusa do triângulo retângulo (também hipotenúsa)</td><td class="e">hipotenusa(3,4) -> 5</td></tr>
+<tr data-s="hora() hora atual hora() -&gt; 14:30:07"><td><code class="fn">hora()</code></td><td class="d">Hora atual</td><td class="e">hora() -> 14:30:07</td></tr>
+<tr data-s="indicede(lista, valor) índice do valor (0 = primeiro, -1 se não encontrar) indicede([1,2,3,4],3) -&gt; 2"><td><code class="fn">indiceDe(lista, valor)</code></td><td class="d">Índice do valor (0 = primeiro, -1 se não encontrar)</td><td class="e">indiceDe([1,2,3,4],3) -> 2</td></tr>
+<tr data-s="insira(lista, pos, valor) insere valor após posição pos insira([1,2,3,4],1,9) -&gt; 1,2,9,3,4"><td><code class="fn">insira(lista, pos, valor)</code></td><td class="d">Insere valor após posição pos</td><td class="e">insira([1,2,3,4],1,9) -> 1,2,9,3,4</td></tr>
+<tr data-s="inteiro(x) parte inteira inteiro(2.7) -&gt; 2"><td><code class="fn">inteiro(x)</code></td><td class="d">Parte inteira</td><td class="e">inteiro(2.7) -> 2</td></tr>
+<tr data-s="inverta(texto) inverte texto/lista inverta(&quot;willog&quot;) -&gt; golliw"><td><code class="fn">inverta(texto)</code></td><td class="d">Inverte texto/lista</td><td class="e">inverta("Willog") -> golliW</td></tr>
+<tr data-s="junte(lista, separador) junta lista em texto junte([&quot;a&quot;,&quot;b&quot;],&quot;-&quot;) -&gt; a-b"><td><code class="fn">junte(lista, separador)</code></td><td class="d">Junta lista em texto</td><td class="e">junte(["a","b"],"-") -> a-b</td></tr>
+<tr data-s="ln(x) logaritmo natural ln(2) -&gt; 0.69314718056"><td><code class="fn">ln(x)</code></td><td class="d">Logaritmo natural</td><td class="e">ln(2) -> 0.69314718056</td></tr>
+<tr data-s="log(base, valor) logaritmo log(10,2) -&gt; 0.30102999566"><td><code class="fn">log(base, valor)</code></td><td class="d">Logaritmo</td><td class="e">log(10,2) -> 0.30102999566</td></tr>
+<tr data-s="log10(x) logaritmo base 10 log10(100) -&gt; 2"><td><code class="fn">log10(x)</code></td><td class="d">Logaritmo base 10</td><td class="e">log10(100) -> 2</td></tr>
+<tr data-s="maiúsculo(texto) converte para maiúsculas maiúsculo(&quot;olá!&quot;) -&gt; olá!"><td><code class="fn">maiúsculo(texto)</code></td><td class="d">Converte para maiúsculas</td><td class="e">maiúsculo("Olá!") -> OLÁ!</td></tr>
+<tr data-s="mapear(lista, expressão) aplica expressão a cada item mapear([1,2,3],&quot;x*2&quot;) -&gt; 2,4,6"><td><code class="fn">mapear(lista, expressão)</code></td><td class="d">Aplica expressão a cada item</td><td class="e">mapear([1,2,3],"x*2") -> 2,4,6</td></tr>
+<tr data-s="máximo(...valores) maior valor máximo(2,4,7,4,5) -&gt; 7"><td><code class="fn">máximo(...valores)</code></td><td class="d">Maior valor</td><td class="e">máximo(2,4,7,4,5) -> 7</td></tr>
+<tr data-s="mdc(a, b, ...) máximo divisor comum mdc(12,18) -&gt; 6"><td><code class="fn">mdc(a, b, ...)</code></td><td class="d">Máximo divisor comum</td><td class="e">mdc(12,18) -> 6</td></tr>
+<tr data-s="média(...valores) média aritmética média(2,4,6) -&gt; 4"><td><code class="fn">média(...valores)</code></td><td class="d">Média aritmética</td><td class="e">média(2,4,6) -> 4</td></tr>
+<tr data-s="mesesentre(data1, data2) meses entre duas datas mesesentre(&quot;14/04/1973&quot;,&quot;15/01/2026&quot;) -&gt; 633.501369863"><td><code class="fn">mesesEntre(data1, data2)</code></td><td class="d">Meses entre duas datas</td><td class="e">mesesEntre("14/04/1973","15/01/2026") -> 633.501369863</td></tr>
+<tr data-s="mínimo(...valores) menor valor mínimo(-3,1,2) -&gt; -3"><td><code class="fn">mínimo(...valores)</code></td><td class="d">Menor valor</td><td class="e">mínimo(-3,1,2) -> -3</td></tr>
+<tr data-s="minúsculo(texto) converte para minúsculas minúsculo(&quot;willog&quot;) -&gt; willog"><td><code class="fn">minúsculo(texto)</code></td><td class="d">Converte para minúsculas</td><td class="e">minúsculo("WILLOG") -> willog</td></tr>
+<tr data-s="mmc(a, b, ...) mínimo múltiplo comum mmc(2,3,5) -&gt; 30"><td><code class="fn">mmc(a, b, ...)</code></td><td class="d">Mínimo múltiplo comum</td><td class="e">mmc(2,3,5) -> 30</td></tr>
+<tr data-s="ordenedecrescente(lista) ordena decrescente ordenedecrescente([2,4,6,8,10]) -&gt; 10,8,6,4,2"><td><code class="fn">ordeneDecrescente(lista)</code></td><td class="d">Ordena decrescente</td><td class="e">ordeneDecrescente([2,4,6,8,10]) -> 10,8,6,4,2</td></tr>
+<tr data-s="paranúmero(x) converte texto para número paranúmero(&quot;12.5&quot;) -&gt; 12.5
+paranúmero(&quot;12,5&quot;)*2 -&gt; 25"><td><code class="fn">paraNúmero(x)</code></td><td class="d">Converte texto para número</td><td class="e">paraNúmero("12.5") -> 12.5paraNúmero("12,5")*2 -> 25</td></tr>
+<tr data-s="paratexto(x) converte número para texto paratexto(8) -&gt; &quot;8&quot;
+paratexto(8)*3 -&gt; 888"><td><code class="fn">paraTexto(x)</code></td><td class="d">Converte número para texto</td><td class="e">paraTexto(8) -> "8"paraTexto(8)*3 -> 888</td></tr>
+<tr data-s="piso(x) arredonda para baixo (floor) piso(2.3) -&gt; 2
+piso(2.9) -&gt; 2"><td><code class="fn">piso(x)</code></td><td class="d">Arredonda para baixo (floor)</td><td class="e">piso(2.3) -> 2piso(2.9) -> 2</td></tr>
+<tr data-s="posição(texto, busca) posição da busca em texto (0 = primeiro) ou caractere na posição se busca for número posição(&quot;willog&quot;,&quot;i&quot;) -&gt; 1
+posição(&quot;willog&quot;,1) -&gt; i"><td><code class="fn">posição(texto, busca)</code></td><td class="d">Posição da busca em texto (0 = primeiro) ou caractere na posição se busca for número</td><td class="e">posição("Willog","i") -> 1posição("Willog",1) -> i</td></tr>
+<tr data-s="potencia(base, exp) potência (aceita listas, vetorizada) potencia(2,3) -&gt; 8"><td><code class="fn">potencia(base, exp)</code></td><td class="d">Potência (aceita listas, vetorizada)</td><td class="e">potencia(2,3) -> 8</td></tr>
+<tr data-s="primos(n) primeiros n primos primos(6) -&gt; 2,3,5,7,11,13"><td><code class="fn">primos(n)</code></td><td class="d">Primeiros n primos</td><td class="e">primos(6) -> 2,3,5,7,11,13</td></tr>
+<tr data-s="produto(lista) produto dos elementos produto([1,3,5,7]) -&gt; 105"><td><code class="fn">produto(lista)</code></td><td class="d">Produto dos elementos</td><td class="e">produto([1,3,5,7]) -> 105</td></tr>
+<tr data-s="raiz(x, n) raiz n-ésima (aceita listas, vetorizada) raiz(27,3) -&gt; 3"><td><code class="fn">raiz(x, n)</code></td><td class="d">Raiz n-ésima (aceita listas, vetorizada)</td><td class="e">raiz(27,3) -> 3</td></tr>
+<tr data-s="raizc(x) raiz cúbica — vetorizada raizc(27) -&gt; 3"><td><code class="fn">raizc(x)</code></td><td class="d">Raiz cúbica — vetorizada</td><td class="e">raizc(27) -> 3</td></tr>
+<tr data-s="raizq(x) raiz quadrada — vetorizada raizq(16) -&gt; 4
+raizq([1,4,9]) -&gt; 1, 2, 3"><td><code class="fn">raizq(x)</code></td><td class="d">Raiz quadrada — vetorizada</td><td class="e">raizq(16) -> 4raizq([1,4,9]) -> 1, 2, 3</td></tr>
+<tr data-s="remova(lista, valor) remove primeira ocorrência remova([1,2,3,4,5,6],5) -&gt; 1,2,3,4,6"><td><code class="fn">remova(lista, valor)</code></td><td class="d">Remove primeira ocorrência</td><td class="e">remova([1,2,3,4,5,6],5) -> 1,2,3,4,6</td></tr>
+<tr data-s="repetir(texto, n) repete texto n vezes repetir(&quot;oi&quot;,4) -&gt; oioioioi"><td><code class="fn">repetir(texto, n)</code></td><td class="d">Repete texto n vezes</td><td class="e">repetir("oi",4) -> oioioioi</td></tr>
+<tr data-s="sec(x) secante (graus, 1/cos) sec(60) -&gt; 2"><td><code class="fn">sec(x)</code></td><td class="d">Secante (graus, 1/cos)</td><td class="e">sec(60) -> 2</td></tr>
+<tr data-s="semespaços(texto) remove todos os espaços semespaços(&quot;1 2 3 4 5 6&quot;) -&gt; 123456"><td><code class="fn">semEspaços(texto)</code></td><td class="d">Remove todos os espaços</td><td class="e">semEspaços("1 2 3 4 5 6") -> 123456</td></tr>
+<tr data-s="sen(x) seno (graus) sen(60) -&gt; 0.86602540378"><td><code class="fn">sen(x)</code></td><td class="d">Seno (graus)</td><td class="e">sen(60) -> 0.86602540378</td></tr>
+<tr data-s="soma(lista) soma elementos (aceita lista ou valores) soma([1,2,3,4]) -&gt; 10
+soma(1,2,3) -&gt; 6"><td><code class="fn">soma(lista)</code></td><td class="d">Soma elementos (aceita lista ou valores)</td><td class="e">soma([1,2,3,4]) -> 10soma(1,2,3) -> 6</td></tr>
+<tr data-s="substitua(texto, antigo, novo) substitui texto substitua(&quot;a-b-c&quot;,&quot;-&quot;,&quot; &quot;) -&gt; a b c"><td><code class="fn">substitua(texto, antigo, novo)</code></td><td class="d">Substitui texto</td><td class="e">substitua("a-b-c","-"," ") -> a b c</td></tr>
+<tr data-s="tamanho(texto) tamanho do texto/lista tamanho(&quot;willog&quot;) -&gt; 6"><td><code class="fn">tamanho(texto)</code></td><td class="d">Tamanho do texto/lista</td><td class="e">tamanho("Willog") -> 6</td></tr>
+<tr data-s="tan(x) tangente (graus) tan(60) -&gt; 1.73205080757"><td><code class="fn">tan(x)</code></td><td class="d">Tangente (graus)</td><td class="e">tan(60) -> 1.73205080757</td></tr>
+<tr data-s="terminacom(texto, sufixo) verifica se texto termina com sufixo (ignora maiúsculas/minúsculas) terminacom(&quot;willog&quot;,&quot;log&quot;) -&gt; verdadeiro
+terminacom(&quot;willog&quot;,&quot;llo&quot;) -&gt; falso"><td><code class="fn">terminaCom(texto, sufixo)</code></td><td class="d">Verifica se texto termina com sufixo (ignora maiúsculas/minúsculas)</td><td class="e">terminaCom("Willog","log") -> verdadeiroterminaCom("Willog","llo") -> falso</td></tr>
+<tr data-s="teto(x) arredonda para cima (ceil) teto(2.3) -&gt; 3
+teto(2.9) -&gt; 3"><td><code class="fn">teto(x)</code></td><td class="d">Arredonda para cima (ceil)</td><td class="e">teto(2.3) -> 3teto(2.9) -> 3</td></tr>
+<tr data-s="tipo(x) retorna tipo: número, texto, booleano ou lista tipo(7) -&gt; número
+tipo(&quot;olá!&quot;) -&gt; texto
+tipo(4&gt;5) -&gt; booleano
+tipo([1,2,3]) -&gt; lista"><td><code class="fn">tipo(x)</code></td><td class="d">Retorna tipo: número, texto, booleano ou lista</td><td class="e">tipo(7) -> númerotipo("Olá!") -> textotipo(4>5) -> booleanotipo([1,2,3]) -> lista</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Operadores -->
+<section id="operadores">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="tag">➕ Operadores</span>
+      <h2>Operadores e <span class="grad">símbolos</span></h2>
+      <p class="lead">Contas, conjuntos, comparações e lógica — muitas operações funcionam com listas (vetorizadas).</p>
+    </div>
+
+    <div class="tbl-wrap reveal">
+      <table>
+        <thead><tr><th style="width:24%">Sintaxe</th><th style="width:44%">Descrição</th><th>Exemplo → Saída</th></tr></thead>
+        <tbody>
+          <tr><td><code>(início..fim)</code><br><code>(início..fim,passo)</code></td><td class="d">Intervalo — cria lista de <code>a</code> até <code>b</code></td><td class="e">x=(1..5) → 1, 2, 3, 4, 5<br>(-5..5, 2) → -5, -3, -1, 1, 3, 5</td></tr>
+          <tr><td><code>(valor, "p%")</code></td><td class="d">Percentual — <code>p%</code> de um valor</td><td class="e">(30, "10%") → 3 &nbsp;·&nbsp; (120, "5%") → 6</td></tr>
+          <tr><td><code>+</code> &nbsp; <code>&amp;</code></td><td class="d">Adição e concatenação. Lista + lista de mesmo tamanho soma elemento a elemento; tamanhos diferentes une; lista + número soma elemento a elemento (vetorizado). Use <code>&amp;</code> para sempre unir</td><td class="e">2+3 → 5 &nbsp;·&nbsp; [1,2] + [3] → 1, 2, 3</td></tr>
+          <tr><td><code>-</code></td><td class="d">Subtração. Lista − lista de mesmo tamanho subtrai elemento a elemento; tamanhos diferentes dá a diferença de conjuntos; lista − número subtrai elemento a elemento (vetorizado)</td><td class="e">5-2 → 3 &nbsp;·&nbsp; [1,2,3]-[2] → 1, 3</td></tr>
+          <tr><td><code>*</code> <code>/</code> <code>//</code> <code>\</code> <code>%</code> <code>**</code></td><td class="d">Multiplicação, divisão, divisão inteira, quociente fracionário, módulo e potência — todos vetorizados</td><td class="e">2**3 → 8 &nbsp;·&nbsp; 5//2 → 2 &nbsp;·&nbsp; 5\2 → 0.5</td></tr>
+          <tr><td><code>=</code> &nbsp; <code>:=</code></td><td class="d">Atribuição (aceita vetores, ex.: <code>y := 2*x</code>)</td><td class="e">x:=(-5..5) → -5..5<br>y:=2*x → -10, -8, …, 10</td></tr>
+          <tr><td><code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> <code>==</code> <code>!=</code></td><td class="d">Comparações → <code>Verdadeiro</code>/<code>Falso</code>. Em condições de <code>se</code>/<code>enquanto</code>, um único <code>=</code> também compara igualdade</td><td class="e">10 &gt; 5 → Verdadeiro</td></tr>
+          <tr><td><code>e</code></td><td class="d">Conjunção lógica</td><td class="e">5&gt;3 e 2&lt;4 → Verdadeiro</td></tr>
+          <tr><td><code>ou</code></td><td class="d">Disjunção lógica</td><td class="e">5&lt;3 ou 6&gt;=3 → Verdadeiro</td></tr>
+          <tr><td><code>não</code></td><td class="d">Negação</td><td class="e">não falso → Verdadeiro</td></tr>
+          <tr><td><code>existe … em …</code></td><td class="d">Pertinência em texto ou lista</td><td class="e">existe "a" em "casa" → Verdadeiro</td></tr>
+          <tr><td><code>união</code></td><td class="d">União de conjuntos</td><td class="e">[1] união [2] → 1, 2</td></tr>
+          <tr><td><code>intersecção</code></td><td class="d">Intersecção de conjuntos</td><td class="e">[1,2] intersecção [2,3] → 2</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Propriedades -->
+<section id="propriedades">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="tag">🔧 Propriedades</span>
+      <h2>Propriedades de listas <span class="grad">e textos</span></h2>
+      <p class="lead">Acessadas com ponto <code>.</code> — valem para listas, textos e até números.</p>
+    </div>
+
+    <div class="tbl-wrap reveal">
+      <table>
+        <thead><tr><th style="width:30%">Sintaxe</th><th style="width:36%">O que faz</th><th>Exemplo → Saída</th></tr></thead>
+        <tbody>
+          <tr><td><code>lista.adicionar(item 1, item 2, …)</code></td><td class="d">Acrescenta itens (altera a lista)</td><td class="e">a=[1,2]; a.adicionar(3); mostre a → 1, 2, 3</td></tr>
+          <tr><td><code>lista.aleatório</code></td><td class="d">Item aleatório</td><td class="e">[1,2,3].aleatório → 2</td></tr>
+          <tr><td><code>lista.contar(valor)</code></td><td class="d">Conta ocorrências</td><td class="e">[1,2,2,3,4,2].contar(2) → 3 &nbsp;·&nbsp; "bananada".contar("a") → 4</td></tr>
+          <tr><td><code>lista.fatiar(início, fim)</code></td><td class="d">Fatia inclusiva</td><td class="e">[1,2,3,4].fatiar(1, 2) → 2, 3</td></tr>
+          <tr><td><code>lista.inverter</code></td><td class="d">Inverte a ordem</td><td class="e">[1,2,3].inverter → 3, 2, 1</td></tr>
+          <tr><td><code>lista.ordenar</code></td><td class="d">Cópia ordenada</td><td class="e">[3,1,2].ordenar → 1, 2, 3</td></tr>
+          <tr><td><code>lista.posição(i)</code></td><td class="d">Elemento no índice <code>i</code> (0 = primeiro)</td><td class="e">[10,20,30].posição(1) → 20</td></tr>
+          <tr><td><code>lista.primeiro</code></td><td class="d">Primeiro elemento</td><td class="e">[5,6].primeiro → 5</td></tr>
+          <tr><td><code>lista.tamanho</code></td><td class="d">Quantidade de itens/caracteres</td><td class="e">[1,2,3].tamanho → 3 &nbsp;·&nbsp; "willog".tamanho → 6</td></tr>
+          <tr><td><code>lista.último</code></td><td class="d">Último elemento</td><td class="e">[5,6].último → 6</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Cores -->
+<section id="cores">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="tag">🎨 Cores</span>
+      <h2>As 12 cores da <span class="grad">Willog</span></h2>
+      <p class="lead">Use-as em <code>desenhe.*(…, cor)</code>, <code>tela.cor(cor)</code> e <code>corTexto(cor)</code>.</p>
+    </div>
+
+    <div class="cores-grid reveal">
+<div class="swatch"><span class="chip-color" style="background:#ffff00"></span><div class="sw-info"><b>amarelo</b><code>#ffff00</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#0066ff"></span><div class="sw-info"><b>azul</b><code>#0066ff</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#ffffff"></span><div class="sw-info"><b>branco</b><code>#ffffff</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#00ffff"></span><div class="sw-info"><b>ciano</b><code>#00ffff</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#808080"></span><div class="sw-info"><b>cinza</b><code>#808080</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#ff9800"></span><div class="sw-info"><b>laranja</b><code>#ff9800</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#8d5524"></span><div class="sw-info"><b>marrom</b><code>#8d5524</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#000000"></span><div class="sw-info"><b>preto</b><code>#000000</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#ff69b4"></span><div class="sw-info"><b>rosa</b><code>#ff69b4</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#9c27b0"></span><div class="sw-info"><b>roxo</b><code>#9c27b0</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#00c853"></span><div class="sw-info"><b>verde</b><code>#00c853</code></div></div>
+<div class="swatch"><span class="chip-color" style="background:#ff0000"></span><div class="sw-info"><b>vermelho</b><code>#ff0000</code></div></div>
+    </div>
+
+    <div class="banner reveal">
+      <div class="txt">
+        <h3>🎲 corAleatória</h3>
+        <p>Use <b style="font-family:var(--mono);color:var(--accent)">corAleatória</b> em qualquer desenho, fundo ou texto: a cada chamada a linguagem sorteia uma das 12 cores.</p>
+      </div>
+      <div class="box" style="flex:1;min-width:280px;margin:0;">
+        <div class="box-head"><span class="fname" style="color:#9ef3de">exemplo</span></div>
+        <pre class="code">janela(300, 400)
+tela.cor(corAleatória)
+tela.limpe
+desenhe.linha(0, 0, 100, 100, corAleatória)</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tartaruga -->
+<section id="tartaruga">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="tag">🐢 Tartaruga</span>
+      <h2>O clássico Logo <span class="grad">em português</span></h2>
+      <p class="lead">Uma janela com editor de comandos e o desenho ao lado — avance, gire e desenhe com comandos simples.</p>
+    </div>
+
+    <div class="cmd-grid">
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>tartaruga()</h4><span class="chip">Abrir</span></div>
+        <div class="syn">tartaruga <code>()</code></div>
+        <p class="note">Começa no centro (400, 300) apontando para o <b>norte (0°)</b>. O ângulo cresce no sentido horário. À esquerda fica a coluna de comandos; à direita, o desenho.</p>
+      </div>
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>avance / recue</h4><span class="chip">Movimento</span></div>
+        <div class="syn">avance <code>&lt;distância&gt;</code> · recue <code>&lt;distância&gt;</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">avance 100
+recue 50</pre>
+          <div class="out">➡️ anda para frente/trás desenhando uma linha</div>
+        </div>
+        <p class="note">Só desenha se a caneta estiver abaixada.</p>
+      </div>
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>direita / esquerda</h4><span class="chip">Rotação</span></div>
+        <div class="syn">direita <code>&lt;graus&gt;</code> · esquerda <code>&lt;graus&gt;</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">direita 30
+esquerda 45</pre>
+          <div class="out">🔄 gira no sentido horário (direita) ou anti-horário (esquerda)</div>
+        </div>
+      </div>
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>cor / corFundo</h4><span class="chip">Cores</span></div>
+        <div class="syn">cor <code>&lt;cor&gt;</code> · corFundo <code>&lt;cor&gt;</code></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">corFundo azul
+cor amarela</pre>
+          <div class="out">🎨 caneta amarela sobre fundo azul</div>
+        </div>
+        <p class="note">Mesmas cores da seção Cores — funciona até <code>corAleatória</code>.</p>
+      </div>
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>levanta caneta / abaixa caneta</h4><span class="chip">Caneta</span></div>
+        <div class="syn">levanta caneta · abaixa caneta</div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">levanta caneta
+avance 150
+abaixa caneta</pre>
+          <div class="out">🚶 se move 150px sem desenhar, depois volta a desenhar</div>
+        </div>
+      </div>
+      <div class="cmd reveal">
+        <div class="cmd-top"><h4>Programa de exemplo</h4><span class="chip">Completo</span></div>
+        <div class="box">
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <pre class="code">tartaruga()
+corFundo azul
+cor amarela
+avance 100
+direita 30
+avance 100
+repita(5):
+    direita 30
+    avance 60</pre>
+          <div class="out">🐢 um caminho com curvas e repetições</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="banner reveal">
+      <div class="txt">
+        <h3>💡 Dicas da tartaruga</h3>
+        <p><b>Ctrl+Enter</b> executa tudo na coluna de comandos · <b>TAB</b> indenta · <b>Ctrl</b> + roda ou <b>Ctrl +/−</b> ajusta a fonte · arraste a alça para mudar a largura da coluna · roda do mouse dá <b>zoom</b> · botões <b>Lento/Normal/Rápido</b> controlam a animação.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Polígonos -->
+<section class="exemplos" id="poligonos">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="tag">📐 Polígonos</span>
+      <h2>Plano cartesiano <span class="grad">clicável</span></h2>
+      <p class="lead">Construa pontos, segmentos, retas, polígonos e circunferências clicando na tela — com medidas atualizadas em tempo real.</p>
+    </div>
+
+    <div class="tbl-wrap reveal">
+      <table>
+        <thead><tr><th style="width:30%">Ferramenta</th><th>O que faz</th></tr></thead>
+        <tbody>
+          <tr><td><b>↔️ Mover</b></td><td class="d">Arrasta pontos já criados. Arraste o fundo para deslizar o plano.</td></tr>
+          <tr><td><b>⚫ Ponto</b></td><td class="d">Um clique cria um ponto, nomeado automaticamente (A, B, C…).</td></tr>
+          <tr><td><b>➖ Reta</b></td><td class="d">Dois cliques (em pontos existentes ou no fundo) criam a reta infinita que passa por eles (f, g, h…).</td></tr>
+          <tr><td><b>📏 Segmento</b></td><td class="d">Dois cliques criam um segmento; o comprimento aparece na coluna de dados.</td></tr>
+          <tr><td><b>📐 Polígono</b></td><td class="d">Cada clique adiciona um vértice; feche com <b>🔒 Fechar polígono</b> para calcular perímetro e área.</td></tr>
+          <tr><td><b>⭕ Circunferência</b></td><td class="d">1º clique define o centro; 2º clique define um ponto na circunferência (o raio é a distância entre eles). Nomeadas c1, c2…</td></tr>
+          <tr><td><b>🪣 Preencher</b></td><td class="d">Escolha uma cor na paleta e clique dentro de um polígono ou circunferência para pintá-lo. O quadradinho xadrez remove o preenchimento.</td></tr>
+          <tr><td><b>🔒 Fechar polígono</b></td><td class="d">Fecha o polígono em construção e calcula perímetro e área.</td></tr>
+          <tr><td><b>🧹 Limpar</b></td><td class="d">Apaga todos os pontos, segmentos, retas, circunferências e polígonos.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="res-grid" style="margin-top:34px">
+      <div class="card reveal">
+        <span class="ic">🎯</span>
+        <h3>Cola na grade</h3>
+        <p>Um ponto é <b>puxado para a coordenada inteira mais próxima</b> quando você clica bem perto da grade. Caso contrário, assume <b>coordenadas decimais</b>. Cada eixo é ajustado separadamente.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ic">🖱️</span>
+        <h3>Navegação</h3>
+        <p>Rodinha do mouse dá <b>zoom</b> (no cursor). Com a ferramenta <b>Mover</b>, arrastar o fundo <b>desloca o plano</b>. A posição do cursor aparece num selo sobre o desenho.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ic">📊</span>
+        <h3>Coluna de dados</h3>
+        <p>Pontos, segmentos (comprimento), retas, circunferências (centro e raio) e polígonos (perímetro e área) aparecem na coluna da direita, atualizados em tempo real. A largura é ajustável.</p>
+      </div>
+    </div>
+
+    <div class="banner reveal">
+      <div class="txt">
+        <h3>🚀 Comece a construir</h3>
+        <p>No editor da IDE, escreva <b style="font-family:var(--mono);color:var(--accent)">polígonos()</b> e execute. Ao fechar a janela, tudo o que foi construído é apagado.</p>
+      </div>
+      <a class="btn btn-primary" href="index.html">▶ Abrir a IDE</a>
+    </div>
+  </div>
+</section>
+
+<!-- Rodapé -->
+<footer>
+  <div class="container">
+    <div class="foot">
+      <div class="brand">
+        <a class="logo" href="#inicio"><span class="logo-mark">W</span> Willog</a>
+        <p>Linguagem de programação em português — gratuita, no navegador e feita para aprender se divertindo.</p>
+      </div>
+      <div>
+        <h5>Navegar</h5>
+        <ul>
+          <li><a href="#comecando">Começando</a></li>
+          <li><a href="#comandos">Comandos</a></li>
+          <li><a href="#funcoes">Funções</a></li>
+          <li><a href="#cores">Cores</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Extras</h5>
+        <ul>
+          <li><a href="#operadores">Operadores</a></li>
+          <li><a href="#propriedades">Propriedades</a></li>
+          <li><a href="#tartaruga">🐢 Tartaruga</a></li>
+          <li><a href="#poligonos">📐 Polígonos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Comece já</h5>
+        <ul>
+          <li><a href="index.html">▶ Abrir a IDE</a></li>
+          <li><a href="#comandos">Primeiro programa</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copy">© 2026 · Willog · desenvolvida por Wilson José Andriolli Junior · manual.html</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+  // ---------- mini destacador de sintaxe Willog ----------
+  var KW_RX=/^(se|senao|senão|entao|então|enquanto|para|cada|entre|pulando|repetir|repita|mostre|mostrar|limpe|pare|continue|continuar|pausa|espere|espereTecla|captureTecla|capture|leia|ler|escrever|fechar|abrir|janela|tela|desenhe|desenha|mover|figura|bipe|toque|mensagem|retorne|retorna|definir|funcao|função|verificar|caso|padrão|padrao|constante|novo|existe|tartaruga|avance|recue|direita|esquerda|levanta|abaixa|caneta|poligonos|polígonos|colar|recortar|cronometro|cronômetro|va|vá|fato|corFundo|centralizaTexto|corTexto)$/i;
+  var COLOR_RX=/^(vermelho|azul|verde|amarelo|ciano|rosa|roxo|branco|preto|laranja|cinza|marrom|corAleatoria|corAleatória)$/;
+  var BOOL_RX=/^(Verdadeiro|Falso|verdadeiro|falso)$/;
+  var LOGICAL_RX=/^(e|ou|não|nao|em|união|uniao|intersecção|interseccao|intersecao|interseção)$/;
+
+  function hl(code){
+    var out='',i=0,len=code.length;
+    while(i<len){
+      var c=code[i];
+      if(c==='#'){
+        var e=code.indexOf('\n',i); if(e===-1)e=len;
+        out+='<span class="tok-comment">'+esc(code.slice(i,e))+'</span>'; i=e; continue;
+      }
+      if(c==='"'||c==="'"){
+        var q=c,s=i;i++;
+        while(i<len&&code[i]!==q){
+          if(code[i]==='\\')i++;
+          i++;
+        }
+        if(i<len)i++;
+        var estr=esc(code.slice(s,i)).replace(/\{([^}]+)\}/g,'<span class="tok-interp">{$1}</span>');
+        out+='<span class="tok-string">'+estr+'</span>'; continue;
+      }
+      if(/[0-9]/.test(c)){
+        var s2=i;
+        while(i<len&&/[0-9.]/.test(code[i]))i++;
+        out+='<span class="tok-num">'+esc(code.slice(s2,i))+'</span>'; continue;
+      }
+      if(/[a-zA-Z_À-ÿ]/.test(c)){
+        var s3=i;
+        while(i<len&&/[a-zA-Z0-9_À-ÿ]/.test(code[i]))i++;
+        var w=code.slice(s3,i), cls;
+        if(s3>0 && code[s3-1]===':'){ cls='tok-label'; }
+        else if(BOOL_RX.test(w)){ cls='tok-boolean'; }
+        else if(LOGICAL_RX.test(w)){ cls='tok-op'; }
+        else if(KW_RX.test(w)){ cls='tok-kw'; }
+        else if(COLOR_RX.test(w)){ cls='tok-prop'; }
+        else if(s3>0 && code[s3-1]==='.'){ cls='tok-prop'; }
+        else{
+          var j=i; while(j<len&&/\s/.test(code[j]))j++;
+          cls=(j<len&&code[j]==='(')?'tok-fn':'tok-var';
+        }
+        out+='<span class="'+cls+'">'+esc(w)+'</span>'; continue;
+      }
+      var two=code.substr(i,2);
+      if(['>=','<=','==','!=','**','//'].indexOf(two)!==-1){
+        out+='<span class="tok-op">'+esc(two)+'</span>'; i+=2; continue;
+      }
+      if('&+-*/%><=,;()[]{}:'.indexOf(c)!==-1){
+        out+='<span class="tok-op">'+esc(c)+'</span>'; i++; continue;
+      }
+      out+=c; i++;
+    }
+    return out;
+  }
+
+  var codes=document.querySelectorAll('.box pre.code, .code-card pre, .mini pre, .hero pre');
+  for(var k=0;k<codes.length;k++){
+    var raw=codes[k].textContent;
+    codes[k].innerHTML=hl(raw);
+  }
+
+  // ---------- copiar código ----------
+  document.addEventListener('click', function(e){
+    var btn=e.target.closest('.copy');
+    if(!btn) return;
+    var box=btn.closest('.box');
+    if(!box) return;
+    var pre=box.querySelector('pre.code');
+    if(!pre) return;
+    var text=pre.textContent;
+    function ok(){
+      var old=btn.textContent;
+      btn.textContent='✓ Copiado';
+      setTimeout(function(){btn.textContent=old;},1400);
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(ok);
+    }else{
+      var ta=document.createElement('textarea');
+      ta.value=text; document.body.appendChild(ta); ta.select();
+      try{document.execCommand('copy');}catch(err){}
+      document.body.removeChild(ta); ok();
+    }
+  });
+
+  // ---------- filtro de funções ----------
+  var input=document.getElementById('fnFilter');
+  var tbody=document.querySelector('#fnTable tbody');
+  var rows=tbody?tbody.querySelectorAll('tr'):[];
+  var count=document.getElementById('fnCount');
+  function filtrar(){
+    var q=(input.value||'').trim().toLowerCase();
+    var vis=0;
+    for(var i=0;i<rows.length;i++){
+      var ok2=!q || (rows[i].getAttribute('data-s')||'').indexOf(q)!==-1;
+      rows[i].classList.toggle('hidden',!ok2);
+      if(ok2)vis++;
+    }
+    if(count)count.textContent='Mostrando '+vis+' de '+rows.length+' funções';
+  }
+  if(input){ input.addEventListener('input',filtrar); if(count)count.textContent='Mostrando '+rows.length+' de '+rows.length+' funções'; }
+
+  // ---------- menu mobile ----------
+  var burger=document.getElementById('navBurger');
+  var links=document.getElementById('navLinks');
+  if(burger&&links){
+    burger.addEventListener('click',function(){ links.classList.toggle('open'); });
+    links.addEventListener('click',function(ev){
+      if(ev.target.tagName==='A') links.classList.remove('open');
+    });
+  }
+
+  // ---------- revelar ao rolar ----------
+  var io='IntersectionObserver' in window?new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('visible'); io.unobserve(en.target);} });
+  },{threshold:.1}):null;
+  var toArr=Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if(io){ toArr.forEach(function(el){io.observe(el);}); }
+  else{ toArr.forEach(function(el){el.classList.add('visible');}); }
+})();
+</script>
+</body>
+</html>
