@@ -724,6 +724,7 @@
       <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Ajuda ▾</button>
       <div class="menu-dropdown">
         <button id="btnReferencia">📖 Referência rápida</button>
+        <button id="btnManual">📘 Manual do Willog</button>
         <button id="btnCodigoComentado">💬 Código comentado</button>
         <div class="menu-sep-dropdown"></div>
         <button id="btnSobre">ℹ️ Sobre</button>
@@ -9356,6 +9357,9 @@ document.getElementById('btnReferencia').addEventListener('click', ()=>{
 });
 document.getElementById('btnFecharReferencia').addEventListener('click', ()=>{
   document.getElementById('modalReferencia').style.display='none';
+});
+document.getElementById('btnManual').addEventListener('click', ()=>{
+  window.open('manual.html','_blank');
 });
 document.getElementById('modalReferencia').addEventListener('click', (e)=>{
   if(e.target.id==='modalReferencia') document.getElementById('modalReferencia').style.display='none';
