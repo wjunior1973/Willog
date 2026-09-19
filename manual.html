@@ -1095,7 +1095,7 @@ fechar $notas</pre>
 <tr data-s="adicionardias(data, dias) adiciona dias a uma data adicionardias(&quot;14/04/1973&quot;,19269) -&gt; 15/01/2026"><td><code class="fn">adicionarDias(data, dias)</code></td><td class="d">Adiciona dias a uma data</td><td class="e">adicionarDias("14/04/1973",19269) -> 15/01/2026</td></tr>
 <tr data-s="agora() data e hora atuais agora() -&gt; 15/01/2026 14:30:07"><td><code class="fn">agora()</code></td><td class="d">Data e hora atuais</td><td class="e">agora() -> 15/01/2026 14:30:07</td></tr>
 <tr data-s="aleatório()aleatório(n)aleatório(a,b) número aleatório 0-1, 1..n ou a..b aleatório(6) -&gt; 1..6
-aleatório(3,12) -&gt; 3..12"><td><code class="fn">aleatório()aleatório(n)aleatório(a,b)</code></td><td class="d">Número aleatório 0-1, 1..n ou a..b</td><td class="e">aleatório(6) -> 1..6aleatório(3,12) -> 3..12</td></tr>
+aleatório(3,12) -&gt; 3..12"><td><code class="fn">aleatório()aleatório(n)aleatório(a,b)</code></td><td class="d">Número aleatório 0-1, 1..n ou a..b</td><td class="e">aleatório(6) -> 1..6<br>aleatório(3,12) -> 3..12</td></tr>
 <tr data-s="amostra(lista, n) amostra aleatória sem repetição amostra([1,2,3,4,5,6],2) -&gt; 5,3"><td><code class="fn">amostra(lista, n)</code></td><td class="d">Amostra aleatória sem repetição</td><td class="e">amostra([1,2,3,4,5,6],2) -> 5,3</td></tr>
 <tr data-s="amostras(lista, tam, qtd) qtd amostras de tamanho tam amostras([1,2,3,4,5,6],3,2) -&gt; 6,1,2 | 5,6,3"><td><code class="fn">amostras(lista, tam, qtd)</code></td><td class="d">Qtd amostras de tamanho tam</td><td class="e">amostras([1,2,3,4,5,6],3,2) -> 6,1,2 | 5,6,3</td></tr>
 <tr data-s="anosentre(data1, data2) anos entre duas datas anosentre(&quot;14/04/1973&quot;,&quot;15/01/2026&quot;) -&gt; 52.7917808219"><td><code class="fn">anosEntre(data1, data2)</code></td><td class="d">Anos entre duas datas</td><td class="e">anosEntre("14/04/1973","15/01/2026") -> 52.7917808219</td></tr>
@@ -1104,13 +1104,13 @@ aleatório(3,12) -&gt; 3..12"><td><code class="fn">aleatório()aleatório(n)alea
 <tr data-s="arcsen(x) arco seno em graus (inversa do seno) arcsen(0.5) -&gt; 30"><td><code class="fn">arcsen(x)</code></td><td class="d">Arco seno em graus (inversa do seno)</td><td class="e">arcsen(0.5) -> 30</td></tr>
 <tr data-s="arctan(x) arco tangente em graus (inversa da tangente) arctan(1) -&gt; 45"><td><code class="fn">arctan(x)</code></td><td class="d">Arco tangente em graus (inversa da tangente)</td><td class="e">arctan(1) -> 45</td></tr>
 <tr data-s="arredondar(x, casas) arredonda para n casas decimais arredondar(5.33333,2) -&gt; 5.33
-arredondar(1.66666,3) -&gt; 1.667"><td><code class="fn">arredondar(x, casas)</code></td><td class="d">Arredonda para n casas decimais</td><td class="e">arredondar(5.33333,2) -> 5.33arredondar(1.66666,3) -> 1.667</td></tr>
+arredondar(1.66666,3) -&gt; 1.667"><td><code class="fn">arredondar(x, casas)</code></td><td class="d">Arredonda para n casas decimais</td><td class="e">arredondar(5.33333,2) -> 5.33<br>arredondar(1.66666,3) -> 1.667</td></tr>
 <tr data-s="capturetecla() retorna a última tecla capturada por esperetecla() esperetecla(); tecla=capturetecla() -&gt; &quot;a&quot;
-esperetecla(&quot;enter&quot;); capturetecla() -&gt; &quot;enter&quot;"><td><code class="fn">captureTecla()</code></td><td class="d">Retorna a última tecla capturada por espereTecla()</td><td class="e">espereTecla(); tecla=captureTecla() -> "a"espereTecla("enter"); captureTecla() -> "Enter"</td></tr>
+esperetecla(&quot;enter&quot;); capturetecla() -&gt; &quot;enter&quot;"><td><code class="fn">captureTecla()</code></td><td class="d">Retorna a última tecla capturada por espereTecla()</td><td class="e">espereTecla(); tecla=captureTecla() -> "a"<br>espereTecla("enter"); captureTecla() -> "Enter"</td></tr>
 <tr data-s="começacom(texto, prefixo) verifica se texto começa com prefixo (ignora maiúsculas/minúsculas) começacom(&quot;willog&quot;,&quot;wil&quot;) -&gt; verdadeiro
-começacom(&quot;willog&quot;,&quot;log&quot;) -&gt; falso"><td><code class="fn">começaCom(texto, prefixo)</code></td><td class="d">Verifica se texto começa com prefixo (ignora maiúsculas/minúsculas)</td><td class="e">começaCom("Willog","wil") -> verdadeirocomeçaCom("Willog","log") -> falso</td></tr>
+começacom(&quot;willog&quot;,&quot;log&quot;) -&gt; falso"><td><code class="fn">começaCom(texto, prefixo)</code></td><td class="d">Verifica se texto começa com prefixo (ignora maiúsculas/minúsculas)</td><td class="e">começaCom("Willog","wil") -> verdadeiro<br>começaCom("Willog","log") -> falso</td></tr>
 <tr data-s="contaritem(lista, item) conta ocorrências de item contaritem(&quot;especialidade&quot;,&quot;e&quot;) -&gt; 3
-contaritem([&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;b&quot;],&quot;b&quot;) -&gt; 2"><td><code class="fn">contarItem(lista, item)</code></td><td class="d">Conta ocorrências de item</td><td class="e">contarItem("especialidade","e") -> 3contarItem(["a","b","c","b"],"b") -> 2</td></tr>
+contaritem([&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;b&quot;],&quot;b&quot;) -&gt; 2"><td><code class="fn">contarItem(lista, item)</code></td><td class="d">Conta ocorrências de item</td><td class="e">contarItem("especialidade","e") -> 3<br>contarItem(["a","b","c","b"],"b") -> 2</td></tr>
 <tr data-s="conte(lista) quantidade de elementos conte([1,3,5,7]) -&gt; 4"><td><code class="fn">conte(lista)</code></td><td class="d">Quantidade de elementos</td><td class="e">conte([1,3,5,7]) -> 4</td></tr>
 <tr data-s="cos(x) cosseno (graus) cos(60) -&gt; 0.5"><td><code class="fn">cos(x)</code></td><td class="d">Cosseno (graus)</td><td class="e">cos(60) -> 0.5</td></tr>
 <tr data-s="cossec(x) cossecante (graus, 1/sen) cossec(30) -&gt; 2"><td><code class="fn">cossec(x)</code></td><td class="d">Cossecante (graus, 1/sen)</td><td class="e">cossec(30) -> 2</td></tr>
@@ -1120,27 +1120,27 @@ contaritem([&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;b&quot;],&quot;b&quo
 <tr data-s="diasemana(data) dia da semana (domingo a sábado) diasemana(&quot;15/01/2026&quot;) -&gt; quinta"><td><code class="fn">diaSemana(data)</code></td><td class="d">Dia da semana (domingo a sábado)</td><td class="e">diaSemana("15/01/2026") -> quinta</td></tr>
 <tr data-s="diasentre(data1, data2) dias entre duas datas diasentre(&quot;14/04/1973&quot;,&quot;15/01/2026&quot;) -&gt; 19269"><td><code class="fn">diasEntre(data1, data2)</code></td><td class="d">Dias entre duas datas</td><td class="e">diasEntre("14/04/1973","15/01/2026") -> 19269</td></tr>
 <tr data-s="distintos(valor) remove duplicatas mantendo ordem distintos(&quot;banana&quot;) -&gt; ban
-distintos(123345456) -&gt; 123456"><td><code class="fn">distintos(valor)</code></td><td class="d">Remove duplicatas mantendo ordem</td><td class="e">distintos("banana") -> bandistintos(123345456) -> 123456</td></tr>
+distintos(123345456) -&gt; 123456"><td><code class="fn">distintos(valor)</code></td><td class="d">Remove duplicatas mantendo ordem</td><td class="e">distintos("banana") -> ban<br>distintos(123345456) -> 123456</td></tr>
 <tr data-s="divida(texto, separador) divide texto em lista divida(&quot;a,b,c&quot;,&quot;,&quot;) -&gt; a,b,c
-divida(&quot;abc&quot;,&quot;,&quot;) -&gt; a,b,c"><td><code class="fn">divida(texto, separador)</code></td><td class="d">Divide texto em lista</td><td class="e">divida("a,b,c",",") -> a,b,cdivida("abc",",") -> a,b,c</td></tr>
+divida(&quot;abc&quot;,&quot;,&quot;) -&gt; a,b,c"><td><code class="fn">divida(texto, separador)</code></td><td class="d">Divide texto em lista</td><td class="e">divida("a,b,c",",") -> a,b,c<br>divida("abc",",") -> a,b,c</td></tr>
 <tr data-s="éímpar(x) verifica se é ímpar éímpar(511) -&gt; verdadeiro"><td><code class="fn">éÍmpar(x)</code></td><td class="d">Verifica se é ímpar</td><td class="e">éÍmpar(511) -> verdadeiro</td></tr>
 <tr data-s="élista(x) verifica se é lista élista([1,3,5,7]) -&gt; verdadeiro"><td><code class="fn">éLista(x)</code></td><td class="d">Verifica se é lista</td><td class="e">éLista([1,3,5,7]) -> verdadeiro</td></tr>
 <tr data-s="embaralhe(valor) embaralha lista/texto/número embaralhe([1,2,3,4,5]) -&gt; 3,1,5,2,4
-embaralhe(&quot;banana&quot;) -&gt; annaba"><td><code class="fn">embaralhe(valor)</code></td><td class="d">Embaralha lista/texto/número</td><td class="e">embaralhe([1,2,3,4,5]) -> 3,1,5,2,4embaralhe("banana") -> annaba</td></tr>
+embaralhe(&quot;banana&quot;) -&gt; annaba"><td><code class="fn">embaralhe(valor)</code></td><td class="d">Embaralha lista/texto/número</td><td class="e">embaralhe([1,2,3,4,5]) -> 3,1,5,2,4<br>embaralhe("banana") -> annaba</td></tr>
 <tr data-s="encontre(texto, busca) posição da primeira ocorrência (0 = primeiro caractere, -1 se não encontrar) encontre(&quot;willog&quot;,&quot;llog&quot;) -&gt; 2
 encontre(&quot;willog&quot;,&quot;x&quot;) -&gt; -1
-encontre([1,2,3,2],2) -&gt; 1"><td><code class="fn">encontre(texto, busca)</code></td><td class="d">Posição da primeira ocorrência (0 = primeiro caractere, -1 se não encontrar)</td><td class="e">encontre("Willog","llog") -> 2encontre("Willog","x") -> -1encontre([1,2,3,2],2) -> 1</td></tr>
+encontre([1,2,3,2],2) -&gt; 1"><td><code class="fn">encontre(texto, busca)</code></td><td class="d">Posição da primeira ocorrência (0 = primeiro caractere, -1 se não encontrar)</td><td class="e">encontre("Willog","llog") -> 2<br>encontre("Willog","x") -> -1<br>encontre([1,2,3,2],2) -> 1</td></tr>
 <tr data-s="énúmero(x) verifica se é número énúmero(234) -&gt; verdadeiro
-énúmero(&quot;123&quot;) -&gt; falso"><td><code class="fn">éNúmero(x)</code></td><td class="d">Verifica se é número</td><td class="e">éNúmero(234) -> verdadeiroéNúmero("123") -> falso</td></tr>
+énúmero(&quot;123&quot;) -&gt; falso"><td><code class="fn">éNúmero(x)</code></td><td class="d">Verifica se é número</td><td class="e">éNúmero(234) -> verdadeiro<br>éNúmero("123") -> falso</td></tr>
 <tr data-s="épar(x) verifica se é par épar(1023) -&gt; falso"><td><code class="fn">éPar(x)</code></td><td class="d">Verifica se é par</td><td class="e">éPar(1023) -> falso</td></tr>
 <tr data-s="éprimo(x) verifica se é primo éprimo(3) -&gt; verdadeiro"><td><code class="fn">éPrimo(x)</code></td><td class="d">Verifica se é primo</td><td class="e">éPrimo(3) -> verdadeiro</td></tr>
 <tr data-s="étexto(x) verifica se é texto étexto(&quot;willog&quot;) -&gt; verdadeiro"><td><code class="fn">éTexto(x)</code></td><td class="d">Verifica se é texto</td><td class="e">éTexto("Willog") -> verdadeiro</td></tr>
 <tr data-s="exp(x) exponencial (e elevado a x) exp(1) -&gt; 2.71828182846"><td><code class="fn">exp(x)</code></td><td class="d">Exponencial (e elevado a x)</td><td class="e">exp(1) -> 2.71828182846</td></tr>
 <tr data-s="fatorial(x) fatorial fatorial(4) -&gt; 24"><td><code class="fn">fatorial(x)</code></td><td class="d">Fatorial</td><td class="e">fatorial(4) -> 24</td></tr>
 <tr data-s="filtrar(lista, condição) filtra por condição ou valor filtrar([1,2,3,4],&quot;x&gt;2&quot;) -&gt; 3,4
-filtrar(&quot;maçaneta&quot;,&quot;a&quot;) -&gt; mçnet"><td><code class="fn">filtrar(lista, condição)</code></td><td class="d">Filtra por condição ou valor</td><td class="e">filtrar([1,2,3,4],"x>2") -> 3,4filtrar("maçaneta","a") -> mçnet</td></tr>
+filtrar(&quot;maçaneta&quot;,&quot;a&quot;) -&gt; mçnet"><td><code class="fn">filtrar(lista, condição)</code></td><td class="d">Filtra por condição ou valor</td><td class="e">filtrar([1,2,3,4],"x>2") -> 3,4<br>filtrar("maçaneta","a") -> mçnet</td></tr>
 <tr data-s="formate(valor, casas) formata número truncando para n casas decimais formate(3.141502,3) -&gt; 3.141
-formate(3.1,3) -&gt; 3.100"><td><code class="fn">formate(valor, casas)</code></td><td class="d">Formata número truncando para n casas decimais</td><td class="e">formate(3.141502,3) -> 3.141formate(3.1,3) -> 3.100</td></tr>
+formate(3.1,3) -&gt; 3.100"><td><code class="fn">formate(valor, casas)</code></td><td class="d">Formata número truncando para n casas decimais</td><td class="e">formate(3.141502,3) -> 3.141<br>formate(3.1,3) -> 3.100</td></tr>
 <tr data-s="fração(x) converte para fração fração(0.333) -&gt; 1/3"><td><code class="fn">fração(x)</code></td><td class="d">Converte para fração</td><td class="e">fração(0.333) -> 1/3</td></tr>
 <tr data-s="hipotenusa(a, b) hipotenusa do triângulo retângulo (também hipotenúsa) hipotenusa(3,4) -&gt; 5"><td><code class="fn">hipotenusa(a, b)</code></td><td class="d">Hipotenusa do triângulo retângulo (também hipotenúsa)</td><td class="e">hipotenusa(3,4) -> 5</td></tr>
 <tr data-s="hora() hora atual hora() -&gt; 14:30:07"><td><code class="fn">hora()</code></td><td class="d">Hora atual</td><td class="e">hora() -> 14:30:07</td></tr>
@@ -1163,38 +1163,38 @@ formate(3.1,3) -&gt; 3.100"><td><code class="fn">formate(valor, casas)</code></t
 <tr data-s="mmc(a, b, ...) mínimo múltiplo comum mmc(2,3,5) -&gt; 30"><td><code class="fn">mmc(a, b, ...)</code></td><td class="d">Mínimo múltiplo comum</td><td class="e">mmc(2,3,5) -> 30</td></tr>
 <tr data-s="ordenedecrescente(lista) ordena decrescente ordenedecrescente([2,4,6,8,10]) -&gt; 10,8,6,4,2"><td><code class="fn">ordeneDecrescente(lista)</code></td><td class="d">Ordena decrescente</td><td class="e">ordeneDecrescente([2,4,6,8,10]) -> 10,8,6,4,2</td></tr>
 <tr data-s="paranúmero(x) converte texto para número paranúmero(&quot;12.5&quot;) -&gt; 12.5
-paranúmero(&quot;12,5&quot;)*2 -&gt; 25"><td><code class="fn">paraNúmero(x)</code></td><td class="d">Converte texto para número</td><td class="e">paraNúmero("12.5") -> 12.5paraNúmero("12,5")*2 -> 25</td></tr>
+paranúmero(&quot;12,5&quot;)*2 -&gt; 25"><td><code class="fn">paraNúmero(x)</code></td><td class="d">Converte texto para número</td><td class="e">paraNúmero("12.5") -> 12.5<br>paraNúmero("12,5")*2 -> 25</td></tr>
 <tr data-s="paratexto(x) converte número para texto paratexto(8) -&gt; &quot;8&quot;
-paratexto(8)*3 -&gt; 888"><td><code class="fn">paraTexto(x)</code></td><td class="d">Converte número para texto</td><td class="e">paraTexto(8) -> "8"paraTexto(8)*3 -> 888</td></tr>
+paratexto(8)*3 -&gt; 888"><td><code class="fn">paraTexto(x)</code></td><td class="d">Converte número para texto</td><td class="e">paraTexto(8) -> "8"<br>paraTexto(8)*3 -> 888</td></tr>
 <tr data-s="piso(x) arredonda para baixo (floor) piso(2.3) -&gt; 2
-piso(2.9) -&gt; 2"><td><code class="fn">piso(x)</code></td><td class="d">Arredonda para baixo (floor)</td><td class="e">piso(2.3) -> 2piso(2.9) -> 2</td></tr>
+piso(2.9) -&gt; 2"><td><code class="fn">piso(x)</code></td><td class="d">Arredonda para baixo (floor)</td><td class="e">piso(2.3) -> 2<br>piso(2.9) -> 2</td></tr>
 <tr data-s="posição(texto, busca) posição da busca em texto (0 = primeiro) ou caractere na posição se busca for número posição(&quot;willog&quot;,&quot;i&quot;) -&gt; 1
-posição(&quot;willog&quot;,1) -&gt; i"><td><code class="fn">posição(texto, busca)</code></td><td class="d">Posição da busca em texto (0 = primeiro) ou caractere na posição se busca for número</td><td class="e">posição("Willog","i") -> 1posição("Willog",1) -> i</td></tr>
+posição(&quot;willog&quot;,1) -&gt; i"><td><code class="fn">posição(texto, busca)</code></td><td class="d">Posição da busca em texto (0 = primeiro) ou caractere na posição se busca for número</td><td class="e">posição("Willog","i") -> 1<br>posição("Willog",1) -> i</td></tr>
 <tr data-s="potencia(base, exp) potência (aceita listas, vetorizada) potencia(2,3) -&gt; 8"><td><code class="fn">potencia(base, exp)</code></td><td class="d">Potência (aceita listas, vetorizada)</td><td class="e">potencia(2,3) -> 8</td></tr>
 <tr data-s="primos(n) primeiros n primos primos(6) -&gt; 2,3,5,7,11,13"><td><code class="fn">primos(n)</code></td><td class="d">Primeiros n primos</td><td class="e">primos(6) -> 2,3,5,7,11,13</td></tr>
 <tr data-s="produto(lista) produto dos elementos produto([1,3,5,7]) -&gt; 105"><td><code class="fn">produto(lista)</code></td><td class="d">Produto dos elementos</td><td class="e">produto([1,3,5,7]) -> 105</td></tr>
 <tr data-s="raiz(x, n) raiz n-ésima (aceita listas, vetorizada) raiz(27,3) -&gt; 3"><td><code class="fn">raiz(x, n)</code></td><td class="d">Raiz n-ésima (aceita listas, vetorizada)</td><td class="e">raiz(27,3) -> 3</td></tr>
 <tr data-s="raizc(x) raiz cúbica — vetorizada raizc(27) -&gt; 3"><td><code class="fn">raizc(x)</code></td><td class="d">Raiz cúbica — vetorizada</td><td class="e">raizc(27) -> 3</td></tr>
 <tr data-s="raizq(x) raiz quadrada — vetorizada raizq(16) -&gt; 4
-raizq([1,4,9]) -&gt; 1, 2, 3"><td><code class="fn">raizq(x)</code></td><td class="d">Raiz quadrada — vetorizada</td><td class="e">raizq(16) -> 4raizq([1,4,9]) -> 1, 2, 3</td></tr>
+raizq([1,4,9]) -&gt; 1, 2, 3"><td><code class="fn">raizq(x)</code></td><td class="d">Raiz quadrada — vetorizada</td><td class="e">raizq(16) -> 4<br>raizq([1,4,9]) -> 1, 2, 3</td></tr>
 <tr data-s="remova(lista, valor) remove primeira ocorrência remova([1,2,3,4,5,6],5) -&gt; 1,2,3,4,6"><td><code class="fn">remova(lista, valor)</code></td><td class="d">Remove primeira ocorrência</td><td class="e">remova([1,2,3,4,5,6],5) -> 1,2,3,4,6</td></tr>
 <tr data-s="repetir(texto, n) repete texto n vezes repetir(&quot;oi&quot;,4) -&gt; oioioioi"><td><code class="fn">repetir(texto, n)</code></td><td class="d">Repete texto n vezes</td><td class="e">repetir("oi",4) -> oioioioi</td></tr>
 <tr data-s="sec(x) secante (graus, 1/cos) sec(60) -&gt; 2"><td><code class="fn">sec(x)</code></td><td class="d">Secante (graus, 1/cos)</td><td class="e">sec(60) -> 2</td></tr>
 <tr data-s="semespaços(texto) remove todos os espaços semespaços(&quot;1 2 3 4 5 6&quot;) -&gt; 123456"><td><code class="fn">semEspaços(texto)</code></td><td class="d">Remove todos os espaços</td><td class="e">semEspaços("1 2 3 4 5 6") -> 123456</td></tr>
 <tr data-s="sen(x) seno (graus) sen(60) -&gt; 0.86602540378"><td><code class="fn">sen(x)</code></td><td class="d">Seno (graus)</td><td class="e">sen(60) -> 0.86602540378</td></tr>
 <tr data-s="soma(lista) soma elementos (aceita lista ou valores) soma([1,2,3,4]) -&gt; 10
-soma(1,2,3) -&gt; 6"><td><code class="fn">soma(lista)</code></td><td class="d">Soma elementos (aceita lista ou valores)</td><td class="e">soma([1,2,3,4]) -> 10soma(1,2,3) -> 6</td></tr>
+soma(1,2,3) -&gt; 6"><td><code class="fn">soma(lista)</code></td><td class="d">Soma elementos (aceita lista ou valores)</td><td class="e">soma([1,2,3,4]) -> 10<br>soma(1,2,3) -> 6</td></tr>
 <tr data-s="substitua(texto, antigo, novo) substitui texto substitua(&quot;a-b-c&quot;,&quot;-&quot;,&quot; &quot;) -&gt; a b c"><td><code class="fn">substitua(texto, antigo, novo)</code></td><td class="d">Substitui texto</td><td class="e">substitua("a-b-c","-"," ") -> a b c</td></tr>
 <tr data-s="tamanho(texto) tamanho do texto/lista tamanho(&quot;willog&quot;) -&gt; 6"><td><code class="fn">tamanho(texto)</code></td><td class="d">Tamanho do texto/lista</td><td class="e">tamanho("Willog") -> 6</td></tr>
 <tr data-s="tan(x) tangente (graus) tan(60) -&gt; 1.73205080757"><td><code class="fn">tan(x)</code></td><td class="d">Tangente (graus)</td><td class="e">tan(60) -> 1.73205080757</td></tr>
 <tr data-s="terminacom(texto, sufixo) verifica se texto termina com sufixo (ignora maiúsculas/minúsculas) terminacom(&quot;willog&quot;,&quot;log&quot;) -&gt; verdadeiro
-terminacom(&quot;willog&quot;,&quot;llo&quot;) -&gt; falso"><td><code class="fn">terminaCom(texto, sufixo)</code></td><td class="d">Verifica se texto termina com sufixo (ignora maiúsculas/minúsculas)</td><td class="e">terminaCom("Willog","log") -> verdadeiroterminaCom("Willog","llo") -> falso</td></tr>
+terminacom(&quot;willog&quot;,&quot;llo&quot;) -&gt; falso"><td><code class="fn">terminaCom(texto, sufixo)</code></td><td class="d">Verifica se texto termina com sufixo (ignora maiúsculas/minúsculas)</td><td class="e">terminaCom("Willog","log") -> verdadeiro<br>terminaCom("Willog","llo") -> falso</td></tr>
 <tr data-s="teto(x) arredonda para cima (ceil) teto(2.3) -&gt; 3
-teto(2.9) -&gt; 3"><td><code class="fn">teto(x)</code></td><td class="d">Arredonda para cima (ceil)</td><td class="e">teto(2.3) -> 3teto(2.9) -> 3</td></tr>
+teto(2.9) -&gt; 3"><td><code class="fn">teto(x)</code></td><td class="d">Arredonda para cima (ceil)</td><td class="e">teto(2.3) -> 3<br>teto(2.9) -> 3</td></tr>
 <tr data-s="tipo(x) retorna tipo: número, texto, booleano ou lista tipo(7) -&gt; número
 tipo(&quot;olá!&quot;) -&gt; texto
 tipo(4&gt;5) -&gt; booleano
-tipo([1,2,3]) -&gt; lista"><td><code class="fn">tipo(x)</code></td><td class="d">Retorna tipo: número, texto, booleano ou lista</td><td class="e">tipo(7) -> númerotipo("Olá!") -> textotipo(4>5) -> booleanotipo([1,2,3]) -> lista</td></tr>
+tipo([1,2,3]) -&gt; lista"><td><code class="fn">tipo(x)</code></td><td class="d">Retorna tipo: número, texto, booleano ou lista</td><td class="e">tipo(7) -> número<br>tipo("Olá!") -> texto<br>tipo(4>5) -> booleano<br>tipo([1,2,3]) -> lista</td></tr>
         </tbody>
       </table>
     </div>
