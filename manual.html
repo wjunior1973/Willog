@@ -959,7 +959,7 @@ desenhe.texto("Olá, Willog!", 100, 100, 20, vermelho)</pre>
 
       <div class="cmd reveal">
         <div class="cmd-top"><h4>corAleatória</h4><span class="chip">Desenho</span></div>
-        <div class="syn">qualquer cor do desenho = corAleatóória</div>
+        <div class="syn">qualquer cor do desenho = corAleatória</div>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(300, 400)
@@ -982,6 +982,7 @@ figura.girar(45, 3, 0.5)
 figura.mover(400, 300, 2)</pre>
           <div class="out">🔄 gira 45° por 3 vezes (0,5 s de pausa) e move para (400,300)</div>
         </div>
+        <p class="note">Qualquer <code>desenhe.*</code> retorna a figura criada e pode ser guardada numa variável: <code>figura = desenhe.circulo(…)</code>, <code>figura = desenhe.linha(…)</code>, <code>figura = desenhe.texto(…)</code>, etc.</p>
       </div>
 
       <div class="cmd reveal">
@@ -1286,6 +1287,8 @@ tipo([1,2,3]) -&gt; lista"><td><code class="fn">tipo(x)</code></td><td class="d"
 <div class="swatch"><span class="chip-color" style="background:#ff0000"></span><div class="sw-info"><b>vermelho</b><code>#ff0000</code></div></div>
     </div>
 
+    <p class="lead" style="margin-top:18px">As formas <b>femininas</b> também valem: <code style="font-family:var(--mono);color:var(--accent)">amarela</code>, <code style="font-family:var(--mono);color:var(--accent)">vermelha</code>, <code style="font-family:var(--mono);color:var(--accent)">roxa</code>, <code style="font-family:var(--mono);color:var(--accent)">branca</code> e <code style="font-family:var(--mono);color:var(--accent)">preta</code> — ex.: <code style="font-family:var(--mono);color:var(--accent)">desenhe.circulo(150, 150, 50, amarela)</code>.</p>
+
     <div class="banner reveal">
       <div class="txt">
         <h3>🎲 corAleatória</h3>
@@ -1485,7 +1488,7 @@ repita(5):
 
   // ---------- mini destacador de sintaxe Willog ----------
   var KW_RX=/^(se|senao|senão|entao|então|enquanto|para|cada|entre|pulando|repetir|repita|mostre|mostrar|limpe|pare|continue|continuar|pausa|espere|espereTecla|captureTecla|capture|leia|ler|escrever|fechar|abrir|janela|tela|desenhe|desenha|mover|figura|bipe|toque|mensagem|retorne|retorna|definir|funcao|função|verificar|caso|padrão|padrao|constante|novo|existe|tartaruga|avance|recue|direita|esquerda|levanta|abaixa|caneta|poligonos|polígonos|colar|recortar|cronometro|cronômetro|va|vá|fato|corFundo|centralizaTexto|corTexto)$/i;
-  var COLOR_RX=/^(vermelho|azul|verde|amarelo|ciano|rosa|roxo|branco|preto|laranja|cinza|marrom|corAleatoria|corAleatória)$/;
+  var COLOR_RX=/^(vermelho|azul|verde|amarelo|ciano|rosa|roxo|branco|preto|laranja|cinza|marrom|amarela|vermelha|roxa|branca|preta|corAleatoria|corAleatória)$/;
   var BOOL_RX=/^(Verdadeiro|Falso|verdadeiro|falso)$/;
   var LOGICAL_RX=/^(e|ou|não|nao|em|união|uniao|intersecção|interseccao|intersecao|interseção)$/;
 

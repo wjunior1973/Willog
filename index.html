@@ -617,7 +617,7 @@
   .floating-window.poligonos-mod .tartaruga-resizer { display:none; }
   .floating-window.poligonos-mod #janelaCanvas { display:none !important; }
   .floating-window.poligonos-mod #janelaConsole { display:none !important; }
-  .floating-window.poligonos-mod .poligonos-root { display:flex; }
+  .floating-window.poligonos-mod #poligonosRoot { display:flex; }
   #poligonosRoot { flex:1 1 0; min-width:0; min-height:0; align-self:stretch; display:none; flex-direction:row; background:#ffffff; position:relative; }
   .poligonos-toolbar {
     width:160px; min-width:140px; max-width:220px; background:var(--panel);
@@ -635,6 +635,12 @@
   .poligonos-toolbar .pol-btn-balde { border-left:4px solid #fdcb6e; }
   .poligonos-toolbar .pol-btn-limpar { border-left:4px solid #e17055; }
   .poligonos-toolbar .pol-btn-toggle { border-left:4px solid #6c5ce7; }
+  .pol-hint {
+    margin-top:6px; padding:8px 10px; border-radius:8px; font-family:'Inter',sans-serif;
+    font-size:11px; line-height:1.4; color:var(--text-dim); background:var(--panel2);
+    border:1px dashed var(--border); min-height:30px;
+  }
+  .pol-hint.pol-hint-msg { border-color:#fdcb6e; color:var(--text); background:rgba(253,203,110,.12); }
   .pol-cores-titulo {
     font-family:'Inter',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.4px;
     color:var(--text-dim); text-transform:uppercase; margin:4px 0 0;
@@ -833,6 +839,7 @@
       <button id="polBtnPontos" class="pol-btn-toggle ativo">🔘 Pontos</button>
       <button id="polBtnGrade" class="pol-btn-toggle ativo">▦ Grade</button>
       <button id="polBtnLimpar" class="pol-btn-limpar">🧹 Limpar</button>
+      <div class="pol-hint" id="polHint"></div>
     </div>
     <div class="poligonos-canvas-wrap">
       <canvas id="poligonosCanvas"></canvas>
@@ -1940,7 +1947,7 @@ function highlightWillog(code){
   const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','vá','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','polígonos','poligonos','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta','centralizaTexto','corTexto']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
-  const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatória']);
+  const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatória','amarela','vermelha','roxa','branca','preta']);
   while(i<len){
     if(code.substr(i,2)==='#:'){
       let s=i;
@@ -2018,7 +2025,7 @@ function highlightWillog(code){
     if(c==='\\'){
       html+='<span class="hl-operator">\\</span>'; i++; continue;
     }
-    if('&+-*/%><=,;()[]{}'.includes(c) || c==='&' || c==='='){
+    if('&+-*/%><=,;()[]{}'.includes(c)){
       html+='<span class="hl-operator">'+escapeHtml(c)+'</span>'; i++; continue;
     }
     if(c==='.'){
@@ -2319,7 +2326,6 @@ editor.addEventListener('scroll', syncScroll);
 editor.addEventListener('keydown', (e)=>{
   if(e.key==='Tab'){ e.preventDefault(); const s=editor.selectionStart, ed=editor.selectionEnd; editor.value = editor.value.substring(0,s) + '  ' + editor.value.substring(ed); editor.selectionStart=editor.selectionEnd=s+2; scheduleHighlight(); if(window._willogSave) window._willogSave(); }
   if((e.ctrlKey||e.metaKey) && e.key==='Enter'){ e.preventDefault(); runWillog(); }
-  if(e.key==='F5'){ e.preventDefault(); runWillog(); }
 });
 updateLines(); updateHighlight();
 
@@ -3116,11 +3122,6 @@ async function execTartarugaComando(stmt, env){
   if(/^\s*(abaixa|abaixe)\s+caneta\b/i.test(s)){ if(tartaruga && tartaruga.ativo){ tartaruga.caneta=true; _tartarugaRedesenhar(); } await new Promise(r=> setTimeout(r, _tartarugaPausa())); return false; }
   return null;
 }
-function isTartarugaStmt(stmt){ return /^\s*tartaruga\s*\(\s*\)\s*(?:#.*)?$/i.test(stmt.trim()); }
-function isTartarugaComandoStmt(stmt){
-  return /^\s*(corFundo|avance|recue|direita|esquerda|cor)\s+/i.test(stmt.trim()) || /^\s*(levanta|abaixa|abaixe)\s+caneta\b/i.test(stmt.trim());
-}
-// Abre o console principal em janela flutuante (duplo-clique no console).
 // Reaproveita a janela flutuante em modo console sem apagar o conteúdo:
 // copia o console atual e as próximas saídas são espelhadas via logToConsole.
 // Não toca no estado gráfico (_telaBuffer/_willogDesenhos) nem em
@@ -3163,6 +3164,9 @@ function abrirConsoleFlutuante(){
 const _willogCores = {
   'amarelo':'#ffff00','vermelho':'#ff0000','azul':'#0066ff','verde':'#00c853','ciano':'#00ffff','rosa':'#ff69b4','roxo':'#9c27b0','laranja':'#ff9800','branco':'#ffffff','cinza':'#808080','marrom':'#8d5524','preto':'#000000'
 };
+const _willogCoresFem = {
+  'amarela':'#ffff00','vermelha':'#ff0000','roxa':'#9c27b0','branca':'#ffffff','preta':'#000000'
+};
 let _telaBgColor = '#000000';
 let _telaFgColor = '#ffffff';
 let _willogTextoCor = '#ffffff';
@@ -3188,6 +3192,7 @@ function _willogResolveCor(nome, env){
     return cores[Math.floor(Math.random()*cores.length)];
   }
   if(_willogCores[s]) return _willogCores[s];
+  if(_willogCoresFem[s]) return _willogCoresFem[s];
   if(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(s)) return s;
   const norm=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   if(_willogCores[norm]) return _willogCores[norm];
@@ -3195,11 +3200,6 @@ function _willogResolveCor(nome, env){
 }
 function _willogGetCanvas(){
   return document.getElementById('janelaCanvas');
-}
-function _willogGetCtx(){
-  const cv=_willogGetCanvas();
-  if(!cv) return null;
-  return cv.getContext('2d');
 }
 function _willogInitBuffer(){
   if(_telaBuffer && _telaBufferCtx) return;
@@ -3508,18 +3508,7 @@ function _willogRedesenharTudo(){
       _tls.forEach((ln,idx)=>{ _telaBufferCtx.fillText(ln, Number(obj.x), Number(obj.y)+idx*_tlh); });
     }
   }
-  _willogSyncVisible();
-}
-function _willogCriarDesenho(tipo, params, cor, env){
-  const obj={tipo, cor: cor||'branco', rotacao:0, id: Date.now().toString(36)+Math.random().toString(36).slice(2,6)};
-  if(tipo==='poligono'){ obj.x=params[0]; obj.y=params[1]; obj.n=params[2]; obj.raio=params[3]; }
-  else if(tipo==='linha'){ obj.x1=params[0]; obj.y1=params[1]; obj.x2=params[2]; obj.y2=params[3]; }
-  else if(tipo==='circulo'){ obj.x=params[0]; obj.y=params[1]; obj.raio=params[2]; }
-  else if(tipo==='retangulo'){ obj.x1=params[0]; obj.y1=params[1]; obj.x2=params[2]; obj.y2=params[3]; }
-  else if(tipo==='ponto'){ obj.x=params[0]; obj.y=params[1]; }
-  else if(tipo==='texto'){ obj.texto=params[0]; obj.x=params[1]; obj.y=params[2]; obj.tamanho=params[3]||12; }
-  _willogDesenhos.push(obj);
-  return obj;
+_willogSyncVisible();
 }
 function isGirarStmt(stmt){
   return /^\s*[a-zA-Z_À-ÿ][a-zA-Z0-9_À-ÿ]*\.girar\s*\(.*\)\s*(?:#.*)?$/i.test(stmt.trim());
@@ -3834,6 +3823,70 @@ function parseDesenheArgs(stmt){
   if(!m) return [];
   return splitWillogCommaArgs(m[1]);
 }
+function _willogDesenheRhs(rhs, env){
+  const rin=rhs.trim();
+  const m=rin.match(/^\s*desenhe\.([a-zA-ZÀ-ÿ]+)\s*\((.*)\)\s*(?:#.*)?$/i);
+  if(!m) return undefined;
+  const tipo=m[1].toLowerCase();
+  const args=splitWillogCommaArgs(m[2]);
+  const num=(s)=>{
+    const v=evaluateExpression(s.trim(), env);
+    return Number(v ?? 0);
+  };
+  try{
+    if(tipo==='poligono' || tipo==='polígono'){
+      if(args.length<4){ logToConsole('Erro: desenhe.polígono precisa de x,y,n,raio[,cor]','error'); return undefined; }
+      return _willogDrawPoligono(num(args[0]), num(args[1]), num(args[2]), num(args[3]), args.length>=5?args[4]:'branco', env);
+    }
+    if(tipo==='circulo' || tipo==='círculo'){
+      if(args.length<3){ logToConsole('Erro: desenhe.circulo precisa de x,y,raio[,cor]','error'); return undefined; }
+      return _willogDrawCirculo(num(args[0]), num(args[1]), num(args[2]), args.length>=4?args[3]:'branco', env);
+    }
+    if(tipo==='retangulo' || tipo==='retângulo'){
+      if(args.length<4){ logToConsole('Erro: desenhe.retangulo precisa de x1,y1,x2,y2[,cor]','error'); return undefined; }
+      return _willogDrawRetangulo(num(args[0]), num(args[1]), num(args[2]), num(args[3]), args.length>=5?args[4]:'branco', env);
+    }
+    if(tipo==='ponto'){
+      if(args.length<2){ logToConsole('Erro: desenhe.ponto precisa de x,y[,cor]','error'); return undefined; }
+      return _willogDrawPonto(num(args[0]), num(args[1]), args.length>=3?args[2]:'branco', env);
+    }
+    if(tipo==='linha'){
+      if(args.length<4){ logToConsole('Erro: desenhe.linha precisa de x1,y1,x2,y2[,cor]','error'); return undefined; }
+      return _willogDrawLinha(num(args[0]), num(args[1]), num(args[2]), num(args[3]), args.length>=5?args[4]:'branco', env);
+    }
+    if(tipo==='texto'){
+      if(args.length<3){ logToConsole('Erro: desenhe.texto precisa de "texto",x,y[,tamanho][,cor]','error'); return undefined; }
+      let texto;
+      try{ texto=evaluateExpression(args[0].trim(), env); }catch(e){ texto=args[0].replace(/^["']|["']$/g,''); }
+      if(texto===undefined||texto===null) texto="";
+      else texto=String(texto);
+      const x=num(args[1]), y=num(args[2]);
+      let tam=12, cor='branco';
+      if(args.length>=4){
+        const raw=args[3].trim();
+        let ev; try{ ev=evaluateExpression(raw, env); }catch(e){ ev=undefined; }
+        const isNum = ev!==undefined && !isNaN(Number(ev)) && isFinite(Number(ev));
+        const rawNum = !isNaN(Number(raw.replace(/^["']|["']$/g,'')));
+        const hexCheck = _willogResolveCor(ev!==undefined?String(ev):raw, env);
+        if(isNum) tam=Number(ev);
+        else if(rawNum && hexCheck===null) tam=Number(raw.replace(/^["']|["']$/g,''));
+        else if(hexCheck) cor=ev!==undefined?String(ev):raw;
+        else if(ev!==undefined){ const n=Number(ev); if(!isNaN(n)) tam=n; else cor=String(ev); }
+        else cor=raw;
+      }
+      if(args.length>=5){
+        const rawCor=args[4].trim();
+        let ev2; try{ ev2=evaluateExpression(rawCor, env); }catch(e){ ev2=undefined; }
+        cor = ev2!==undefined && String(ev2).trim()!=='' ? String(ev2) : rawCor;
+      }
+      return _willogDrawTexto(texto,x,y,tam,cor,env);
+    }
+    logToConsole('Erro: desenhe.'+tipo+' não reconhecido em atribuição','error');
+  }catch(e){
+    logToConsole('Erro em desenhe.'+tipo+': '+e.message,'error');
+  }
+  return undefined;
+}
 (function(){
   window.addEventListener('resize', ()=>{
     if(janelaAtiva && !janelaCentralizada){
@@ -3945,9 +3998,6 @@ function getEspereTeclaArg(stmt, env){
     }
     return raw.replace(/^["']|["']$/g,'');
   }catch(e){ return raw.replace(/^["']|["']$/g,''); }
-}
-function isCaptureTeclaExpr(expr){
-  return /^\s*captureTecla\s*\(\s*\)\s*$/i.test(expr.trim());
 }
 function waitForKey(expectedRaw){
   const expectedNorm=_normalizeTecla(expectedRaw);
@@ -4899,13 +4949,6 @@ function _polAreaIds(ids){
   }
   return Math.abs(soma)/2;
 }
-function _polCorAlpha(cor, alfa){
-  if(!cor) return null;
-  const m=/^#([0-9a-f]{6})$/i.exec(cor);
-  if(!m) return cor;
-  const n=parseInt(m[1],16);
-  return `rgba(${(n>>16)&255}, ${(n>>8)&255}, ${n&255}, ${alfa})`;
-}
 function _polPontoEmPoligono(x,y,ids){
   let dentro=false;
   for(let i=0,j=ids.length-1;i<ids.length;j=i++){
@@ -5013,8 +5056,30 @@ function _polPintarRegiao(img, reg, cor){
     d[o]=r; d[o+1]=g; d[o+2]=b; d[o+3]=a;
   }
 }
-function _polAtualizarHint(){}
-function _polAtualizarHintMsg(msg){}
+function _polAtualizarHint(){
+  const el=document.getElementById('polHint');
+  if(!el) return;
+  const f=_polEstado && _polEstado.ferramenta || 'mover';
+  const msgs={
+    mover:'Clique e arraste para mover objetos. Use a roda do mouse para dar zoom.',
+    ponto:'Clique para criar um ponto.',
+    reta:'Clique em 2 lugares para traçar uma reta.',
+    segmento:'Clique em 2 pontos para criar um segmento.',
+    poligono:'Clique nos vértices e depois em "Fechar polígono".',
+    circunferencia:'Clique no centro e depois em um ponto do contorno.',
+    balde:'Escolha a cor e clique dentro de uma figura para pintar só a região clicada.'
+  };
+  el.textContent=msgs[f]||'';
+  el.className='pol-hint';
+}
+function _polAtualizarHintMsg(msg){
+  const el=document.getElementById('polHint');
+  if(!el) return;
+  el.textContent=msg;
+  el.className='pol-hint pol-hint-msg';
+  clearTimeout(el._polHintTimer);
+  el._polHintTimer=setTimeout(()=>{ if(document.getElementById('polHint')===el) _polAtualizarHint(); }, 5000);
+}
 function _polAtualizarDados(){
   const elP=document.getElementById('polDadosPontos');
   const elS=document.getElementById('polDadosSegmentos');
@@ -6030,7 +6095,6 @@ function preprocessMethods(expr){
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*tamanho\\b', 'gi'), 'tamanho($1)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*inverter\\b', 'gi'), 'inverter($1)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*posi[çc][aã]o\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'posicao($1,$2)');
-  expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*posicao\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'posicao($1,$2)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*fatiar\\s*\\(\\s*(.*?)\\s*,\\s*(.*?)\\s*\\)', 'gi'), 'fatiar($1,$2,$3)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*adicionar\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), 'adicionar($1,$2)');
   expr = expr.replace(new RegExp(recv + '\\s*\\.\\s*contar\\s*\\(\\s*(.*?)\\s*\\)', 'gi'), (m,r,arg)=>{ let rr=r.trim(); if(/^-?\d+(\.\d+)?$/.test(rr)) rr='"'+rr+'"'; return 'contar('+rr+','+arg+')'; });
@@ -6211,7 +6275,7 @@ function evaluateExpression(expr, env){
     }
   }
   if(/^\s*captureTecla\s*(\(\s*\))?\s*$/i.test(expr)) return _willogLastKey || "";
-  if(/^\s*capture\s*(\(\s*\))?\s*$/i.test(expr)) return _willogLastKey
+  if(/^\s*capture\s*(\(\s*\))?\s*$/i.test(expr)) return _willogLastKey;
   if(isCronometroTempoExpr(expr)) return cronometroTempo();
   expr = preprocessMethods(expr);
   expr = preprocessObjects(expr, env);
@@ -6796,13 +6860,6 @@ function fracDivWillog(a,b){
   return singleFrac(a,b);
 }
 
-function concatWillog(a,b){
-  const arrA = Array.isArray(a) ? a : [a];
-  const arrB = Array.isArray(b) ? b : [b];
-  if(Array.isArray(a) || Array.isArray(b)) return arrA.concat(arrB);
-  return String(a)+String(b);
-}
-
 function unionWillog(a,b){
   const arrA = Array.isArray(a) ? a : [a];
   const arrB = Array.isArray(b) ? b : [b];
@@ -6828,17 +6885,6 @@ function differenceWillog(a,b){
   const arrB = Array.isArray(b) ? b : [b];
   const setB=new Set(arrB.map(x=>String(x)));
   return arrA.filter(x=> !setB.has(String(x)));
-}
-
-function applyToArrayOrSingle(val, fn){
-  if(Array.isArray(val)) return val.map(x=> {
-    const r=fn(x);
-    if(typeof r==='number' && !Number.isInteger(r)){
-      return Number(r.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
-    }
-    return r;
-  });
-  return fn(val);
 }
 
 function evalRPN(rpn, env){
@@ -7515,16 +7561,11 @@ function evalRPN(rpn, env){
         const count=Math.max(0, Math.trunc(Number(n)||0));
         let res="";
         for(let i=0;i<count;i++) res+=s;
-        // se txt era lista (array), repete lista? não necessário, mas trata
         if(Array.isArray(txt)){
           res=[];
           for(let i=0;i<count;i++) res.push(...txt);
-        } else if(typeof txt==='string'){
-          // já feito
         }
-        // se txt era número, String já tratou
-        if(Array.isArray(txt)) stack.push(res);
-        else stack.push(res);
+        stack.push(res);
       } else if(fn==='inverta' || fn==='inverter'){
         const a = stack.pop();
         let res;
@@ -7590,6 +7631,82 @@ function evalRPN(rpn, env){
         else { res=1; for(let n of nums) res*=n; }
         res=Number(Number(res).toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
         stack.push(res);
+      } else if(fn==='mmc' || fn==='mdc'){
+        const b = stack.pop();
+        const a = stack.pop();
+        const nums=[];
+        const addNums=(v)=>{
+          if(Array.isArray(v)) nums.push(...v.map(x=>Number(x)).filter(n=>!isNaN(n)&&isFinite(n)));
+          else { let n=Number(v); if(!isNaN(n)&&isFinite(n)) nums.push(n); }
+        };
+        if(b!==undefined) addNums(b);
+        addNums(a);
+        const gcd=(p,q)=>{ p=Math.abs(p); q=Math.abs(q); while(q){ const t=q; q=p%q; p=t; } return p||1; };
+        let res=0;
+        if(nums.length>0){
+          if(fn==='mmc'){
+            const lcm=(p,q)=>{ if(p===0||q===0) return 0; return Math.abs(p*q)/gcd(p,q); };
+            res=nums[0];
+            for(let i=1;i<nums.length;i++) res=lcm(res,nums[i]);
+          } else {
+            res=nums[0];
+            for(let i=1;i<nums.length;i++) res=gcd(res,nums[i]);
+            res=Math.abs(res);
+          }
+        }
+        stack.push(res);
+      } else if(['media','média','maximo','máximo','minimo','mínimo'].includes(fn)){
+        const b = stack.pop();
+        const a = stack.pop();
+        const nums=[];
+        const addNums=(v)=>{
+          if(Array.isArray(v)) nums.push(...v.map(x=>Number(x)).filter(n=>!isNaN(n)&&isFinite(n)));
+          else { let n=Number(v); if(!isNaN(n)&&isFinite(n)) nums.push(n); }
+        };
+        if(b!==undefined) addNums(b);
+        addNums(a);
+        let res=0;
+        if(nums.length>0){
+          if(fn==='media' || fn==='média'){
+            const s=nums.reduce((x,y)=>x+y,0)/nums.length;
+            res=Number(s.toFixed(10).replace(/0+$/,'').replace(/\.$/,''));
+          } else if(fn==='maximo' || fn==='máximo') res=Math.max(...nums);
+          else res=Math.min(...nums);
+        }
+        stack.push(res);
+      } else if(fn==='primos'){
+        const n=Math.trunc(Number(stack.pop()));
+        if(isNaN(n) || n<=0){ stack.push([]); }
+        else {
+          const isPrime=(x)=>{ if(x<2) return false; if(x===2) return true; if(x%2===0) return false; for(let i=3;i*i<=x;i+=2) if(x%i===0) return false; return true; };
+          const res=[]; let cur=2;
+          while(res.length<n){ if(isPrime(cur)) res.push(cur); cur++; }
+          stack.push(res);
+        }
+      } else if(fn==='embaralhe'){
+        const v = stack.pop();
+        if(v===undefined || v===null){ stack.push(v); }
+        else if(Array.isArray(v)){
+          const arr=v.slice();
+          for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+          stack.push(arr);
+        } else if(typeof v==='string'){
+          const arr=v.split("");
+          for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+          stack.push(arr.join(""));
+        } else if(typeof v==='number'){
+          let s=String(Math.trunc(v));
+          const neg=s.startsWith("-");
+          if(neg) s=s.slice(1);
+          const arr=s.split("");
+          for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+          let res=arr.join("");
+          if(neg) res="-"+res;
+          const num=Number(res);
+          stack.push(res!=="" && !isNaN(num) && isFinite(num) ? num : res);
+        } else {
+          stack.push(v);
+        }
       } else if(fn==='diasemana'){
         const arg = stack.pop();
         let s=String(arg===undefined?'':arg).trim();
@@ -7889,33 +8006,6 @@ function evalRPN(rpn, env){
   return stack.length ? stack[0] : '';
 }
 
-function splitStatements(src){
-  const stmts=[];
-  let cur='';
-  let inStr=false;
-  let strCh=null;
-  let esc=false;
-  for(let i=0;i<src.length;i++){
-    const ch=src[i];
-    if(inStr){
-      cur+=ch;
-      if(esc){ esc=false; }
-      else if(ch==='\\'){ esc=true; }
-      else if(ch===strCh){ inStr=false; strCh=null; }
-    } else {
-      if(ch==='"' || ch==="'"){ inStr=true; strCh=ch; cur+=ch; }
-      else if(ch===';' || ch==='\n'){
-        stmts.push(cur);
-        cur='';
-      } else {
-        cur+=ch;
-      }
-    }
-  }
-  if(cur.trim()!=='' || stmts.length===0) stmts.push(cur);
-  return stmts;
-}
-
 function splitAssignmentParts(stmt){
   const parts=[];
   let cur='';
@@ -8111,7 +8201,6 @@ function isPadraoLine(line){
 function isRepetirLine(line){
   return /^\s*repetir\s*\(.*\)\s*:/i.test(line) || /^\s*repita\s*\(.*\)\s*:/i.test(line);
 }
-function isRepitaLine(line){ return isRepetirLine(line); }
 
 function parseRepetir(line){
   let m=line.match(/^\s*repetir\s*\(\s*(.*?)\s*\)\s*:\s*(.*)$/i);
@@ -8120,7 +8209,6 @@ function parseRepetir(line){
   if(m) return {expr:m[1].trim(), after:m[2].trim()};
   return {expr:'', after:''};
 }
-function parseRepita(line){ return parseRepetir(line); }
 
 function isEnquantoLine(line){
   return /^\s*enquanto\b.*:/i.test(line);
@@ -8544,13 +8632,8 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
             val=willogCoerceLeiaValue(rawValue);
           }
         }
-        else if(/^\s*desenhe\.pol[ií]gono/i.test(rhs)){
-          const _a=parseDesenheArgs(rhs);
-          if(_a.length<4){ logToConsole('Erro: desenhe.polígono precisa de x,y,n,raio[,cor]', 'error'); return; }
-          const _x=evaluateExpression(_a[0], env), _y=evaluateExpression(_a[1], env), _n=evaluateExpression(_a[2], env), _r=evaluateExpression(_a[3], env);
-          const _c=_a.length>=5?_a[4]:'branco';
-          const _obj=_willogDrawPoligono(_x,_y,_n,_r,_c,env);
-          val=_obj;
+        else if(/^\s*desenhe\./i.test(rhs)){
+          val=_willogDesenheRhs(rhs, env);
         } else { val=evaluateExpression(rhs, env); }
         for(let ti=0;ti<targets.length;ti++){
           const varPath=targets[ti];
@@ -8634,10 +8717,6 @@ function normalizeCondEquality(cond){
 }
 
 function evaluateCondition(condStr, env){
-  const norm=condStr.replace(/\s+/g,' ').trim().toLowerCase().replace(/não/g,'nao');
-  if(norm.includes('1>2') && norm.includes('7<=3') && norm.includes('nao') && norm.includes('8!=8')){
-    return true;
-  }
   try{
     const v=evaluateExpression(normalizeCondEquality(condStr), env);
     if(typeof v==='boolean') return v;
@@ -9532,10 +9611,9 @@ document.addEventListener('keydown', (e)=>{
 });
 
 
-﻿ 
 
 // ==================== CÓDIGO COMENTADO ====================
-﻿function willogComentarLinha(raw, num){
+function willogComentarLinha(raw, num){
   const t = raw.trim();
   if(t==='' ) return null;
   const esc = (s)=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
