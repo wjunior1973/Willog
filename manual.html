@@ -241,6 +241,8 @@
   }
   .cmd .syn code{background:rgba(162,155,254,.10);border:1px solid rgba(162,155,254,.25);border-radius:6px;padding:1px 7px;color:var(--accent);}
   .cmd p.note{color:var(--text-dim);font-size:12.5px;margin-top:8px;}
+  .cmd p.desc{color:var(--text);font-size:13px;margin:8px 0 2px;line-height:1.55;}
+  .cmd p.desc b{color:var(--text);}
   .cmd .box{margin-top:10px;border-radius:10px;}
   .cmd .box pre.code{font-size:12px;padding:12px 14px;}
 
@@ -529,7 +531,7 @@ Letra: a</div>
     <div class="sec-head center reveal">
       <span class="tag">📖 Comandos</span>
       <h2>Todos os <span class="grad">comandos</span></h2>
-      <p class="lead">Cada comando com sua sintaxe, um exemplo real e a saída esperada. Clique em ⧉ para copiar o código.</p>
+      <p class="lead">Cada comando com sua explicação, sintaxe, um exemplo real e a saída esperada. Clique em ⧉ para copiar o código.</p>
     </div>
 
     <div class="cat-title reveal"><span>🖥️ Entrada, saída e interação</span><span class="line"></span></div>
@@ -538,6 +540,7 @@ Letra: a</div>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>mostre</h4><span class="chip">Saída</span></div>
         <div class="syn">mostre <code>&lt;valor&gt;</code> [, <code>&lt;valor&gt;</code> …]</div>
+        <p class="desc"><b>Exibe valores no console.</b> É o comando de saída principal: mostra textos, números, listas e resultados de contas.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">nome = "Wilson"
@@ -554,6 +557,7 @@ mostre 10 & 5</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>mostre { … }</h4><span class="chip">Saída</span></div>
         <div class="syn">mostre { <code>&lt;expressão&gt;</code> … }</div>
+        <p class="desc"><b>Mostra vários valores em bloco, um por linha.</b> Útil para despejar várias variáveis de uma vez sem repetir <code>mostre</code>.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">A = [1, 2, 3]
@@ -570,6 +574,7 @@ A é uma lista</div>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>leia</h4><span class="chip">Entrada</span></div>
         <div class="syn"><code>&lt;var&gt;</code> = leia <code>"mensagem"</code> &nbsp;·&nbsp; <code>&lt;a, b&gt;</code> = leia <code>"…"</code></div>
+        <p class="desc"><b>Pede um valor ao usuário e guarda na variável.</b> Pausa o programa, mostra a pergunta e converte número automaticamente. Não confundir com <code>ler</code>, que lê de arquivo.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">nome, idade = leia "Nome e idade:"
@@ -583,6 +588,7 @@ Olá, Maria, você tem 30 anos!</div>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>limpe</h4><span class="chip">Saída</span></div>
         <div class="syn">limpe</div>
+        <p class="desc"><b>Apaga todo o texto do console.</b> Use para recomeçar a saída do zero. Escreve-se sozinho, sem parênteses.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">mostre "Olá"
@@ -595,6 +601,7 @@ mostre "Console limpo"</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>corTexto</h4><span class="chip">Saída</span></div>
         <div class="syn">corTexto <code>(cor)</code></div>
+        <p class="desc"><b>Troca a cor do texto exibido depois dele.</b> Vale para o console, a janela e o <code>desenhe.texto</code> sem cor própria.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">corTexto(vermelho)
@@ -609,6 +616,7 @@ mostre "Colorido!"</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>centralizaTexto</h4><span class="chip">Saída</span></div>
         <div class="syn">centralizaTexto <code>()</code></div>
+        <p class="desc"><b>Centraliza horizontalmente o texto do console na janela.</b> Use após <code>janela()</code>; os parênteses são opcionais.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela()
@@ -621,6 +629,7 @@ mostre "No centro"</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>mensagem</h4><span class="chip">Interação</span></div>
         <div class="syn">mensagem <code>("título", "texto")</code></div>
+        <p class="desc"><b>Abre uma caixinha com título e texto e espera o OK.</b> Serve para avisos e boas-vindas; o programa só continua depois do clique.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">mensagem("Boas vindas", "Olá, mundo!")</pre>
@@ -632,6 +641,7 @@ mostre "No centro"</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>espereTecla / captureTecla</h4><span class="chip">Interação</span></div>
         <div class="syn">espereTecla <code>()</code> · espereTecla <code>("enter")</code> · <code>tecla</code> = captureTecla <code>()</code></div>
+        <p class="desc"><b>Pausa até o usuário pressionar uma tecla.</b> <code>espereTecla()</code> aceita qualquer tecla; com argumento espera uma tecla específica. <code>captureTecla()</code> devolve a última tecla pressionada. ESC cancela e devolve vazio.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">mostre "Pressione ENTER"
@@ -646,6 +656,7 @@ Você pressionou Enter</div>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>bipe</h4><span class="chip">Som</span></div>
         <div class="syn">bipe</div>
+        <p class="desc"><b>Emite um bipe curto padrão.</b> Toca 800 Hz por 0,2 s. Escreve-se sozinho, sem parênteses nem argumentos.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">bipe</pre>
@@ -656,6 +667,7 @@ Você pressionou Enter</div>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>toque</h4><span class="chip">Som</span></div>
         <div class="syn">toque <code>(frequência, duração)</code></div>
+        <p class="desc"><b>Toca um som com a frequência e a duração indicadas.</b> É um gerador de tons, não um detector de clique: informe Hz e segundos.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">toque(440, 1)
@@ -667,7 +679,8 @@ toque(523, 0.3)</pre>
 
       <div class="cmd reveal">
         <div class="cmd-top"><h4>pausa</h4><span class="chip">Tempo</span></div>
-        <div class="syn">pausa <code>(segundos)</code></div>
+        <div class="syn">pausa <code>(segundos)</code> · pausa <code>segundos</code></div>
+        <p class="desc"><b>Congela o programa por alguns segundos.</b> Aceita com parênteses ou com espaço (<code>pausa(1)</code> ou <code>pausa 1</code>); aceita variáveis e decimais.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">para cada n entre 1 e 3:
@@ -680,6 +693,7 @@ toque(523, 0.3)</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>cronometro</h4><span class="chip">Tempo</span></div>
         <div class="syn">cronometro.iniciar · cronometro.parar · cronometro.tempo<code>()</code></div>
+        <p class="desc"><b>Mede o tempo decorrido em segundos.</b> <code>iniciar</code> zera e começa, <code>parar</code> congela a contagem e <code>tempo()</code> lê o valor atual.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">cronometro.iniciar
@@ -695,6 +709,7 @@ mostre cronometro.tempo()</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>comentários</h4><span class="chip">Código</span></div>
         <div class="syn"><code>#</code> linha · <code>#'</code> linha · <code>#:</code> bloco <code>:#</code></div>
+        <p class="desc"><b>Trechos ignorados pelo programa, só para explicar o código.</b> <code>#</code> comenta até o fim da linha; <code>#:</code> … <code>:#</code> comenta várias linhas.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code"># comentário de linha
@@ -717,6 +732,7 @@ executa</div>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>se … então … senão</h4><span class="chip">Decisão</span></div>
         <div class="syn">se <code>&lt;condição&gt;</code> então: <code>comandos</code> · senão: <code>comandos</code></div>
+        <p class="desc"><b>Executa um bloco só se a condição for verdadeira.</b> É o desvio condicional: com <code>senão</code> define o caminho alternativo.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">nota = 8
@@ -732,6 +748,7 @@ senão:
       <div class="cmd reveal">
         <div class="cmd-top"><h4>verificar … caso … padrão</h4><span class="chip">Decisão</span></div>
         <div class="syn">verificar <code>&lt;valor&gt;:</code> · caso <code>X:</code> <code>expr</code> · padrão: <code>expr</code></div>
+        <p class="desc"><b>Escolhe um entre vários valores possíveis.</b> Compara o valor com cada <code>caso</code> e executa o primeiro igual; <code>padrão</code> é o plano B quando nenhum confere.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">nota = 9
@@ -746,6 +763,7 @@ verificar nota:
       <div class="cmd reveal">
         <div class="cmd-top"><h4>enquanto</h4><span class="chip">Repetição</span></div>
         <div class="syn">enquanto <code>&lt;condição&gt;:</code> <code>comandos</code></div>
+        <p class="desc"><b>Repete o bloco enquanto a condição continuar verdadeira.</b> Ideal quando você não sabe quantas voltas serão preciso dar.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">n = 0
@@ -759,6 +777,7 @@ mostre "n = {n}. Fim!"</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>para cada</h4><span class="chip">Repetição</span></div>
         <div class="syn">para cada <code>x</code> entre <code>a</code> e <code>b</code> [pulando <code>p</code>]: · para cada <code>x</code> em <code>lista</code>:</div>
+        <p class="desc"><b>Percorre uma sequência item por item.</b> Com <code>entre … e</code> conta números (use <code>pulando</code> para o passo); com <code>em</code> percorre listas, textos e intervalos.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">para cada n entre 2 e 10 pulando 2:
@@ -771,8 +790,9 @@ w i l l o g</div>
       </div>
 
       <div class="cmd reveal">
-        <div class="cmd-top"><h4>repita</h4><span class="chip">Repetição</span></div>
-        <div class="syn">repita <code>(n):</code> <code>comandos</code></div>
+        <div class="cmd-top"><h4>repita / repetir</h4><span class="chip">Repetição</span></div>
+        <div class="syn">repita <code>(n):</code> <code>comandos</code> · repetir <code>(n):</code> <code>comandos</code></div>
+        <p class="desc"><b>Repete o bloco um número fixo de vezes.</b> <code>repita</code> e <code>repetir</code> como comando são iguais. Atenção: <code>repetir(texto, n)</code> como função repete um texto.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">repita(3):
@@ -786,6 +806,7 @@ Olá!</div>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>pare / continue</h4><span class="chip">Repetição</span></div>
         <div class="syn">pare · continue</div>
+        <p class="desc"><b>Controlam o laço por dentro.</b> <code>pare</code> encerra a repetição na hora; <code>continue</code> pula para a próxima volta.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">para cada n entre 1 e 10:
@@ -802,6 +823,7 @@ Olá!</div>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>vá para / rótulos</h4><span class="chip">Repetição</span></div>
         <div class="syn">:rótulo · vá para <code>rótulo</code></div>
+        <p class="desc"><b>Pula a execução para um ponto marcado do programa.</b> Crie o destino com <code>:nome</code> e salte com <code>vá para nome</code> (também vale sem acento: <code>va para</code>).</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">:início
@@ -816,6 +838,7 @@ mostre "Fim!"</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>intervalo</h4><span class="chip">Dados</span></div>
         <div class="syn">(<code>início..fim</code>) · (<code>início..fim</code>,passo)</div>
+        <p class="desc"><b>Cria uma lista de números de uma vez.</b> <code>(1..5)</code> gera 1 a 5; com passo, <code>(-5..5, 2)</code> pula de 2 em 2.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">x = (1..5)
@@ -830,6 +853,7 @@ mostre y</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>definir função</h4><span class="chip">Funções</span></div>
         <div class="syn">definir função <code>&lt;nome&gt;</code>(p1, p2…): · retorne <code>&lt;expressão&gt;</code></div>
+        <p class="desc"><b>Cria sua própria função reutilizável.</b> Defina uma vez com parâmetros e devolva o resultado com <code>retorne</code> para usar quantas vezes quiser.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">definir função dobro(x):
@@ -842,6 +866,7 @@ mostre dobro(21)</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>constante</h4><span class="chip">Dados</span></div>
         <div class="syn">constante <code>NOME</code> = valor</div>
+        <p class="desc"><b>Declara um valor fixo que não pode mudar.</b> Ideal para PI, taxas e limites: tentar alterar depois gera erro.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">constante PI = 3.1415
@@ -858,6 +883,7 @@ mostre PI</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>janela</h4><span class="chip">Janela</span></div>
         <div class="syn">janela <code>()</code> · janela <code>(centraliza)</code> · janela <code>(largura, altura)</code></div>
+        <p class="desc"><b>Abre a janela do programa.</b> Sem medidas ela mostra o console; com <code>largura, altura</code> ela vira tela de desenho.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(300, 400)
@@ -871,6 +897,7 @@ desenhe.circulo(150, 200, 50, vermelho)</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>tela.cor / tela.limpe</h4><span class="chip">Janela</span></div>
         <div class="syn">tela.cor <code>(cor)</code> · tela.limpe</div>
+        <p class="desc"><b>Controla o fundo da tela de desenho.</b> <code>tela.cor</code> escolhe a cor do próximo fundo; <code>tela.limpe</code> pinta a tela e apaga os desenhos.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(300, 400)
@@ -884,7 +911,8 @@ desenhe.circulo(100, 100, 40, amarelo)</pre>
 
       <div class="cmd reveal">
         <div class="cmd-top"><h4>desenhe.circulo</h4><span class="chip">Desenho</span></div>
-        <div class="syn">desenhe.circulo <code>(x, y, raio, cor)</code></div>
+        <div class="syn">desenhe.circulo <code>(x, y, raio [, cor])</code></div>
+        <p class="desc"><b>Desenha um círculo na tela.</b> Informe o centro <code>x, y</code> e o <code>raio</code>; a cor é opcional (padrão <code>branco</code>).</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(300, 400)
@@ -896,7 +924,8 @@ desenhe.circulo(150, 150, 50, vermelho)</pre>
 
       <div class="cmd reveal">
         <div class="cmd-top"><h4>desenhe.retangulo</h4><span class="chip">Desenho</span></div>
-        <div class="syn">desenhe.retangulo <code>(x1, y1, x2, y2, cor)</code></div>
+        <div class="syn">desenhe.retangulo <code>(x1, y1, x2, y2 [, cor])</code></div>
+        <p class="desc"><b>Desenha um retângulo pelos cantos opostos.</b> Informe dois cantos <code>(x1,y1)</code> e <code>(x2,y2)</code>; a cor é opcional.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(300, 400)
@@ -908,7 +937,8 @@ desenhe.retangulo(20, 30, 140, 110, verde)</pre>
 
       <div class="cmd reveal">
         <div class="cmd-top"><h4>desenhe.linha</h4><span class="chip">Desenho</span></div>
-        <div class="syn">desenhe.linha <code>(x1, y1, x2, y2, cor)</code></div>
+        <div class="syn">desenhe.linha <code>(x1, y1, x2, y2 [, cor])</code></div>
+        <p class="desc"><b>Desenha um segmento de reta entre dois pontos.</b> Informe início e fim; a cor é opcional (padrão <code>branco</code>).</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(300, 400)
@@ -920,7 +950,8 @@ desenhe.linha(10, 10, 200, 100, azul)</pre>
 
       <div class="cmd reveal">
         <div class="cmd-top"><h4>desenhe.polígono</h4><span class="chip">Desenho</span></div>
-        <div class="syn">desenhe.polígono <code>(x, y, n, raio, cor)</code></div>
+        <div class="syn">desenhe.polígono <code>(x, y, n, raio [, cor])</code></div>
+        <p class="desc"><b>Desenha um polígono regular.</b> Informe o centro, o número de lados <code>n</code> (mínimo 3) e o <code>raio</code>; a cor é opcional.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(300, 400)
@@ -932,7 +963,8 @@ desenhe.polígono(150, 150, 5, 50, vermelho)</pre>
 
       <div class="cmd reveal">
         <div class="cmd-top"><h4>desenhe.ponto</h4><span class="chip">Desenho</span></div>
-        <div class="syn">desenhe.ponto <code>(x, y, cor)</code></div>
+        <div class="syn">desenhe.ponto <code>(x, y [, cor])</code></div>
+        <p class="desc"><b>Marca um ponto na tela.</b> É o desenho mais simples: só precisa da posição; a cor é opcional.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(300, 400)
@@ -945,6 +977,7 @@ desenhe.ponto(100, 100, amarelo)</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>desenhe.texto</h4><span class="chip">Desenho</span></div>
         <div class="syn">desenhe.texto <code>("texto", x, y [, tamanho] [, cor])</code></div>
+        <p class="desc"><b>Escreve um texto na tela de desenho.</b> O 4º argumento aceita tamanho <i>ou</i> cor diretamente; com 5 argumentos use tamanho e cor.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(300, 400)
@@ -958,6 +991,7 @@ desenhe.texto("Olá, Willog!", 100, 100, 20, vermelho)</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>corAleatória</h4><span class="chip">Desenho</span></div>
         <div class="syn">qualquer cor do desenho = corAleatória</div>
+        <p class="desc"><b>Sorteia uma das 12 cores a cada uso.</b> Use no lugar da cor para deixar desenhos, fundos e textos diferentes a cada execução.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(300, 400)
@@ -972,6 +1006,7 @@ desenhe.circulo(150, 150, 50, corAleatória)</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>&lt;figura&gt;.girar / &lt;figura&gt;.mover</h4><span class="chip">Animação</span></div>
         <div class="syn">figura.girar <code>(ângulo, vezes, pausa)</code> · figura.mover <code>(x, y, passo)</code></div>
+        <p class="desc"><b>Anima uma figura guardada numa variável.</b> <code>girar</code> gira em graus com pausa em segundos; <code>mover</code> desliza até <code>x, y</code> no ritmo do <code>passo</code>.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(600, 600)
@@ -986,6 +1021,7 @@ figura.mover(400, 300, 2)</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>girar / mover (vários)</h4><span class="chip">Animação</span></div>
         <div class="syn">girar <code>(a(ângulo, vezes, pausa), b(…))</code> · mover <code>(a(x, y, passo), b(…))</code></div>
+        <p class="desc"><b>Anima várias figuras ao mesmo tempo, em paralelo.</b> Cada figura tem seus próprios parâmetros; use os nomes das variáveis que guardaram os desenhos.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(400, 400)
@@ -999,6 +1035,7 @@ girar(a(30, 5, 0.125), b(-15, 5, 0.25))</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>recortar / colar</h4><span class="chip">Desenho</span></div>
         <div class="syn">recortar <code>(variável)</code> · colar <code>(variável, x, y)</code></div>
+        <p class="desc"><b>Remove e reposiciona um desenho.</b> <code>recortar(a)</code> tira a figura da tela sem apagá-la; <code>colar(a, x, y)</code> devolve a mesma figura na nova posição.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">janela(400, 400)
@@ -1017,18 +1054,20 @@ colar(a, 300, 300)</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>abrir</h4><span class="chip">Arquivo</span></div>
         <div class="syn">abrir <code>"arquivo.txt"</code></div>
+        <p class="desc"><b>Abre (ou cria) um arquivo para leitura e escrita.</b> O nome sem extensão vira o identificador: <code>arquivo.txt</code> passa a ser <code>$arquivo</code>.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">abrir "arquivo.txt"
 mostre "arquivo pronto para uso"</pre>
           <div class="out">📄 arquivo criado/aberto como $arquivo</div>
         </div>
-        <p class="note">O handle vem do nome sem extensão: <code>arquivo.txt</code> → <code>$arquivo</code>. Também aceita <code>$1</code>, <code>$2</code>…</p>
+        <p class="note">O handle vem do nome sem extensão: <code>arquivo.txt</code> → <code>$arquivo</code>. Aceita nome entre aspas, variável ou expressão. Sem <code>fechar</code> o conteúdo pode não ser salvo.</p>
       </div>
 
       <div class="cmd reveal">
         <div class="cmd-top"><h4>escrever</h4><span class="chip">Arquivo</span></div>
         <div class="syn">escrever <code>$arquivo</code>, <code>&lt;var&gt;</code> [, <code>&lt;var2&gt;</code> …]</div>
+        <p class="desc"><b>Grava valores no arquivo aberto, um por linha (vários valores na mesma linha separados por vírgula).</b> Só funciona depois de <code>abrir</code>; não confundir com <code>mostre</code>, que escreve no console.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">abrir "arquivo.txt"
@@ -1043,6 +1082,7 @@ fechar $arquivo</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>ler</h4><span class="chip">Arquivo</span></div>
         <div class="syn">ler <code>$arquivo</code>, <code>&lt;var&gt;</code> [, <code>&lt;var2&gt;</code> …]</div>
+        <p class="desc"><b>Lê o conteúdo do arquivo para variáveis.</b> Com uma variável lê a linha inteira; com várias divide a linha por vírgulas. Números viram número sozinhos. Diferente de <code>leia</code>, que pergunta ao usuário.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">abrir "arquivo.txt"
@@ -1057,6 +1097,7 @@ fechar $arquivo</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>fechar</h4><span class="chip">Arquivo</span></div>
         <div class="syn">fechar <code>$arquivo</code></div>
+        <p class="desc"><b>Fecha o arquivo e garante a gravação.</b> Salva no disco (ou no localStorage quando virtual) e libera o <code>$arquivo</code> para novo uso.</p>
         <div class="box">
           <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
           <pre class="code">abrir "notas.txt"
