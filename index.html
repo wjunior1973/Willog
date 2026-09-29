@@ -389,29 +389,6 @@
   .menu-dropdown button.primary { background:var(--accent); color:white; }
   .menu-dropdown button.primary:hover { background:var(--accent-hover); }
   .menu-sep-dropdown { height:1px; background:var(--border); margin:4px 0; }
-  .calc-box { min-width:270px; max-width:330px; padding:14px 16px 18px; touch-action:none; }
-  .calc-box .modal-header { cursor:grab; user-select:none; }
-  .calc-box.dragging .modal-header { cursor:grabbing; }
-  .calc-box.dragging { transition:none; }
-  .calc-box .modal-header button { cursor:pointer; }
-  .calc-display {
-    font-family:'JetBrains Mono',monospace; font-size:26px; font-weight:700; color:var(--text);
-    background:var(--panel2); border:2px solid var(--border); border-radius:8px; padding:10px 14px;
-    margin-bottom:12px; text-align:right; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
-    min-height:50px; line-height:1.2; display:flex; align-items:center; justify-content:flex-end;
-  }
-  .calc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-  .calc-btn {
-    font-family:'Inter',sans-serif; font-size:16px; font-weight:600; padding:11px 0; border:2px solid var(--border);
-    background:var(--panel2); color:var(--text); border-radius:8px; cursor:pointer; user-select:none; line-height:1;
-  }
-  .calc-btn:hover { background:var(--bg2); border-color:var(--border-strong); }
-  .calc-btn:active { transform:translateY(1px); }
-  .calc-btn.op { color:var(--accent); }
-  .calc-btn.op.ativo { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .calc-btn.fn { color:var(--text-dim); font-size:14px; }
-  .calc-btn.eq { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .calc-btn.eq:hover { background:var(--accent-hover); border-color:var(--accent-hover); }
   .modal-manual-body {
     padding:20px 22px; overflow:auto; font-family:'Inter',sans-serif; font-size:17px; line-height:1.6; color:var(--text);
   }
@@ -508,52 +485,6 @@
   .floating-body { flex:1; display:flex; flex-direction:column; overflow:hidden; background:#000; position:relative; min-height:0; }
   #janelaCanvas { display:none; width:100%; height:100%; flex:1; background:#000; min-height:0; }
   #janelaCanvas.ativo { display:block; }
-  .tartaruga-painel {
-    width:260px; min-width:200px; max-width:70%;
-    display:flex; flex-direction:column; background:var(--panel);
-    border-right:1px solid var(--border); padding:10px; gap:8px; overflow:hidden; box-sizing:border-box;
-  }
-  .tartaruga-resizer { display:none; width:6px; cursor:col-resize; flex:0 0 auto; background:transparent; border-left:1px solid var(--border); }
-  .tartaruga-resizer:hover { background:var(--border-strong); }
-  .floating-window.tartaruga-mod .tartaruga-resizer { display:block; }
-  .floating-window.tartaruga-mod .floating-body { flex-direction:row; }
-  .floating-window.tartaruga-mod #btnMinJanela,
-  .floating-window.tartaruga-mod #btnMaxJanela,
-  .floating-window.tartaruga-mod .zoom-btn { display:none; }
-  .floating-window.tartaruga-mod #janelaCanvas { flex:1 1 0 !important; width:auto !important; min-width:0; cursor:grab; }
-  .floating-window.tartaruga-mod #janelaCanvas.panning { cursor:grabbing; }
-  .tartaruga-painel .tartaruga-titulo { font-family:'Inter',sans-serif; font-size:12px; font-weight:700; color:var(--accent); letter-spacing:0.3px; }
-  .tartaruga-entrada {
-    flex:1 1 auto; width:100%; min-height:120px; resize:vertical; box-sizing:border-box;
-    background:var(--console-bg); color:var(--console-fg);
-    border:1px solid var(--border); border-radius:8px; padding:8px 10px;
-    font-family:'JetBrains Mono',monospace; font-size:13px; line-height:19px;
-  }
-  .tartaruga-velocidade { flex:0 0 auto; display:flex; align-items:center; gap:4px; }
-  .tartaruga-velocidade .tartaruga-vel-label { font-family:'Inter',sans-serif; font-size:11px; color:var(--text-dim); font-weight:600; white-space:nowrap; }
-  .tartaruga-velocidade .vel-btn {
-    flex:1; padding:5px 6px; border-radius:6px; border:1px solid var(--border);
-    background:var(--panel); color:var(--text); cursor:pointer;
-    font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
-  }
-  .tartaruga-velocidade .vel-btn:hover { background:var(--panel2); }
-  .tartaruga-velocidade .vel-btn.ativo { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .tartaruga-modo3d { flex:0 0 auto; display:flex; align-items:center; gap:4px; }
-  .tartaruga-modo3d .tartaruga-vel-label { font-family:'Inter',sans-serif; font-size:11px; color:var(--text-dim); font-weight:600; white-space:nowrap; }
-  .tartaruga-modo3d .vel-btn {
-    padding:5px 8px; border-radius:6px; border:1px solid var(--border);
-    background:var(--panel); color:var(--text); cursor:pointer;
-    font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
-  }
-  .tartaruga-modo3d .vel-btn:hover { background:var(--panel2); }
-  .tartaruga-modo3d .vel-btn.ativo { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .tartaruga-botoes { flex:0 0 auto; display:flex; gap:6px; }
-  .tartaruga-botoes button {
-    flex:1; padding:7px 10px; border-radius:8px; border:1px solid var(--border);
-    background:var(--panel2); color:var(--text); cursor:pointer;
-    font-family:'Inter',sans-serif; font-size:12px; font-weight:600;
-  }
-  .tartaruga-botoes button:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
   .autocomplete {
     position: absolute;
     background: var(--panel);
@@ -609,75 +540,6 @@
   }
   .editor-tooltip .et-desc { color:var(--text-dim); }
   .editor-container { position:relative; }
-  /* --- Polígonos (plano cartesiano estilo GeoGebra) --- */
-  .floating-window.poligonos-mod #btnMinJanela,
-  .floating-window.poligonos-mod #btnMaxJanela,
-  .floating-window.poligonos-mod .zoom-btn { display:none; }
-  .floating-window.poligonos-mod .floating-body { flex-direction:row; }
-  .floating-window.poligonos-mod .tartaruga-resizer { display:none; }
-  .floating-window.poligonos-mod #janelaCanvas { display:none !important; }
-  .floating-window.poligonos-mod #janelaConsole { display:none !important; }
-  .floating-window.poligonos-mod #poligonosRoot { display:flex; }
-  #poligonosRoot { flex:1 1 0; min-width:0; min-height:0; align-self:stretch; display:none; flex-direction:row; background:#ffffff; position:relative; }
-  .poligonos-toolbar {
-    width:160px; min-width:140px; max-width:220px; background:var(--panel);
-    border-right:1px solid var(--border); padding:10px; display:flex;
-    flex-direction:column; gap:6px; overflow-y:auto; overflow-x:hidden; box-sizing:border-box;
-  }
-  .poligonos-toolbar button {
-    width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border);
-    background:var(--panel2); color:var(--text); cursor:pointer;
-    font-family:'Inter',sans-serif; font-size:12px; font-weight:600; text-align:left;
-  }
-  .poligonos-toolbar button:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .poligonos-toolbar button.ativo { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .poligonos-toolbar .pol-btn-fechar { border-left:4px solid #00b894; }
-  .poligonos-toolbar .pol-btn-balde { border-left:4px solid #fdcb6e; }
-  .poligonos-toolbar .pol-btn-limpar { border-left:4px solid #e17055; }
-  .poligonos-toolbar .pol-btn-toggle { border-left:4px solid #6c5ce7; }
-  .pol-hint {
-    margin-top:6px; padding:8px 10px; border-radius:8px; font-family:'Inter',sans-serif;
-    font-size:11px; line-height:1.4; color:var(--text-dim); background:var(--panel2);
-    border:1px dashed var(--border); min-height:30px;
-  }
-  .pol-hint.pol-hint-msg { border-color:#fdcb6e; color:var(--text); background:rgba(253,203,110,.12); }
-  .pol-cores-titulo {
-    font-family:'Inter',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.4px;
-    color:var(--text-dim); text-transform:uppercase; margin:4px 0 0;
-  }
-  .poligonos-toolbar .pol-cores { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
-  .poligonos-toolbar .pol-cor {
-    width:100%; aspect-ratio:1/1; padding:0; border-radius:6px;
-    border:2px solid var(--border); cursor:pointer; transition:transform .1s;
-  }
-  .poligonos-toolbar .pol-cor:hover { transform:scale(1.08); border-color:var(--border-strong); }
-  .poligonos-toolbar .pol-cor.ativo { border-color:var(--accent); box-shadow:0 0 0 2px var(--panel), 0 0 0 4px var(--accent); }
-  .poligonos-toolbar .pol-cor.sem-cor {
-    background-color:#fff;
-    background-image:linear-gradient(45deg,#c8d0da 25%,transparent 25%,transparent 75%,#c8d0da 75%),
-                     linear-gradient(45deg,#c8d0da 25%,transparent 25%,transparent 75%,#c8d0da 75%);
-    background-size:10px 10px; background-position:0 0,5px 5px;
-  }
-  .poligonos-canvas-wrap { flex:1 1 0; min-width:0; position:relative; background:#ffffff; }
-  .poligonos-canvas-wrap canvas { position:absolute; inset:0; width:100%; height:100%; display:block; cursor:crosshair; touch-action:none; }
-  .poligonos-canvas-wrap canvas.pol-grab { cursor:grab; }
-  .poligonos-canvas-wrap canvas.pol-grab.pol-panning { cursor:grabbing; }
-  .poligonos-resizer { width:6px; flex:0 0 auto; cursor:col-resize; background:transparent; border-left:1px solid var(--border); }
-  .poligonos-resizer:hover { background:var(--border-strong); }
-  .poligonos-dados {
-    width:220px; min-width:160px; max-width:520px; flex:0 0 auto; background:var(--panel);
-    border-left:1px solid var(--border); padding:10px; display:flex;
-    flex-direction:column; gap:12px; overflow-y:auto; box-sizing:border-box;
-  }
-  .pol-dados-sec { display:flex; flex-direction:column; gap:4px; }
-  .pol-dados-titulo {
-    font-family:'Inter',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.4px;
-    color:var(--accent); text-transform:uppercase; border-bottom:1px solid var(--border); padding-bottom:3px;
-  }
-  .pol-dados-conteudo { display:flex; flex-direction:column; gap:2px; }
-  .pol-dados-item { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text); padding:2px 4px; border-radius:4px; white-space:nowrap; }
-  .pol-dados-item:hover { background:var(--panel2); }
-  .pol-dados-vazio { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-dim); opacity:0.6; padding:2px 4px; }
 
 
 </style>
@@ -716,14 +578,6 @@
           <button class="btn small" id="btnZoomIn" style="padding:4px 8px;">A+</button>
           <span id="zoomLabel" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">100%</span>
         </div>
-      </div>
-    </div>
-    <div class="menu" id="menuFerramentas">
-      <button class="menu-trigger" aria-haspopup="true" aria-expanded="false">Ferramentas ▾</button>
-      <div class="menu-dropdown">
-        <button id="btnFerCalculadora">🧮 Calculadora</button>
-        <button id="btnFerPoligonos">📐 Polígonos</button>
-        <button id="btnFerTartaruga">🐢 Tartaruga</button>
       </div>
     </div>
     <div class="menu" id="menuAjuda">
@@ -791,83 +645,8 @@
       </div>
     </div>
     <div class="floating-body" id="janelaBody">
-      <div id="tartarugaPainel" class="tartaruga-painel" style="display:none">
-        <div class="tartaruga-titulo">🐢 Editor de comandos:</div>
-        <textarea class="tartaruga-entrada" id="tartarugaInput" spellcheck="false" placeholder="Digite aqui todos os comandos (um por linha, separados por Enter):&#10;avance 100&#10;direita 30&#10;avance 100&#10;---&#10;TAB insere indentação&#10;Ctrl+Enter executa tudo"></textarea>
-        <div class="tartaruga-velocidade">
-          <span class="tartaruga-vel-label">velocidades:</span>
-          <button class="vel-btn" data-vel="1" title="1 — Lento (25% da velocidade Rápida)">1</button>
-          <button class="vel-btn ativo" data-vel="2" title="2 — Normal (50% da velocidade Rápida)">2</button>
-          <button class="vel-btn" data-vel="3" title="3 — 75% da velocidade Rápida">3</button>
-          <button class="vel-btn" data-vel="4" title="4 — Rápido (velocidade atual)">4</button>
-        </div>
-        <div class="tartaruga-modo3d">
-          <span class="tartaruga-vel-label">vista:</span>
-          <button id="btnTartaruga3D" class="vel-btn" title="Alterna para a vista 3-D: arraste no desenho para girar (Shift ou botão direito do mouse gira em Z)">3-D</button>
-          <button id="btnTartaruga2D" class="vel-btn ativo" title="Volta para a vista normal 2-D">2-D</button>
-        </div>
-        <div class="tartaruga-botoes">
-          <button id="btnTartarugaExecutar" title="Executa tudo o que está escrito (suporta blocos repita/se/enquanto)">▶ Executar tudo</button>
-          <button id="btnTartarugaLimpar" title="Limpa o histórico">🧹 Limpar</button>
-        </div>
-      </div>
-      <div class="tartaruga-resizer" id="tartarugaResizer" title="Arraste para redimensionar a coluna de comandos"></div>
       <canvas id="janelaCanvas" width="640" height="400"></canvas>
       <div class="floating-console" id="janelaConsole"></div>
-      <div id="poligonosRoot" class="poligonos-root" style="display:none">
-    <div class="poligonos-toolbar">
-      <button data-tool="mover" class="ativo">↔️ Mover</button>
-      <button data-tool="ponto">⚫ Ponto</button>
-      <button data-tool="reta">➖ Reta</button>
-      <button data-tool="segmento">📏 Segmento</button>
-      <button data-tool="poligono">📐 Polígono</button>
-      <button data-tool="circunferencia">⭕ Circunferência</button>
-      <button id="polBtnFecharPoli" class="pol-btn-fechar">🔒 Fechar polígono</button>
-      <button data-tool="balde" class="pol-btn-balde">🪣 Preencher</button>
-      <div class="pol-cores-titulo">Cor do preenchimento</div>
-      <div class="pol-cores" id="polCores">
-        <button class="pol-cor sem-cor" data-cor=""></button>
-        <button class="pol-cor" data-cor="#ff7675" style="background:#ff7675"></button>
-        <button class="pol-cor ativo" data-cor="#fdcb6e" style="background:#fdcb6e"></button>
-        <button class="pol-cor" data-cor="#55efc4" style="background:#55efc4"></button>
-        <button class="pol-cor" data-cor="#74b9ff" style="background:#74b9ff"></button>
-        <button class="pol-cor" data-cor="#a29bfe" style="background:#a29bfe"></button>
-        <button class="pol-cor" data-cor="#fd79a8" style="background:#fd79a8"></button>
-        <button class="pol-cor" data-cor="#dfe6e9" style="background:#dfe6e9"></button>
-        <button class="pol-cor" data-cor="#636e72" style="background:#636e72"></button>
-      </div>
-      <button id="polBtnPontos" class="pol-btn-toggle ativo">🔘 Pontos</button>
-      <button id="polBtnGrade" class="pol-btn-toggle ativo">▦ Grade</button>
-      <button id="polBtnLimpar" class="pol-btn-limpar">🧹 Limpar</button>
-      <div class="pol-hint" id="polHint"></div>
-    </div>
-    <div class="poligonos-canvas-wrap">
-      <canvas id="poligonosCanvas"></canvas>
-    </div>
-    <div class="poligonos-resizer" id="poligonosResizer" title="Arraste para redimensionar a coluna de dados"></div>
-    <div class="poligonos-dados">
-      <div class="pol-dados-sec">
-        <div class="pol-dados-titulo">Pontos</div>
-        <div class="pol-dados-conteudo" id="polDadosPontos"></div>
-      </div>
-      <div class="pol-dados-sec">
-        <div class="pol-dados-titulo">Segmentos</div>
-        <div class="pol-dados-conteudo" id="polDadosSegmentos"></div>
-      </div>
-      <div class="pol-dados-sec">
-        <div class="pol-dados-titulo">Retas</div>
-        <div class="pol-dados-conteudo" id="polDadosRetas"></div>
-      </div>
-      <div class="pol-dados-sec">
-        <div class="pol-dados-titulo">Circunferências</div>
-        <div class="pol-dados-conteudo" id="polDadosCircunf"></div>
-      </div>
-      <div class="pol-dados-sec">
-        <div class="pol-dados-titulo">Polígonos</div>
-        <div class="pol-dados-conteudo" id="polDadosPoligonos"></div>
-      </div>
-    </div>
-    </div>
   </div>
   </div>
 
@@ -888,8 +667,6 @@
         <button class="manual-tab" data-tab="operadores">Operadores</button>
         <button class="manual-tab" data-tab="propriedades">Propriedades</button>
         <button class="manual-tab" data-tab="cores">Cores</button>
-        <button class="manual-tab" data-tab="tartaruga">🐢 Tartaruga</button>
-        <button class="manual-tab" data-tab="poligonos">📐 Polígonos</button>
       </div>
       <div class="manual-pane active" id="pane-comandos"><h3>abrir</h3>
         <p class="code-label">Sintaxe</p>
@@ -1405,13 +1182,6 @@ mostre "Mundo"</span>
     mostre n
     pausa(1)</span>
 <span class="saida">-> 1 (pausa 1s) -> 2 (pausa 1s) -> 3</span></pre>
-        <h3>polígonos</h3>
-        <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">polígonos</span><span class="example">()</span></pre>
-        <p class="code-label">Exemplo</p>
-        <pre><span class="example">polígonos()</span>
-<span class="saida">-> Abre o plano cartesiano: clique para criar pontos, use Segmento para medir comprimentos e Polígono para desenhar figuras fechadas (perímetro e área aparecem na coluna da direita)</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Abre uma janela maximizada com o plano cartesiano estilo GeoGebra. Ferramentas: <b>Mover</b> (arrasta pontos e desloca o plano), <b>Ponto</b>, <b>Segmento</b> (mostra o comprimento), <b>Polígono</b> (perímetro e área) e <b>Preencher</b> (balde: pinta apenas a região clicada com a cor da paleta — polígonos, circunferências e as interseções entre elas são preenchidas de forma independente). Um ponto cola na coordenada inteira mais próxima quando você clica bem perto de um inteiro; caso contrário, ele aceita coordenadas decimais. Os pontos são nomeados A, B, C… Rodinha do mouse faz zoom; arrastar o fundo na ferramenta Mover desloca o plano. <code>poligonos()</code> (sem acento) também funciona.</p>
         <h3>recortar</h3>
         <p class="code-label">Sintaxe</p>
         <pre><span class="syntax">recortar</span><span class="example">(variável)</span></pre>
@@ -1561,105 +1331,6 @@ verificar nota:
         <table><tr><td><code>amarelo</code></td><td>#ffff00</td><td><code>desenhe.linha(0,0,100,100,amarelo)</code></td></tr><tr><td><code>azul</code></td><td>#0066ff</td><td><code>desenhe.linha(0,0,100,100,azul)</code></td></tr><tr><td><code>branco</code></td><td>#ffffff</td><td><code>desenhe.linha(0,0,100,100,branco)</code></td></tr><tr><td><code>ciano</code></td><td>#00ffff</td><td><code>desenhe.linha(0,0,100,100,ciano)</code></td></tr><tr><td><code>cinza</code></td><td>#808080</td><td><code>desenhe.linha(0,0,100,100,cinza)</code></td></tr><tr><td><code>corAleatória</code></td><td>aleatória</td><td><code>desenhe.circulo(100,100,50,corAleatória)</code> → cor aleatória a cada chamada<br><code>tela.cor(corAleatória)</code> → fundo aleatório<br><code>desenhe.linha(0,0,100,100,corAleatória)</code> → linha aleatória</td></tr><tr><td><code>laranja</code></td><td>#ff9800</td><td><code>desenhe.linha(0,0,100,100,laranja)</code></td></tr><tr><td><code>marrom</code></td><td>#8d5524</td><td><code>desenhe.linha(0,0,100,100,marrom)</code></td></tr><tr><td><code>preto</code></td><td>#000000</td><td><code>desenhe.linha(0,0,100,100,preto)</code></td></tr><tr><td><code>rosa</code></td><td>#ff69b4</td><td><code>desenhe.linha(0,0,100,100,rosa)</code></td></tr><tr><td><code>roxo</code></td><td>#9c27b0</td><td><code>desenhe.linha(0,0,100,100,roxo)</code></td></tr><tr><td><code>verde</code></td><td>#00c853</td><td><code>desenhe.linha(0,0,100,100,verde)</code></td></tr><tr><td><code>vermelho</code></td><td>#ff0000</td><td><code>desenhe.linha(0,0,100,100,vermelho)</code></td></tr></table>
         <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Use <code>corAleatória</code> em qualquer <code>desenhe.*(...,cor)</code>, <code>corTexto(corAleatória)</code> ou <code>tela.cor(corAleatória)</code>. Cada chamada sorteia entre as 12 cores.</p>
       </div>
-      <div class="manual-pane" id="pane-tartaruga">
-        <h3>tartaruga</h3>
-        <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">tartaruga</span><span class="example">()</span></pre>
-        <p class="code-label">Exemplo</p>
-        <pre><span class="example">tartaruga()</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Abre a janela <code>🐢 Editor de comandos:</code> numa coluna flutuante cheia de tela: à esquerda, a coluna de comandos; à direita, o desenho. A tartaruga começa no centro (400, 300), apontando para o norte (0°). O ângulo cresce no sentido horário.</p>
-        <h3>corFundo</h3>
-        <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">corFundo</span> <span class="example">&lt;cor&gt;</span></pre>
-        <p class="code-label">Exemplos</p>
-        <pre><span class="example">corFundo azul
-corFundo corAleatória</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Pinta o fundo do desenho da tartaruga. As cores são as mesmas da aba <code>Cores</code> (azul, verde, vermelho, etc.).</p>
-        <h3>cor</h3>
-        <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">cor</span> <span class="example">&lt;cor&gt;</span></pre>
-        <p class="code-label">Exemplos</p>
-        <pre><span class="example">cor amarela
-cor branca</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Define a cor da caneta da tartaruga (por onde ela anda, deixa um rastro).</p>
-        <h3>avance / recue</h3>
-        <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">avance</span> <span class="example">&lt;distância&gt;</span>
-<span class="syntax">recue</span> <span class="example">&lt;distância&gt;</span></pre>
-        <p class="code-label">Exemplos</p>
-        <pre><span class="example">avance 100
-recue 50</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Move a tartaruga para frente/trás pixels, desenhando uma linha (se a caneta estiver abaixada).</p>
-        <h3>direita / esquerda</h3>
-        <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">direita</span> <span class="example">&lt;graus&gt;</span>
-<span class="syntax">esquerda</span> <span class="example">&lt;graus&gt;</span></pre>
-        <p class="code-label">Exemplos</p>
-        <pre><span class="example">direita 30
-esquerda 45</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Gira a tartaruga no sentido horário (direita) ou anti-horário (esquerda).</p>
-        <h3>levanta caneta / abaixa caneta</h3>
-        <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">levanta caneta</span>
-<span class="syntax">abaixa caneta</span></pre>
-        <p class="code-label">Exemplos</p>
-        <pre><span class="example">levanta caneta
-avance 150
-abaixa caneta</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px"><code>levanta caneta</code> para de desenhar; <code>abaixa caneta</code> volta a desenhar.</p>
-        <h3>Programa de exemplo</h3>
-        <p class="code-label">Exemplo</p>
-        <pre><span class="example">tartaruga()
-corFundo azul
-cor amarela
-avance 100
-direita 30
-avance 100
-esquerda 45
-recue 50
-levanta caneta
-direita 60
-avance 150
-abaixa caneta
-esquerda 30
-avance 50
-repita(5):
-  direita 30
-  avance 60</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Os comandos da tartaruga também podem ser digitados direto na coluna de comandos da janela tartaruga (um comando por linha). <code>Ctrl+Enter</code> executa tudo. <code>TAB</code> indenta; <code>Ctrl</code>+roda do mouse (em cima da coluna) ou <code>Ctrl+</code>+/<code>-</code> ajusta o tamanho da fonte. A largura da coluna é ajustável arrastando a alça vertical. No desenho, a roda do mouse dá zoom (sobre o cursor) e o arrasto com o mouse (mãozinha) move o desenho. Os botões <code>Lento / Normal / Rápido</code> controlam a velocidade da animação.</p>
-      </div>
-      <div class="manual-pane" id="pane-poligonos">
-        <h3>polígonos()</h3>
-        <p class="code-label">Sintaxe</p>
-        <pre><span class="syntax">polígonos()</span></pre>
-        <p class="code-label">Exemplos</p>
-        <pre><span class="example">polígonos()</span> <span class="saida">→ abre o plano cartesiano estilo GeoGebra</span>
-
-<span class="example">poligonos()</span> <span class="saida">→ o mesmo comando sem acento também funciona</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Abre uma janela maximizada com um plano cartesiano. Você constrói pontos, segmentos, retas, polígonos e circunferências clicando no desenho; cada objeto é criado e analisado em uma coluna à direita. É possível usar os <code>comandos do módulo</code> só na janela dos polígonos — os demais comandos (console/desenho) não interferem.</p>
-        <h3>Ferramentas</h3>
-        <table>
-          <tr><th>Ferramenta</th><th>O que faz</th></tr>
-          <tr><td><b>↔️ Mover</b></td><td>Arrasta pontos já criados. Arraste o fundo para deslizar o plano.</td></tr>
-          <tr><td><b>⚫ Ponto</b></td><td>Um clique cria um ponto, nomeado automaticamente (A, B, C…).</td></tr>
-          <tr><td><b>➖ Reta</b></td><td>Dois cliques (em pontos existentes ou no fundo) criam a reta infinita que passa por eles (f, g, h…).</td></tr>
-          <tr><td><b>📏 Segmento</b></td><td>Dois cliques criam um segmento; o comprimento aparece na coluna de dados.</td></tr>
-          <tr><td><b>📐 Polígono</b></td><td>Cada clique adiciona um vértice; feche com <b>🔒 Fechar polígono</b> para calcular perímetro e área.</td></tr>
-          <tr><td><b>⭕ Circunferência</b></td><td>1º clique define o centro; 2º clique define o ponto na circunferência (o raio é a distância entre eles). Nomeada c1, c2…</td></tr>
-          <tr><td><b>🪣 Preencher</b></td><td>Escolha uma cor na paleta e clique dentro de um polígono ou circunferência para pintá-lo. O quadradinho xadrez da paleta remove o preenchimento.</td></tr>
-          <tr><td><b>🔒 Fechar polígono</b></td><td>Fecha o polígono em construção e calcula perímetro e área.</td></tr>
-          <tr><td><b>🧹 Limpar</b></td><td>Apaga todos os pontos, segmentos, retas, circunferências e polígonos.</td></tr>
-        </table>
-        <h3>Cola na grade (coordenadas inteiras)</h3>
-        <p>Um ponto é <b>puxado para a coordenada inteira mais próxima</b> quando você clica bem perto dela (a poucos pixels da linha da grade). Caso contrário, o ponto assume <b>coordenadas decimais</b> (com 2 casas). Cada eixo é ajustado separadamente: perto de uma vertical, o <code>x</code> cola; perto de uma horizontal, o <code>y</code> cola.</p>
-        <h3>Navegação</h3>
-        <p>Rodinha do mouse: <b>zoom</b> (centralizado no cursor). Com a ferramenta <b>Mover</b>, arrastar o fundo <b>desloca o plano</b>. A posição do cursor é mostrada num selo sobre o desenho enquanto você cria objetos.</p>
-        <h3>Coluna de dados</h3>
-        <pre><span class="saida">Pontos · Segmentos (comprimento) · Retas · Circunferências (centro, raio) · Polígonos (perímetro e área)</span></pre>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Todos os objetos criados aparecem na coluna à direita com seus valores atualizados em tempo real. A largura da coluna pode ser ajustada arrastando a alça entre o desenho e a coluna (min 160px, max 520px).</p>
-        <h3>Observações</h3>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Pontos são nomeados <code>A, B, C…</code> e retas <code>f, g, h…</code> (reiniciando em <code>f1, g1…</code> quando as 26 letras se esgotam); circunferências recebem <code>c1, c2…</code>. Ao fechar a janela, tudo o que foi construído é apagado.</p>
-      </div>
     </div>
   </div>
 
@@ -1678,40 +1349,6 @@ repita(5):
         <p style="margin:2px 0 12px; font-size:15px; color:var(--accent);">wjunior1973@gmail.com</p>
         <p style="margin:0; font-size:15px; color:var(--text-dim);">2026</p>
       </div>
-    </div>
-  </div>
-
-  <!-- Modal Calculadora -->
-  <div id="modalCalculadora" class="modal-overlay" style="display:none">
-    <div class="modal-box calc-box">
-      <div class="modal-header" style="padding:0 0 10px; border:none; display:flex; align-items:center; justify-content:space-between;">
-        <span style="font-family:'Inter',sans-serif; font-size:14px; font-weight:700; color:var(--text);">🧮 Calculadora</span>
-        <button class="modal-close" id="btnFecharCalculadora" title="Fechar" style="position:static;">✕</button>
-      </div>
-      <div class="calc-display" id="calcDisplay">0</div>
-      <div class="calc-grid">
-        <button class="calc-btn fn" data-a="ac">AC</button>
-        <button class="calc-btn fn" data-a="bs">⌫</button>
-        <button class="calc-btn fn" data-a="pct">%</button>
-        <button class="calc-btn op" data-a="div">÷</button>
-        <button class="calc-btn" data-a="7">7</button>
-        <button class="calc-btn" data-a="8">8</button>
-        <button class="calc-btn" data-a="9">9</button>
-        <button class="calc-btn op" data-a="mul">×</button>
-        <button class="calc-btn" data-a="4">4</button>
-        <button class="calc-btn" data-a="5">5</button>
-        <button class="calc-btn" data-a="6">6</button>
-        <button class="calc-btn op" data-a="sub">−</button>
-        <button class="calc-btn" data-a="1">1</button>
-        <button class="calc-btn" data-a="2">2</button>
-        <button class="calc-btn" data-a="3">3</button>
-        <button class="calc-btn op" data-a="add">+</button>
-        <button class="calc-btn" data-a="neg">±</button>
-        <button class="calc-btn" data-a="0">0</button>
-        <button class="calc-btn" data-a="dot">.</button>
-        <button class="calc-btn eq" data-a="eq">=</button>
-      </div>
-      <button class="calc-btn eq" id="calcEnviar" style="width:100%; margin-top:8px; font-size:14px;" title="Insere o resultado da calculadora na posição do cursor no editor">⤵ Enviar ao editor</button>
     </div>
   </div>
 
@@ -1944,7 +1581,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','vá','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','polígonos','poligonos','tartaruga','avance','recue','direita','esquerda','corfundo','levanta','abaixa','abaixe','caneta','centralizaTexto','corTexto']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','vá','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','centralizaTexto','corTexto']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatória','amarela','vermelha','roxa','branca','preta']);
@@ -2363,15 +2000,6 @@ updateLines(); updateHighlight();
     {name:'girar',hint:'girar(a(âng,vez,pausa),b(...))',desc:'Gira múltiplos desenhos'},
     {name:'intervalo',hint:'(início..fim)',desc:'Cria intervalo/lista de números'},
     {name:'janela',hint:'janela(largura,altura,cor)',desc:'Cria janela/gráfico'},
-    {name:'tartaruga',hint:'tartaruga()',desc:'Abre a tartaruga - editor de comandos'},
-    {name:'avance',hint:'avance distância',desc:'Move a tartaruga para frente'},
-    {name:'recue',hint:'recue distância',desc:'Move a tartaruga para trás'},
-    {name:'direita',hint:'direita ângulo',desc:'Gira a tartaruga para a direita'},
-    {name:'esquerda',hint:'esquerda ângulo',desc:'Gira a tartaruga para a esquerda'},
-    {name:'corFundo',hint:'corFundo cor',desc:'Define cor de fundo da tela da tartaruga'},
-    {name:'cor',hint:'cor cor',desc:'Define a cor do traço da tartaruga'},
-    {name:'levanta caneta',hint:'levanta caneta',desc:'Para de desenhar'},
-    {name:'abaixa caneta',hint:'abaixa caneta',desc:'Volta a desenhar'},
     {name:'leia',hint:'leia(texto?)',desc:'Lê entrada do usuário (prompt)'},
     {name:'ler',hint:'ler(tipo,texto?)',desc:'Lê entrada com tipo específico'},
     {name:'limpe',hint:'limpe()',desc:'Limpa saída/console'},
@@ -2381,7 +2009,6 @@ updateLines(); updateHighlight();
     {name:'para cada',hint:'para cada item em lista:',desc:'Percorre cada item da lista'},
     {name:'pare',hint:'pare',desc:'Para execução (break)'},
     {name:'pausa',hint:'pausa(segundos)',desc:'Pausa execução'},
-    {name:'polígonos',hint:'polígonos()',desc:'Abre o plano cartesiano de polígonos (pontos, segmentos e áreas)'},
     {name:'recortar',hint:'recortar()',desc:'Recorta da área de transferência'},
     {name:'repetir',hint:'repetir n vezes:',desc:'Repete bloco n vezes'},
     {name:'retorne',hint:'retorne(valor)',desc:'Retorna valor da função'},
@@ -2777,8 +2404,6 @@ let janelaModo=null; // 'console' | 'desenho'
 let janelaEl=document.getElementById('janelaFlutuante');
 let janelaConsoleEl=document.getElementById('janelaConsole');
 function ativarJanela(centraliza){
-  _esconderPainelTartaruga();
-  _esconderPoligonos();
   janelaEl=document.getElementById('janelaFlutuante');
   janelaConsoleEl=document.getElementById('janelaConsole');
   if(!janelaEl) return;
@@ -2818,8 +2443,6 @@ function ativarJanela(centraliza){
   }
 }
 function ativarJanelaDesenho(w,h){
-  _esconderPainelTartaruga();
-  _esconderPoligonos();
   janelaEl=document.getElementById('janelaFlutuante');
   janelaConsoleEl=document.getElementById('janelaConsole');
   if(!janelaEl) return;
@@ -2861,9 +2484,6 @@ function ativarJanelaDesenho(w,h){
 }
 function fecharJanela(){
   if(janelaAtiva) _janelaFechadaDuranteExec=true;
-  _esconderPainelTartaruga();
-  _esconderPoligonos();
-  tartaruga=null;
   if(janelaEl){
     janelaEl.style.display='none';
     janelaEl.classList.remove('maximized','minimized');
@@ -2885,255 +2505,15 @@ function fecharJanela(){
   _telaLogicalW=640; _telaLogicalH=400;
   janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
 }
-// --- Tartaruga (estilo Logo) ---
-let tartaruga = null;
-const _tartarugaVelocidade = { fator: 0.5 }; // 1=Rápido (velocidade atual), 0.5=Normal, 0.25=Lento
-let _tartarugaZoom = 1;
-let _tartarugaPanX = 0;
-let _tartarugaPanY = 0;
-let _tartarugaPanning = false;
-let _tartaruga3D = false;
-let _tartarugaRotando = false;
-let _tartarugaRotX = 0;
-let _tartarugaRotY = 0;
-let _tartarugaRotZ = 0;
-const tartarugaEnv = {};
-try{ willogInitConstantes(tartarugaEnv); }catch(e){ tartarugaEnv.__tartarugaEnvsafe=true; }
-function _esconderPainelTartaruga(){
-  const _j=document.getElementById('janelaFlutuante');
-  if(_j) _j.classList.remove('tartaruga-mod');
-  const _h=document.getElementById('janelaHeader');
-  if(_h){ const _s=_h.querySelector('span'); if(_s) _s.textContent='🪟 Janela Willog — Console'; }
-  const _p=document.getElementById('tartarugaPainel');
-  if(_p) _p.style.display='none';
-}
-function abrirJanelaTartaruga(){
-  _esconderPoligonos();
-  janelaEl=document.getElementById('janelaFlutuante');
-  janelaConsoleEl=document.getElementById('janelaConsole');
-  if(!janelaEl) return;
-  janelaEl.style.display='flex';
-  janelaAtiva=true;
-  janelaCentralizada=false;
-  janelaModo='tartaruga';
-  _janelaAbertaNestaExec=true;
-  _graficoErroJaMostrado=false;
-  janelaEl.classList.remove('minimized');
-  janelaEl.classList.add('maximized');
-  janelaEl.classList.add('tartaruga-mod');
-  janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
-  const janelaBodyEl=document.getElementById('janelaBody');
-  if(janelaBodyEl){ janelaBodyEl.style.width=''; janelaBodyEl.style.height=''; janelaBodyEl.style.flex=''; }
-  const _h=document.getElementById('janelaHeader');
-  if(_h){ const _s=_h.querySelector('span'); if(_s) _s.textContent='🐢 Tartaruga Willog'; }
-  const _p=document.getElementById('tartarugaPainel');
-  if(_p) _p.style.display='flex';
-  const _cv=document.getElementById('janelaCanvas');
-  _telaBgColor='#000000';
-  _telaFgColor='#ffffff';
-  if(_cv){ _cv.style.background='#000000'; _cv.classList.remove('ativo'); _cv.style.display='none'; }
-  _telaLogicalW=800; _telaLogicalH=600;
-  _tartarugaZoom=1; _tartarugaPanX=0; _tartarugaPanY=0;
-  _tartarugaSetModo3D(false);
-  _telaBuffer=null; _telaBufferCtx=null;
-  _willogInitBuffer();
-  tartaruga={x:400,y:300,angulo:0,caneta:true,cor:'branco',corHex:'#ffffff',segmentos:[],ativo:true};
-  _tartarugaRedesenhar();
-  requestAnimationFrame(()=>{ const c=document.getElementById('janelaCanvas'); if(c){ const r=c.getBoundingClientRect(); if(r.width>0){ _willogResizeCanvas(); }}});
-}
-function _tartarugaRedesenhar(){
-  if(!tartaruga || !tartaruga.ativo) return;
-  _willogInitBuffer();
-  _willogEnsureTela();
-  const ctx=_telaBufferCtx;
-  ctx.fillStyle=_telaBgColor;
-  ctx.fillRect(0,0,_telaLogicalW,_telaLogicalH);
-  ctx.fillStyle='rgba(255,255,255,0.07)';
-  for(let gx=20; gx<_telaLogicalW; gx+=40){ for(let gy=20; gy<_telaLogicalH; gy+=40){ ctx.fillRect(gx,gy,2,2); } }
-  ctx.lineCap='round';
-  for(const seg of tartaruga.segmentos){
-    ctx.strokeStyle=seg.cor;
-    ctx.lineWidth=2.5;
-    ctx.beginPath();
-    ctx.moveTo(seg.x1,seg.y1);
-    ctx.lineTo(seg.x2,seg.y2);
-    ctx.stroke();
-  }
-  ctx.save();
-  ctx.translate(tartaruga.x,tartaruga.y);
-  ctx.rotate(tartaruga.angulo*Math.PI/180);
-  ctx.beginPath();
-  ctx.moveTo(0,-11);
-  ctx.lineTo(7,8);
-  ctx.lineTo(-7,8);
-  ctx.closePath();
-  ctx.fillStyle = tartaruga.caneta ? '#00c853' : '#78909c';
-  ctx.fill();
-  ctx.strokeStyle='#ffffff';
-  ctx.lineWidth=1;
-  ctx.stroke();
-  ctx.restore();
-  _willogSyncVisible();
-  requestAnimationFrame(()=>_willogSyncVisible());
-}
-function _tartarugaAndar(dist){
-  if(!tartaruga || !tartaruga.ativo) return Promise.resolve();
-  const rad=tartaruga.angulo*Math.PI/180;
-  const nx=tartaruga.x + Math.sin(rad)*dist;
-  const ny=tartaruga.y - Math.cos(rad)*dist;
-  const corHex=tartaruga.corHex || _telaFgColor;
-  if(tartaruga.caneta){
-    tartaruga.segmentos.push({x1:tartaruga.x,y1:tartaruga.y,x2:nx,y2:ny,cor:corHex});
-  }
-  tartaruga.x=nx; tartaruga.y=ny;
-  _tartarugaRedesenhar();
-  return new Promise(r=> setTimeout(r, _tartarugaPausa()));
-}
-function _tartarugaGirar(ang){
-  if(!tartaruga || !tartaruga.ativo) return Promise.resolve();
-  tartaruga.angulo=((tartaruga.angulo+(ang%360))%360+360)%360;
-  _tartarugaRedesenhar();
-  return new Promise(r=> setTimeout(r, _tartarugaPausa()));
-}
-function _tartarugaPausa(){
-  const f=_tartarugaVelocidade.fator;
-  if(f>=1) return 0;
-  return Math.round(300/f - 300);
-}
-function _tartarugaReset(){
-  if(!tartaruga || !tartaruga.ativo) return;
-  _tartarugaZoom=1; _tartarugaPanX=0; _tartarugaPanY=0;
-  _tartarugaSetModo3D(false);
-  tartaruga.x=400; tartaruga.y=300; tartaruga.angulo=0;
-  tartaruga.caneta=true;
-  tartaruga.cor='branco'; tartaruga.corHex=_telaFgColor;
-  tartaruga.segmentos=[];
-  _tartarugaRedesenhar();
-}
-function _tartarugaSetModo3D(on){
-  _tartaruga3D = !!on;
-  _tartarugaRotX=0; _tartarugaRotY=0; _tartarugaRotZ=0;
-  const b3=document.getElementById('btnTartaruga3D');
-  const b2=document.getElementById('btnTartaruga2D');
-  if(b3) b3.classList.toggle('ativo', _tartaruga3D);
-  if(b2) b2.classList.toggle('ativo', !_tartaruga3D);
-  _willogSyncVisible();
-}
-function _tartarugaProjetar(x,y){
-  const rx=_tartarugaRotX*Math.PI/180, ry=_tartarugaRotY*Math.PI/180, rz=_tartarugaRotZ*Math.PI/180;
-  let X=x-400, Y=y-300, Z=0;
-  const cx=Math.cos(rz), sx=Math.sin(rz);
-  let X1=X*cx - Y*sx;
-  let Y1=X*sx + Y*cx;
-  X=X1; Y=Y1;
-  const cy=Math.cos(ry), sy=Math.sin(ry);
-  let X2=X*cy + Z*sy;
-  let Z2=-X*sy + Z*cy;
-  X=X2; Z=Z2;
-  const cz=Math.cos(rx), sz=Math.sin(rx);
-  let Y3=Y*cz - Z*sz;
-  let Z3=Y*sz + Z*cz;
-  Y=Y3; Z=Z3;
-  const f=1000;
-  const p=f/(f+Z);
-  return { x:400+X*p, y:300+Y*p, p:p };
-}
-function _tartarugaRender3D(ctx, offX, offY, k){
-  ctx.lineCap='round';
-  ctx.fillStyle='rgba(255,255,255,0.07)';
-  for(let gx=20; gx<_telaLogicalW; gx+=40){
-    for(let gy=20; gy<_telaLogicalH; gy+=40){
-      const g=_tartarugaProjetar(gx,gy);
-      ctx.fillRect(offX+g.x*k, offY+g.y*k, 2, 2);
-    }
-  }
-  for(const seg of tartaruga.segmentos){
-    const a=_tartarugaProjetar(seg.x1,seg.y1);
-    const b=_tartarugaProjetar(seg.x2,seg.y2);
-    ctx.strokeStyle=seg.cor;
-    ctx.lineWidth=2.5*(0.7+0.6*(a.p+b.p)/2);
-    ctx.beginPath();
-    ctx.moveTo(offX+a.x*k, offY+a.y*k);
-    ctx.lineTo(offX+b.x*k, offY+b.y*k);
-    ctx.stroke();
-  }
-  const rad=tartaruga.angulo*Math.PI/180;
-  const pts=[[0,-11],[7,8],[-7,8]].map(l=>{
-    const lx=l[0], ly=l[1];
-    const wx=tartaruga.x + lx*Math.cos(rad) - ly*Math.sin(rad);
-    const wy=tartaruga.y + lx*Math.sin(rad) + ly*Math.cos(rad);
-    const p=_tartarugaProjetar(wx,wy);
-    return [offX+p.x*k, offY+p.y*k];
-  });
-  ctx.beginPath();
-  ctx.moveTo(pts[0][0], pts[0][1]);
-  ctx.lineTo(pts[1][0], pts[1][1]);
-  ctx.lineTo(pts[2][0], pts[2][1]);
-  ctx.closePath();
-  ctx.fillStyle = tartaruga.caneta ? '#00c853' : '#78909c';
-  ctx.fill();
-  ctx.strokeStyle='#ffffff';
-  ctx.lineWidth=1;
-  ctx.stroke();
-}
-function _tartarugaResolverCor(nome, env){
-  return _willogResolveCor(nome, env);
-}
-function _tartarugaNumeral(v, env){
-  if(typeof v==='number') return v;
-  let s=String(v||'').trim().replace(/^(\d+),(\d+)$/,'$1.$2');
-  let n=Number(s);
-  if(isNaN(n)){ try{ n=Number(evaluateExpression(v, env)); }catch(e){ n=NaN; } }
-  return isNaN(n)?0:n;
-}
-async function execTartarugaComando(stmt, env){
-  const s=stmt.trim();
-  let m;
-  if(/^\s*tartaruga\s*\(\s*\)\s*(?:#.*)?$/i.test(s)){
-    abrirJanelaTartaruga();
-    return true;
-  }
-  if((m=s.match(/^\s*corFundo\s+(.+?)\s*$/i))){
-    const hex=_tartarugaResolverCor(m[1].trim(), env);
-    if(hex){
-      _telaBgColor=hex;
-      const cv=document.getElementById('janelaCanvas');
-      if(cv) cv.style.background=hex;
-      if(tartaruga && tartaruga.ativo){ _tartarugaRedesenhar(); }
-    }else{
-      logToConsole('Erro: cor desconhecida "'+m[1].trim()+'". Use: amarelo, vermelho, azul, verde, ciano, rosa, roxo, laranja, branco, cinza, marrom, preto', 'error');
-    }
-    return true;
-  }
-  if((m=s.match(/^\s*cor\s+(.+?)\s*$/i))){
-    const hex=_tartarugaResolverCor(m[1].trim(), env);
-    if(hex){
-      if(tartaruga && tartaruga.ativo){ tartaruga.cor=m[1].trim(); tartaruga.corHex=hex; _tartarugaRedesenhar(); }
-    }else{
-      logToConsole('Erro: cor desconhecida "'+m[1].trim()+'". Use: amarelo, vermelho, azul, verde, ciano, rosa, roxo, laranja, branco, cinza, marrom, preto', 'error');
-    }
-    return true;
-  }
-  if((m=s.match(/^\s*avance\s+(.+?)\s*$/i))){ await _tartarugaAndar(_tartarugaNumeral(m[1], env)); return false; }
-  if((m=s.match(/^\s*recue\s+(.+?)\s*$/i))){ await _tartarugaAndar(-_tartarugaNumeral(m[1], env)); return false; }
-  if((m=s.match(/^\s*direita\s+(.+?)\s*$/i))){ await _tartarugaGirar(_tartarugaNumeral(m[1], env)); return false; }
-  if((m=s.match(/^\s*esquerda\s+(.+?)\s*$/i))){ await _tartarugaGirar(-_tartarugaNumeral(m[1], env)); return false; }
-  if(/^\s*levanta\s+caneta\b/i.test(s)){ if(tartaruga && tartaruga.ativo){ tartaruga.caneta=false; _tartarugaRedesenhar(); } await new Promise(r=> setTimeout(r, _tartarugaPausa())); return false; }
-  if(/^\s*(abaixa|abaixe)\s+caneta\b/i.test(s)){ if(tartaruga && tartaruga.ativo){ tartaruga.caneta=true; _tartarugaRedesenhar(); } await new Promise(r=> setTimeout(r, _tartarugaPausa())); return false; }
-  return null;
-}
 // Reaproveita a janela flutuante em modo console sem apagar o conteúdo:
 // copia o console atual e as próximas saídas são espelhadas via logToConsole.
 // Não toca no estado gráfico (_telaBuffer/_willogDesenhos) nem em
 // _janelaAbertaNestaExec, para não afetar erros de desenho do programa.
 function abrirConsoleFlutuante(){
-  _esconderPainelTartaruga();
-  _esconderPoligonos();
   janelaEl=document.getElementById('janelaFlutuante');
   janelaConsoleEl=document.getElementById('janelaConsole');
   if(!janelaEl || !janelaConsoleEl || !consoleEl) return;
   if(janelaModo==='desenho' && janelaEl.style.display!=='none') return;
-  if(janelaModo==='poligonos' && janelaEl.style.display!=='none') return;
   if(janelaAtiva && janelaModo==='console' && janelaEl.style.display!=='none'){
     janelaEl.classList.remove('minimized');
     janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
@@ -3229,20 +2609,14 @@ function _willogSyncVisible(){
   ctx.fillStyle=_telaBgColor;
   ctx.fillRect(0,0,w,h);
   // escalonamento proporcional (preserva aspecto) — coordenadas reais, (0,0) topo-esquerda em janela normal, centralizado quando maximizada
-  const _useZoom = (janelaModo==='tartaruga');
   const scale=Math.min(w/_telaLogicalW, h/_telaLogicalH);
-  const k = scale * (_useZoom ? _tartarugaZoom : 1);
+  const k = scale;
   const destW=_telaLogicalW*k;
   const destH=_telaLogicalH*k;
-  const isMaxDesenho = janelaEl && janelaEl.classList.contains('maximized') && (janelaModo==='desenho'||janelaModo==='tartaruga');
+  const isMaxDesenho = janelaEl && janelaEl.classList.contains('maximized') && (janelaModo==='desenho');
   let dx=isMaxDesenho ? (w-destW)/2 : 0;
   let dy=isMaxDesenho ? (h-destH)/2 : 0;
-  if(_useZoom){ dx+=_tartarugaPanX; dy+=_tartarugaPanY; }
-  if(_useZoom && _tartaruga3D && tartaruga && tartaruga.ativo){
-    _tartarugaRender3D(ctx, dx, dy, k);
-  } else {
-    ctx.drawImage(_telaBuffer, 0,0, _telaLogicalW, _telaLogicalH, dx, dy, destW, destH);
-  }
+  ctx.drawImage(_telaBuffer, 0,0, _telaLogicalW, _telaLogicalH, dx, dy, destW, destH);
 }
 function _willogEnsureTela(){
   _willogInitBuffer();
@@ -3266,10 +2640,6 @@ function _willogResizeCanvas(){
   _willogSyncVisible();
 }
 function _willogTelaLimpe(){
-  if(janelaModo==='tartaruga'){
-    if(tartaruga){ tartaruga.segmentos=[]; _tartarugaRedesenhar(); return true; }
-    return false;
-  }
   if(janelaModo!=='desenho'){
     if(_janelaAbertaNestaExec) return false;
     if(_graficoErroJaMostrado) return false;
@@ -3289,7 +2659,7 @@ function _willogTelaLimpe(){
   return true;
 }
 function _willogTelaCor(argRaw, env){
-  if(janelaModo!=='desenho' && janelaModo!=='tartaruga'){
+  if(janelaModo!=='desenho'){
     if(_janelaAbertaNestaExec) return false;
     if(_graficoErroJaMostrado) return false;
     if(!janelaAtiva) logToConsole('Erro: use janela(largura,altura) antes de tela.cor() (ex: janela(300,400))', 'error');
@@ -3313,7 +2683,6 @@ function _willogTelaCor(argRaw, env){
     return false;
   }
   _telaBgColor=hex;
-  if(janelaModo==='tartaruga' && tartaruga && tartaruga.ativo){ _tartarugaRedesenhar(); }
   const cv=_willogGetCanvas();
   if(cv){ cv.style.background=hex; }
   // não apaga desenhos existentes no buffer; apenas define cor para próximo limpe
@@ -3924,9 +3293,6 @@ function getJanelaCentraliza(stmt){
 function isCentralizaTextoStmt(stmt){
   const t=stmt.trim();
   return /^\s*centralizaTexto\s*(\(\s*\))?\s*(?:#.*)?$/i.test(t);
-}
-function isPoligonosStmt(stmt){
-  return /^\s*pol[ií]gonos\s*\(\s*\)\s*(?:#.*)?$/i.test(stmt.trim());
 }
 function isJanelaDesenhoStmt(stmt){
   const t=stmt.trim();
@@ -4539,181 +3905,76 @@ clearConsole();
   window._willogJanelaZoom = ()=> janZoom;
 })();
 
-// --- Painel da Tartaruga (janela flutuante em modo tartaruga) ---
-(function(){
-  const inputEl=document.getElementById('tartarugaInput');
-  const btnExec=document.getElementById('btnTartarugaExecutar');
-  const btnLimpar=document.getElementById('btnTartarugaLimpar');
-  const velBtns=document.querySelectorAll('.tartaruga-velocidade .vel-btn');
-  const panelEl=document.getElementById('tartarugaPainel');
-  const resizerEl=document.getElementById('tartarugaResizer');
-  let tartarugaFontSize = parseFloat(getComputedStyle(inputEl||document.body).fontSize) || 13;
-  let fontPadrao = tartarugaFontSize;
-  function setTartarugaFont(){
-    if(!inputEl) return;
-    const escala = tartarugaFontSize / fontPadrao;
-    inputEl.style.fontSize = tartarugaFontSize+'px';
-    inputEl.style.lineHeight = (escala*1.35).toFixed(3);
-  }
-  function zoomTartarugaFont(delta){
-    tartarugaFontSize = Math.max(fontPadrao*0.75, Math.min(fontPadrao*2.25, Math.round(tartarugaFontSize + delta)));
-    setTartarugaFont();
-  }
-  function tartarugaExecutarTudo(){
-    const text=inputEl ? inputEl.value : '';
-    if(!text.trim()) return;
-    try{ executarPrograma(text); }catch(err){ console.error(err); }
-  }
-  if(panelEl){
-    let resizing=false, rStartX=0, rStartW=0;
-    resizerEl && resizerEl.addEventListener('mousedown', (e)=>{
-      if(e.button!==0) return;
-      resizing=true; rStartX=e.clientX; rStartW=panelEl.offsetWidth;
-      e.preventDefault();
-      document.body.style.userSelect='none';
-    });
-    window.addEventListener('mousemove', (e)=>{
-      if(!resizing) return;
-      const maxW=Math.round(window.innerWidth*0.7);
-      const w=Math.max(200, Math.min(maxW, rStartW + (e.clientX-rStartX)));
-      panelEl.style.width=w+'px';
-    });
-    window.addEventListener('mouseup', ()=>{
-      if(resizing){ resizing=false; document.body.style.userSelect=''; }
-    });
-    panelEl.addEventListener('wheel', (e)=>{
-      if(!(e.ctrlKey||e.metaKey)) return;
-      e.preventDefault();
-      zoomTartarugaFont(e.deltaY<0 ? 1 : -1);
-    }, {passive:false});
-  }
-  if(btnExec){
-    btnExec.addEventListener('click', tartarugaExecutarTudo);
-  }
-  if(btnLimpar){
-    btnLimpar.addEventListener('click', ()=>{
-      if(inputEl) inputEl.value='';
-      try{ localStorage.removeItem('willog-tartaruga-codigo'); }catch(_){}
-    });
-  }
-  if(velBtns.length){
-    velBtns.forEach(b=> b.addEventListener('click', ()=>{
-      const f=b.dataset.vel==='1'?0.25 : b.dataset.vel==='2'?0.5 : b.dataset.vel==='3'?0.75 : 1;
-      _tartarugaVelocidade.fator=f;
-      velBtns.forEach(x=> x.classList.toggle('ativo', x===b));
-    }));
-  }
-  const btn3D=document.getElementById('btnTartaruga3D');
-  const btn2D=document.getElementById('btnTartaruga2D');
-  btn3D && btn3D.addEventListener('click', ()=> _tartarugaSetModo3D(true));
-  btn2D && btn2D.addEventListener('click', ()=> _tartarugaSetModo3D(false));
-  if(inputEl){
-    try{
-      const tartarugaSalvo = localStorage.getItem('willog-tartaruga-codigo');
-      if(tartarugaSalvo !== null && tartarugaSalvo !== ''){
-        inputEl.value = tartarugaSalvo;
-      }
-    }catch(_){}
-    let saveTartarugaTimer=null;
-    function salvarTartaruga(){
-      try{ localStorage.setItem('willog-tartaruga-codigo', inputEl.value); }catch(_){}
-    }
-    inputEl.addEventListener('input', ()=>{
-      clearTimeout(saveTartarugaTimer);
-      saveTartarugaTimer=setTimeout(salvarTartaruga, 300);
-    });
-    inputEl.addEventListener('keydown', (e)=>{
-      if((e.ctrlKey||e.metaKey) && (e.key==='+'||e.key==='=')){
-        e.preventDefault(); zoomTartarugaFont(1); return;
-      }
-      if((e.ctrlKey||e.metaKey) && (e.key==='-'||e.key==='_')){
-        e.preventDefault(); zoomTartarugaFont(-1); return;
-      }
-      if(e.key==='Tab'){
-        e.preventDefault();
-        const s=inputEl.selectionStart, ed=inputEl.selectionEnd;
-        inputEl.value=inputEl.value.substring(0,s)+'  '+inputEl.value.substring(ed);
-        inputEl.selectionStart=inputEl.selectionEnd=s+2;
-        return;
-      }
-      if((e.ctrlKey||e.metaKey) && e.key==='Enter'){
-        e.preventDefault();
-        tartarugaExecutarTudo();
-      }
-    });
-    setTartarugaFont();
-  }
-})();
-
-// --- Zoom & arrastar (mãozinha) no desenho da tartaruga ---
+// --- Janela flutuante ---
+// --- Duplo-clique no console ---
 (function(){
   const cv=document.getElementById('janelaCanvas');
   if(!cv) return;
   let startX=0, startY=0, basePanX=0, basePanY=0;
   let rotStartX=0, rotStartY=0, rotBaseX=0, rotBaseY=0, rotBaseZ=0, rotMode='xy';
-  function tartarugaModAtivo(){ return janelaModo==='tartaruga' && tartaruga && tartaruga.ativo && cv.classList.contains('ativo'); }
+  function janelaModAtivo(){ return janelaModo==='janela' && janela && janela.ativo && cv.classList.contains('ativo'); }
   cv.addEventListener('wheel', (e)=>{
-    if(!tartarugaModAtivo()) return;
+    if(!janelaModAtivo()) return;
     e.preventDefault();
     const delta = e.deltaY<0 ? 1.15 : 1/1.15;
-    const zNew = Math.max(0.2, Math.min(10, _tartarugaZoom * delta));
-    if(zNew===_tartarugaZoom) return;
+    const zNew = Math.max(0.2, Math.min(10, _janelaZoom * delta));
+    if(zNew===_janelaZoom) return;
     const rect=cv.getBoundingClientRect();
     const dpr=window.devicePixelRatio||1;
     const w=rect.width*dpr, h=rect.height*dpr;
     const mx=(e.clientX-rect.left)*dpr, my=(e.clientY-rect.top)*dpr;
     const base=Math.min(w/_telaLogicalW, h/_telaLogicalH);
-    const isMax = janelaEl && janelaEl.classList.contains('maximized') && (janelaModo==='desenho'||janelaModo==='tartaruga');
-    const kOld=base*_tartarugaZoom, kNew=base*zNew;
+    const isMax = janelaEl && janelaEl.classList.contains('maximized') && (janelaModo==='desenho');
+    const kOld=base*_janelaZoom, kNew=base*zNew;
     const cXOld = isMax ? (w-_telaLogicalW*kOld)/2 : 0;
     const cYOld = isMax ? (h-_telaLogicalH*kOld)/2 : 0;
-    const dxOld = cXOld + _tartarugaPanX;
-    const dyOld = cYOld + _tartarugaPanY;
+    const dxOld = cXOld + _janelaPanX;
+    const dyOld = cYOld + _janelaPanY;
     const dxNew = mx - (mx - dxOld)*(kNew/kOld);
     const dyNew = my - (my - dyOld)*(kNew/kOld);
     const cXNew = isMax ? (w-_telaLogicalW*kNew)/2 : 0;
     const cYNew = isMax ? (h-_telaLogicalH*kNew)/2 : 0;
-    _tartarugaZoom=zNew;
-    _tartarugaPanX = dxNew - cXNew;
-    _tartarugaPanY = dyNew - cYNew;
+    _janelaZoom=zNew;
+    _janelaPanX = dxNew - cXNew;
+    _janelaPanY = dyNew - cYNew;
     _willogSyncVisible();
   }, {passive:false});
   cv.addEventListener('mousedown', (e)=>{
-    if(!tartarugaModAtivo()) return;
+    if(!janelaModAtivo()) return;
     e.preventDefault();
-    if(_tartaruga3D){
-      _tartarugaRotando=true;
+    if(_janela3D){
+      _janelaRotando=true;
       rotStartX=e.clientX; rotStartY=e.clientY;
-      rotBaseX=_tartarugaRotX; rotBaseY=_tartarugaRotY; rotBaseZ=_tartarugaRotZ;
+      rotBaseX=_janelaRotX; rotBaseY=_janelaRotY; rotBaseZ=_janelaRotZ;
       rotMode=(e.shiftKey || e.button===2) ? 'z' : 'xy';
       cv.classList.add('panning');
       return;
     }
     if(e.button!==0) return;
-    _tartarugaPanning=true;
+    _janelaPanning=true;
     startX=e.clientX; startY=e.clientY;
-    basePanX=_tartarugaPanX; basePanY=_tartarugaPanY;
+    basePanX=_janelaPanX; basePanY=_janelaPanY;
     cv.classList.add('panning');
   });
   window.addEventListener('mousemove', (e)=>{
-    if(_tartarugaRotando){
+    if(_janelaRotando){
       const dx=e.clientX-rotStartX, dy=e.clientY-rotStartY;
-      if(rotMode==='z'){ _tartarugaRotZ = ((rotBaseZ + dx*0.3)%360+360)%360; }
-      else { _tartarugaRotY = rotBaseY + dx*0.5; _tartarugaRotX = rotBaseX + dy*0.5; }
+      if(rotMode==='z'){ _janelaRotZ = ((rotBaseZ + dx*0.3)%360+360)%360; }
+      else { _janelaRotY = rotBaseY + dx*0.5; _janelaRotX = rotBaseX + dy*0.5; }
       _willogSyncVisible();
       return;
     }
-    if(!_tartarugaPanning) return;
+    if(!_janelaPanning) return;
     const dpr=window.devicePixelRatio||1;
-    _tartarugaPanX = basePanX + (e.clientX-startX)*dpr;
-    _tartarugaPanY = basePanY + (e.clientY-startY)*dpr;
+    _janelaPanX = basePanX + (e.clientX-startX)*dpr;
+    _janelaPanY = basePanY + (e.clientY-startY)*dpr;
     _willogSyncVisible();
   });
   window.addEventListener('mouseup', ()=>{
-    if(_tartarugaRotando){ _tartarugaRotando=false; cv.classList.remove('panning'); }
-    if(_tartarugaPanning){ _tartarugaPanning=false; cv.classList.remove('panning'); }
+    if(_janelaRotando){ _janelaRotando=false; cv.classList.remove('panning'); }
+    if(_janelaPanning){ _janelaPanning=false; cv.classList.remove('panning'); }
   });
-  cv.addEventListener('contextmenu', (e)=>{ if(_tartaruga3D && tartarugaModAtivo()) e.preventDefault(); });
+  cv.addEventListener('contextmenu', (e)=>{ if(_janela3D && janelaModAtivo()) e.preventDefault(); });
 })();
 
 // --- Duplo-clique no console: exibe em janela flutuante ---
@@ -4810,918 +4071,6 @@ if(consoleInputEl){
   });
 }
 
-// ==================== Polígonos (plano cartesiano estilo GeoGebra) ====================
-const _polEstado = {
-  ativo:false,
-  ferramenta:'mover', // mover | ponto | reta | segmento | poligono | circunferencia
-  pontos:[],          // {x,y,rotulo}
-  segmentos:[],       // {a:idx,b:idx}
-  retas:[],           // {a:idx,b:idx,nome} retas infinitas
-  circunferencias:[], // {centro:idx, ponto:idx, nome}
-  poligonos:[],       // {ids:[...]}
-  pinturas:[],        // {x,y,cor} preenchimentos independentes feitos pelo balde (coordenadas do mundo)
-  rascunhoPoli:[],    // índices dos vértices do polígono em construção
-  segA:-1,            // índice do 1º ponto escolhido na ferramenta segmento
-  retaA:-1,           // índice do 1º ponto escolhido na ferramenta reta
-  circA:-1,           // índice do centro escolhido na ferramenta circunferência
-  corPintar:'#fdcb6e',// cor usada pela ferramenta balde ('' = sem preenchimento)
-  verPontos:true,     // mostra/oculta os pontos e seus rótulos
-  verGrade:true,      // mostra/oculta as linhas de grade
-  view:{cx:0, cy:0, scale:60},
-  panning:false, panSX:0, panSY:0, viewCX0:0, viewCY0:0,
-  arrastando:-1,
-  cursorDentro:false,
-  curX:0, curY:0,
-};
-function _polEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function _polFmt(n){ if(!isFinite(n)) return '—'; return String(Math.round(n*100)/100); }
-function _polDist(x1,y1,x2,y2){ return Math.hypot(x2-x1, y2-y1); }
-const _polSnapPx=6; // cola no inteiro só quando está a poucos pixels da linha da grade
-function _polCoord(v, s){
-  const r=Math.round(v);
-  return (Math.abs(v-r)*s <= _polSnapPx) ? r : Math.round(v*100)/100;
-}
-function _polProximaLetra(){
-  const i=_polEstado.pontos.length;
-  const n=Math.floor(i/26);
-  const c=String.fromCharCode(65+(i%26));
-  return n>0 ? c+n : c;
-}
-function _polNomeObj(offset, idx){
-  const letras='abcdefghijklmnopqrstuvwxyz';
-  const total=letras.length;
-  const c=letras[(offset + (idx%total)) % total];
-  const n=Math.floor((offset+idx)/total);
-  return n>0 ? c+n : c;
-}
-function _polSegVisivel(a,b,x0,y0,x1,y1){
-  let t0=-Infinity, t1=Infinity;
-  const dx=b.x-a.x, dy=b.y-a.y;
-  const p=[-dx, dx, -dy, dy];
-  const q=[a.x-x0, x1-a.x, a.y-y0, y1-a.y];
-  for(let i=0;i<4;i++){
-    if(p[i]===0){
-      if(q[i]<0) return null;
-    }else{
-      const r=q[i]/p[i];
-      if(p[i]<0){
-        if(r>t1) return null;
-        if(r>t0) t0=r;
-      }else{
-        if(r<t0) return null;
-        if(r<t1) t1=r;
-      }
-    }
-  }
-  if(!isFinite(t0) || !isFinite(t1)) return null;
-  return {a:{x:a.x+t0*dx, y:a.y+t0*dy}, b:{x:a.x+t1*dx, y:a.y+t1*dy}};
-}
-function _polTraçarReta(ctx, pA, pB, cor, largura){
-  const cv=document.getElementById('poligonosCanvas');
-  if(!cv) return;
-  const v=_polEstado.view, s=v.scale;
-  const W=cv.width, H=cv.height;
-  if(pA.x===pB.x && pA.y===pB.y) return;
-  const x0=v.cx - W/(2*s), x1=v.cx + W/(2*s);
-  const y0=v.cy - H/(2*s), y1=v.cy + H/(2*s);
-  const clip=_polSegVisivel(pA,pB,x0,y0,x1,y1);
-  if(!clip) return;
-  ctx.strokeStyle=cor; ctx.lineWidth=largura; ctx.lineCap='round';
-  ctx.beginPath();
-  ctx.moveTo((clip.a.x-v.cx)*s+W/2, H/2-(clip.a.y-v.cy)*s);
-  ctx.lineTo((clip.b.x-v.cx)*s+W/2, H/2-(clip.b.y-v.cy)*s);
-  ctx.stroke();
-}
-function _polS2W(sx,sy){
-  const cv=document.getElementById('poligonosCanvas');
-  if(!cv) return {x:0,y:0};
-  const s=_polEstado.view.scale;
-  return {
-    x: (sx - cv.width/2)/s + _polEstado.view.cx,
-    y: _polEstado.view.cy - (sy - cv.height/2)/s
-  };
-}
-function _polHitPonto(sx,sy){
-  const cv=document.getElementById('poligonosCanvas');
-  if(!cv) return -1;
-  const cx=cv.width/2, cy=cv.height/2, s=_polEstado.view.scale;
-  let best=-1, bestD=Infinity;
-  for(let i=0;i<_polEstado.pontos.length;i++){
-    const p=_polEstado.pontos[i];
-    const px=(p.x-_polEstado.view.cx)*s+cx;
-    const py=cy-(p.y-_polEstado.view.cy)*s;
-    const d=Math.hypot(px-sx, py-sy);
-    if(d<=10 && d<bestD){ best=i; bestD=d; }
-  }
-  return best;
-}
-function _polRedimensionar(cv){
-  if(!cv) return;
-  const r=cv.parentElement.getBoundingClientRect();
-  const w=Math.max(80, Math.round(r.width));
-  const h=Math.max(80, Math.round(r.height));
-  if(cv.width!==w) cv.width=w;
-  if(cv.height!==h) cv.height=h;
-}
-function _polPassoGrid(s){
-  const passos=[1,2,5,10,20,50,100,200,500,1000,2000,5000];
-  for(let i=0;i<passos.length;i++) if(passos[i]*s>=20) return passos[i];
-  return passos[passos.length-1];
-}
-function _polPassoNum(s){
-  const passos=[1,2,5,10,20,50,100,200,500,1000,2000,5000];
-  for(let i=0;i<passos.length;i++) if(passos[i]*s>=70) return passos[i];
-  return passos[passos.length-1];
-}
-function _polPerimetroIds(ids){
-  let p=0;
-  for(let i=0;i<ids.length;i++){
-    const a=_polEstado.pontos[ids[i]], b=_polEstado.pontos[ids[(i+1)%ids.length]];
-    p+=_polDist(a.x,a.y,b.x,b.y);
-  }
-  return p;
-}
-function _polAreaIds(ids){
-  let soma=0;
-  for(let i=0;i<ids.length;i++){
-    const a=_polEstado.pontos[ids[i]], b=_polEstado.pontos[ids[(i+1)%ids.length]];
-    soma += a.x*b.y - b.x*a.y;
-  }
-  return Math.abs(soma)/2;
-}
-function _polPontoEmPoligono(x,y,ids){
-  let dentro=false;
-  for(let i=0,j=ids.length-1;i<ids.length;j=i++){
-    const a=_polEstado.pontos[ids[i]], b=_polEstado.pontos[ids[j]];
-    if(!a || !b) continue;
-    if(((a.y>y)!==(b.y>y)) && (x < (b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)) dentro=!dentro;
-  }
-  return dentro;
-}
-function _polHitPoligono(x,y){
-  for(let i=_polEstado.poligonos.length-1;i>=0;i--){
-    const pg=_polEstado.poligonos[i];
-    if(pg.ids.length>=3 && _polPontoEmPoligono(x,y,pg.ids)) return i;
-  }
-  return -1;
-}
-function _polHitCircunferencia(x,y){
-  for(let i=_polEstado.circunferencias.length-1;i>=0;i--){
-    const ci=_polEstado.circunferencias[i];
-    const c=_polEstado.pontos[ci.centro], p=_polEstado.pontos[ci.ponto];
-    if(!c || !p) continue;
-    const r=_polDist(c.x,c.y,p.x,p.y);
-    if(r>0 && _polDist(x,y,c.x,c.y)<=r) return i;
-  }
-  return -1;
-}
-let _polBarr=null; // canvas auxiliar com as bordas (barreiras) das figuras para o flood fill
-function _polBarreiraBuild(){
-  const cv=document.getElementById('poligonosCanvas');
-  if(!cv) return null;
-  if(!_polBarr){ _polBarr=document.createElement('canvas'); }
-  if(_polBarr.width!==cv.width) _polBarr.width=cv.width;
-  if(_polBarr.height!==cv.height) _polBarr.height=cv.height;
-  const t=_polBarr.getContext('2d');
-  const v=_polEstado.view, s=v.scale;
-  const W=cv.width, H=cv.height;
-  t.fillStyle='#ffffff';
-  t.fillRect(0,0,W,H);
-  const px=x=>(x-v.cx)*s+W/2;
-  const py=y=>H/2-(y-v.cy)*s;
-  t.strokeStyle='#000000'; t.lineWidth=3; t.lineCap='round'; t.lineJoin='round';
-  for(const pg of _polEstado.poligonos){
-    if(pg.ids.length<3) continue;
-    t.beginPath();
-    for(let i=0;i<pg.ids.length;i++){
-      const p=_polEstado.pontos[pg.ids[i]];
-      if(!p) continue;
-      const x=px(p.x), y=py(p.y);
-      if(i===0) t.moveTo(x,y); else t.lineTo(x,y);
-    }
-    t.closePath();
-    t.stroke();
-  }
-  for(const ci of _polEstado.circunferencias){
-    const c=_polEstado.pontos[ci.centro], p=_polEstado.pontos[ci.ponto];
-    if(!c || !p) continue;
-    const r=_polDist(c.x,c.y,p.x,p.y);
-    if(r<=0) continue;
-    t.beginPath();
-    t.arc(px(c.x), py(c.y), r*s, 0, Math.PI*2);
-    t.stroke();
-  }
-  return {W:W, H:H, data:t.getImageData(0,0,W,H).data};
-}
-function _polEhBarreira(d,o){
-  return d[o+3]>0 && !(d[o]>=250 && d[o+1]>=250 && d[o+2]>=250);
-}
-function _polFlood(barr, sx, sy){
-  const W=barr.W, H=barr.H, data=barr.data;
-  if(sx<0 || sy<0 || sx>=W || sy>=H) return null;
-  if(_polEhBarreira(data, (sy*W+sx)*4)) return null;
-  const visit=new Uint8Array(W*H);
-  const mapa=new Uint8Array(W*H);
-  const lista=[];
-  const pilha=[sy*W+sx];
-  visit[sy*W+sx]=1;
-  while(pilha.length){
-    const idx=pilha.pop();
-    const x=idx%W, y=(idx-x)/W;
-    lista.push(idx);
-    mapa[idx]=1;
-    if(x>0){ const ni=idx-1; if(!visit[ni] && !_polEhBarreira(data,ni*4)){ visit[ni]=1; pilha.push(ni); } }
-    if(x<W-1){ const ni=idx+1; if(!visit[ni] && !_polEhBarreira(data,ni*4)){ visit[ni]=1; pilha.push(ni); } }
-    if(y>0){ const ni=idx-W; if(!visit[ni] && !_polEhBarreira(data,ni*4)){ visit[ni]=1; pilha.push(ni); } }
-    if(y<H-1){ const ni=idx+W; if(!visit[ni] && !_polEhBarreira(data,ni*4)){ visit[ni]=1; pilha.push(ni); } }
-  }
-  return {W:W, H:H, lista:lista, mapa:mapa};
-}
-function _polSeedPixel(x,y){
-  const cv=document.getElementById('poligonosCanvas');
-  const s=_polEstado.view.scale;
-  return {
-    x:Math.round((x-_polEstado.view.cx)*s + cv.width/2),
-    y:Math.round(cv.height/2 - (y-_polEstado.view.cy)*s)
-  };
-}
-function _polPintarRegiao(img, reg, cor){
-  const d=img.data;
-  const m=/^#([0-9a-f]{6})$/i.exec(cor);
-  let r=51,g=153,b=255;
-  if(m){ const n=parseInt(m[1],16); r=(n>>16)&255; g=(n>>8)&255; b=n&255; }
-  const a=Math.round(0.35*255);
-  for(const idx of reg.lista){
-    const o=idx*4;
-    d[o]=r; d[o+1]=g; d[o+2]=b; d[o+3]=a;
-  }
-}
-function _polAtualizarHint(){
-  const el=document.getElementById('polHint');
-  if(!el) return;
-  const f=_polEstado && _polEstado.ferramenta || 'mover';
-  const msgs={
-    mover:'Clique e arraste para mover objetos. Use a roda do mouse para dar zoom.',
-    ponto:'Clique para criar um ponto.',
-    reta:'Clique em 2 lugares para traçar uma reta.',
-    segmento:'Clique em 2 pontos para criar um segmento.',
-    poligono:'Clique nos vértices e depois em "Fechar polígono".',
-    circunferencia:'Clique no centro e depois em um ponto do contorno.',
-    balde:'Escolha a cor e clique dentro de uma figura para pintar só a região clicada.'
-  };
-  el.textContent=msgs[f]||'';
-  el.className='pol-hint';
-}
-function _polAtualizarHintMsg(msg){
-  const el=document.getElementById('polHint');
-  if(!el) return;
-  el.textContent=msg;
-  el.className='pol-hint pol-hint-msg';
-  clearTimeout(el._polHintTimer);
-  el._polHintTimer=setTimeout(()=>{ if(document.getElementById('polHint')===el) _polAtualizarHint(); }, 5000);
-}
-function _polAtualizarDados(){
-  const elP=document.getElementById('polDadosPontos');
-  const elS=document.getElementById('polDadosSegmentos');
-  const elR=document.getElementById('polDadosRetas');
-  const elC=document.getElementById('polDadosCircunf');
-  const elG=document.getElementById('polDadosPoligonos');
-  if(elP){
-    elP.innerHTML = _polEstado.pontos.length
-      ? _polEstado.pontos.map(p=>`<div class="pol-dados-item">${_polEsc(p.rotulo)} — (${p.x}, ${p.y})</div>`).join('')
-      : '<div class="pol-dados-vazio">—</div>';
-  }
-  if(elS){
-    elS.innerHTML = _polEstado.segmentos.length
-      ? _polEstado.segmentos.map(se=>{
-          const a=_polEstado.pontos[se.a], b=_polEstado.pontos[se.b];
-          if(!a || !b) return '';
-          return `<div class="pol-dados-item">${_polEsc(a.rotulo)}${_polEsc(b.rotulo)} — ${_polFmt(_polDist(a.x,a.y,b.x,b.y))}</div>`;
-        }).join('')
-      : '<div class="pol-dados-vazio">—</div>';
-  }
-  if(elR){
-    elR.innerHTML = _polEstado.retas.length
-      ? _polEstado.retas.map(re=>{
-          const a=_polEstado.pontos[re.a], b=_polEstado.pontos[re.b];
-          if(!a || !b) return '';
-          return `<div class="pol-dados-item">${_polEsc(re.nome)} — por ${_polEsc(a.rotulo)}(${a.x}, ${a.y}) e ${_polEsc(b.rotulo)}(${b.x}, ${b.y})</div>`;
-        }).join('')
-      : '<div class="pol-dados-vazio">—</div>';
-  }
-  if(elC){
-    elC.innerHTML = _polEstado.circunferencias.length
-      ? _polEstado.circunferencias.map(ci=>{
-          const c=_polEstado.pontos[ci.centro], p=_polEstado.pontos[ci.ponto];
-          if(!c || !p) return '';
-          const r=_polDist(c.x,c.y,p.x,p.y);
-          const comp=r*2*Math.PI, area=r*r*Math.PI;
-          return `<div class="pol-dados-item">${_polEsc(ci.nome)} — r=${_polFmt(r)}, C=${_polFmt(comp)}, A=${_polFmt(area)}</div>`;
-        }).join('')
-      : '<div class="pol-dados-vazio">—</div>';
-  }
-  if(elG){
-    elG.innerHTML = _polEstado.poligonos.length
-      ? _polEstado.poligonos.map((pg,i)=>{
-          if(pg.ids.length<3) return '';
-          const rot=pg.ids.map(id=>_polEstado.pontos[id]?_polEsc(_polEstado.pontos[id].rotulo):'?').join('');
-          return `<div class="pol-dados-item">${rot} — P=${_polFmt(_polPerimetroIds(pg.ids))}  A=${_polFmt(_polAreaIds(pg.ids))}</div>`;
-        }).join('')
-      : '<div class="pol-dados-vazio">—</div>';
-  }
-}
-function _polRedesenhar(){
-  const cv=document.getElementById('poligonosCanvas');
-  if(!cv || !_polEstado.ativo) return;
-  const ctx=cv.getContext('2d');
-  const W=cv.width, H=cv.height;
-  const v=_polEstado.view, s=v.scale;
-  cv.classList.toggle('pol-grab', _polEstado.ferramenta==='mover');
-  cv.classList.toggle('pol-panning', _polEstado.panning);
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='#ffffff';
-  ctx.fillRect(0,0,W,H);
-  const x0=v.cx - W/(2*s), x1=v.cx + W/(2*s);
-  const y0=v.cy - H/(2*s), y1=v.cy + H/(2*s);
-  // grade
-  if(_polEstado.verGrade){
-    const passo=_polPassoGrid(s);
-    ctx.strokeStyle='#d9dfe7';
-    ctx.lineWidth=1;
-    ctx.beginPath();
-    for(let gx=Math.floor(x0/passo)*passo; gx<=x1; gx+=passo){
-      const px=(gx-v.cx)*s+W/2;
-      ctx.moveTo(px,0); ctx.lineTo(px,H);
-    }
-    for(let gy=Math.floor(y0/passo)*passo; gy<=y1; gy+=passo){
-      const py=H/2-(gy-v.cy)*s;
-      ctx.moveTo(0,py); ctx.lineTo(W,py);
-    }
-    ctx.stroke();
-  }
-  // eixos (linhas principais)
-  if(_polEstado.verGrade){
-    ctx.strokeStyle='#b7bfca';
-    ctx.lineWidth=1.5;
-    ctx.beginPath();
-    const ax=(0-v.cx)*s+W/2;
-    ctx.moveTo(ax,0); ctx.lineTo(ax,H);
-    const ay=H/2-(0-v.cy)*s;
-    ctx.moveTo(0,ay); ctx.lineTo(W,ay);
-    ctx.stroke();
-    // setas e rótulos dos eixos
-    ctx.fillStyle='#98a1ad';
-    ctx.font='11px Inter, sans-serif';
-    ctx.fillText('x', W-16, ay-6);
-    ctx.fillText('y', ax+6, 15);
-    // números dos eixos
-    const numPasso=_polPassoNum(s);
-    for(let gx=Math.floor(x0/numPasso)*numPasso; gx<=x1; gx+=numPasso){
-      if(gx===0) continue;
-      ctx.fillText(String(gx), (gx-v.cx)*s+W/2+4, ay+13);
-    }
-    for(let gy=Math.floor(y0/numPasso)*numPasso; gy<=y1; gy+=numPasso){
-      if(gy===0) continue;
-      ctx.fillText(String(gy), ax+5, H/2-(gy-v.cy)*s-5);
-    }
-  }
-  // preenchimentos com o balde (regiões independentes, incluindo interseções)
-  if(_polEstado.pinturas.length){
-    const pbarr=_polBarreiraBuild();
-    if(pbarr){
-      const tmpc=document.createElement('canvas');
-      tmpc.width=pbarr.W; tmpc.height=pbarr.H;
-      const tctx=tmpc.getContext('2d');
-      const img=tctx.createImageData(pbarr.W,pbarr.H);
-      for(const pn of _polEstado.pinturas){
-        const sp=_polSeedPixel(pn.x,pn.y);
-        if(sp.x<0 || sp.y<0 || sp.x>=pbarr.W || sp.y>=pbarr.H) continue;
-        const reg=_polFlood(pbarr, sp.x, sp.y);
-        if(reg && reg.lista.length>0) _polPintarRegiao(img, reg, pn.cor);
-      }
-      tctx.putImageData(img,0,0);
-      ctx.drawImage(tmpc,0,0);
-    }
-  }
-  // polígonos fechados
-  for(const pg of _polEstado.poligonos){
-    const ids=pg.ids;
-    if(ids.length<3) continue;
-    ctx.beginPath();
-    for(let i=0;i<ids.length;i++){
-      const p=_polEstado.pontos[ids[i]];
-      if(!p) continue;
-      const px=(p.x-v.cx)*s+W/2, py=H/2-(p.y-v.cy)*s;
-      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
-    }
-    ctx.closePath();
-    ctx.strokeStyle='#3399ff';
-    ctx.lineWidth=2;
-    ctx.stroke();
-  }
-  // rascunho do polígono em construção
-  if(_polEstado.rascunhoPoli.length>0){
-    ctx.setLineDash([6,4]);
-    ctx.strokeStyle='#3399ff';
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    for(let i=0;i<_polEstado.rascunhoPoli.length;i++){
-      const p=_polEstado.pontos[_polEstado.rascunhoPoli[i]];
-      if(!p) continue;
-      const px=(p.x-v.cx)*s+W/2, py=H/2-(p.y-v.cy)*s;
-      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
-    }
-    if(_polEstado.cursorDentro && _polEstado.ferramenta==='poligono'){
-      ctx.lineTo((_polEstado.curX-v.cx)*s+W/2, H/2-(_polEstado.curY-v.cy)*s);
-    }
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-  // retas infinitas
-  for(const re of _polEstado.retas){
-    const a=_polEstado.pontos[re.a], b=_polEstado.pontos[re.b];
-    if(!a || !b) continue;
-    _polTraçarReta(ctx, a, b, '#ff9f43', 1.8);
-    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
-    ctx.fillStyle='#d07d17';
-    ctx.font='600 12px Inter, sans-serif';
-    ctx.fillText(re.nome, (mx-v.cx)*s+W/2+5, H/2-(my-v.cy)*s-5);
-  }
-  // circunferências
-  for(const ci of _polEstado.circunferencias){
-    const c=_polEstado.pontos[ci.centro], p=_polEstado.pontos[ci.ponto];
-    if(!c || !p) continue;
-    const r=_polDist(c.x,c.y,p.x,p.y);
-    if(r<=0) continue;
-    const px=(c.x-v.cx)*s+W/2, py=H/2-(c.y-v.cy)*s;
-    const pr=r*s;
-    if(_polEstado.verPontos){
-      ctx.setLineDash([4,4]);
-      ctx.strokeStyle='rgba(0,184,148,0.45)';
-      ctx.lineWidth=1.2;
-      ctx.beginPath();
-      ctx.moveTo(px,py);
-      ctx.lineTo((p.x-v.cx)*s+W/2, H/2-(p.y-v.cy)*s);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }
-    ctx.beginPath();
-    ctx.arc(px,py,pr,0,Math.PI*2);
-    ctx.strokeStyle='#00b894';
-    ctx.lineWidth=2;
-    ctx.stroke();
-    if(_polEstado.verPontos){
-      ctx.fillStyle='#00b894';
-      ctx.font='600 12px Inter, sans-serif';
-      ctx.fillText(ci.nome, px+4, py-pr-6);
-    }
-  }
-  // segmentos
-  ctx.lineCap='round';
-  ctx.lineJoin='round';
-  ctx.strokeStyle='#2d3436';
-  ctx.lineWidth=2.5;
-  for(const se of _polEstado.segmentos){
-    const a=_polEstado.pontos[se.a], b=_polEstado.pontos[se.b];
-    if(!a || !b) continue;
-    ctx.beginPath();
-    ctx.moveTo((a.x-v.cx)*s+W/2, H/2-(a.y-v.cy)*s);
-    ctx.lineTo((b.x-v.cx)*s+W/2, H/2-(b.y-v.cy)*s);
-    ctx.stroke();
-  }
-  // guia do segmento em construção
-  if(_polEstado.ferramenta==='segmento' && _polEstado.segA>=0 && _polEstado.cursorDentro){
-    const a=_polEstado.pontos[_polEstado.segA];
-    if(a){
-      ctx.setLineDash([5,4]);
-      ctx.strokeStyle='#74b9ff';
-      ctx.lineWidth=1.5;
-      ctx.beginPath();
-      ctx.moveTo((a.x-v.cx)*s+W/2, H/2-(a.y-v.cy)*s);
-      ctx.lineTo((_polEstado.curX-v.cx)*s+W/2, H/2-(_polEstado.curY-v.cy)*s);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }
-  }
-  // guia da reta em construção
-  if(_polEstado.ferramenta==='reta' && _polEstado.retaA>=0 && _polEstado.cursorDentro){
-    const a=_polEstado.pontos[_polEstado.retaA];
-    if(a){
-      const curso={x:_polEstado.curX, y:_polEstado.curY};
-      ctx.setLineDash([6,5]);
-      _polTraçarReta(ctx, a, curso, '#ff9f43', 1.5);
-      ctx.setLineDash([]);
-    }
-  }
-  // guia da circunferência em construção
-  if(_polEstado.ferramenta==='circunferencia' && _polEstado.circA>=0 && _polEstado.cursorDentro){
-    const c=_polEstado.pontos[_polEstado.circA];
-    if(c){
-      const r=_polDist(c.x,c.y,_polEstado.curX,_polEstado.curY);
-      if(r>0){
-        const px=(c.x-v.cx)*s+W/2, py=H/2-(c.y-v.cy)*s;
-        ctx.setLineDash([6,5]);
-        ctx.beginPath();
-        ctx.arc(px,py,r*s,0,Math.PI*2);
-        ctx.strokeStyle='rgba(0,184,148,0.55)';
-        ctx.lineWidth=1.5;
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
-    }
-  }
-  // pontos
-  if(_polEstado.verPontos){
-    for(let i=0;i<_polEstado.pontos.length;i++){
-      const p=_polEstado.pontos[i];
-      const px=(p.x-v.cx)*s+W/2, py=H/2-(p.y-v.cy)*s;
-      ctx.beginPath();
-      ctx.arc(px,py, (i===_polEstado.arrastando || i===_polEstado.segA || i===_polEstado.retaA || i===_polEstado.circA) ? 6 : 4.5, 0, Math.PI*2);
-      ctx.fillStyle = _polEstado.arrastando===i ? '#3399ff' : '#e74c3c';
-      ctx.fill();
-      ctx.strokeStyle='#ffffff';
-      ctx.lineWidth=1.5;
-      ctx.stroke();
-      ctx.fillStyle='#2d3436';
-      ctx.font='600 12px Inter, sans-serif';
-      ctx.fillText(p.rotulo, px+7, py-7);
-    }
-  }
-  // coordenadas do cursor
-  if(_polEstado.cursorDentro && (_polEstado.ferramenta==='ponto'||_polEstado.ferramenta==='reta'||_polEstado.ferramenta==='segmento'||_polEstado.ferramenta==='poligono'||_polEstado.ferramenta==='circunferencia')){
-    const cx=(_polEstado.curX-v.cx)*s+W/2;
-    const cy=H/2-(_polEstado.curY-v.cy)*s;
-    const tx='('+_polEstado.curX+', '+_polEstado.curY+')';
-    ctx.font='11px JetBrains Mono, monospace';
-    const tw=ctx.measureText(tx).width;
-    const bxp=Math.min(cx+8, W-tw-12);
-    ctx.fillStyle='rgba(45,52,54,0.75)';
-    ctx.fillRect(bxp, cy+8, tw+8, 18);
-    ctx.fillStyle='#ffffff';
-    ctx.fillText(tx, bxp+4, cy+21);
-  }
-}
-function _polCriarPonto(sx,sy){
-  const hit=_polHitPonto(sx,sy);
-  if(hit>=0) return hit;
-  const w=_polS2W(sx,sy);
-  const nx=_polCoord(w.x, _polEstado.view.scale), ny=_polCoord(w.y, _polEstado.view.scale);
-  const rotulo=_polProximaLetra();
-  _polEstado.pontos.push({x:nx, y:ny, rotulo:rotulo});
-  _polAtualizarDados();
-  _polRedesenhar();
-  return _polEstado.pontos.length-1;
-}
-function _polFecharPoligono(){
-  if(_polEstado.rascunhoPoli.length<3){
-    _polAtualizarHintMsg('São necessários ao menos 3 vértices para fechar o polígono.');
-    return;
-  }
-  _polEstado.poligonos.push({ids:_polEstado.rascunhoPoli.slice()});
-  _polEstado.rascunhoPoli=[];
-  _polAtualizarDados();
-  _polAtualizarHint();
-  _polRedesenhar();
-}
-function _polLimpar(){
-  _polEstado.pontos=[];
-  _polEstado.segmentos=[];
-  _polEstado.retas=[];
-  _polEstado.circunferencias=[];
-  _polEstado.poligonos=[];
-  _polEstado.rascunhoPoli=[];
-  _polEstado.pinturas=[];
-  _polEstado.segA=-1;
-  _polEstado.retaA=-1;
-  _polEstado.circA=-1;
-  _polAtualizarDados();
-  _polAtualizarHint();
-  _polRedesenhar();
-}
-function _polMousedown(sx,sy){
-  const e=_polEstado;
-  if(e.ferramenta==='mover'){
-    const h=_polHitPonto(sx,sy);
-    if(h>=0){ e.arrastando=h; e.curX=e.pontos[h].x; e.curY=e.pontos[h].y; }
-    else{
-      e.panning=true; e.panSX=sx; e.panSY=sy;
-      e.viewCX0=e.view.cx; e.viewCY0=e.view.cy;
-    }
-    _polRedesenhar();
-    return;
-  }
-  if(e.ferramenta==='ponto'){ _polCriarPonto(sx,sy); return; }
-  if(e.ferramenta==='reta'){
-    let idx=_polHitPonto(sx,sy);
-    if(idx<0) idx=_polCriarPonto(sx,sy);
-    if(idx<0) return;
-    if(e.retaA<0) e.retaA=idx;
-    else if(idx===e.retaA) e.retaA=-1;
-    else{
-      if(_polDist(e.pontos[e.retaA].x,e.pontos[e.retaA].y,e.pontos[idx].x,e.pontos[idx].y)>0){
-        e.retas.push({a:e.retaA, b:idx, nome:_polNomeObj(5, e.retas.length)});
-      }
-      e.retaA=-1;
-    }
-    _polAtualizarDados();
-    _polRedesenhar();
-    return;
-  }
-  if(e.ferramenta==='segmento'){
-    let idx=_polHitPonto(sx,sy);
-    if(idx<0) idx=_polCriarPonto(sx,sy);
-    if(idx<0) return;
-    if(e.segA<0) e.segA=idx;
-    else if(idx===e.segA) e.segA=-1;
-    else{
-      const ja=e.segmentos.some(se=>(se.a===e.segA&&se.b===idx)||(se.a===idx&&se.b===e.segA));
-      if(!ja) e.segmentos.push({a:e.segA, b:idx});
-      e.segA=-1;
-    }
-    _polAtualizarDados();
-    _polRedesenhar();
-    return;
-  }
-  if(e.ferramenta==='circunferencia'){
-    let idx=_polHitPonto(sx,sy);
-    if(idx<0) idx=_polCriarPonto(sx,sy);
-    if(idx<0) return;
-    if(e.circA<0) e.circA=idx;
-    else if(idx===e.circA) e.circA=-1;
-    else{
-      if(_polDist(e.pontos[e.circA].x,e.pontos[e.circA].y,e.pontos[idx].x,e.pontos[idx].y)>0){
-        e.circunferencias.push({centro:e.circA, ponto:idx, nome:'c'+(e.circunferencias.length+1)});
-      }
-      e.circA=-1;
-    }
-    _polAtualizarDados();
-    _polRedesenhar();
-    return;
-  }
-  if(e.ferramenta==='poligono'){
-    let idx=_polHitPonto(sx,sy);
-    if(idx<0) idx=_polCriarPonto(sx,sy);
-    if(idx<0) return;
-    const ult=e.rascunhoPoli[e.rascunhoPoli.length-1];
-    if(ult!==idx) e.rascunhoPoli.push(idx);
-    _polAtualizarDados();
-    _polRedesenhar();
-    return;
-  }
-  if(e.ferramenta==='balde'){
-    const w=_polS2W(sx,sy);
-    if(_polHitPoligono(w.x,w.y)<0 && _polHitCircunferencia(w.x,w.y)<0){
-      _polAtualizarHintMsg('Clique dentro de um polígono ou circunferência: a região delimitada pelas bordas (incluindo interseções) é pintada.');
-      return;
-    }
-    const barr=_polBarreiraBuild();
-    if(!barr) return;
-    const sp=_polSeedPixel(w.x,w.y);
-    const reg=_polFlood(barr, sp.x, sp.y);
-    if(!reg || reg.lista.length===0){
-      _polAtualizarHintMsg('Não foi possível calcular a região para pintar.');
-      return;
-    }
-    const W=barr.W, H=barr.H, mapa=reg.mapa;
-    let aberta=false;
-    for(let x=0;x<W;x++){ if(mapa[x] || mapa[(H-1)*W+x]){ aberta=true; x=W; } }
-    if(!aberta){ for(let y=0;y<H;y++){ if(mapa[y*W] || mapa[y*W+W-1]){ aberta=true; break; } } }
-    if(aberta){
-      _polAtualizarHintMsg('A região clicada não está fechada por completo; não dá para pintar.');
-      _polAtualizarDados();
-      _polRedesenhar();
-      return;
-    }
-    let alvo=-1;
-    for(let i=0;i<e.pinturas.length;i++){
-      const q=e.pinturas[i];
-      const s2=_polSeedPixel(q.x,q.y);
-      if(s2.x>=0 && s2.y>=0 && s2.x<W && s2.y<H && mapa[s2.y*W+s2.x]){ alvo=i; break; }
-    }
-    if(e.corPintar===''){
-      if(alvo>=0){
-        e.pinturas.splice(alvo,1);
-        _polAtualizarHintMsg('Preenchimento da região removido.');
-      }else{
-        _polAtualizarHintMsg('Não há preenchimento nesta região para remover.');
-      }
-    }else{
-      if(alvo>=0){
-        e.pinturas[alvo]={x:e.pinturas[alvo].x, y:e.pinturas[alvo].y, cor:e.corPintar};
-        _polAtualizarHintMsg('Preenchimento da região atualizado.');
-      }else{
-        e.pinturas.push({x:w.x, y:w.y, cor:e.corPintar});
-        _polAtualizarHintMsg('Região pintada de forma independente!');
-      }
-    }
-    _polAtualizarDados();
-    _polRedesenhar();
-    return;
-  }
-}
-function _polMousemove(sx,sy){
-  const e=_polEstado;
-  const w=_polS2W(sx,sy);
-  e.curX=_polCoord(w.x, e.view.scale);
-  e.curY=_polCoord(w.y, e.view.scale);
-  if(e.panning){
-    const s=e.view.scale;
-    e.view.cx=e.viewCX0 - (sx-e.panSX)/s;
-    e.view.cy=e.viewCY0 + (sy-e.panSY)/s;
-    _polRedesenhar();
-    return;
-  }
-  if(e.arrastando>=0 && e.pontos[e.arrastando]){
-    e.pontos[e.arrastando].x=e.curX;
-    e.pontos[e.arrastando].y=e.curY;
-    _polAtualizarDados();
-    _polRedesenhar();
-    return;
-  }
-  _polRedesenhar();
-}
-function _polZoom(e){
-  const cv=document.getElementById('poligonosCanvas');
-  if(!cv) return;
-  const r=cv.getBoundingClientRect();
-  const sx=e.clientX-r.left, sy=e.clientY-r.top;
-  const w=_polS2W(sx,sy);
-  const fator=e.deltaY<0?1.15:(1/1.15);
-  let nova=_polEstado.view.scale*fator;
-  nova=Math.max(8, Math.min(400, nova));
-  _polEstado.view.scale=nova;
-  _polEstado.view.cx=w.x - (sx-cv.width/2)/nova;
-  _polEstado.view.cy=w.y + (sy-cv.height/2)/nova;
-  _polRedesenhar();
-}
-function _esconderPoligonos(){
-  const _j=document.getElementById('janelaFlutuante');
-  if(_j) _j.classList.remove('poligonos-mod');
-  const _h=document.getElementById('janelaHeader');
-  if(_h){ const _s=_h.querySelector('span'); if(_s && _s.textContent.includes('Polígonos')) _s.textContent='🪟 Janela Willog — Console'; }
-  const _p=document.getElementById('poligonosRoot');
-  if(_p) _p.style.display='none';
-  _polEstado.ativo=false;
-  _polEstado.panning=false;
-  _polEstado.arrastando=-1;
-}
-function abrirJanelaPoligonos(){
-  _esconderPainelTartaruga();
-  janelaEl=document.getElementById('janelaFlutuante');
-  janelaConsoleEl=document.getElementById('janelaConsole');
-  if(!janelaEl) return;
-  janelaEl.style.display='flex';
-  janelaAtiva=true;
-  janelaCentralizada=false;
-  janelaModo='poligonos';
-  _janelaAbertaNestaExec=true;
-  _graficoErroJaMostrado=false;
-  janelaEl.classList.remove('minimized');
-  janelaEl.classList.add('maximized');
-  janelaEl.classList.remove('tartaruga-mod');
-  janelaEl.classList.add('poligonos-mod');
-  janelaEl.style.left=''; janelaEl.style.top=''; janelaEl.style.transform=''; janelaEl.style.width=''; janelaEl.style.height='';
-  const janelaBodyEl=document.getElementById('janelaBody');
-  if(janelaBodyEl){ janelaBodyEl.style.width=''; janelaBodyEl.style.height=''; janelaBodyEl.style.flex=''; }
-  const _h=document.getElementById('janelaHeader');
-  if(_h){ const _s=_h.querySelector('span'); if(_s) _s.textContent='📐 Polígonos — plano cartesiano'; }
-  const _cv=document.getElementById('janelaCanvas');
-  if(_cv){ _cv.classList.remove('ativo'); _cv.style.display='none'; }
-  const _cs=document.getElementById('janelaConsole');
-  if(_cs){ _cs.style.display='none'; }
-  const _root=document.getElementById('poligonosRoot');
-  if(_root) _root.style.display='flex';
-  _polEstado.ativo=true;
-  if(_polEstado.pontos.length===0 && _polEstado.segmentos.length===0 && _polEstado.poligonos.length===0){
-    _polEstado.view.cx=0; _polEstado.view.cy=0; _polEstado.view.scale=60;
-  }
-  _polEstado.rascunhoPoli=[];
-  _polEstado.segA=-1;
-  _polEstado.retaA=-1;
-  _polEstado.circA=-1;
-  _polAtualizarHint();
-  _polAtualizarDados();
-  const cv=document.getElementById('poligonosCanvas');
-  if(cv){
-    _polRedimensionar(cv);
-    _polRedesenhar();
-  }
-  requestAnimationFrame(()=>{ if(cv){ _polRedimensionar(cv); _polRedesenhar(); } });
-}
-(function(){
-  const root=document.getElementById('poligonosRoot');
-  const cv=document.getElementById('poligonosCanvas');
-  if(!root || !cv) return;
-  root.querySelectorAll('.poligonos-toolbar button[data-tool]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      _polEstado.ferramenta=btn.dataset.tool;
-      _polEstado.segA=-1; _polEstado.retaA=-1; _polEstado.circA=-1;
-      root.querySelectorAll('.poligonos-toolbar button[data-tool]').forEach(b=>b.classList.toggle('ativo', b===btn));
-      _polAtualizarHint();
-      _polRedesenhar();
-    });
-  });
-  const coresEl=document.getElementById('polCores');
-  if(coresEl){
-    coresEl.querySelectorAll('.pol-cor').forEach(sw=>{
-      sw.addEventListener('click', ()=>{
-        _polEstado.corPintar=sw.dataset.cor;
-        coresEl.querySelectorAll('.pol-cor').forEach(s=>s.classList.toggle('ativo', s===sw));
-        _polAtualizarHint();
-      });
-    });
-  }
-  const btnF=document.getElementById('polBtnFecharPoli');
-  if(btnF) btnF.addEventListener('click', ()=>{ _polFecharPoligono(); });
-  const btnL=document.getElementById('polBtnLimpar');
-  if(btnL) btnL.addEventListener('click', ()=>{ _polLimpar(); });
-  const btnPt=document.getElementById('polBtnPontos');
-  if(btnPt) btnPt.addEventListener('click', ()=>{
-    _polEstado.verPontos=!_polEstado.verPontos;
-    btnPt.classList.toggle('ativo', _polEstado.verPontos);
-    _polRedesenhar();
-  });
-  const btnGr=document.getElementById('polBtnGrade');
-  if(btnGr) btnGr.addEventListener('click', ()=>{
-    _polEstado.verGrade=!_polEstado.verGrade;
-    btnGr.classList.toggle('ativo', _polEstado.verGrade);
-    _polRedesenhar();
-  });
-  const resizerEl=document.getElementById('poligonosResizer');
-  const dadosEl=document.querySelector('#poligonosRoot .poligonos-dados');
-  if(resizerEl && dadosEl){
-    let rez=false, rStartX=0, rStartW=0;
-    resizerEl.addEventListener('mousedown', (e)=>{
-      if(e.button!==0) return;
-      rez=true; rStartX=e.clientX; rStartW=dadosEl.offsetWidth;
-      e.preventDefault();
-      document.body.style.userSelect='none';
-    });
-    window.addEventListener('mousemove', (e)=>{
-      if(!rez) return;
-      dadosEl.style.width=Math.max(160, Math.round(rStartW - (e.clientX-rStartX)))+'px';
-      if(_polEstado.ativo){ _polRedimensionar(cv); _polRedesenhar(); }
-    });
-    window.addEventListener('mouseup', ()=>{
-      if(rez){ rez=false; document.body.style.userSelect=''; }
-    });
-  }
-  function _pos(e){
-    const r=cv.getBoundingClientRect();
-    return {sx:(e.clientX||0)-r.left, sy:(e.clientY||0)-r.top};
-  }
-  cv.addEventListener('mousedown', (e)=>{
-    if(!_polEstado.ativo) return;
-    e.preventDefault();
-    const {sx,sy}=_pos(e);
-    _polMousedown(sx,sy);
-  });
-  cv.addEventListener('mousemove', (e)=>{
-    if(!_polEstado.ativo) return;
-    _polEstado.cursorDentro=true;
-    const {sx,sy}=_pos(e);
-    _polMousemove(sx,sy);
-  });
-  window.addEventListener('mousemove', (e)=>{
-    if(!_polEstado.ativo) return;
-    if(_polEstado.panning || _polEstado.arrastando>=0){
-      const r=cv.getBoundingClientRect();
-      _polMousemove(e.clientX-r.left, e.clientY-r.top);
-    }
-  });
-  window.addEventListener('mouseup', ()=>{
-    _polEstado.panning=false;
-    _polEstado.arrastando=-1;
-  });
-  cv.addEventListener('mouseenter', ()=>{ _polEstado.cursorDentro=true; });
-  cv.addEventListener('mouseleave', ()=>{ _polEstado.cursorDentro=false; _polRedesenhar(); });
-  cv.addEventListener('wheel', (e)=>{ if(!_polEstado.ativo) return; e.preventDefault(); _polZoom(e); }, {passive:false});
-  cv.addEventListener('touchstart', (e)=>{
-    if(!_polEstado.ativo || e.touches.length!==1) return;
-    e.preventDefault();
-    const t=e.touches[0], r=cv.getBoundingClientRect();
-    _polMousedown(t.clientX-r.left, t.clientY-r.top);
-  }, {passive:false});
-  cv.addEventListener('touchmove', (e)=>{
-    if(!_polEstado.ativo || e.touches.length!==1) return;
-    e.preventDefault();
-    const t=e.touches[0], r=cv.getBoundingClientRect();
-    _polMousemove(t.clientX-r.left, t.clientY-r.top);
-  }, {passive:false});
-  cv.addEventListener('touchend', (e)=>{
-    if(_polEstado.ativo && e.touches.length===0){
-      _polEstado.panning=false;
-      _polEstado.arrastando=-1;
-    }
-  });
-  window.addEventListener('resize', ()=>{ if(_polEstado.ativo){ _polRedimensionar(cv); _polRedesenhar(); } });
-  if(window.ResizeObserver){
-    try{
-      const ro=new ResizeObserver(()=>{ if(_polEstado.ativo){ _polRedimensionar(cv); _polRedesenhar(); } });
-      ro.observe(cv.parentElement);
-    }catch(e){}
-  }
-})();
 // --- Arquivos .wil ---
 document.getElementById('btnNovo').addEventListener('click', ()=>{
   if(confirm('Criar novo arquivo? Alterações não salvas serão perdidas.')){
@@ -8415,7 +6764,6 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
     return;
   }
   if(isJanelaStmt(stmt)){ const cent=getJanelaCentraliza(stmt); ativarJanela(cent); if(!cent) hasOutputRef.value=true; return; }
-  if(isPoligonosStmt(stmt)){ abrirJanelaPoligonos(); hasOutputRef.value=true; return; }
   // --- Tela / Desenhe (gráficos na janela) ---
   if(isTelaLimpeStmt(stmt)){ if(_willogTelaLimpe()) hasOutputRef.value=true; return; }
   if(isTelaCorStmt(stmt)){ const _arg=parseTelaCorArg(stmt); if(_willogTelaCor(_arg, env)) hasOutputRef.value=true; return; }
@@ -8671,12 +7019,6 @@ async function execSingleStatement(stmt, env, lineNo, hasOutputRef){
       return;
     }
   }
-  // --- Tartaruga (estilo Logo) ---
-  const _tartRes=await execTartarugaComando(stmt, env);
-  if(_tartRes!==null){
-    hasOutputRef.value=true;
-    return;
-  }
   try{
     const v=evaluateExpression(stmt, env);
     if(v!==undefined && v!=='' && v!==null){
@@ -8749,9 +7091,6 @@ async function executarPrograma(src){
   _janelaAbertaNestaExec=false;
   _janelaFechadaDuranteExec=false;
   _graficoErroJaMostrado=false;
-  if(janelaModo==='tartaruga' && tartaruga && tartaruga.ativo && /(?:^|\s)(tartaruga|corFundo|cor|avance|recue|direita|esquerda)\s|(?:^|\s)(levanta|abaixa|abaixe)\s+caneta\b/i.test(src)){
-    _tartarugaReset();
-  }
   let srcNoBlock=src.replace(/#:[\s\S]*?:#/g, '');
   srcNoBlock=srcNoBlock.replace(/#:[\s\S]*$/g, '');
   const env={};
@@ -8845,7 +7184,6 @@ async function executarPrograma(src){
         hasOutputRef.value=true; i++; continue;
       }
       if(isJanelaLine(raw)){ const cent=getJanelaCentraliza(raw); ativarJanela(cent); if(!cent) hasOutputRef.value=true; i++; continue; }
-      if(isPoligonosStmt(raw)){ abrirJanelaPoligonos(); hasOutputRef.value=true; i++; continue; }
       if(isTelaLimpeStmt(raw)){ if(_willogTelaLimpe()) hasOutputRef.value=true; i++; continue; }
       if(isTelaCorStmt(raw)){ const _a=parseTelaCorArg(raw); if(_willogTelaCor(_a, env)) hasOutputRef.value=true; i++; continue; }
       if(isCorTextoStmt(raw)){ const _a=parseCorTextoArg(raw); if(_willogCorTexto(_a, env)) hasOutputRef.value=true; i++; continue; }
@@ -9467,126 +7805,6 @@ document.addEventListener('keydown', (e)=>{
   if(e.key==='Escape') document.getElementById('modalSobre').style.display='none';
 });
 
-// --- Ferramentas: Tartaruga e Polígonos ---
-document.getElementById('btnFerTartaruga').addEventListener('click', ()=>{ abrirJanelaTartaruga(); });
-document.getElementById('btnFerPoligonos').addEventListener('click', ()=>{ abrirJanelaPoligonos(); });
-
-// --- Calculadora flutuante ---
-(function(){
-  const modal=document.getElementById('modalCalculadora');
-  if(!modal) return;
-  const display=document.getElementById('calcDisplay');
-  let acc=0, oper=null, entrada='0', novo=true, erro=false;
-  const fmt=n=>{ if(!Number.isFinite(n)) return 'Erro'; return String(parseFloat(n.toPrecision(12))); };
-  const atualizar=()=>{ display.textContent = erro ? 'Erro' : entrada; };
-  const highlightOp=(op)=>{ modal.querySelectorAll('.calc-btn.op').forEach(x=> x.classList.toggle('ativo', x.dataset.a===op)); };
-  function limparTotal(){ acc=0; oper=null; entrada='0'; novo=true; erro=false; atualizar(); highlightOp(null); }
-  function digito(ch){
-    if(erro) limparTotal();
-    if(novo){ entrada = (ch==='.') ? '0.' : ch; novo=false; }
-    else if(ch==='.'){ if(!entrada.includes('.')) entrada+='.'; }
-    else if(entrada==='0'){ entrada=ch; }
-    else{ if(entrada.replace(/[-.]/g,'').length>=15) return; entrada+=ch; }
-    atualizar();
-  }
-  function calcular(){
-    const b=parseFloat(entrada);
-    let r;
-    switch(oper){
-      case 'add': r=acc+b; break;
-      case 'sub': r=acc-b; break;
-      case 'mul': r=acc*b; break;
-      case 'div': r=(b===0)?NaN:(acc/b); break;
-      default: r=b; break;
-    }
-    if(!Number.isFinite(r)){ erro=true; atualizar(); highlightOp(null); return null; }
-    acc=r; entrada=fmt(r); novo=true; atualizar(); return r;
-  }
-  function setOper(op){
-    if(!novo){ if(calcular()===null) return; }
-    else if(oper===null){ acc=parseFloat(entrada); }
-    oper=op; novo=true; highlightOp(op); atualizar();
-  }
-  function iguala(){
-    if(erro) return;
-    if(oper!==null){ if(calcular()!==null){ oper=null; highlightOp(null); } }
-    else novo=true;
-  }
-  modal.querySelectorAll('.calc-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const a=btn.dataset.a;
-      if(erro){
-        if(a==='ac'){ limparTotal(); return; }
-        if(!/^[0-9]$/.test(a) && a!=='dot') return;
-        limparTotal();
-      }
-      if(/^[0-9]$/.test(a)) digito(a);
-      else if(a==='dot') digito('.');
-      else if(a==='neg'){ if(entrada!=='0' && entrada!=='0.'){ entrada = entrada.startsWith('-') ? entrada.slice(1) : '-'+entrada; atualizar(); } }
-      else if(a==='bs'){ if(!novo){ if(entrada.length>1){ entrada=entrada.slice(0,-1); if(entrada==='-'||entrada==='') entrada='0'; } else entrada='0'; atualizar(); } }
-      else if(a==='pct'){ const v=parseFloat(entrada)/100; entrada=fmt(v); novo=true; atualizar(); }
-      else if(a==='ac'){ limparTotal(); }
-      else if(a==='add'||a==='sub'||a==='mul'||a==='div'){ setOper(a); }
-      else if(a==='eq'){ iguala(); }
-    });
-  });
-  document.getElementById('calcEnviar').addEventListener('click', ()=>{
-    if(erro) return;
-    const editor=document.getElementById('editor');
-    if(!editor) return;
-    const valor = (oper!==null && !novo) ? String(acc) : String(parseFloat(entrada));
-    editor.setRangeText(valor, editor.selectionStart, editor.selectionEnd, 'end');
-    editor.focus();
-    if(typeof updateLines==='function') updateLines();
-    if(typeof updateHighlight==='function') updateHighlight();
-    if(window._willogSave) window._willogSave();
-  });
-  document.addEventListener('keydown', (e)=>{
-    if(modal.style.display!=='grid') return;
-    if(/^[0-9]$/.test(e.key)){ digito(e.key); e.preventDefault(); return; }
-    if(e.key==='.'){ digito('.'); e.preventDefault(); return; }
-    if(e.key==='+'){ setOper('add'); e.preventDefault(); return; }
-    if(e.key==='-'){ setOper('sub'); e.preventDefault(); return; }
-    if(e.key==='*'){ setOper('mul'); e.preventDefault(); return; }
-    if(e.key==='/'){ setOper('div'); e.preventDefault(); return; }
-    if(e.key==='Enter'||e.key==='='){ iguala(); e.preventDefault(); return; }
-    if(e.key==='Backspace'){ if(!novo){ if(entrada.length>1){ entrada=entrada.slice(0,-1); if(entrada==='-'||entrada==='') entrada='0'; } else entrada='0'; atualizar(); } e.preventDefault(); return; }
-    if(e.key==='Escape'){ modal.style.display='none'; return; }
-    if(e.key==='Delete'){ limparTotal(); }
-  });
-  document.getElementById('btnFerCalculadora').addEventListener('click', ()=>{ modal.style.display='grid'; });
-  document.getElementById('btnFecharCalculadora').addEventListener('click', ()=>{ modal.style.display='none'; });
-  modal.addEventListener('click', (e)=>{ if(e.target.id==='modalCalculadora') modal.style.display='none'; });
-  const box=modal.querySelector('.calc-box');
-  const cab=modal.querySelector('.modal-header');
-  let arrastando=false, offX=0, offY=0;
-  cab.addEventListener('pointerdown', (e)=>{
-    if(e.target.closest('button')) return;
-    e.preventDefault();
-    const r=box.getBoundingClientRect();
-    box.style.position='fixed';
-    box.style.margin='0';
-    box.style.left=r.left+'px';
-    box.style.top=r.top+'px';
-    arrastando=true;
-    offX=e.clientX-r.left;
-    offY=e.clientY-r.top;
-    box.classList.add('dragging');
-    cab.setPointerCapture(e.pointerId);
-  });
-  cab.addEventListener('pointermove', (e)=>{
-    if(!arrastando) return;
-    let x=e.clientX-offX, y=e.clientY-offY;
-    x=Math.max(0, Math.min(x, window.innerWidth-box.offsetWidth));
-    y=Math.max(0, Math.min(y, window.innerHeight-box.offsetHeight));
-    box.style.left=x+'px';
-    box.style.top=y+'px';
-  });
-  function pararArrasto(){ arrastando=false; box.classList.remove('dragging'); }
-  cab.addEventListener('pointerup', pararArrasto);
-  cab.addEventListener('pointercancel', pararArrasto);
-})();
-
 // --- Leia modal ---
 document.getElementById('btnLeiaOk').addEventListener('click', ()=> hideLeia(document.getElementById('leiaInput').value));
 document.getElementById('btnLeiaCancelar').addEventListener('click', ()=> hideLeia(''));
@@ -9649,36 +7867,6 @@ function willogComentarLinha(raw, num){
   }
   if(/^tela\.cor/i.test(t)){
     return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #636e72; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🎨 <b>O que faz?</b> Escolhe a cor do fundo da janelinha para o próximo <code>tela.limpe</code>. É como escolher a cor do papel!</div></div></div>`;
-  }
-  // --- Polígonos (plano cartesiano) ---
-  if(/^\s*pol[ií]gonos\s*\(\s*\)/i.test(t)){
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #3399ff; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">📐 <b>O que faz?</b> Abre o plano cartesiano de polígonos (estilo GeoGebra): clique para criar pontos (grudam no inteiro quando clicados bem perto; caso contrário, ficam decimais), use <code>Segmento</code> para medir comprimentos e <code>Polígono</code> para ver perímetro e área. Com o balde <code>Preencher</code>, clique dentro de uma figura para pintar somente a região clicada com a cor da paleta — polígonos, circunferências e as interseções entre elas são preenchidas de forma independente. Os pontos ganham letras A, B, C…</div></div></div>`;
-  }
-  // --- Tartaruga (estilo Logo) ---
-  if(/^tartaruga\s*\(\s*\)/i.test(t)){
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🐢 <b>O que faz?</b> Abre a janelinha da Tartaruga: a coluna de comandos à esquerda e o desenho à direita. A tartaruga começa no centro (400, 300), virada para o norte (0°), e o ângulo cresce no sentido horário!</div></div></div>`;
-  }
-  if(/^corFundo\s+/i.test(t)){
-    const c=t.replace(/^corFundo\s+/i,'').trim();
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🎨 <b>O que faz?</b> Pinta o fundo do desenho da tartaruga de <code>${esc(c)}</code>. É como escolher a cor do papel!</div></div></div>`;
-  }
-  if(/^cor\s+/i.test(t)){
-    const c=t.replace(/^cor\s+/i,'').trim();
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🖊️ <b>O que faz?</b> Troca a cor da caneta da tartaruga para <code>${esc(c)}</code>. O próximo traço será dessa cor!</div></div></div>`;
-  }
-  if(/^(avance|recue)\s+/i.test(t)){
-    const d=t.replace(/^(avance|recue)\s+/i,'').trim();
-    const dir=/^recue/i.test(t)?"recuar (para trás)":"avançar (para frente)";
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🐢 <b>O que faz?</b> Faz a tartaruga ${dir} <code>${esc(d)}</code> pixels, desenhando uma linha (se a caneta estiver abaixada).</div></div></div>`;
-  }
-  if(/^(direita|esquerda)\s+/i.test(t)){
-    const g=t.replace(/^(direita|esquerda)\s+/i,'').trim();
-    const esq=/^esquerda/i.test(t);
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">🔀 <b>O que faz?</b> Gira a tartaruga <code>${esc(g)}</code> graus para a ${esq?"esquerda (sentido anti-horário)":"direita (sentido horário)"}.</div></div></div>`;
-  }
-  if(/^\s*(levanta|abaixa|abaixe)\s+caneta\b/i.test(t)){
-    const up=/^levanta/i.test(t);
-    return `<div style="display:flex; gap:12px; padding:12px 14px; margin:8px 0; background:var(--panel); border:1px solid var(--border); border-left:4px solid #00b894; border-radius:8px;"><div style="min-width:56px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim);">L${num}</div><div style="flex:1;">${linhaCode}<div style="margin-top:8px; font-size:15px; color:var(--text);">${up?"✋ <b>O que faz?</b> Levanta a caneta — a tartaruga anda sem desenhar.":"🖊️ <b>O que faz?</b> Abaixa a caneta — a tartaruga volta a desenhar."}</div></div></div>`;
   }
   if(/^desenhe\./i.test(t)){
     const tipo = t.match(/^desenhe\.([a-zA-ZÀ-ÿ]+)/i)?.[1] || "algo";

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manual — Linguagem Willog</title>
-<meta name="description" content="Manual completo da linguagem Willog: comandos, funções, operadores, propriedades, cores, tartaruga e polígonos.">
+<meta name="description" content="Manual completo da linguagem Willog: comandos, funções, operadores, propriedades e cores.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -371,8 +371,6 @@
       <a href="#operadores">Operadores</a>
       <a href="#propriedades">Propriedades</a>
       <a href="#cores">Cores</a>
-      <a href="#tartaruga">🐢 Tartaruga</a>
-      <a href="#poligonos">📐 Polígonos</a>
     </div>
     <a class="btn btn-primary nav-cta" href="index.html">▶ Abrir a IDE</a>
   </div>
@@ -435,7 +433,7 @@ mostre "Pronto! 🎨"</pre>
       <div class="card reveal">
         <span class="ic">🌐</span>
         <h3>Roda no navegador</h3>
-        <p>Nenhuma instalação. O código é executado na própria tela, com era específica <code style="font-family:var(--mono);color:var(--accent);font-size:13px">janela()</code>, <code style="font-family:var(--mono);color:var(--accent);font-size:13px">tartaruga()</code> e <code style="font-family:var(--mono);color:var(--accent);font-size:13px">polígonos()</code>.</p>
+        <p>Nenhuma instalação. O código é executado na própria tela.</p>
       </div>
       <div class="card reveal">
         <span class="ic">🎓</span>
@@ -1305,145 +1303,6 @@ desenhe.linha(0, 0, 100, 100, corAleatória)</pre>
   </div>
 </section>
 
-<!-- Tartaruga -->
-<section id="tartaruga">
-  <div class="container">
-    <div class="sec-head reveal">
-      <span class="tag">🐢 Tartaruga</span>
-      <h2>O clássico Logo <span class="grad">em português</span></h2>
-      <p class="lead">Uma janela com editor de comandos e o desenho ao lado — avance, gire e desenhe com comandos simples.</p>
-    </div>
-
-    <div class="cmd-grid">
-      <div class="cmd reveal">
-        <div class="cmd-top"><h4>tartaruga()</h4><span class="chip">Abrir</span></div>
-        <div class="syn">tartaruga <code>()</code></div>
-        <p class="note">Começa no centro (400, 300) apontando para o <b>norte (0°)</b>. O ângulo cresce no sentido horário. À esquerda fica a coluna de comandos; à direita, o desenho.</p>
-      </div>
-      <div class="cmd reveal">
-        <div class="cmd-top"><h4>avance / recue</h4><span class="chip">Movimento</span></div>
-        <div class="syn">avance <code>&lt;distância&gt;</code> · recue <code>&lt;distância&gt;</code></div>
-        <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
-          <pre class="code">avance 100
-recue 50</pre>
-          <div class="out">➡️ anda para frente/trás desenhando uma linha</div>
-        </div>
-        <p class="note">Só desenha se a caneta estiver abaixada.</p>
-      </div>
-      <div class="cmd reveal">
-        <div class="cmd-top"><h4>direita / esquerda</h4><span class="chip">Rotação</span></div>
-        <div class="syn">direita <code>&lt;graus&gt;</code> · esquerda <code>&lt;graus&gt;</code></div>
-        <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
-          <pre class="code">direita 30
-esquerda 45</pre>
-          <div class="out">🔄 gira no sentido horário (direita) ou anti-horário (esquerda)</div>
-        </div>
-      </div>
-      <div class="cmd reveal">
-        <div class="cmd-top"><h4>cor / corFundo</h4><span class="chip">Cores</span></div>
-        <div class="syn">cor <code>&lt;cor&gt;</code> · corFundo <code>&lt;cor&gt;</code></div>
-        <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
-          <pre class="code">corFundo azul
-cor amarela</pre>
-          <div class="out">🎨 caneta amarela sobre fundo azul</div>
-        </div>
-        <p class="note">Mesmas cores da seção Cores — funciona até <code>corAleatória</code>.</p>
-      </div>
-      <div class="cmd reveal">
-        <div class="cmd-top"><h4>levanta caneta / abaixa caneta</h4><span class="chip">Caneta</span></div>
-        <div class="syn">levanta caneta · abaixa caneta</div>
-        <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
-          <pre class="code">levanta caneta
-avance 150
-abaixa caneta</pre>
-          <div class="out">🚶 se move 150px sem desenhar, depois volta a desenhar</div>
-        </div>
-      </div>
-      <div class="cmd reveal">
-        <div class="cmd-top"><h4>Programa de exemplo</h4><span class="chip">Completo</span></div>
-        <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
-          <pre class="code">tartaruga()
-corFundo azul
-cor amarela
-avance 100
-direita 30
-avance 100
-repita(5):
-    direita 30
-    avance 60</pre>
-          <div class="out">🐢 um caminho com curvas e repetições</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="banner reveal">
-      <div class="txt">
-        <h3>💡 Dicas da tartaruga</h3>
-        <p><b>Ctrl+Enter</b> executa tudo na coluna de comandos · <b>TAB</b> indenta · <b>Ctrl</b> + roda ou <b>Ctrl +/−</b> ajusta a fonte · arraste a alça para mudar a largura da coluna · roda do mouse dá <b>zoom</b> · botões <b>Lento/Normal/Rápido</b> controlam a animação.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Polígonos -->
-<section class="exemplos" id="poligonos">
-  <div class="container">
-    <div class="sec-head center reveal">
-      <span class="tag">📐 Polígonos</span>
-      <h2>Plano cartesiano <span class="grad">clicável</span></h2>
-      <p class="lead">Construa pontos, segmentos, retas, polígonos e circunferências clicando na tela — com medidas atualizadas em tempo real.</p>
-    </div>
-
-    <div class="tbl-wrap reveal">
-      <table>
-        <thead><tr><th style="width:30%">Ferramenta</th><th>O que faz</th></tr></thead>
-        <tbody>
-          <tr><td><b>↔️ Mover</b></td><td class="d">Arrasta pontos já criados. Arraste o fundo para deslizar o plano.</td></tr>
-          <tr><td><b>⚫ Ponto</b></td><td class="d">Um clique cria um ponto, nomeado automaticamente (A, B, C…).</td></tr>
-          <tr><td><b>➖ Reta</b></td><td class="d">Dois cliques (em pontos existentes ou no fundo) criam a reta infinita que passa por eles (f, g, h…).</td></tr>
-          <tr><td><b>📏 Segmento</b></td><td class="d">Dois cliques criam um segmento; o comprimento aparece na coluna de dados.</td></tr>
-          <tr><td><b>📐 Polígono</b></td><td class="d">Cada clique adiciona um vértice; feche com <b>🔒 Fechar polígono</b> para calcular perímetro e área.</td></tr>
-          <tr><td><b>⭕ Circunferência</b></td><td class="d">1º clique define o centro; 2º clique define um ponto na circunferência (o raio é a distância entre eles). Nomeadas c1, c2…</td></tr>
-          <tr><td><b>🪣 Preencher</b></td><td class="d">Escolha uma cor na paleta e clique dentro de um polígono ou circunferência para pintá-lo. O quadradinho xadrez remove o preenchimento.</td></tr>
-          <tr><td><b>🔒 Fechar polígono</b></td><td class="d">Fecha o polígono em construção e calcula perímetro e área.</td></tr>
-          <tr><td><b>🧹 Limpar</b></td><td class="d">Apaga todos os pontos, segmentos, retas, circunferências e polígonos.</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="res-grid" style="margin-top:34px">
-      <div class="card reveal">
-        <span class="ic">🎯</span>
-        <h3>Cola na grade</h3>
-        <p>Um ponto é <b>puxado para a coordenada inteira mais próxima</b> quando você clica bem perto da grade. Caso contrário, assume <b>coordenadas decimais</b>. Cada eixo é ajustado separadamente.</p>
-      </div>
-      <div class="card reveal">
-        <span class="ic">🖱️</span>
-        <h3>Navegação</h3>
-        <p>Rodinha do mouse dá <b>zoom</b> (no cursor). Com a ferramenta <b>Mover</b>, arrastar o fundo <b>desloca o plano</b>. A posição do cursor aparece num selo sobre o desenho.</p>
-      </div>
-      <div class="card reveal">
-        <span class="ic">📊</span>
-        <h3>Coluna de dados</h3>
-        <p>Pontos, segmentos (comprimento), retas, circunferências (centro e raio) e polígonos (perímetro e área) aparecem na coluna da direita, atualizados em tempo real. A largura é ajustável.</p>
-      </div>
-    </div>
-
-    <div class="banner reveal">
-      <div class="txt">
-        <h3>🚀 Comece a construir</h3>
-        <p>No editor da IDE, escreva <b style="font-family:var(--mono);color:var(--accent)">polígonos()</b> e execute. Ao fechar a janela, tudo o que foi construído é apagado.</p>
-      </div>
-      <a class="btn btn-primary" href="index.html">▶ Abrir a IDE</a>
-    </div>
-  </div>
-</section>
-
 <!-- Rodapé -->
 <footer>
   <div class="container">
@@ -1466,8 +1325,6 @@ repita(5):
         <ul>
           <li><a href="#operadores">Operadores</a></li>
           <li><a href="#propriedades">Propriedades</a></li>
-          <li><a href="#tartaruga">🐢 Tartaruga</a></li>
-          <li><a href="#poligonos">📐 Polígonos</a></li>
         </ul>
       </div>
       <div>
@@ -1487,7 +1344,7 @@ repita(5):
   var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
 
   // ---------- mini destacador de sintaxe Willog ----------
-  var KW_RX=/^(se|senao|senão|entao|então|enquanto|para|cada|entre|pulando|repetir|repita|mostre|mostrar|limpe|pare|continue|continuar|pausa|espere|espereTecla|captureTecla|capture|leia|ler|escrever|fechar|abrir|janela|tela|desenhe|desenha|mover|figura|bipe|toque|mensagem|retorne|retorna|definir|funcao|função|verificar|caso|padrão|padrao|constante|novo|existe|tartaruga|avance|recue|direita|esquerda|levanta|abaixa|caneta|poligonos|polígonos|colar|recortar|cronometro|cronômetro|va|vá|fato|corFundo|centralizaTexto|corTexto)$/i;
+  var KW_RX=/^(se|senao|senão|entao|então|enquanto|para|cada|entre|pulando|repetir|repita|mostre|mostrar|limpe|pare|continue|continuar|pausa|espere|espereTecla|captureTecla|capture|leia|ler|escrever|fechar|abrir|janela|tela|desenhe|desenha|mover|figura|bipe|toque|mensagem|retorne|retorna|definir|funcao|função|verificar|caso|padrão|padrao|constante|novo|existe|colar|recortar|cronometro|cronômetro|va|vá|fato|centralizaTexto|corTexto)$/i;
   var COLOR_RX=/^(vermelho|azul|verde|amarelo|ciano|rosa|roxo|branco|preto|laranja|cinza|marrom|amarela|vermelha|roxa|branca|preta|corAleatoria|corAleatória)$/;
   var BOOL_RX=/^(Verdadeiro|Falso|verdadeiro|falso)$/;
   var LOGICAL_RX=/^(e|ou|não|nao|em|união|uniao|intersecção|interseccao|intersecao|interseção)$/;
