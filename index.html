@@ -406,7 +406,6 @@
     display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border); background:var(--panel2);
   }
   .modal-manual-header b { font-family:'Inter',sans-serif; font-size:17px; }
-  .modal-manual-tabs { display:flex; gap:6px; padding:0 20px; border-bottom:2px solid var(--border); background:var(--panel2); flex-shrink:0; }
   .manual-tabs { display:flex; gap:6px; padding:0 20px; border-bottom:2px solid var(--border); background:var(--panel2); flex-shrink:0; }
   .manual-tab {
     font-family:'Inter',sans-serif; font-size:13px; font-weight:600; padding:10px 16px; border:none; background:transparent; color:var(--text-dim); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; border-radius:6px 6px 0 0; transition:.15s;
@@ -1501,7 +1500,7 @@ function applyPaleta(p){
   }
   let saved=null;
   try{ saved=localStorage.getItem('willog-paleta'); }catch(e){}
-  applyPaleta(saved||'github');
+  applyPaleta(saved||'padrao');
 })();
 document.getElementById('btnPaleta').addEventListener('click', ()=>{
   document.getElementById('modalPaleta').style.display='grid';
@@ -1581,7 +1580,7 @@ function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function highlightWillog(code){
   let html='';
   let i=0, len=code.length;
-  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','vá','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','centralizaTexto','corTexto']);
+  const keywords = new Set(['mostre','se','então','entao','senão','senao','enquanto','para','cada','entre','pulando','definir','funcao','função','retorne','retorna','importe','classe','novo','existe','verificar','vá','caso','padrão','padrao','repetir','repita','leia','pare','continue','continuar','limpe','pausa','janela','tela','desenhe','desenha','bipe','toque','espereTecla','espere','captureTecla','capture','abrir','escrever','ler','fechar','cronometro','cronômetro','girar','mover','figura','recortar','colar','constante','mensagem','centralizaTexto','corTexto']);
   const booleans = new Set(['Verdadeiro','Falso','verdadeiro','falso']);
   const logicalOps = new Set(['e','ou','não','nao','em','união','uniao','intersecção','interseccao','intersecao','interseção']);
   const colors = new Set(['amarelo','vermelho','azul','verde','ciano','rosa','roxo','laranja','branco','cinza','marrom','preto','coraleatória','amarela','vermelha','roxa','branca','preta']);
@@ -1961,7 +1960,10 @@ function scheduleHighlight(){
 editor.addEventListener('input', scheduleHighlight);
 editor.addEventListener('scroll', syncScroll);
 editor.addEventListener('keydown', (e)=>{
-  if(e.key==='Tab'){ e.preventDefault(); const s=editor.selectionStart, ed=editor.selectionEnd; editor.value = editor.value.substring(0,s) + '  ' + editor.value.substring(ed); editor.selectionStart=editor.selectionEnd=s+2; scheduleHighlight(); if(window._willogSave) window._willogSave(); }
+  if(e.key==='Tab'){
+    const ac=document.getElementById('autocomplete');
+    if(ac && ac.classList.contains('visible') && ac.style.display!=='none'){ return; }
+    e.preventDefault(); const s=editor.selectionStart, ed=editor.selectionEnd; editor.value = editor.value.substring(0,s) + '  ' + editor.value.substring(ed); editor.selectionStart=editor.selectionEnd=s+2; scheduleHighlight(); if(window._willogSave) window._willogSave(); }
   if((e.ctrlKey||e.metaKey) && e.key==='Enter'){ e.preventDefault(); runWillog(); }
 });
 updateLines(); updateHighlight();
@@ -1973,11 +1975,11 @@ updateLines(); updateHighlight();
   const ed=document.getElementById('editor');
   if(!acEl || !ed) return;
   const comandos=[
-    {name:'abrir',hint:'abrir(url)',desc:'Abre URL externa'},
+    {name:'abrir',hint:'abrir "arquivo.txt"',desc:'Abre arquivo ($nome) para ler/escrever'},
     {name:'bipe',hint:'bipe()',desc:'Emite som de bipe'},
     {name:'captureTecla',hint:'captureTecla()',desc:'Retorna última tecla capturada'},
     {name:'centralizaTexto',hint:'centralizaTexto()',desc:'Centraliza horizontalmente o texto do console'},
-    {name:'colar',hint:'colar()',desc:'Cola da área de transferência'},
+    {name:'colar',hint:'colar(var,x,y)',desc:'Cola desenho recortado em (x,y)'},
     {name:'constante',hint:'constante nome=valor',desc:'Declara constante'},
     {name:'corTexto',hint:'corTexto(cor)',desc:'Define a cor do texto (console e desenho)'},
     {name:'continue',hint:'continue',desc:'Pula para próxima iteração'},
@@ -1990,33 +1992,33 @@ updateLines(); updateHighlight();
     {name:'desenhe.polígono',hint:'desenhe.polígono(x,y,lados,raio,cor)',desc:'Desenha polígono regular'},
     {name:'desenhe.ponto',hint:'desenhe.ponto(x,y,cor)',desc:'Desenha ponto'},
     {name:'desenhe.retangulo',hint:'desenhe.retangulo(x1,y1,x2,y2,cor)',desc:'Desenha retângulo'},
-    {name:'desenhe.texto',hint:'desenhe.texto(texto,x,y,cor)',desc:'Desenha texto na tela'},
+    {name:'desenhe.texto',hint:'desenhe.texto(texto,x,y,[tam],[cor])',desc:'Desenha texto na tela'},
     {name:'enquanto',hint:'enquanto condição:',desc:'Laço enquanto condição for verdadeira'},
-    {name:'escrever',hint:'escrever(valor)',desc:'Escreve no console (sem quebra)'},
+    {name:'escrever',hint:'escrever $arq, valor',desc:'Escreve valor no arquivo aberto'},
     {name:'espereTecla',hint:'espereTecla(tecla?)',desc:'Espera pressionar uma tecla'},
-    {name:'fechar',hint:'fechar()',desc:'Fecha janela/página'},
+    {name:'fechar',hint:'fechar $arq',desc:'Salva e fecha o arquivo aberto'},
     {name:'figura.girar',hint:'figura.girar(ângulo,vezes,pausa)',desc:'Gira um desenho'},
-    {name:'figura.mover',hint:'figura.mover(x,y,pausa)',desc:'Move um desenho'},
+    {name:'figura.mover',hint:'figura.mover(x,y,passo)',desc:'Move um desenho'},
     {name:'girar',hint:'girar(a(âng,vez,pausa),b(...))',desc:'Gira múltiplos desenhos'},
     {name:'intervalo',hint:'(início..fim)',desc:'Cria intervalo/lista de números'},
-    {name:'janela',hint:'janela(largura,altura,cor)',desc:'Cria janela/gráfico'},
+    {name:'janela',hint:'janela() / janela(centraliza) / janela(larg,alt)',desc:'Console, console centralizado ou desenho'},
     {name:'leia',hint:'leia(texto?)',desc:'Lê entrada do usuário (prompt)'},
-    {name:'ler',hint:'ler(tipo,texto?)',desc:'Lê entrada com tipo específico'},
+    {name:'ler',hint:'ler $arq, variável',desc:'Lê do arquivo para variável'},
     {name:'limpe',hint:'limpe()',desc:'Limpa saída/console'},
-    {name:'mensagem',hint:'mensagem(texto,cor,duração)',desc:'Exibe mensagem temporizada'},
+    {name:'mensagem',hint:'mensagem("título","texto")',desc:'Exibe caixa de mensagem e espera OK'},
     {name:'mostre',hint:'mostre(valor)',desc:'Mostra valor no console'},
-    {name:'mover',hint:'mover(x,y,pausa)',desc:'Move último desenho'},
+    {name:'mover',hint:'mover(a(x,y,passo),...)',desc:'Move vários desenhos juntos'},
     {name:'para cada',hint:'para cada item em lista:',desc:'Percorre cada item da lista'},
     {name:'pare',hint:'pare',desc:'Para execução (break)'},
     {name:'pausa',hint:'pausa(segundos)',desc:'Pausa execução'},
-    {name:'recortar',hint:'recortar()',desc:'Recorta da área de transferência'},
+    {name:'recortar',hint:'recortar(var)',desc:'Recorta desenho da tela'},
     {name:'repetir',hint:'repetir n vezes:',desc:'Repete bloco n vezes'},
     {name:'retorne',hint:'retorne(valor)',desc:'Retorna valor da função'},
     {name:'se',hint:'se condição então:',desc:'Condicional se/senão'},
     {name:'senão',hint:'senão:',desc:'Alternativa do se'},
     {name:'tela.cor',hint:'tela.cor(cor)',desc:'Define cor de fundo da tela'},
     {name:'tela.limpe',hint:'tela.limpe()',desc:'Limpa a tela/desenho'},
-    {name:'toque',hint:'toque()',desc:'Verifica clique na tela'},
+    {name:'toque',hint:'toque(freq,dur)',desc:'Toca frequência (20-20000Hz) por segundos'},
     {name:'vá para',hint:'vá para <rótulo>',desc:'Pula para o rótulo definido com :nome'},
     {name:'verificar',hint:'verificar caso valor:',desc:'Estrutura caso/padrão (switch)'}
   ].sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase(),'pt'));
@@ -3493,10 +3495,17 @@ function parseFechar(stmt){
 async function willogAbrir(filename, env){
   const fn=String(filename).trim();
   if(!fn){ logToConsole('Erro: abrir precisa de nome de arquivo', 'error'); return null; }
-  const handleName=_willogHandleNameFromFilename(fn);
-  if(willogFileHandles.has(handleName)){
-    logToConsole(`Arquivo já aberto: ${fn} como $${handleName}`, 'info');
-    return handleName;
+  let handleName=_willogHandleNameFromFilename(fn);
+  const existente=willogFileHandles.get(handleName);
+  if(existente){
+    if(existente.filename.toLowerCase()===fn.toLowerCase()){
+      logToConsole(`Arquivo já aberto: ${fn} como $${handleName}`, 'info');
+      return handleName;
+    }
+    let n=2; let alt=handleName+'_'+n;
+    while(willogFileHandles.has(alt)){ n++; alt=handleName+'_'+n; }
+    logToConsole(`Aviso: $${handleName} já usado por "${existente.filename}" — "${fn}" aberto como $${alt}`, 'info');
+    handleName=alt;
   }
   let realHandle=null;
   let content="";
@@ -3740,7 +3749,7 @@ function parseToqueArgs(stmt, env){
   return {freq:f, dur:d, rawFreq:args[0], rawDur:args[1]};
 }
 
-function logToConsole(text, cls=''){
+function _willogMakeLine(text, cls=''){
   const div = document.createElement('div');
   div.className = 'line ' + cls;
   div.style.whiteSpace='pre-wrap';
@@ -3758,45 +3767,17 @@ function logToConsole(text, cls=''){
   } else {
     div.textContent=str;
   }
-  consoleEl.appendChild(div);
+  return div;
+}
+function logToConsole(text, cls=''){
+  consoleEl.appendChild(_willogMakeLine(text, cls));
   consoleEl.scrollTop = consoleEl.scrollHeight;
-  if(janelaModo==='console' && janelaAtiva && janelaConsoleEl){
-    const d2=document.createElement('div');
-    d2.className='line ' + cls;
-    d2.style.whiteSpace='pre-wrap';
-    d2.style.wordBreak='break-word';
-    if(!cls) d2.style.color=_willogTextoCor;
-    if(str.includes('\n')){
-      const parts=str.split('\n');
-      parts.forEach((part,i)=>{
-        if(i>0) d2.appendChild(document.createElement('br'));
-        if(part!=='') d2.appendChild(document.createTextNode(part));
-        else if(i===0 && parts.length>1) d2.appendChild(document.createElement('br'));
-      });
-      if(str==='\n') d2.appendChild(document.createElement('br'));
-    } else {
-      d2.textContent=str;
-    }
-    janelaConsoleEl.appendChild(d2);
-    janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
-  } else if(janelaModo==='console' && janelaConsoleEl && janelaEl && janelaEl.style.display!=='none'){
-    const d2=document.createElement('div');
-    d2.className='line ' + cls;
-    d2.style.whiteSpace='pre-wrap';
-    d2.style.wordBreak='break-word';
-    if(!cls) d2.style.color=_willogTextoCor;
-    if(str.includes('\n')){
-      const parts=str.split('\n');
-      parts.forEach((part,i)=>{
-        if(i>0) d2.appendChild(document.createElement('br'));
-        if(part!=='') d2.appendChild(document.createTextNode(part));
-        else if(i===0 && parts.length>1) d2.appendChild(document.createElement('br'));
-      });
-      if(str==='\n') d2.appendChild(document.createElement('br'));
-    } else {
-      d2.textContent=str;
-    }
-    janelaConsoleEl.appendChild(d2);
+  const espelhaFlutuante = janelaConsoleEl && janelaEl && janelaEl.style.display!=='none' && (
+    (janelaModo==='console' && janelaAtiva) ||
+    (janelaModo==='console' && !janelaAtiva)
+  );
+  if(espelhaFlutuante){
+    janelaConsoleEl.appendChild(_willogMakeLine(text, cls));
     janelaConsoleEl.scrollTop=janelaConsoleEl.scrollHeight;
   }
 }
@@ -3906,76 +3887,11 @@ clearConsole();
 })();
 
 // --- Janela flutuante ---
-// --- Duplo-clique no console ---
-(function(){
-  const cv=document.getElementById('janelaCanvas');
-  if(!cv) return;
-  let startX=0, startY=0, basePanX=0, basePanY=0;
-  let rotStartX=0, rotStartY=0, rotBaseX=0, rotBaseY=0, rotBaseZ=0, rotMode='xy';
-  function janelaModAtivo(){ return janelaModo==='janela' && janela && janela.ativo && cv.classList.contains('ativo'); }
-  cv.addEventListener('wheel', (e)=>{
-    if(!janelaModAtivo()) return;
-    e.preventDefault();
-    const delta = e.deltaY<0 ? 1.15 : 1/1.15;
-    const zNew = Math.max(0.2, Math.min(10, _janelaZoom * delta));
-    if(zNew===_janelaZoom) return;
-    const rect=cv.getBoundingClientRect();
-    const dpr=window.devicePixelRatio||1;
-    const w=rect.width*dpr, h=rect.height*dpr;
-    const mx=(e.clientX-rect.left)*dpr, my=(e.clientY-rect.top)*dpr;
-    const base=Math.min(w/_telaLogicalW, h/_telaLogicalH);
-    const isMax = janelaEl && janelaEl.classList.contains('maximized') && (janelaModo==='desenho');
-    const kOld=base*_janelaZoom, kNew=base*zNew;
-    const cXOld = isMax ? (w-_telaLogicalW*kOld)/2 : 0;
-    const cYOld = isMax ? (h-_telaLogicalH*kOld)/2 : 0;
-    const dxOld = cXOld + _janelaPanX;
-    const dyOld = cYOld + _janelaPanY;
-    const dxNew = mx - (mx - dxOld)*(kNew/kOld);
-    const dyNew = my - (my - dyOld)*(kNew/kOld);
-    const cXNew = isMax ? (w-_telaLogicalW*kNew)/2 : 0;
-    const cYNew = isMax ? (h-_telaLogicalH*kNew)/2 : 0;
-    _janelaZoom=zNew;
-    _janelaPanX = dxNew - cXNew;
-    _janelaPanY = dyNew - cYNew;
-    _willogSyncVisible();
-  }, {passive:false});
-  cv.addEventListener('mousedown', (e)=>{
-    if(!janelaModAtivo()) return;
-    e.preventDefault();
-    if(_janela3D){
-      _janelaRotando=true;
-      rotStartX=e.clientX; rotStartY=e.clientY;
-      rotBaseX=_janelaRotX; rotBaseY=_janelaRotY; rotBaseZ=_janelaRotZ;
-      rotMode=(e.shiftKey || e.button===2) ? 'z' : 'xy';
-      cv.classList.add('panning');
-      return;
-    }
-    if(e.button!==0) return;
-    _janelaPanning=true;
-    startX=e.clientX; startY=e.clientY;
-    basePanX=_janelaPanX; basePanY=_janelaPanY;
-    cv.classList.add('panning');
-  });
-  window.addEventListener('mousemove', (e)=>{
-    if(_janelaRotando){
-      const dx=e.clientX-rotStartX, dy=e.clientY-rotStartY;
-      if(rotMode==='z'){ _janelaRotZ = ((rotBaseZ + dx*0.3)%360+360)%360; }
-      else { _janelaRotY = rotBaseY + dx*0.5; _janelaRotX = rotBaseX + dy*0.5; }
-      _willogSyncVisible();
-      return;
-    }
-    if(!_janelaPanning) return;
-    const dpr=window.devicePixelRatio||1;
-    _janelaPanX = basePanX + (e.clientX-startX)*dpr;
-    _janelaPanY = basePanY + (e.clientY-startY)*dpr;
-    _willogSyncVisible();
-  });
-  window.addEventListener('mouseup', ()=>{
-    if(_janelaRotando){ _janelaRotando=false; cv.classList.remove('panning'); }
-    if(_janelaPanning){ _janelaPanning=false; cv.classList.remove('panning'); }
-  });
-  cv.addEventListener('contextmenu', (e)=>{ if(_janela3D && janelaModAtivo()) e.preventDefault(); });
-})();
+// REMOVIDO: bloco antigo de zoom/pan/3D do canvas (referenciava
+// janelaModo==='janela', `janela`, _janelaZoom/_janelaPanX/_janela3D etc.
+// nunca declarados -> ReferenceError). O canvas usa buffer escalonável
+// via _willogSyncVisible(); zoom da janela-console já existe em
+// _willogApplyJanelaZoom (Ctrl+roda / botões A+/A-).
 
 // --- Duplo-clique no console: exibe em janela flutuante ---
 (function(){
@@ -7734,7 +7650,16 @@ async function executarPrograma(src){
       setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 3000);
       return;
     }
-    throw e;
+    if(e && (e.type==='pare' || e.type==='continue')){
+      logToConsole(`Erro: "${e.type}" fora de laço`, 'error');
+      document.getElementById('statusBar').textContent = 'Erro • ' + e.type + ' fora de laço';
+      setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 3000);
+      return;
+    }
+    logToConsole('Erro: ' + ((e && e.message) || e), 'error');
+    document.getElementById('statusBar').textContent = 'Erro na execução';
+    setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 3000);
+    return;
   }
   if(!hasOutputRef.value){
     logToConsole('> programa executado — sem saída.','info');
@@ -7743,7 +7668,7 @@ async function executarPrograma(src){
   setTimeout(()=> document.getElementById('statusBar').textContent='Pronto • Willog 1.0', 3000);
 }
 
-function runWillog(){ executarPrograma(editor.value); }
+function runWillog(){ executarPrograma(editor.value).catch(e=>{ console.error(e); logToConsole('Erro: ' + ((e && e.message) || e), 'error'); }); }
 
 document.getElementById('btnExecutar').addEventListener('click', runWillog);
 
