@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manual — Linguagem Willog</title>
-<meta name="description" content="Manual completo da linguagem Willog: comandos, funções, operadores, propriedades e cores.">
+<meta name="description" content="Manual completo da linguagem Willog: comandos, funções, operadores, propriedades e cores — tudo em português, com exemplos testados.">
+<meta name="theme-color" content="#0d0b16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236c5ce7'/%3E%3Ctext x='32' y='44' font-family='monospace' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3EW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -356,15 +358,34 @@
     .hero{padding:64px 0 56px;}
     section{padding:60px 0;}
   }
+
+  /* ---------- acessibilidade / profissional ---------- */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  .skip-link{position:absolute;left:12px;top:-48px;z-index:100;background:#fff;color:#111;font-weight:700;font-size:14px;padding:10px 16px;border-radius:10px;transition:top .2s;}
+  .skip-link:focus{top:12px;}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .box-head .copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .doc-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+  .doc-meta .meta-chip{font-size:12px;font-weight:600;color:var(--text-dim);background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:5px 12px;}
+  .back-top{position:fixed;right:18px;bottom:18px;z-index:60;display:none;background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;border:none;border-radius:12px;font-size:18px;padding:10px 14px;cursor:pointer;box-shadow:0 10px 30px rgba(108,92,231,.45);}
+  .back-top.show{display:block;}
+  @media print{
+    nav,.hero-actions,.fn-filter,.box-head .copy,.back-top,.nav-burger{display:none!important;}
+    body{background:#fff;color:#111;}
+    section{padding:24px 0;}
+    .card,.cmd,.mini,.step,.swatch,.banner,.tbl-wrap,.box,.code-card{break-inside:avoid;background:#fff!important;color:#111!important;border-color:#ccc!important;box-shadow:none!important;}
+    a{color:#111;}
+  }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#comandos">Pular para os comandos</a>
 
 <!-- Navegação -->
-<nav>
+<nav aria-label="Navegação do manual">
   <div class="container nav-inner">
-    <a class="logo" href="#inicio"><span class="logo-mark">W</span> Willog · Manual</a>
-    <button class="nav-burger" id="navBurger" aria-label="Menu">☰</button>
+    <a class="logo" href="#inicio" aria-label="Willog Manual — início"><span class="logo-mark" aria-hidden="true">W</span> Willog · Manual</a>
+    <button class="nav-burger" id="navBurger" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks">☰</button>
     <div class="nav-links" id="navLinks">
       <a href="#inicio">Início</a>
       <a href="#comecando">Começando</a>
@@ -384,13 +405,18 @@
     <div>
       <span class="tag">📘 Manual completo da linguagem</span>
       <h1>Tudo sobre o <span class="grad">Willog</span></h1>
-      <p class="sub">Comandos, funções, operadores, propriedades, cores, desenho e muito mais — <b>tudo em português</b>, com exemplos prontos para colar na IDE.</p>
+      <p class="sub">Comandos, funções, operadores, propriedades, cores e desenho — <b>tudo em português</b>, com exemplos testados e prontos para colar na IDE.</p>
+      <div class="doc-meta" aria-label="Sobre este manual">
+        <span class="meta-chip">v1.0 · 2026</span>
+        <span class="meta-chip">Exemplos testados na IDE</span>
+        <span class="meta-chip">Português (pt-BR)</span>
+      </div>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#comandos">📖 Ver comandos</a>
         <a class="btn btn-ghost" href="#comecando">🚀 Começando</a>
       </div>
       <div class="hero-stats">
-        <div class="stat"><b>56</b><span>comandos</span></div>
+        <div class="stat"><b>46</b><span>comandos na IDE</span></div>
         <div class="stat"><b>80</b><span>funções prontas</span></div>
         <div class="stat"><b>12</b><span>cores + aleatória</span></div>
       </div>
@@ -409,9 +435,8 @@
 tela.cor(azul)
 tela.limpe
 desenhe.circulo(250, 200, 90, amarelo)
-desenhe.retangulo(205, 165, 295, 235, vermelho)
-mostre "Pronto! 🎨"</pre>
-        <div class="console">&gt; Pronto! 🎨</div>
+desenhe.retangulo(205, 165, 295, 235, vermelho)</pre>
+        <div class="console"><span class="p">🪟 janela de desenho 500×400 aberta</span></div>
       </div>
     </div>
   </div>
@@ -423,24 +448,24 @@ mostre "Pronto! 🎨"</pre>
     <div class="sec-head reveal">
       <span class="tag">🚀 Primeiros passos</span>
       <h2>Escreva seu primeiro <span class="grad">programa</span></h2>
-      <p class="lead">O Willog é simples, gratuita e roda no navegador. Escreva, aperte <b>F5</b> ou clique em <b>Executar</b> e veja o resultado na hora.</p>
+      <p class="lead">O Willog é simples e gratuito e roda no navegador. Escreva o código, aperte <b>F5</b> ou clique em <b>Executar</b> e veja o resultado na hora.</p>
     </div>
 
     <div class="about-grid">
       <div class="card reveal">
         <span class="ic">🇧🇷</span>
         <h3>Português de verdade</h3>
-        <p><b>mostre</b>, <b>se…então</b>, <b>enquanto</b>, <b>para cada</b>… A sintaxe acompanha a língua materna — foque no raciocínio, não na tradução.</p>
+        <p><b>mostre</b>, <b>se…então</b>, <b>enquanto</b> e <b>para cada</b>… A sintaxe acompanha o idioma materno — foque no raciocínio, não na tradução.</p>
       </div>
       <div class="card reveal">
         <span class="ic">🌐</span>
         <h3>Roda no navegador</h3>
-        <p>Nenhuma instalação. O código é executado na própria tela.</p>
+        <p>Sem instalação. O código é executado na própria página, com salvamento automático entre sessões.</p>
       </div>
       <div class="card reveal">
         <span class="ic">🎓</span>
         <h3>Feita para aprender</h3>
-        <p>Mensagens de erro claras, autocompletar, referência rápida e o salvamento automático guarda seu código entre sessões.</p>
+        <p>Mensagens de erro claras, autocompletar, referência rápida e salvamento automático do código entre sessões.</p>
       </div>
     </div>
 
@@ -531,7 +556,7 @@ Letra: a</div>
     <div class="sec-head center reveal">
       <span class="tag">📖 Comandos</span>
       <h2>Todos os <span class="grad">comandos</span></h2>
-      <p class="lead">Cada comando com sua explicação, sintaxe, um exemplo real e a saída esperada. Clique em ⧉ para copiar o código.</p>
+      <p class="lead">Cada comando com explicação, sintaxe, exemplo testado e saída esperada. Clique em ⧉ para copiar o código.</p>
     </div>
 
     <div class="cat-title reveal"><span>🖥️ Entrada, saída e interação</span><span class="line"></span></div>
@@ -542,7 +567,7 @@ Letra: a</div>
         <div class="syn">mostre <code>&lt;valor&gt;</code> [, <code>&lt;valor&gt;</code> …]</div>
         <p class="desc"><b>Exibe valores no console.</b> É o comando de saída principal: mostra textos, números, listas e resultados de contas.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">nome = "Wilson"
 mostre "Olá, {nome}!"
 mostre 10 + 5
@@ -559,7 +584,7 @@ mostre 10 & 5</pre>
         <div class="syn">mostre { <code>&lt;expressão&gt;</code> … }</div>
         <p class="desc"><b>Mostra vários valores em bloco, um por linha.</b> Útil para despejar várias variáveis de uma vez sem repetir <code>mostre</code>.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">A = [1, 2, 3]
 mostre {
 A
@@ -576,7 +601,7 @@ A é uma lista</div>
         <div class="syn"><code>&lt;var&gt;</code> = leia <code>"mensagem"</code> &nbsp;·&nbsp; <code>&lt;a, b&gt;</code> = leia <code>"…"</code></div>
         <p class="desc"><b>Pede um valor ao usuário e guarda na variável.</b> Pausa o programa, mostra a pergunta e converte número automaticamente. Não confundir com <code>ler</code>, que lê de arquivo.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">nome, idade = leia "Nome e idade:"
 mostre "Olá, {nome}, você tem {idade} anos!"</pre>
           <div class="out">Nome e idade: <span class="p">Maria, 30</span>
@@ -590,7 +615,7 @@ Olá, Maria, você tem 30 anos!</div>
         <div class="syn">limpe</div>
         <p class="desc"><b>Apaga todo o texto do console.</b> Use para recomeçar a saída do zero. Escreve-se sozinho, sem parênteses.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">mostre "Olá"
 limpe
 mostre "Console limpo"</pre>
@@ -603,7 +628,7 @@ mostre "Console limpo"</pre>
         <div class="syn">corTexto <code>(cor)</code></div>
         <p class="desc"><b>Troca a cor do texto exibido depois dele.</b> Vale para o console, a janela e o <code>desenhe.texto</code> sem cor própria.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">corTexto(vermelho)
 mostre "Alerta!"
 corTexto(corAleatória)
@@ -618,7 +643,7 @@ mostre "Colorido!"</pre>
         <div class="syn">centralizaTexto <code>()</code></div>
         <p class="desc"><b>Centraliza horizontalmente o texto do console na janela.</b> Use após <code>janela()</code>; os parênteses são opcionais.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela()
 centralizaTexto()
 mostre "No centro"</pre>
@@ -631,7 +656,7 @@ mostre "No centro"</pre>
         <div class="syn">mensagem <code>("título", "texto")</code></div>
         <p class="desc"><b>Abre uma caixinha com título e texto e espera o OK.</b> Serve para avisos e boas-vindas; o programa só continua depois do clique.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">mensagem("Boas vindas", "Olá, mundo!")</pre>
           <div class="out">🪟 caixa com título e texto; o programa espera o OK</div>
         </div>
@@ -643,7 +668,7 @@ mostre "No centro"</pre>
         <div class="syn">espereTecla <code>()</code> · espereTecla <code>("enter")</code> · <code>tecla</code> = captureTecla <code>()</code></div>
         <p class="desc"><b>Pausa até o usuário pressionar uma tecla.</b> <code>espereTecla()</code> aceita qualquer tecla; com argumento espera uma tecla específica. <code>captureTecla()</code> devolve a última tecla pressionada. ESC cancela e devolve vazio.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">mostre "Pressione ENTER"
 espereTecla("enter")
 tecla = captureTecla()
@@ -658,7 +683,7 @@ Você pressionou Enter</div>
         <div class="syn">bipe</div>
         <p class="desc"><b>Emite um bipe curto padrão.</b> Toca 800 Hz por 0,2 s. Escreve-se sozinho, sem parênteses nem argumentos.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">bipe</pre>
           <div class="out">🔊 bipe padrão (800 Hz por 0,2 s)</div>
         </div>
@@ -669,7 +694,7 @@ Você pressionou Enter</div>
         <div class="syn">toque <code>(frequência, duração)</code></div>
         <p class="desc"><b>Toca um som com a frequência e a duração indicadas.</b> É um gerador de tons, não um detector de clique: informe Hz e segundos.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">toque(440, 1)
 toque(523, 0.3)</pre>
           <div class="out">🎵 440 Hz (Lá) por 1 s · Dó 523 Hz por 0,3 s</div>
@@ -682,7 +707,7 @@ toque(523, 0.3)</pre>
         <div class="syn">pausa <code>(segundos)</code> · pausa <code>segundos</code></div>
         <p class="desc"><b>Congela o programa por alguns segundos.</b> Aceita com parênteses ou com espaço (<code>pausa(1)</code> ou <code>pausa 1</code>); aceita variáveis e decimais.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">para cada n entre 1 e 3:
     mostre n
     pausa(1)</pre>
@@ -695,7 +720,7 @@ toque(523, 0.3)</pre>
         <div class="syn">cronometro.iniciar · cronometro.parar · cronometro.tempo<code>()</code></div>
         <p class="desc"><b>Mede o tempo decorrido em segundos.</b> <code>iniciar</code> zera e começa, <code>parar</code> congela a contagem e <code>tempo()</code> lê o valor atual.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">cronometro.iniciar
 pausa(2)
 cronometro.parar
@@ -711,7 +736,7 @@ mostre cronometro.tempo()</pre>
         <div class="syn"><code>#</code> linha · <code>#'</code> linha · <code>#:</code> bloco <code>:#</code></div>
         <p class="desc"><b>Trechos ignorados pelo programa, só para explicar o código.</b> <code>#</code> comenta até o fim da linha; <code>#:</code> … <code>:#</code> comenta várias linhas.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code"># comentário de linha
 mostre "Olá" #' comentário após o código
 #:
@@ -734,7 +759,7 @@ executa</div>
         <div class="syn">se <code>&lt;condição&gt;</code> então: <code>comandos</code> · senão: <code>comandos</code></div>
         <p class="desc"><b>Executa um bloco só se a condição for verdadeira.</b> É o desvio condicional: com <code>senão</code> define o caminho alternativo.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">nota = 8
 se nota >= 7 então:
     mostre "Aprovado"
@@ -750,7 +775,7 @@ senão:
         <div class="syn">verificar <code>&lt;valor&gt;:</code> · caso <code>X:</code> <code>expr</code> · padrão: <code>expr</code></div>
         <p class="desc"><b>Escolhe um entre vários valores possíveis.</b> Compara o valor com cada <code>caso</code> e executa o primeiro igual; <code>padrão</code> é o plano B quando nenhum confere.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">nota = 9
 verificar nota:
     caso 10: "Excelente!"
@@ -763,9 +788,9 @@ verificar nota:
       <div class="cmd reveal">
         <div class="cmd-top"><h4>enquanto</h4><span class="chip">Repetição</span></div>
         <div class="syn">enquanto <code>&lt;condição&gt;:</code> <code>comandos</code></div>
-        <p class="desc"><b>Repete o bloco enquanto a condição continuar verdadeira.</b> Ideal quando você não sabe quantas voltas serão preciso dar.</p>
+        <p class="desc"><b>Repete o bloco enquanto a condição continuar verdadeira.</b> Ideal quando não se sabe de antemão quantas repetições serão necessárias.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">n = 0
 enquanto n < 10:
     n = n + 1
@@ -779,7 +804,7 @@ mostre "n = {n}. Fim!"</pre>
         <div class="syn">para cada <code>x</code> entre <code>a</code> e <code>b</code> [pulando <code>p</code>]: · para cada <code>x</code> em <code>lista</code>:</div>
         <p class="desc"><b>Percorre uma sequência item por item.</b> Com <code>entre … e</code> conta números (use <code>pulando</code> para o passo); com <code>em</code> percorre listas, textos e intervalos.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">para cada n entre 2 e 10 pulando 2:
     mostre n
 para cada letra em "willog":
@@ -794,7 +819,7 @@ w i l l o g</div>
         <div class="syn">repita <code>(n):</code> <code>comandos</code> · repetir <code>(n):</code> <code>comandos</code></div>
         <p class="desc"><b>Repete o bloco um número fixo de vezes.</b> <code>repita</code> e <code>repetir</code> como comando são iguais. Atenção: <code>repetir(texto, n)</code> como função repete um texto.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">repita(3):
     mostre "Olá!"</pre>
           <div class="out">Olá!
@@ -808,7 +833,7 @@ Olá!</div>
         <div class="syn">pare · continue</div>
         <p class="desc"><b>Controlam o laço por dentro.</b> <code>pare</code> encerra a repetição na hora; <code>continue</code> pula para a próxima volta.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">para cada n entre 1 e 10:
     se n == 5:
         pare
@@ -823,9 +848,9 @@ Olá!</div>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>vá para / rótulos</h4><span class="chip">Repetição</span></div>
         <div class="syn">:rótulo · vá para <code>rótulo</code></div>
-        <p class="desc"><b>Pula a execução para um ponto marcado do programa.</b> Crie o destino com <code>:nome</code> e salte com <code>vá para nome</code> (também vale sem acento: <code>va para</code>).</p>
+        <p class="desc"><b>Pula a execução para um ponto marcado do programa.</b> Crie o destino com <code>:nome</code> e salte para ele com <code>vá para nome</code> (também vale sem acento: <code>va para</code>).</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">:início
 a = aleatório(10)
 se a != 7:
@@ -840,7 +865,7 @@ mostre "Fim!"</pre>
         <div class="syn">(<code>início..fim</code>) · (<code>início..fim</code>,passo)</div>
         <p class="desc"><b>Cria uma lista de números de uma vez.</b> <code>(1..5)</code> gera 1 a 5; com passo, <code>(-5..5, 2)</code> pula de 2 em 2.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">x = (1..5)
 mostre x
 y = (-5..5, 2)
@@ -855,7 +880,7 @@ mostre y</pre>
         <div class="syn">definir função <code>&lt;nome&gt;</code>(p1, p2…): · retorne <code>&lt;expressão&gt;</code></div>
         <p class="desc"><b>Cria sua própria função reutilizável.</b> Defina uma vez com parâmetros e devolva o resultado com <code>retorne</code> para usar quantas vezes quiser.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">definir função dobro(x):
     retorne x * 2
 mostre dobro(21)</pre>
@@ -868,7 +893,7 @@ mostre dobro(21)</pre>
         <div class="syn">constante <code>NOME</code> = valor</div>
         <p class="desc"><b>Declara um valor fixo que não pode mudar.</b> Ideal para PI, taxas e limites: tentar alterar depois gera erro.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">constante PI = 3.1415
 mostre PI</pre>
           <div class="out">3.1415</div>
@@ -883,9 +908,9 @@ mostre PI</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>janela</h4><span class="chip">Janela</span></div>
         <div class="syn">janela <code>()</code> · janela <code>(centraliza)</code> · janela <code>(largura, altura)</code></div>
-        <p class="desc"><b>Abre a janela do programa.</b> Sem medidas ela mostra o console; com <code>largura, altura</code> ela vira tela de desenho.</p>
+        <p class="desc"><b>Abre a janela do programa.</b> Sem argumentos, ela exibe o console; com <code>largura, altura</code>, ela se torna uma tela de desenho.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(300, 400)
 tela.limpe
 desenhe.circulo(150, 200, 50, vermelho)</pre>
@@ -897,9 +922,9 @@ desenhe.circulo(150, 200, 50, vermelho)</pre>
       <div class="cmd reveal">
         <div class="cmd-top"><h4>tela.cor / tela.limpe</h4><span class="chip">Janela</span></div>
         <div class="syn">tela.cor <code>(cor)</code> · tela.limpe</div>
-        <p class="desc"><b>Controla o fundo da tela de desenho.</b> <code>tela.cor</code> escolhe a cor do próximo fundo; <code>tela.limpe</code> pinta a tela e apaga os desenhos.</p>
+        <p class="desc"><b>Controlam o fundo da tela de desenho.</b> <code>tela.cor</code> escolhe a cor do próximo fundo; <code>tela.limpe</code> pinta a tela e apaga os desenhos.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(300, 400)
 tela.cor(azul)
 tela.limpe
@@ -914,7 +939,7 @@ desenhe.circulo(100, 100, 40, amarelo)</pre>
         <div class="syn">desenhe.circulo <code>(x, y, raio [, cor])</code></div>
         <p class="desc"><b>Desenha um círculo na tela.</b> Informe o centro <code>x, y</code> e o <code>raio</code>; a cor é opcional (padrão <code>branco</code>).</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(300, 400)
 tela.limpe
 desenhe.circulo(150, 150, 50, vermelho)</pre>
@@ -927,7 +952,7 @@ desenhe.circulo(150, 150, 50, vermelho)</pre>
         <div class="syn">desenhe.retangulo <code>(x1, y1, x2, y2 [, cor])</code></div>
         <p class="desc"><b>Desenha um retângulo pelos cantos opostos.</b> Informe dois cantos <code>(x1,y1)</code> e <code>(x2,y2)</code>; a cor é opcional.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(300, 400)
 tela.limpe
 desenhe.retangulo(20, 30, 140, 110, verde)</pre>
@@ -940,7 +965,7 @@ desenhe.retangulo(20, 30, 140, 110, verde)</pre>
         <div class="syn">desenhe.linha <code>(x1, y1, x2, y2 [, cor])</code></div>
         <p class="desc"><b>Desenha um segmento de reta entre dois pontos.</b> Informe início e fim; a cor é opcional (padrão <code>branco</code>).</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(300, 400)
 tela.limpe
 desenhe.linha(10, 10, 200, 100, azul)</pre>
@@ -953,7 +978,7 @@ desenhe.linha(10, 10, 200, 100, azul)</pre>
         <div class="syn">desenhe.polígono <code>(x, y, n, raio [, cor])</code></div>
         <p class="desc"><b>Desenha um polígono regular.</b> Informe o centro, o número de lados <code>n</code> (mínimo 3) e o <code>raio</code>; a cor é opcional.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(300, 400)
 tela.limpe
 desenhe.polígono(150, 150, 5, 50, vermelho)</pre>
@@ -966,7 +991,7 @@ desenhe.polígono(150, 150, 5, 50, vermelho)</pre>
         <div class="syn">desenhe.ponto <code>(x, y [, cor])</code></div>
         <p class="desc"><b>Marca um ponto na tela.</b> É o desenho mais simples: só precisa da posição; a cor é opcional.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(300, 400)
 tela.limpe
 desenhe.ponto(100, 100, amarelo)</pre>
@@ -979,7 +1004,7 @@ desenhe.ponto(100, 100, amarelo)</pre>
         <div class="syn">desenhe.texto <code>("texto", x, y [, tamanho] [, cor])</code></div>
         <p class="desc"><b>Escreve um texto na tela de desenho.</b> O 4º argumento aceita tamanho <i>ou</i> cor diretamente; com 5 argumentos use tamanho e cor.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(300, 400)
 tela.limpe
 desenhe.texto("Olá, Willog!", 100, 100, 20, vermelho)</pre>
@@ -993,7 +1018,7 @@ desenhe.texto("Olá, Willog!", 100, 100, 20, vermelho)</pre>
         <div class="syn">qualquer cor do desenho = corAleatória</div>
         <p class="desc"><b>Sorteia uma das 12 cores a cada uso.</b> Use no lugar da cor para deixar desenhos, fundos e textos diferentes a cada execução.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(300, 400)
 tela.cor(corAleatória)
 tela.limpe
@@ -1008,7 +1033,7 @@ desenhe.circulo(150, 150, 50, corAleatória)</pre>
         <div class="syn">figura.girar <code>(ângulo, vezes, pausa)</code> · figura.mover <code>(x, y, passo)</code></div>
         <p class="desc"><b>Anima uma figura guardada numa variável.</b> <code>girar</code> gira em graus com pausa em segundos; <code>mover</code> desliza até <code>x, y</code> no ritmo do <code>passo</code>.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(600, 600)
 figura = desenhe.polígono(200, 200, 5, 50, vermelho)
 figura.girar(45, 3, 0.5)
@@ -1023,7 +1048,7 @@ figura.mover(400, 300, 2)</pre>
         <div class="syn">girar <code>(a(ângulo, vezes, pausa), b(…))</code> · mover <code>(a(x, y, passo), b(…))</code></div>
         <p class="desc"><b>Anima várias figuras ao mesmo tempo, em paralelo.</b> Cada figura tem seus próprios parâmetros; use os nomes das variáveis que guardaram os desenhos.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(400, 400)
 a = desenhe.polígono(200, 200, 5, 50)
 b = desenhe.polígono(200, 200, 4, 100)
@@ -1037,7 +1062,7 @@ girar(a(30, 5, 0.125), b(-15, 5, 0.25))</pre>
         <div class="syn">recortar <code>(variável)</code> · colar <code>(variável, x, y)</code></div>
         <p class="desc"><b>Remove e reposiciona um desenho.</b> <code>recortar(a)</code> tira a figura da tela sem apagá-la; <code>colar(a, x, y)</code> devolve a mesma figura na nova posição.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">janela(400, 400)
 a = desenhe.polígono(200, 200, 5, 50)
 recortar(a)
@@ -1056,7 +1081,7 @@ colar(a, 300, 300)</pre>
         <div class="syn">abrir <code>"arquivo.txt"</code></div>
         <p class="desc"><b>Abre (ou cria) um arquivo para leitura e escrita.</b> O nome sem extensão vira o identificador: <code>arquivo.txt</code> passa a ser <code>$arquivo</code>.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">abrir "arquivo.txt"
 mostre "arquivo pronto para uso"</pre>
           <div class="out">📄 arquivo criado/aberto como $arquivo</div>
@@ -1069,7 +1094,7 @@ mostre "arquivo pronto para uso"</pre>
         <div class="syn">escrever <code>$arquivo</code>, <code>&lt;var&gt;</code> [, <code>&lt;var2&gt;</code> …]</div>
         <p class="desc"><b>Grava valores no arquivo aberto, um por linha (vários valores na mesma linha separados por vírgula).</b> Só funciona depois de <code>abrir</code>; não confundir com <code>mostre</code>, que escreve no console.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">abrir "arquivo.txt"
 nome = "Wilson"
 idade = 53
@@ -1084,7 +1109,7 @@ fechar $arquivo</pre>
         <div class="syn">ler <code>$arquivo</code>, <code>&lt;var&gt;</code> [, <code>&lt;var2&gt;</code> …]</div>
         <p class="desc"><b>Lê o conteúdo do arquivo para variáveis.</b> Com uma variável lê a linha inteira; com várias divide a linha por vírgulas. Números viram número sozinhos. Diferente de <code>leia</code>, que pergunta ao usuário.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">abrir "arquivo.txt"
 ler $arquivo, nome, idade
 mostre "{nome}, {idade}"
@@ -1099,7 +1124,7 @@ fechar $arquivo</pre>
         <div class="syn">fechar <code>$arquivo</code></div>
         <p class="desc"><b>Fecha o arquivo e garante a gravação.</b> Salva no disco (ou no localStorage quando virtual) e libera o <code>$arquivo</code> para novo uso.</p>
         <div class="box">
-          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button">⧉</button></div>
+          <div class="box-head"><span class="fname">✏️</span><button class="copy" type="button" aria-label="Copiar código">⧉</button></div>
           <pre class="code">abrir "notas.txt"
 escrever $notas, "linha1"
 fechar $notas</pre>
@@ -1117,7 +1142,7 @@ fechar $notas</pre>
     <div class="sec-head reveal">
       <span class="tag">🧮 Funções prontas</span>
       <h2>80 funções em <span class="grad">ordem alfabética</span></h2>
-      <p class="lead">Digite para filtrar, ou use os chips categoriais. Todas aceitam variáveis e expressões.</p>
+      <p class="lead">Digite para filtrar a lista. Todas aceitam variáveis e expressões.</p>
     </div>
 
     <div class="fn-filter reveal">
@@ -1127,17 +1152,17 @@ fechar $notas</pre>
 
     <div class="tbl-wrap reveal">
       <table id="fnTable">
+        <caption class="sr-only">Tabela de funções da linguagem Willog</caption>
         <thead>
-          <tr><th style="width:30%">Função</th><th style="width:40%">O que faz</th><th>Exemplo → Saída</th></tr>
+          <tr><th scope="col" style="width:30%">Função</th><th scope="col" style="width:40%">O que faz</th><th scope="col">Exemplo → Saída</th></tr>
         </thead>
         <tbody>
 <tr data-s="abs(x) valor absoluto abs(-2) -&gt; 2"><td><code class="fn">abs(x)</code></td><td class="d">Valor absoluto</td><td class="e">abs(-2) -> 2</td></tr>
 <tr data-s="adicionardias(data, dias) adiciona dias a uma data adicionardias(&quot;14/04/1973&quot;,19269) -&gt; 15/01/2026"><td><code class="fn">adicionarDias(data, dias)</code></td><td class="d">Adiciona dias a uma data</td><td class="e">adicionarDias("14/04/1973",19269) -> 15/01/2026</td></tr>
 <tr data-s="agora() data e hora atuais agora() -&gt; 15/01/2026 14:30:07"><td><code class="fn">agora()</code></td><td class="d">Data e hora atuais</td><td class="e">agora() -> 15/01/2026 14:30:07</td></tr>
-<tr data-s="aleatório()aleatório(n)aleatório(a,b) número aleatório 0-1, 1..n ou a..b aleatório(6) -&gt; 1..6
-aleatório(3,12) -&gt; 3..12"><td><code class="fn">aleatório()aleatório(n)aleatório(a,b)</code></td><td class="d">Número aleatório 0-1, 1..n ou a..b</td><td class="e">aleatório(6) -> 1..6<br>aleatório(3,12) -> 3..12</td></tr>
+<tr data-s="aleatório número aleatório 0-1, 1..n ou a..b aleatório(6) aleatório(3,12)"><td><code class="fn">aleatório()</code><br><code class="fn">aleatório(n)</code><br><code class="fn">aleatório(a, b)</code></td><td class="d">Número aleatório: 0–1, 1..n ou a..b</td><td class="e">aleatório(6) -> 1..6<br>aleatório(3,12) -> 3..12</td></tr>
 <tr data-s="amostra(lista, n) amostra aleatória sem repetição amostra([1,2,3,4,5,6],2) -&gt; 5,3"><td><code class="fn">amostra(lista, n)</code></td><td class="d">Amostra aleatória sem repetição</td><td class="e">amostra([1,2,3,4,5,6],2) -> 5,3</td></tr>
-<tr data-s="amostras(lista, tam, qtd) qtd amostras de tamanho tam amostras([1,2,3,4,5,6],3,2) -&gt; 6,1,2 | 5,6,3"><td><code class="fn">amostras(lista, tam, qtd)</code></td><td class="d">Qtd amostras de tamanho tam</td><td class="e">amostras([1,2,3,4,5,6],3,2) -> 6,1,2 | 5,6,3</td></tr>
+<tr data-s="amostras(lista, tam, qtd) quantidade de amostras de tamanho tam"><td><code class="fn">amostras(lista, tam, qtd)</code></td><td class="d">Quantidade de amostras de tamanho tam</td><td class="e">amostras([1,2,3,4,5,6],3,2) -> 6,1,2 | 5,6,3</td></tr>
 <tr data-s="anosentre(data1, data2) anos entre duas datas anosentre(&quot;14/04/1973&quot;,&quot;15/01/2026&quot;) -&gt; 52.7917808219"><td><code class="fn">anosEntre(data1, data2)</code></td><td class="d">Anos entre duas datas</td><td class="e">anosEntre("14/04/1973","15/01/2026") -> 52.7917808219</td></tr>
 <tr data-s="aparar(texto) remove espaços no início e fim aparar(&quot;     olá    &quot;) -&gt; olá"><td><code class="fn">aparar(texto)</code></td><td class="d">Remove espaços no início e fim</td><td class="e">aparar("     olá    ") -> olá</td></tr>
 <tr data-s="arccos(x) arco cosseno em graus (inversa do cosseno) arccos(0.5) -&gt; 60"><td><code class="fn">arccos(x)</code></td><td class="d">Arco cosseno em graus (inversa do cosseno)</td><td class="e">arccos(0.5) -> 60</td></tr>
@@ -1145,8 +1170,7 @@ aleatório(3,12) -&gt; 3..12"><td><code class="fn">aleatório()aleatório(n)alea
 <tr data-s="arctan(x) arco tangente em graus (inversa da tangente) arctan(1) -&gt; 45"><td><code class="fn">arctan(x)</code></td><td class="d">Arco tangente em graus (inversa da tangente)</td><td class="e">arctan(1) -> 45</td></tr>
 <tr data-s="arredondar(x, casas) arredonda para n casas decimais arredondar(5.33333,2) -&gt; 5.33
 arredondar(1.66666,3) -&gt; 1.667"><td><code class="fn">arredondar(x, casas)</code></td><td class="d">Arredonda para n casas decimais</td><td class="e">arredondar(5.33333,2) -> 5.33<br>arredondar(1.66666,3) -> 1.667</td></tr>
-<tr data-s="capturetecla() retorna a última tecla capturada por esperetecla() esperetecla(); tecla=capturetecla() -&gt; &quot;a&quot;
-esperetecla(&quot;enter&quot;); capturetecla() -&gt; &quot;enter&quot;"><td><code class="fn">captureTecla()</code></td><td class="d">Retorna a última tecla capturada por espereTecla()</td><td class="e">espereTecla(); tecla=captureTecla() -> "a"<br>espereTecla("enter"); captureTecla() -> "Enter"</td></tr>
+<tr data-s="capturetecla() retorna a última tecla capturada por esperetecla()"><td><code class="fn">captureTecla()</code></td><td class="d">Retorna a última tecla capturada por espereTecla()</td><td class="e">espereTecla(); tecla=captureTecla() -> "a"<br>espereTecla("enter"); captureTecla() -> "Enter"</td></tr>
 <tr data-s="começacom(texto, prefixo) verifica se texto começa com prefixo (ignora maiúsculas/minúsculas) começacom(&quot;willog&quot;,&quot;wil&quot;) -&gt; verdadeiro
 começacom(&quot;willog&quot;,&quot;log&quot;) -&gt; falso"><td><code class="fn">começaCom(texto, prefixo)</code></td><td class="d">Verifica se texto começa com prefixo (ignora maiúsculas/minúsculas)</td><td class="e">começaCom("Willog","wil") -> verdadeiro<br>começaCom("Willog","log") -> falso</td></tr>
 <tr data-s="contaritem(lista, item) conta ocorrências de item contaritem(&quot;especialidade&quot;,&quot;e&quot;) -&gt; 3
@@ -1252,14 +1276,15 @@ tipo([1,2,3]) -&gt; lista"><td><code class="fn">tipo(x)</code></td><td class="d"
 
     <div class="tbl-wrap reveal">
       <table>
-        <thead><tr><th style="width:24%">Sintaxe</th><th style="width:44%">Descrição</th><th>Exemplo → Saída</th></tr></thead>
+        <caption class="sr-only">Tabela de operadores da linguagem Willog</caption>
+        <thead><tr><th scope="col" style="width:24%">Sintaxe</th><th scope="col" style="width:44%">Descrição</th><th scope="col">Exemplo → Saída</th></tr></thead>
         <tbody>
           <tr><td><code>(início..fim)</code><br><code>(início..fim,passo)</code></td><td class="d">Intervalo — cria lista numérica de início até fim</td><td class="e">x=(1..5) → 1, 2, 3, 4, 5<br>(-5..5, 2) → -5, -3, -1, 1, 3, 5</td></tr>
           <tr><td><code>(valor, "p%")</code></td><td class="d">Percentual — <code>p%</code> de um valor</td><td class="e">(30, "10%") → 3 &nbsp;·&nbsp; (120, "5%") → 6</td></tr>
           <tr><td><code>+</code> &nbsp; <code>&amp;</code></td><td class="d">Adição e concatenação. Lista + lista de mesmo tamanho soma elemento a elemento; tamanhos diferentes une; lista + número soma elemento a elemento (vetorizado). Use <code>&amp;</code> para sempre unir</td><td class="e">2+3 → 5 &nbsp;·&nbsp; [1,2] + [3] → 1, 2, 3</td></tr>
           <tr><td><code>-</code></td><td class="d">Subtração. Lista − lista de mesmo tamanho subtrai elemento a elemento; tamanhos diferentes dá a diferença de conjuntos; lista − número subtrai elemento a elemento (vetorizado)</td><td class="e">5-2 → 3 &nbsp;·&nbsp; [1,2,3]-[2] → 1, 3</td></tr>
           <tr><td><code>*</code> <code>/</code> <code>//</code> <code>\</code> <code>%</code> <code>**</code></td><td class="d">Multiplicação, divisão, divisão inteira, quociente fracionário, módulo e potência — todos vetorizados</td><td class="e">2**3 → 8 &nbsp;·&nbsp; 5//2 → 2 &nbsp;·&nbsp; 5\2 → 0.5</td></tr>
-          <tr><td><code>=</code> &nbsp; <code>:=</code></td><td class="d">Atribuição (aceita vetores, ex.: <code>y := 2*x</code>)</td><td class="e">x:=(-5..5) → -5..5<br>y:=2*x → -10, -8, …, 10</td></tr>
+          <tr><td><code>=</code> &nbsp; <code>:=</code></td><td class="d">Atribuição (aceita vetores, ex.: <code>y := 2*x</code>)</td><td class="e">x:=(-5..5) → -5, -4, …, 5<br>y:=2*x → -10, -8, …, 10</td></tr>
           <tr><td><code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> <code>==</code> <code>!=</code></td><td class="d">Comparações → <code>Verdadeiro</code>/<code>Falso</code>. Em condições de <code>se</code>/<code>enquanto</code>, um único <code>=</code> também compara igualdade</td><td class="e">10 &gt; 5 → Verdadeiro</td></tr>
           <tr><td><code>e</code></td><td class="d">Conjunção lógica</td><td class="e">5&gt;3 e 2&lt;4 → Verdadeiro</td></tr>
           <tr><td><code>ou</code></td><td class="d">Disjunção lógica</td><td class="e">5&lt;3 ou 6&gt;=3 → Verdadeiro</td></tr>
@@ -1284,7 +1309,8 @@ tipo([1,2,3]) -&gt; lista"><td><code class="fn">tipo(x)</code></td><td class="d"
 
     <div class="tbl-wrap reveal">
       <table>
-        <thead><tr><th style="width:30%">Sintaxe</th><th style="width:36%">O que faz</th><th>Exemplo → Saída</th></tr></thead>
+        <caption class="sr-only">Tabela de propriedades de listas e textos</caption>
+        <thead><tr><th scope="col" style="width:30%">Sintaxe</th><th scope="col" style="width:36%">O que faz</th><th scope="col">Exemplo → Saída</th></tr></thead>
         <tbody>
           <tr><td><code>lista.adicionar(item 1, item 2, …)</code></td><td class="d">Acrescenta itens (altera a lista)</td><td class="e">a=[1,2]; a.adicionar(3); mostre a → 1, 2, 3</td></tr>
           <tr><td><code>lista.aleatório</code></td><td class="d">Item aleatório</td><td class="e">[1,2,3].aleatório → 2</td></tr>
@@ -1372,11 +1398,11 @@ desenhe.linha(0, 0, 100, 100, corAleatória)</pre>
         <h5>Comece já</h5>
         <ul>
           <li><a href="index.html">▶ Abrir a IDE</a></li>
-          <li><a href="#comandos">Primeiro programa</a></li>
+          <li><a href="#comecando">Primeiro programa</a></li>
         </ul>
       </div>
     </div>
-    <div class="copy">© 2026 · Willog · desenvolvida por Wilson José Andriolli Junior · manual.html</div>
+    <div class="copy">© 2026 · Willog · desenvolvido por Wilson José Andriolli Junior · Manual v1.0</div>
   </div>
 </footer>
 
@@ -1385,7 +1411,7 @@ desenhe.linha(0, 0, 100, 100, corAleatória)</pre>
   var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
 
   // ---------- mini destacador de sintaxe Willog ----------
-  var KW_RX=/^(se|senao|senão|entao|então|enquanto|para|cada|entre|pulando|repetir|repita|mostre|mostrar|limpe|pare|continue|continuar|pausa|espere|espereTecla|captureTecla|capture|leia|ler|escrever|fechar|abrir|janela|tela|desenhe|desenha|mover|figura|bipe|toque|mensagem|retorne|retorna|definir|funcao|função|verificar|caso|padrão|padrao|constante|novo|existe|colar|recortar|cronometro|cronômetro|va|vá|fato|centralizaTexto|corTexto)$/i;
+  var KW_RX=/^(se|senao|senão|entao|então|enquanto|para|cada|entre|pulando|repetir|repita|mostre|limpe|pare|continue|continuar|pausa|espere|espereTecla|captureTecla|capture|leia|ler|escrever|fechar|abrir|janela|tela|desenhe|desenha|mover|figura|bipe|toque|mensagem|retorne|retorna|definir|funcao|função|verificar|caso|padrão|padrao|constante|novo|existe|colar|recortar|cronometro|cronômetro|va|vá|centralizaTexto|corTexto)$/i;
   var COLOR_RX=/^(vermelho|azul|verde|amarelo|ciano|rosa|roxo|branco|preto|laranja|cinza|marrom|amarela|vermelha|roxa|branca|preta|corAleatoria|corAleatória)$/;
   var BOOL_RX=/^(Verdadeiro|Falso|verdadeiro|falso)$/;
   var LOGICAL_RX=/^(e|ou|não|nao|em|união|uniao|intersecção|interseccao|intersecao|interseção)$/;
@@ -1492,10 +1518,22 @@ desenhe.linha(0, 0, 100, 100, corAleatória)</pre>
   var burger=document.getElementById('navBurger');
   var links=document.getElementById('navLinks');
   if(burger&&links){
-    burger.addEventListener('click',function(){ links.classList.toggle('open'); });
-    links.addEventListener('click',function(ev){
-      if(ev.target.tagName==='A') links.classList.remove('open');
+    burger.addEventListener('click',function(){
+      var open=links.classList.toggle('open');
+      burger.setAttribute('aria-expanded',open?'true':'false');
     });
+    links.addEventListener('click',function(ev){
+      if(ev.target.tagName==='A'){ links.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
+    });
+  }
+
+  // ---------- voltar ao topo ----------
+  var backTop=document.getElementById('backTop');
+  if(backTop){
+    window.addEventListener('scroll',function(){
+      backTop.classList.toggle('show',window.scrollY>600);
+    },{passive:true});
+    backTop.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
   }
 
   // ---------- revelar ao rolar ----------
@@ -1507,5 +1545,6 @@ desenhe.linha(0, 0, 100, 100, corAleatória)</pre>
   else{ toArr.forEach(function(el){el.classList.add('visible');}); }
 })();
 </script>
+<button class="back-top" id="backTop" aria-label="Voltar ao topo" title="Voltar ao topo">↑</button>
 </body>
 </html>
