@@ -1,0 +1,4279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Willog - IDE</title>
+  <style>
+:root {
+  --bg: #1a1b26;
+  --panel: #1f2335;
+  --panel-2: #16161e;
+  --border: #2f3549;
+  --text: #c0caf5;
+  --muted: #565f89;
+  --accent: #7aa2f7;
+  --accent-2: #bb9af7;
+  --green: #9ece6a;
+  --orange: #ff9e64;
+  --red: #f7768e;
+  --yellow: #e0af68;
+  --cyan: #89ddff;
+  --blue: #5c9dff;
+  --mono: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, "Courier New", monospace;
+  --editor-font: 15px;
+  --console-font: 14px;
+  --console-width: 45%;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  overflow: hidden;
+}
+
+/* --- Barras de rolagem (cores do tema) ------------------------------------ */
+
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-corner { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* --- Barra superior ----------------------------------------------------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: linear-gradient(180deg, #232842, #1b1e2e);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand { display: flex; align-items: center; gap: 10px; }
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  font-weight: 800;
+  font-size: 18px;
+  color: #1a1b26;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-text strong { font-size: 24px; letter-spacing: .3px; }
+.brand-text small { color: var(--muted); font-size: 11px; }
+
+.actions { display: flex; align-items: center; gap: 8px; }
+
+.btn {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: #2a2f45;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, transform .05s;
+}
+.btn:hover { background: #333a55; border-color: #3d4463; }
+.btn:active { transform: translateY(1px); }
+
+.menu-wrap { position: relative; }
+
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .5);
+  z-index: 60;
+}
+
+.menu[hidden] { display: none; }
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  padding: 8px 10px;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+}
+.menu-item:hover { background: rgba(122, 162, 247, .14); }
+.menu-item .hint { color: var(--muted); font-size: 11px; }
+
+.menu-sep { height: 1px; margin: 4px 6px; background: var(--border); }
+
+.btn.primary {
+  color: #10121b;
+  font-weight: 700;
+  background: linear-gradient(135deg, #8bb4ff, var(--accent));
+  border-color: transparent;
+}
+.btn.primary:hover { background: linear-gradient(135deg, #9dc0ff, #86adff); }
+
+/* --- Área de trabalho --------------------------------------------------- */
+
+.workspace {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--panel);
+}
+
+.editor-pane { flex: 1 1 0; }
+
+.console-pane { flex: 0 0 var(--console-width, 45%); min-width: 220px; }
+
+.splitter {
+  flex: 0 0 6px;
+  position: relative;
+  cursor: col-resize;
+  background: var(--panel-2);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  z-index: 5;
+  transition: background .12s;
+  touch-action: none;
+}
+.splitter::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 34px;
+  transform: translate(-50%, -50%);
+  border-radius: 2px;
+  background: var(--border);
+}
+.splitter:hover,
+.splitter:focus-visible,
+.splitter.dragging { background: var(--accent); outline: none; }
+.splitter:hover::after,
+.splitter:focus-visible::after,
+.splitter.dragging::after { background: rgba(26, 27, 38, .6); }
+
+body.resizing { cursor: col-resize; user-select: none; }
+
+.pane-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.pane-name { color: var(--muted); font-size: 12px; margin-left: 4px; }
+
+.pane-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+.action-run {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: #10121b;
+  background: linear-gradient(135deg, #8bb4ff, var(--accent));
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: filter .12s, transform .05s;
+}
+.action-run:hover { filter: brightness(1.12); }
+.action-run:active { transform: translateY(1px); }
+
+.action-clear {
+  font: inherit;
+  font-size: 12px;
+  color: var(--text);
+  background: rgba(247, 118, 142, .12);
+  border: 1px solid rgba(247, 118, 142, .45);
+  border-radius: 7px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+.action-clear:hover { background: rgba(247, 118, 142, .25); border-color: var(--red); }
+
+.zoom { display: flex; align-items: center; gap: 2px; }
+.zoom .zoom-val {
+  min-width: 40px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.zoom .mini {
+  width: 22px;
+  padding: 3px 0;
+  text-align: center;
+  line-height: 1;
+}
+.zoom .mini:disabled { opacity: .35; cursor: default; }
+.zoom .mini:disabled:hover { color: var(--muted); border-color: var(--border); }
+
+.dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+.dot.red { background: #ff5f57; }
+.dot.yellow { background: #febc2e; }
+.dot.green { background: #28c840; }
+
+.mini {
+  font: inherit;
+  font-size: 11px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+.mini:hover { color: var(--text); border-color: #3d4463; }
+
+/* --- Editor ------------------------------------------------------------- */
+
+.editor-wrap {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  background: var(--bg);
+}
+
+.gutter {
+  width: 52px;
+  flex: 0 0 52px;
+  overflow: hidden;
+  padding: 14px 0;
+  text-align: right;
+  background: #171823;
+  border-right: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--editor-font);
+  line-height: 1.5;
+  user-select: none;
+}
+.gutter div { padding-right: 12px; }
+
+.code-area { position: relative; flex: 1; min-width: 0; }
+
+.highlight,
+#code {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 14px 16px;
+  border: 0;
+  font-family: var(--mono);
+  font-size: var(--editor-font);
+  line-height: 1.5;
+  tab-size: 4;
+  white-space: pre;
+  overflow: auto;
+}
+
+.highlight { pointer-events: none; overflow: hidden; }
+.highlight code { font-family: inherit; }
+
+#code {
+  background: transparent;
+  color: transparent;
+  caret-color: var(--accent);
+  resize: none;
+  outline: none;
+}
+#code::selection { background: rgba(122, 162, 247, .28); }
+
+/* Autocompletar */
+.complete-box {
+  position: absolute;
+  z-index: 20;
+  min-width: 210px;
+  max-width: 330px;
+  max-height: 224px;
+  overflow: auto;
+  margin: 0;
+  padding: 4px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .5);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.complete-box[hidden] { display: none; }
+.complete-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.complete-item.sel { background: rgba(122, 162, 247, .18); }
+.complete-kind {
+  min-width: 36px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+.complete-kind.k-var { color: var(--yellow); border-color: rgba(224, 175, 104, .55); }
+.complete-kind.k-cmd { color: var(--accent-2); border-color: rgba(187, 154, 247, .55); }
+.complete-kind.k-fn { color: var(--cyan); border-color: rgba(137, 221, 255, .45); }
+.complete-kind.k-prop { color: var(--green); border-color: rgba(158, 206, 106, .45); }
+.complete-label { color: var(--text); }
+.complete-detail { margin-left: auto; padding-left: 12px; font-size: 11px; color: var(--muted); }
+
+/* Realce de sintaxe */
+.tk-comment { color: var(--muted); font-style: italic; }
+.tk-string { color: var(--green); }
+.tk-string .tk-var { color: var(--yellow); }
+.tk-value { color: var(--blue); }
+.tk-value .tk-var { color: var(--yellow); }
+.tk-keyword { color: var(--accent-2); font-weight: 700; }
+.tk-func { color: var(--cyan); }
+.tk-number { color: var(--orange); }
+.tk-op { color: var(--text); }
+.tk-var { color: var(--yellow); }
+
+/* --- Console ------------------------------------------------------------ */
+
+.console {
+  flex: 1;
+  overflow: auto;
+  padding: 12px 16px;
+  background: #12131c;
+  font-family: var(--mono);
+  font-size: var(--console-font);
+  line-height: 1.55;
+}
+
+.console { position: relative; }
+.console .line { white-space: pre-wrap; word-break: break-word; }
+.console .input-line { display: flex; flex-direction: column; gap: 4px; align-items: stretch; padding: 4px 0 0 0; }
+.console .input-prefix { color: var(--accent); padding: 0 0 2px 2px; }
+.console .input-field {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: var(--console-font);
+  outline: none;
+  padding: 4px 6px;
+}
+.console .input-field:focus { border-color: var(--accent); outline: 1px solid rgba(122,162,247,.35); }
+.console .input-field::placeholder { color: var(--muted); }
+.console .out { color: var(--text); }
+.console .sys { color: var(--muted); }
+.console .err { color: var(--red); }
+.console .in { color: var(--cyan); }
+.console .info { color: var(--accent); }
+.console .line.err::before { content: ""; }
+
+/* --- Barra de status ---------------------------------------------------- */
+
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 28px;
+  padding: 0 16px;
+  background: var(--panel-2);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
+}
+.statusbar .spacer { flex: 1; }
+.status.ok { color: var(--green); }
+.status.error { color: var(--red); }
+.status.running { color: var(--yellow); }
+
+/* --- Referência --------------------------------------------------------- */
+
+.help-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(8, 9, 14, .72);
+  z-index: 50;
+}
+
+.help-overlay[hidden] { display: none; }
+
+.help-box {
+  width: min(760px, 100%);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+}
+
+.help-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.help-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px 0;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.help-tabs .tab {
+  font: inherit;
+  font-size: 12px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background .12s, color .12s;
+}
+.help-tabs .tab:hover { color: var(--text); background: rgba(122, 162, 247, .08); }
+.help-tabs .tab.active {
+  color: var(--text);
+  background: var(--panel);
+  border-color: var(--border);
+  margin-bottom: -1px;
+}
+
+.help-search {
+  padding: 10px 14px 2px;
+  background: var(--panel);
+}
+.help-search input {
+  width: 100%;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: #12131c;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  outline: none;
+}
+.help-search input::placeholder { color: var(--muted); }
+.help-search input:focus { border-color: var(--accent); }
+
+.help-body { padding: 6px 16px 16px; overflow: auto; }
+.help-body code { font-family: var(--mono); font-size: 13px; }
+
+.help-panel[hidden] { display: none; }
+.help-empty { padding: 24px; text-align: center; color: var(--muted); font-size: 13px; }
+.help-empty[hidden] { display: none; }
+
+.ref-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(18, 19, 28, .55);
+  padding: 12px 14px;
+  margin: 12px 0;
+  font-size: 13px;
+}
+.ref-item[hidden] { display: none; }
+.ref-sig {
+  display: block;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 6px;
+}
+.ref-desc { margin: 0 0 10px; color: var(--text); }
+.ref-desc em { color: var(--muted); font-style: normal; }
+.ref-desc code {
+  font-family: var(--mono);
+  background: #12131c;
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: var(--cyan);
+}
+.ref-ex {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 12px;
+  align-items: start;
+  background: #12131c;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.ref-ex-code {
+  grid-column: 1;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--green);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.ref-ex-out {
+  grid-column: 1;
+  margin: 6px 0 0;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border);
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.ref-ex-out::before { content: "→ "; color: var(--accent); }
+.ref-use { grid-column: 2; grid-row: 1 / span 2; align-self: start; }
+
+/* --- Responsivo --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .workspace { flex-direction: column; }
+  .editor-pane { flex: 1 1 0; border-right: 0; border-bottom: 1px solid var(--border); }
+  .console-pane { flex: 1 1 0; min-width: 0; }
+  .splitter { display: none; }
+}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">W</span>
+      <div class="brand-text">
+        <strong>Willog</strong>
+        <small>Linguagem de programação em Português do Brasil</small>
+      </div>
+    </div>
+
+      <div class="actions">
+      <div class="menu-wrap">
+        <button id="btnFile" class="btn" title="Operações com arquivo" aria-haspopup="true" aria-expanded="false">Arquivo</button>
+        <div id="fileMenu" class="menu" role="menu" hidden>
+          <button id="mnuOpen" class="menu-item" role="menuitem" title="Abrir arquivo (Ctrl+O)">Abrir...<span class="hint">Ctrl+O</span></button>
+          <button id="mnuSave" class="menu-item" role="menuitem" title="Salvar (Ctrl+S)">Salvar<span class="hint">Ctrl+S</span></button>
+          <button id="mnuSaveAs" class="menu-item" role="menuitem" title="Salvar com outro nome">Salvar como...</button>
+          <div class="menu-sep" role="separator"></div>
+          <button id="mnuExit" class="menu-item" role="menuitem" title="Sair da IDE">Sair</button>
+        </div>
+      </div>
+      <button id="btnHelp" class="btn" title="Referências da linguagem">Referências</button>
+    </div>
+  </header>
+
+  <input type="file" id="fileOpen" accept=".wil,.willog,.txt,text/plain" hidden />
+
+  <main class="workspace">
+    <section class="pane editor-pane">
+      <div class="pane-head">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <span class="pane-name" id="fileName">programa.wil</span>
+        <div class="pane-tools">
+          <button id="btnRun" class="action-run" title="Executar (Ctrl+Enter)">&#9654; Executar</button>
+          <button id="btnClearEditor" class="action-clear" title="Limpar o editor">Limpar editor</button>
+          <div class="zoom" data-target="editor">
+            <button class="mini zoom-out" title="Diminuir fonte do editor">&minus;</button>
+            <span class="zoom-val">100%</span>
+            <button class="mini zoom-in" title="Aumentar fonte do editor">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="editor-wrap">
+        <div class="gutter" id="gutter"></div>
+        <div class="code-area">
+          <pre class="highlight" id="highlight" aria-hidden="true"><code id="highlightCode"></code></pre>
+          <textarea id="code" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" aria-label="Editor Willog"></textarea>
+          <div id="completeBox" class="complete-box" role="listbox" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" tabindex="0" title="Arraste para redimensionar o console"></div>
+
+    <section class="pane console-pane">
+      <div class="pane-head">
+        <span class="pane-name">console</span>
+        <div class="pane-tools">
+          <div class="zoom" data-target="console">
+            <button class="mini zoom-out" title="Diminuir fonte do console">&minus;</button>
+            <span class="zoom-val">100%</span>
+            <button class="mini zoom-in" title="Aumentar fonte do console">+</button>
+          </div>
+          <button id="btnVars" class="mini" title="Mostrar variáveis no console">Variáveis</button>
+          <button id="btnConsoleClear" class="mini" title="Limpar o console">Limpar</button>
+        </div>
+      </div>
+      <div class="console" id="console"></div>
+    </section>
+  </main>
+
+  <footer class="statusbar">
+    <span id="status" class="status ok">Pronto</span>
+    <span class="spacer"></span>
+    <span id="cursorInfo">linha 1, col 1</span>
+    <span id="stats">0 linhas</span>
+  </footer>
+
+  <div class="help-overlay" id="helpOverlay" hidden>
+    <div class="help-box">
+      <div class="help-head">
+        <strong>Referência da linguagem Willog</strong>
+        <button id="btnHelpClose" class="mini">fechar</button>
+      </div>
+      <div class="help-tabs" id="helpTabs">
+        <button class="tab active" data-tab="comandos">Comandos</button>
+        <button class="tab" data-tab="funcoes">Funções</button>
+        <button class="tab" data-tab="operadores">Operadores</button>
+        <button class="tab" data-tab="propriedades">Propriedades</button>
+      </div>
+      <div class="help-search">
+        <input id="helpSearch" type="text" placeholder="Buscar na referência..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="help-body">
+        <section class="help-panel" data-panel="comandos">
+          <div class="ref-item" data-name="atribuição variável nome valor">
+            <code class="ref-sig">VARIÁVEL = valor</code>
+            <p class="ref-desc">Guarda um valor em uma variável (nome em MAIÚSCULAS). O valor aparece em azul no editor.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">NÚMERO=100
+mostre NÚMERO</pre>
+              <pre class="ref-ex-out">100</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="constante imutável">
+            <code class="ref-sig">constante NOME = valor</code>
+            <p class="ref-desc">Declara uma constante; não pode ser alterada depois.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">constante PI=3.14
+mostre PI</pre>
+              <pre class="ref-ex-out">3.14</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="leia entrada ler digitar">
+            <code class="ref-sig">leia "texto"</code>
+            <p class="ref-desc">Lê um valor pelo console: numérico (se válido) vira número, texto não numérico vira string.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">NOME=leia "Digite seu nome"</pre>
+              <pre class="ref-ex-out">(digite o valor no console)</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="mostre exibir imprimir saída">
+            <code class="ref-sig">mostre expr, expr...</code>
+            <p class="ref-desc">Exibe os valores, um por linha.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 2+8,10-3</pre>
+              <pre class="ref-ex-out">10
+7</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="mostre bloco chaves">
+            <code class="ref-sig">mostre { ... }</code>
+            <p class="ref-desc">Bloco: imprime cada expressão dentro de <code>{ }</code>, uma por linha.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre {
+2+3
+"fim"
+}</pre>
+              <pre class="ref-ex-out">5
+fim</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="para cada em laço loop repetir intervalo">
+            <code class="ref-sig">para cada NOME em (a..b):</code>
+            <p class="ref-desc">Repete o corpo indentado para cada valor do intervalo. Também em uma linha: <code>para cada Y em (1..3) mostre Y</code>.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">para cada Y em (1..3):
+    mostre Y</pre>
+              <pre class="ref-ex-out">1
+2
+3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="repetir repetição repete vezes loop laço">
+            <code class="ref-sig">repetir(n):</code>
+            <p class="ref-desc">Repete o corpo indentado n vezes. Também em uma linha: <code>repetir(3) mostre X</code>.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">repetir(5):
+    mostre "Olá!"</pre>
+              <pre class="ref-ex-out">Olá!
+Olá!
+Olá!
+Olá!
+Olá!</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="se senão senao então entao condicional condição if else">
+            <code class="ref-sig">se condição então:</code>
+            <p class="ref-desc">Executa o corpo indentado quando a condição é verdadeira; com <code>senão:</code> executa o outro corpo. O <code>então</code> e o <code>:</code> são opcionais. Também em uma linha: <code>se X&lt;10 mostre X senão mostre Y</code>. Condições usam <code>&lt; &gt; &lt;= &gt;= == !=</code>, <code>e</code>, <code>ou</code>, <code>não</code> e <code>existe ... em ...</code>.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">NUMERO=100
+se NUMERO&lt;50 então:
+    mostre "Numero é menor que 50"
+senão:
+    mostre "Numero maior ou igual a 50"</pre>
+              <pre class="ref-ex-out">Numero maior ou igual a 50</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="help-panel" data-panel="funcoes" hidden>
+          <div class="ref-item" data-name="abs absoluto módulo">
+            <code class="ref-sig">abs(x)</code>
+            <p class="ref-desc">Valor absoluto.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre abs(-2)</pre>
+              <pre class="ref-ex-out">2</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="aleatório aleatorio sorteio sorte sortear">
+            <code class="ref-sig">aleatório(a, b)</code>
+            <p class="ref-desc">Número inteiro aleatório entre a e b (inclusive).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre aleatório(1,10)</pre>
+              <pre class="ref-ex-out">(número aleatório entre 1 e 10)</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="arredonda arredondar">
+            <code class="ref-sig">arredonda(x)</code>
+            <p class="ref-desc">Arredonda para o inteiro mais próximo.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre arredonda(2.6)</pre>
+              <pre class="ref-ex-out">3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="decimal fracionária fração parte">
+            <code class="ref-sig">decimal(x)</code>
+            <p class="ref-desc">Parte fracionária do número.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre decimal(5/2)</pre>
+              <pre class="ref-ex-out">0.5</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="fração fracao fração">
+            <code class="ref-sig">fração(x)</code>
+            <p class="ref-desc">Converte um decimal em fração.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre fração(0.33333333)</pre>
+              <pre class="ref-ex-out">1/3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="inteiro truncar">
+            <code class="ref-sig">inteiro(x)</code>
+            <p class="ref-desc">Parte inteira (trunca as casas decimais).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre inteiro(3.9)</pre>
+              <pre class="ref-ex-out">3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="máximo maximo maior">
+            <code class="ref-sig">máximo(a, b, ...)</code>
+            <p class="ref-desc">Retorna o maior valor.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre máximo(3,7,5)</pre>
+              <pre class="ref-ex-out">7</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="mínimo minimo menor">
+            <code class="ref-sig">mínimo(a, b, ...)</code>
+            <p class="ref-desc">Retorna o menor valor.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre mínimo(3,7,5)</pre>
+              <pre class="ref-ex-out">3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="paranúmero paranumero converter número texto">
+            <code class="ref-sig">paraNúmero(x)</code>
+            <p class="ref-desc">Converte em número: texto numérico vira número, texto não numérico vira 0.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre paraNúmero("banana"),paraNúmero("5555")</pre>
+              <pre class="ref-ex-out">0
+5555</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="paratexto converter texto string">
+            <code class="ref-sig">paraTexto(x)</code>
+            <p class="ref-desc">Converte em texto.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre paraTexto(12345)</pre>
+              <pre class="ref-ex-out">12345</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="potência potencia elevado">
+            <code class="ref-sig">potência(a, b)</code>
+            <p class="ref-desc">a elevado a b.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre potência(2,10)</pre>
+              <pre class="ref-ex-out">1024</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="raiz quadrada sqrt">
+            <code class="ref-sig">raiz(x)</code>
+            <p class="ref-desc">Raiz quadrada.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre raiz(64)</pre>
+              <pre class="ref-ex-out">8</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="help-panel" data-panel="operadores" hidden>
+          <div class="ref-item" data-name="+ adição soma somar">
+            <code class="ref-sig">a + b</code>
+            <p class="ref-desc">Adição.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 2+3</pre>
+              <pre class="ref-ex-out">5</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="!= diferente desigual comparação">
+            <code class="ref-sig">a != b</code>
+            <p class="ref-desc">Diferente: verdadeiro quando os valores são diferentes.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 2!=3</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="/ divisão dividir">
+            <code class="ref-sig">a / b</code>
+            <p class="ref-desc">Divisão.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 16/5</pre>
+              <pre class="ref-ex-out">3.2</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="// divisão inteira quociente">
+            <code class="ref-sig">a // b</code>
+            <p class="ref-desc">Divisão inteira.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 5//2</pre>
+              <pre class="ref-ex-out">2</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="e and lógico comparação">
+            <code class="ref-sig">a e b</code>
+            <p class="ref-desc">E lógico: verdadeiro quando as duas condições são verdadeiras.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 3&lt;5 e 10&gt;2</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="existe em pertence contém inclusão lista texto">
+            <code class="ref-sig">existe item em coleção</code>
+            <p class="ref-desc">Pertinência: verdadeiro quando o item está na lista, no texto ou nos algarismos do número.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre existe "b" em "banana"</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="== igual igualdade comparação">
+            <code class="ref-sig">a == b</code>
+            <p class="ref-desc">Igual: verdadeiro quando os valores são iguais.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 2==2</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name=".. intervalo faixa lista sequência">
+            <code class="ref-sig">(a..b)</code>
+            <p class="ref-desc">Intervalo: gera a lista de a até b.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre (1..5)</pre>
+              <pre class="ref-ex-out">1,2,3,4,5</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="> maior comparação">
+            <code class="ref-sig">a &gt; b</code>
+            <p class="ref-desc">Maior: verdadeiro quando a é maior que b.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 10&gt;8</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name=">= maior ou igual comparação">
+            <code class="ref-sig">a &gt;= b</code>
+            <p class="ref-desc">Maior ou igual: verdadeiro quando a é maior ou igual a b.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 5&gt;=5</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="< menor comparação">
+            <code class="ref-sig">a &lt; b</code>
+            <p class="ref-desc">Menor: verdadeiro quando a é menor que b.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 2&lt;3</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="<= menor ou igual comparação">
+            <code class="ref-sig">a &lt;= b</code>
+            <p class="ref-desc">Menor ou igual: verdadeiro quando a é menor ou igual a b.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 3&lt;=5</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="* multiplicação vezes multiplicar">
+            <code class="ref-sig">a * b</code>
+            <p class="ref-desc">Multiplicação.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 3*7</pre>
+              <pre class="ref-ex-out">21</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="não nao not negação lógico">
+            <code class="ref-sig">não a</code>
+            <p class="ref-desc">Negação: inverte verdadeiro e falso.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre não falso</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="ou or lógico comparação">
+            <code class="ref-sig">a ou b</code>
+            <p class="ref-desc">Ou lógico: verdadeiro quando ao menos uma condição é verdadeira.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 3&gt;5 ou 10&gt;2</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="** potência elevado">
+            <code class="ref-sig">a ** b</code>
+            <p class="ref-desc">Potência (associativo à direita).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 3**2</pre>
+              <pre class="ref-ex-out">9</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="- subtração menos subtrair">
+            <code class="ref-sig">a - b</code>
+            <p class="ref-desc">Subtração.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 10-8</pre>
+              <pre class="ref-ex-out">2</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="help-panel" data-panel="propriedades" hidden>
+          <div class="ref-item" data-name="adicionar acrescentar incluir lista">
+            <code class="ref-sig">LISTA.adicionar(v)</code>
+            <p class="ref-desc">Devolve a lista com um item a mais no fim.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,2].adicionar(3)</pre>
+              <pre class="ref-ex-out">1,2,3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="aleatório sortear sorte item">
+            <code class="ref-sig">LISTA.aleatório</code>
+            <p class="ref-desc">Sorteia um item da lista.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [10,20,30].aleatório</pre>
+              <pre class="ref-ex-out">(um item sorteado da lista)</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="comentários # ignorar">
+            <code class="ref-sig"># comentário</code>
+            <p class="ref-desc">A partir de <code>#</code> até o fim da linha, o texto é ignorado.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code"># isto é um comentário
+mostre 2+2</pre>
+              <pre class="ref-ex-out">4</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="constantes imutável fixo">
+            <code class="ref-sig">constante NOME = valor</code>
+            <p class="ref-desc">Definidas com <code>constante</code>; não podem ser reatribuídas.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">constante EULER=2.71828
+mostre EULER</pre>
+              <pre class="ref-ex-out">2.71828</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="contar quantidade tamanho length">
+            <code class="ref-sig">LISTA.contar</code>
+            <p class="ref-desc">Quantidade de itens da lista.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,2,3,4,5,6].contar</pre>
+              <pre class="ref-ex-out">6</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="contardistintos distintos únicos contar">
+            <code class="ref-sig">LISTA.contarDistintos</code>
+            <p class="ref-desc">Quantidade de itens diferentes da lista.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,3,3,4,2,5,5].contarDistintos</pre>
+              <pre class="ref-ex-out">5</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="contaritem ocorrências frequência vezes">
+            <code class="ref-sig">LISTA.contarItem(v)</code>
+            <p class="ref-desc">Conta quantas vezes o valor aparece (separando textos em letras e números em algarismos).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [13336533].contarItem(3)</pre>
+              <pre class="ref-ex-out">5</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="crescente ordenar ordem ascendente">
+            <code class="ref-sig">LISTA.crescente</code>
+            <p class="ref-desc">Lista ordenada do menor para o maior.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,4,3,2,5].crescente</pre>
+              <pre class="ref-ex-out">1,2,3,4,5</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="decrescente ordenar ordem descendente">
+            <code class="ref-sig">LISTA.decrescente</code>
+            <p class="ref-desc">Lista ordenada do maior para o menor.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,4,3,2,5].decrescente</pre>
+              <pre class="ref-ex-out">5,4,3,2,1</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="distintos únicos únicos sem repetir">
+            <code class="ref-sig">LISTA.distintos</code>
+            <p class="ref-desc">Lista sem valores repetidos.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,2,2,3].distintos</pre>
+              <pre class="ref-ex-out">1,2,3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="expressões solta resultado">
+            <code class="ref-sig">expressão</code>
+            <p class="ref-desc">Uma expressão sozinha na linha é exibida (igual a <code>mostre</code>).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">2+3</pre>
+              <pre class="ref-ex-out">5</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="interpolação chaves variável texto">
+            <code class="ref-sig">"{expressão}"</code>
+            <p class="ref-desc">Use <code>{expressão}</code> dentro de um texto (destacada em amarelo no editor). Chaves literais com <code>{{</code> e <code>}}</code>.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">NOME="Wilson"
+mostre "Olá, {NOME}!"</pre>
+              <pre class="ref-ex-out">Olá, Wilson!</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="listas colchetes vetor array">
+            <code class="ref-sig">[v1, v2, ...]</code>
+            <p class="ref-desc">Geradas por intervalos <code>(1..10)</code> ou literais <code>[1,2,3]</code>; exibidas separadas por vírgula.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">X=(1..3)
+mostre X</pre>
+              <pre class="ref-ex-out">1,2,3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="maior máximo">
+            <code class="ref-sig">LISTA.maior</code>
+            <p class="ref-desc">Maior valor da lista.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,4,3,2,5].maior</pre>
+              <pre class="ref-ex-out">5</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="menor mínimo">
+            <code class="ref-sig">LISTA.menor</code>
+            <p class="ref-desc">Menor valor da lista.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,4,3,2,5].menor</pre>
+              <pre class="ref-ex-out">1</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="nomes maiúsculas minúsculas variável constante">
+            <code class="ref-sig">NOME</code>
+            <p class="ref-desc">Variáveis e constantes aceitam MAIÚSCULAS ou minúsculas, sem distinção: <code>nome</code> e <code>NOME</code> são a mesma variável.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">NÚMERO=100
+mostre NÚMERO</pre>
+              <pre class="ref-ex-out">100</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="posição índice index elemento">
+            <code class="ref-sig">LISTA.posição(i)</code>
+            <p class="ref-desc">Item na posição indicada (começa em 0).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,2,3,4,5].posição(2)</pre>
+              <pre class="ref-ex-out">3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="primeiro início head">
+            <code class="ref-sig">LISTA.primeiro</code>
+            <p class="ref-desc">Primeiro item da lista.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,4,3].primeiro</pre>
+              <pre class="ref-ex-out">1</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="recortar fatiar fatia pedaço intervalo">
+            <code class="ref-sig">LISTA.recortar(ini, fim)</code>
+            <p class="ref-desc">Devolve parte da lista, do início ao fim (inclusive).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre ["a","b","c","d","e"].recortar(1,3)</pre>
+              <pre class="ref-ex-out">b,c,d</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="retirar remover excluir tirar">
+            <code class="ref-sig">LISTA.retirar(v)</code>
+            <p class="ref-desc">Devolve a lista sem o valor indicado.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,4,2,4].retirar(4)</pre>
+              <pre class="ref-ex-out">1,2</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="separar dividir letras algarismos caracteres">
+            <code class="ref-sig">X.separar</code>
+            <p class="ref-desc">Separa um texto em letras ou um número em algarismos (em listas, separa cada item).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre ["banana"].separar</pre>
+              <pre class="ref-ex-out">b,a,n,a,n,a</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="textos string aspas concatenar">
+            <code class="ref-sig">"texto"</code>
+            <p class="ref-desc">Entre aspas <code>"</code> ou <code>'</code>; concatenados com <code>+</code>.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">NOME="Wil"+"son"
+mostre NOME</pre>
+              <pre class="ref-ex-out">Wilson</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="último fim final tail">
+            <code class="ref-sig">LISTA.último</code>
+            <p class="ref-desc">Último item da lista.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre [1,4,3].último</pre>
+              <pre class="ref-ex-out">3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="variáveis atribuir guardar">
+            <code class="ref-sig">VARIÁVEL = valor</code>
+            <p class="ref-desc">Criadas na primeira atribuição com <code>=</code>; o valor atribuído aparece em azul no editor.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">IDADE=53
+mostre IDADE</pre>
+              <pre class="ref-ex-out">53</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="verdadeiro falso booleano condição">
+            <code class="ref-sig">verdadeiro | falso</code>
+            <p class="ref-desc">Valores lógicos usados em <code>se</code> e em comparações (<code>&lt; &gt; ==</code>, <code>e</code>, <code>ou</code>, <code>não</code>).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre 2&lt;3</pre>
+              <pre class="ref-ex-out">verdadeiro</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+        </section>
+        <div class="help-empty" id="helpEmpty" hidden>Nenhum item encontrado.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+/* js/lexer.js (embutido; fonte em js/lexer.js) */
+/*
+ * Willog - Analisador léxico (lexer)
+ * Converte o texto fonte em uma lista de tokens.
+ */
+(function (global) {
+  'use strict';
+
+  const W = (global.Willog = global.Willog || {});
+
+  /* --- Erros da linguagem ------------------------------------------------- */
+
+  class WillogError extends Error {
+    constructor(message, line, col) {
+      super(message);
+      this.name = 'WillogError';
+      this.line = line;
+      this.col = col;
+    }
+  }
+
+  class SyntaxError_ extends WillogError {
+    constructor(message, line, col) {
+      super(message, line, col);
+      this.name = 'WillogSyntaxError';
+    }
+  }
+
+  class RunError extends WillogError {
+    constructor(message, line, col) {
+      super(message, line, col);
+      this.name = 'WillogRunError';
+    }
+  }
+
+  W.WillogError = WillogError;
+  W.SyntaxError = SyntaxError_;
+  W.RunError = RunError;
+
+  /* --- Palavras reservadas ------------------------------------------------ */
+
+  const KEYWORDS = new Set(['constante', 'leia', 'mostre', 'para', 'cada', 'em', 'repetir', 'se', 'senão', 'senao', 'então', 'entao', 'e', 'ou', 'não', 'nao', 'verdadeiro', 'falso', 'existe']);
+
+  /* --- Utilidades de caracteres (suporta acentos) ------------------------- */
+
+  const RE_LETTER = /\p{L}/u;
+  const RE_DIGIT = /[0-9]/;
+
+  function isLetter(ch) {
+    return ch !== undefined && RE_LETTER.test(ch);
+  }
+  function isDigit(ch) {
+    return ch !== undefined && RE_DIGIT.test(ch);
+  }
+  function isIdentStart(ch) {
+    return isLetter(ch) || ch === '_';
+  }
+  function isIdentPart(ch) {
+    return isLetter(ch) || isDigit(ch) || ch === '_';
+  }
+
+  /* --- Lexer -------------------------------------------------------------- */
+
+  function lex(source) {
+    const tokens = [];
+    let i = 0;
+    let line = 1;
+    let col = 1;
+    const n = source.length;
+
+    function push(type, value, l, c) {
+      tokens.push({ type: type, value: value, line: l, col: c });
+    }
+
+    function advance() {
+      const ch = source[i++];
+      if (ch === '\n') {
+        line++;
+        col = 1;
+      } else {
+        col++;
+      }
+      return ch;
+    }
+
+    // Indentação da próxima linha com conteúdo (ignora linhas vazias e comentários).
+    // Retorna -1 se não houver próxima linha. Tab conta como 4 espaços.
+    function peekIndent() {
+      let k = i;
+      while (k < n) {
+        let m = k;
+        while (m < n && (source[m] === ' ' || source[m] === '\t')) m++;
+        if (m < n && source[m] !== '\n' && source[m] !== '\r' && source[m] !== '#') {
+          let w = 0;
+          for (let p = k; p < m; p++) w += source[p] === '\t' ? 4 : 1;
+          return w;
+        }
+        k = m;
+        if (k < n && source[k] === '#') {
+          while (k < n && source[k] !== '\n') k++;
+        }
+        if (k < n && source[k] === '\r') k++;
+        if (k < n && source[k] === '\n') k++;
+        else break;
+      }
+      return -1;
+    }
+
+    while (i < n) {
+      const ch = source[i];
+
+      if (ch === '\r') {
+        i++;
+        continue;
+      }
+
+      if (ch === '\n') {
+        const nlLine = line;
+        const nlCol = col;
+        advance();
+        tokens.push({ type: 'NEWLINE', value: '\n', line: nlLine, col: nlCol, indent: peekIndent() });
+        continue;
+      }
+
+      if (ch === ' ' || ch === '\t') {
+        advance();
+        continue;
+      }
+
+      // Comentário até o fim da linha
+      if (ch === '#') {
+        while (i < n && source[i] !== '\n') advance();
+        continue;
+      }
+
+      const startLine = line;
+      const startCol = col;
+
+      // Números: inteiros e decimais (mas não consome o ".." de intervalos)
+      if (isDigit(ch) || (ch === '.' && isDigit(source[i + 1]))) {
+        let num = '';
+        while (i < n && isDigit(source[i])) num += advance();
+        if (source[i] === '.' && source[i + 1] !== '.') {
+          num += advance();
+          while (i < n && isDigit(source[i])) num += advance();
+        }
+        push('NUMBER', parseFloat(num), startLine, startCol);
+        continue;
+      }
+
+      // Textos (strings) com " ou '
+      if (ch === '"' || ch === "'") {
+        const quote = ch;
+        advance();
+        let str = '';
+        while (i < n && source[i] !== quote && source[i] !== '\n') {
+          if (source[i] === '\\') {
+            advance();
+            const esc = advance();
+            str += esc === 'n' ? '\n' : esc === 't' ? '\t' : esc;
+          } else {
+            str += advance();
+          }
+        }
+        if (source[i] === quote) advance();
+        push('STRING', str, startLine, startCol);
+        continue;
+      }
+
+      // Identificadores e palavras reservadas
+      if (isIdentStart(ch)) {
+        let id = '';
+        while (i < n && isIdentPart(source[i])) id += advance();
+        push(KEYWORDS.has(id) ? 'KEYWORD' : 'IDENT', id, startLine, startCol);
+        continue;
+      }
+
+      // Operadores de dois caracteres
+      const two = source.slice(i, i + 2);
+      if (two === '//' || two === '**' || two === '..' || two === '<=' || two === '>=' || two === '==' || two === '!=') {
+        advance();
+        advance();
+        push('OP', two, startLine, startCol);
+        continue;
+      }
+
+      // Operadores de um caractere
+      if ('+-*/()={}:,.[]<>!'.indexOf(ch) >= 0) {
+        advance();
+        push('OP', ch, startLine, startCol);
+        continue;
+      }
+
+      throw new SyntaxError_('Caractere inesperado "' + ch + '"', startLine, startCol);
+    }
+
+    push('EOF', '', line, col);
+    return tokens;
+  }
+
+  W.lex = lex;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+  </script>
+  <script>
+/* js/parser.js (embutido; fonte em js/parser.js) */
+/*
+ * Willog - Analisador sintático (parser)
+ * Converte tokens em uma Árvore de Sintaxe Abstrata (AST).
+ */
+(function (global) {
+  'use strict';
+
+  const W = (global.Willog = global.Willog || {});
+
+  function parse(tokens) {
+    let pos = 0;
+    let lineIndent = 0; // indentação da linha da instrução atual
+
+    function peek(offset) {
+      const idx = pos + (offset || 0);
+      return tokens[idx] || tokens[tokens.length - 1];
+    }
+
+    function next() {
+      return tokens[pos++];
+    }
+
+    function at(type, value) {
+      const t = peek();
+      return t.type === type && (value === undefined || t.value === value);
+    }
+
+    function expect(type, value, message) {
+      const t = peek();
+      if (!at(type, value)) {
+        throw new W.SyntaxError(
+          message || 'Esperado "' + (value === undefined ? type : value) + '", encontrado "' + t.value + '"',
+          t.line,
+          t.col
+        );
+      }
+      return next();
+    }
+
+    function skipNewlines() {
+      while (at('NEWLINE')) {
+        const t = next();
+        if (typeof t.indent === 'number' && t.indent >= 0) lineIndent = t.indent;
+      }
+    }
+
+    function startsExpression(tok) {
+      if (!tok) return false;
+      if (tok.type === 'NUMBER' || tok.type === 'STRING' || tok.type === 'IDENT') return true;
+      if (tok.type === 'KEYWORD') return tok.value === 'leia' || tok.value === 'verdadeiro' || tok.value === 'falso' || tok.value === 'não' || tok.value === 'nao' || tok.value === 'existe';
+      if (tok.type === 'OP') return tok.value === '(' || tok.value === '[' || tok.value === '-' || tok.value === '+' || tok.value === '!';
+      return false;
+    }
+
+    /* --- Programa e comandos --------------------------------------------- */
+
+    function parseProgram() {
+      const statements = [];
+      skipNewlines();
+      while (!at('EOF')) {
+        statements.push(parseStatement());
+        if (at('NEWLINE')) {
+          skipNewlines();
+        } else if (!at('EOF')) {
+          const t = peek();
+          throw new W.SyntaxError('Token inesperado "' + t.value + '"', t.line, t.col);
+        }
+      }
+      return { type: 'Program', statements: statements };
+    }
+
+    function parseStatement() {
+      if (at('KEYWORD', 'constante')) return parseConstDecl();
+      if (at('KEYWORD', 'mostre')) return parsePrint();
+      if (at('KEYWORD', 'para')) return parseFor();
+      if (at('KEYWORD', 'repetir')) return parseRepeat();
+      if (at('KEYWORD', 'se')) return parseIf();
+      if (at('KEYWORD') && (peek().value === 'senão' || peek().value === 'senao')) {
+        const t = peek();
+        throw new W.SyntaxError('"senão" sem "se" correspondente', t.line, t.col);
+      }
+      if (at('KEYWORD') && (peek().value === 'então' || peek().value === 'entao')) {
+        const t = peek();
+        throw new W.SyntaxError('"então" sem "se" correspondente', t.line, t.col);
+      }
+      if (at('IDENT') && peek(1).type === 'OP' && peek(1).value === '=') return parseAssignment();
+      return { type: 'ExpressionStatement', expression: parseExpression() };
+    }
+
+    function parseConstDecl() {
+      const kw = next();
+      const nameTok = expect('IDENT', undefined, 'Esperado o nome da constante depois de "constante"');
+      expect('OP', '=', 'Esperado "=" na declaração da constante');
+      const value = parseExpression();
+      return { type: 'ConstDecl', name: nameTok.value, value: value, line: kw.line, col: kw.col };
+    }
+
+    function parseAssignment() {
+      const nameTok = next();
+      next(); // consome o "="
+      const value = parseExpression();
+      return { type: 'Assignment', name: nameTok.value, value: value, line: nameTok.line, col: nameTok.col };
+    }
+
+    function parsePrint() {
+      const kw = next();
+
+      // Bloco: mostre { expr \n expr \n ... }
+      if (at('OP', '{')) {
+        next(); // consome "{"
+        const args = [];
+        skipNewlines();
+        while (!at('OP', '}')) {
+          if (at('EOF')) {
+            const t = peek();
+            throw new W.SyntaxError('Esperado "}" para fechar o bloco mostre', t.line, t.col);
+          }
+          args.push(parseExpression());
+          if (at('OP', ',')) { next(); continue; }
+          if (at('NEWLINE')) { skipNewlines(); continue; }
+          if (at('OP', '}')) break;
+          const t = peek();
+          throw new W.SyntaxError('Dentro do bloco mostre, esperado nova linha, "," ou "}"', t.line, t.col);
+        }
+        expect('OP', '}', 'Esperado "}" para fechar o bloco mostre');
+        return { type: 'Print', args: args, line: kw.line, col: kw.col };
+      }
+
+      const args = [parseExpression()];
+      while (at('OP', ',')) {
+        next();
+        args.push(parseExpression());
+      }
+      return { type: 'Print', args: args, line: kw.line, col: kw.col };
+    }
+
+    function parseFor() {
+      const paraTok = next(); // consome "para"
+      const paraIndent = lineIndent;
+      expect('KEYWORD', 'cada', 'Esperado "cada" depois de "para"');
+      const varTok = expect('IDENT', undefined, 'Esperado o nome da variável depois de "para cada"');
+      expect('KEYWORD', 'em', 'Esperado "em" depois do nome da variável');
+      const iterable = parseExpression();
+      if (at('OP', ':')) next(); // ":" opcional
+      const body = parseLoopBody(paraIndent, 'para cada');
+
+      return { type: 'ForEach', name: varTok.value, iterable: iterable, body: body, line: paraTok.line, col: paraTok.col };
+    }
+
+    function parseRepeat() {
+      const repTok = next(); // consome "repetir"
+      const repIndent = lineIndent;
+      expect('OP', '(', 'Esperado "(" depois de "repetir"');
+      const count = parseExpression();
+      expect('OP', ')', 'Esperado ")" depois da quantidade');
+      if (at('OP', ':')) next(); // ":" opcional
+      const body = parseLoopBody(repIndent, 'repetir');
+
+      return { type: 'Repeat', count: count, body: body, line: repTok.line, col: repTok.col };
+    }
+
+    function isSenao(tok) {
+      return tok && tok.type === 'KEYWORD' && (tok.value === 'senão' || tok.value === 'senao');
+    }
+
+    function isEntao(tok) {
+      return tok && tok.type === 'KEYWORD' && (tok.value === 'então' || tok.value === 'entao');
+    }
+
+    // Condicional: se <cond> [então] [:] corpo [senão [:] corpo]
+    // Aceita bloco indentado ou forma de uma linha. Ex.:
+    //   se N<50 então:
+    //       mostre "menor"
+    //   senão:
+    //       mostre "maior ou igual"
+    function parseIf() {
+      const seTok = next(); // consome "se"
+      const seIndent = lineIndent;
+      const condition = parseExpression();
+      if (isEntao(peek())) next(); // "então" opcional
+      if (at('OP', ':')) next(); // ":" opcional
+      const thenBody = parseLoopBody(seIndent, 'se');
+
+      let elseBody = null;
+      if (isSenao(peek())) {
+        // "senão" na mesma linha: se X mostre A senão mostre B
+        next();
+        if (at('OP', ':')) next();
+        elseBody = parseLoopBody(seIndent, 'senão');
+      } else if (at('NEWLINE')) {
+        // Procura "senão" no mesmo nível de indentação do "se"
+        let k = pos;
+        while (k < tokens.length && tokens[k].type === 'NEWLINE' && tokens[k].indent === seIndent) {
+          k++;
+        }
+        const nxt = tokens[k];
+        if (nxt && nxt.type === 'KEYWORD' && (nxt.value === 'senão' || nxt.value === 'senao')) {
+          skipNewlines();
+          next(); // consome "senão"
+          if (at('OP', ':')) next();
+          elseBody = parseLoopBody(seIndent, 'senão');
+        }
+      }
+
+      return { type: 'If', condition: condition, thenBody: thenBody, elseBody: elseBody, line: seTok.line, col: seTok.col };
+    }
+
+    // Corpo de laço: bloco indentado após ":" ou instrução única na mesma linha.
+    function parseLoopBody(indentBase, nome) {
+      const body = [];
+      if (at('NEWLINE')) {
+        // Forma em bloco: o corpo são as linhas mais indentadas que o laço
+        let bodyIndent = -1;
+        while (at('NEWLINE')) {
+          const t = next();
+          if (typeof t.indent === 'number' && t.indent >= 0) {
+            bodyIndent = t.indent;
+            lineIndent = t.indent;
+            break;
+          }
+        }
+        if (bodyIndent < 0) {
+          const t = peek();
+          throw new W.SyntaxError('Esperado o corpo do "' + nome + '" depois de ":"', t.line, t.col);
+        }
+        if (bodyIndent <= indentBase) {
+          const t = peek();
+          throw new W.SyntaxError('O corpo do "' + nome + '" deve estar indentado', t.line, t.col);
+        }
+        body.push(parseStatement()); // primeira instrução segue a quebra consumida
+        while (true) {
+          if (at('EOF')) break;
+          if (!at('NEWLINE')) break; // deixa o nível externo tratar
+          const t = peek();
+          const nextIndent = (typeof t.indent === 'number') ? t.indent : -1;
+          if (nextIndent >= 0 && nextIndent <= indentBase) break; // fim do bloco
+          skipNewlines();
+          if (at('EOF')) break;
+          body.push(parseStatement());
+        }
+      } else {
+        // Forma de uma linha: repetir(3) mostre X
+        if (at('EOF')) {
+          const t = peek();
+          throw new W.SyntaxError('Esperado o corpo do "' + nome + '"', t.line, t.col);
+        }
+        body.push(parseStatement());
+      }
+      return body;
+    }
+
+    /* --- Expressões ------------------------------------------------------ */
+
+    function parseExpression() {
+      return parseOr();
+    }
+
+    function isOu(tok) {
+      return tok && tok.type === 'KEYWORD' && tok.value === 'ou';
+    }
+
+    function isE(tok) {
+      return tok && tok.type === 'KEYWORD' && tok.value === 'e';
+    }
+
+    function parseOr() {
+      let left = parseAnd();
+      while (isOu(peek())) {
+        next();
+        const right = parseAnd();
+        left = { type: 'Binary', op: 'ou', left: left, right: right };
+      }
+      return left;
+    }
+
+    function parseAnd() {
+      let left = parseNot();
+      while (isE(peek())) {
+        next();
+        const right = parseNot();
+        left = { type: 'Binary', op: 'e', left: left, right: right };
+      }
+      return left;
+    }
+
+    function isNao(tok) {
+      return (tok && tok.type === 'OP' && tok.value === '!') ||
+        (tok && tok.type === 'KEYWORD' && (tok.value === 'não' || tok.value === 'nao'));
+    }
+
+    // "não" tem precedência menor que comparação: não A<B vale como não (A<B).
+    function parseNot() {
+      if (isNao(peek())) {
+        const tok = next();
+        const operand = parseNot();
+        return { type: 'Not', operand: operand, line: tok.line, col: tok.col };
+      }
+      return parseExiste();
+    }
+
+    function isExiste(tok) {
+      return tok && tok.type === 'KEYWORD' && tok.value === 'existe';
+    }
+
+    function isEm(tok) {
+      return tok && tok.type === 'KEYWORD' && tok.value === 'em';
+    }
+
+    // Pertinência: existe ITEM em COLEÇÃO (lista, texto ou número).
+    // Ex.: existe "b" em "banana", existe 3 em [1,2,3].
+    function parseExiste() {
+      if (isExiste(peek())) {
+        const tok = next(); // consome "existe"
+        const item = parseComparison();
+        const emTok = peek();
+        if (!isEm(emTok)) {
+          throw new W.SyntaxError('Esperado "em" depois de "existe ..."', emTok.line, emTok.col);
+        }
+        next(); // consome "em"
+        const collection = parseComparison();
+        return { type: 'Exists', item: item, collection: collection, line: tok.line, col: tok.col };
+      }
+      return parseComparison();
+    }
+
+    function isComparisonOp(tok) {
+      return tok && tok.type === 'OP' && (tok.value === '<' || tok.value === '>' || tok.value === '<=' || tok.value === '>=' || tok.value === '==' || tok.value === '!=' || tok.value === '=');
+    }
+
+    function parseComparison() {
+      let left = parseRange();
+      while (isComparisonOp(peek())) {
+        let op = next().value;
+        if (op === '=') op = '=='; // "=" sozinho em expressão vale como igualdade
+        const right = parseRange();
+        left = { type: 'Binary', op: op, left: left, right: right };
+      }
+      return left;
+    }
+
+    function parseRange() {
+      let left = parseAdditive();
+      while (at('OP', '..')) {
+        next();
+        const right = parseAdditive();
+        left = { type: 'Binary', op: '..', left: left, right: right };
+      }
+      return left;
+    }
+
+    function parseAdditive() {
+      let left = parseMultiplicative();
+      while (at('OP', '+') || at('OP', '-')) {
+        const op = next().value;
+        const right = parseMultiplicative();
+        left = { type: 'Binary', op: op, left: left, right: right };
+      }
+      return left;
+    }
+
+    function parseMultiplicative() {
+      let left = parseUnary();
+      while (at('OP', '*') || at('OP', '/') || at('OP', '//')) {
+        const op = next().value;
+        const right = parseUnary();
+        left = { type: 'Binary', op: op, left: left, right: right };
+      }
+      return left;
+    }
+
+    function parseUnary() {
+      if (at('OP', '-') || at('OP', '+')) {
+        const op = next().value;
+        const operand = parseUnary();
+        return { type: 'Unary', op: op, operand: operand };
+      }
+      return parsePower();
+    }
+
+    function parsePower() {
+      const base = parsePostfix();
+      if (at('OP', '**')) {
+        next();
+        const exp = parseUnary(); // associativo à direita
+        return { type: 'Binary', op: '**', left: base, right: exp };
+      }
+      return base;
+    }
+
+    // Acesso a propriedades de lista: LISTA.crescente, LISTA.adicionar(3)
+    function parsePostfix() {
+      let node = parsePrimary();
+      while (at('OP', '.')) {
+        const dot = next();
+        const nameTok = expect('IDENT', undefined, 'Esperado o nome da propriedade depois de "."');
+        const args = [];
+        if (at('OP', '(')) {
+          next();
+          if (!at('OP', ')')) {
+            args.push(parseExpression());
+            while (at('OP', ',')) {
+              next();
+              args.push(parseExpression());
+            }
+          }
+          expect('OP', ')', 'Esperado ")" para fechar a chamada');
+        }
+        node = { type: 'Property', object: node, name: nameTok.value, args: args, line: dot.line, col: dot.col };
+      }
+      return node;
+    }
+
+    function parsePrimary() {
+      const t = peek();
+
+      if (t.type === 'NUMBER') {
+        next();
+        return { type: 'Number', value: t.value, line: t.line, col: t.col };
+      }
+
+      if (t.type === 'STRING') {
+        next();
+        return { type: 'String', value: t.value, line: t.line, col: t.col };
+      }
+
+      // Booleanos: verdadeiro | falso
+      if (t.type === 'KEYWORD' && (t.value === 'verdadeiro' || t.value === 'falso')) {
+        next();
+        return { type: 'Boolean', value: t.value === 'verdadeiro', line: t.line, col: t.col };
+      }
+
+      // leia "texto"  |  leia  |  leia(expr)
+      if (t.type === 'KEYWORD' && t.value === 'leia') {
+        next();
+        let prompt = null;
+        if (startsExpression(peek())) prompt = parseExpression();
+        return { type: 'Read', prompt: prompt, line: t.line, col: t.col };
+      }
+
+      if (t.type === 'IDENT') {
+        next();
+        if (at('OP', '(')) {
+          next();
+          const args = [];
+          if (!at('OP', ')')) {
+            args.push(parseExpression());
+            while (at('OP', ',')) {
+              next();
+              args.push(parseExpression());
+            }
+          }
+          expect('OP', ')', 'Esperado ")" para fechar a chamada de função');
+          return { type: 'Call', callee: t.value, args: args, line: t.line, col: t.col };
+        }
+        return { type: 'Identifier', name: t.value, line: t.line, col: t.col };
+      }
+
+      if (at('OP', '(')) {
+        next();
+        const expr = parseExpression();
+        expect('OP', ')', 'Esperado ")"');
+        return expr;
+      }
+
+      // Lista: [1, 2, 3]
+      if (at('OP', '[')) {
+        const t = next();
+        const elements = [];
+        if (!at('OP', ']')) {
+          elements.push(parseExpression());
+          while (at('OP', ',')) {
+            next();
+            elements.push(parseExpression());
+          }
+        }
+        expect('OP', ']', 'Esperado "]" para fechar a lista');
+        return { type: 'List', elements: elements, line: t.line, col: t.col };
+      }
+
+      throw new W.SyntaxError('Expressão inesperada "' + t.value + '"', t.line, t.col);
+    }
+
+    return parseProgram();
+  }
+
+  W.parse = parse;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+  </script>
+  <script>
+/* js/interpreter.js (embutido; fonte em js/interpreter.js) */
+﻿/*
+ * Willog - Interpretador
+ * Executa a AST e produz a saída do programa.
+ */
+(function (global) {
+  'use strict';
+
+  const W = (global.Willog = global.Willog || {});
+
+  /* --- Formatação de números ---------------------------------------------- */
+
+  function formatNumber(n) {
+    if (typeof n !== 'number') return String(n);
+    if (Number.isNaN(n)) return 'indefinido';
+    if (!isFinite(n)) return n > 0 ? 'infinito' : '-infinito';
+    if (Number.isInteger(n)) return String(n);
+    // Limpa ruídos de ponto flutuante (ex.: 0.30000000000000004 -> 0.3)
+    return String(Number(n.toPrecision(12)));
+  }
+
+  function stringify(value) {
+    if (Array.isArray(value)) return value.map(stringify).join(',');
+    if (typeof value === 'boolean') return value ? 'verdadeiro' : 'falso';
+    if (typeof value === 'number') return formatNumber(value);
+    return String(value);
+  }
+
+  // Verdadeiro/falso para o "se": 0, "" e lista vazia contam como falso.
+  function isTruthy(value) {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'number') return value !== 0 && !Number.isNaN(value);
+    if (typeof value === 'string') return value.length > 0;
+    if (Array.isArray(value)) return value.length > 0;
+    return !!value;
+  }
+
+  // Comparação para ordenar e achar menor/maior (números ou textos).
+  function compareValues(a, b) {
+    if (typeof a === 'number' && typeof b === 'number') return a - b;
+    const sa = stringify(a);
+    const sb = stringify(b);
+    return sa < sb ? -1 : sa > sb ? 1 : 0;
+  }
+
+  function valuesEqual(a, b) {
+    if (a === b) return true;
+    if (Array.isArray(a) && Array.isArray(b)) return stringify(a) === stringify(b);
+    return false;
+  }
+
+  // Igualdade do Willog (mesma regra do operador "==").
+  function equalsWillog(a, b) {
+    if (typeof a === 'number' && typeof b === 'number') return a === b;
+    if (typeof a === 'boolean' && typeof b === 'boolean') return a === b;
+    if (Array.isArray(a) && Array.isArray(b)) return stringify(a) === stringify(b);
+    if (typeof a !== typeof b) return stringify(a) === stringify(b);
+    return a === b;
+  }
+
+  // Pertinência: existe ITEM em COLEÇÃO (lista, texto ou número).
+  function existsIn(item, collection, node) {
+    if (Array.isArray(collection)) {
+      for (let i = 0; i < collection.length; i++) {
+        if (equalsWillog(item, collection[i])) return true;
+      }
+      return false;
+    }
+    if (typeof collection === 'string') {
+      return collection.indexOf(stringify(item)) !== -1;
+    }
+    if (typeof collection === 'number') {
+      let digitos;
+      try {
+        digitos = separarValor(collection);
+      } catch (e) {
+        throw new W.RunError('Não é possível verificar "existe" neste número', node && node.line, node && node.col);
+      }
+      for (let i = 0; i < digitos.length; i++) {
+        if (equalsWillog(item, digitos[i])) return true;
+      }
+      return false;
+    }
+    throw new W.RunError('Esperado lista, texto ou número após "em" (ex.: existe "b" em "banana")', node && node.line, node && node.col);
+  }
+
+  // Separa um valor: texto em letras, número em algarismos, lista achatada.
+  function separarValor(v) {
+    if (typeof v === 'number') {
+      if (!isFinite(v)) throw new Error('infinito');
+      const texto = formatNumber(Math.abs(v));
+      if (/[eE]/.test(texto)) throw new Error('exponencial');
+      return texto.replace(/[^0-9]/g, '').split('').map(function (d) { return Number(d); });
+    }
+    if (typeof v === 'string') {
+      return Array.from(v);
+    }
+    if (Array.isArray(v)) {
+      const out = [];
+      for (let i = 0; i < v.length; i++) {
+        const partes = separarValor(v[i]);
+        for (let j = 0; j < partes.length; j++) out.push(partes[j]);
+      }
+      return out;
+    }
+    return [v];
+  }
+
+  /* --- Conversão de decimal para fração ----------------------------------- */
+
+  function toFraction(value, maxDen) {
+    maxDen = maxDen || 100000;
+    if (Number.isInteger(value)) return String(value);
+    if (!isFinite(value) || Number.isNaN(value)) return formatNumber(value);
+
+    const negative = value < 0;
+    const v = Math.abs(value);
+
+    let h2 = 0, h1 = 1, k2 = 1, k1 = 0, b = v;
+    let bestN = null, bestD = 1, bestErr = Infinity;
+
+    for (let it = 0; it < 40; it++) {
+      const a = Math.floor(b);
+      const numer = a * h1 + h2;
+      const denom = a * k1 + k2;
+      h2 = h1; h1 = numer;
+      k2 = k1; k1 = denom;
+
+      if (denom > 0 && denom <= maxDen) {
+        const err = Math.abs(v - numer / denom);
+        if (err < bestErr) {
+          bestErr = err;
+          bestN = numer;
+          bestD = denom;
+        }
+      }
+
+      const frac = b - a;
+      if (frac < 1e-12) break;
+      b = 1 / frac;
+    }
+
+    if (bestN === null) {
+      bestN = Math.round(v * 1000000);
+      bestD = 1000000;
+    }
+    return (negative ? '-' : '') + bestN + '/' + bestD;
+  }
+
+  /* --- Verificações ------------------------------------------------------- */
+
+  function asNumber(value, node, what) {
+    if (typeof value === 'number') return value;
+    throw new W.RunError('Esperado um número em ' + (what || 'expressão'), node && node.line, node && node.col);
+  }
+
+  function asSingleNumber(args, name, node) {
+    if (args.length !== 1) {
+      throw new W.RunError('A função "' + name + '" espera 1 argumento, recebeu ' + args.length, node.line, node.col);
+    }
+    return asNumber(args[0], node, 'argumento de "' + name + '"');
+  }
+
+  // Conversão para número: número vira ele mesmo; verdadeiro=1, falso=0;
+  // texto numérico vira número, o resto vira 0.
+  function toWillogNumber(value) {
+    if (typeof value === 'number') return value;
+    if (typeof value === 'boolean') return value ? 1 : 0;
+    const texto = (Array.isArray(value) ? stringify(value) : String(value)).trim();
+    if (texto === '') return 0;
+    if (/^[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$/.test(texto)) {
+      const n = Number(texto);
+      return isFinite(n) ? n : 0;
+    }
+    return 0;
+  }
+
+  /* --- Funções internas --------------------------------------------------- */
+
+  const BUILTINS = {
+    abs: function (args, node) {
+      return Math.abs(asSingleNumber(args, 'abs', node));
+    },
+    raiz: function (args, node) {
+      const x = asSingleNumber(args, 'raiz', node);
+      if (x < 0) throw new W.RunError('Não existe raiz quadrada real de número negativo', node.line, node.col);
+      return Math.sqrt(x);
+    },
+    decimal: function (args, node) {
+      const x = asSingleNumber(args, 'decimal', node);
+      return x - Math.trunc(x);
+    },
+    inteiro: function (args, node) {
+      return Math.trunc(asSingleNumber(args, 'inteiro', node));
+    },
+    arredonda: function (args, node) {
+      return Math.round(asSingleNumber(args, 'arredonda', node));
+    },
+    paraTexto: function (args, node) {
+      if (args.length !== 1) {
+        throw new W.RunError('A função "paraTexto" espera 1 argumento, recebeu ' + args.length, node.line, node.col);
+      }
+      return stringify(args[0]);
+    },
+    'paraNúmero': function (args, node) {
+      if (args.length !== 1) {
+        throw new W.RunError('A função "paraNúmero" espera 1 argumento, recebeu ' + args.length, node.line, node.col);
+      }
+      return toWillogNumber(args[0]);
+    },
+    potência: function (args, node) {
+      if (args.length !== 2) throw new W.RunError('A função "potência" espera 2 argumentos', node.line, node.col);
+      return Math.pow(asNumber(args[0], node), asNumber(args[1], node));
+    },
+    mínimo: function (args, node) {
+      if (args.length < 1) throw new W.RunError('A função "mínimo" espera ao menos 1 argumento', node.line, node.col);
+      return Math.min.apply(null, args.map(function (a) { return asNumber(a, node); }));
+    },
+    máximo: function (args, node) {
+      if (args.length < 1) throw new W.RunError('A função "máximo" espera ao menos 1 argumento', node.line, node.col);
+      return Math.max.apply(null, args.map(function (a) { return asNumber(a, node); }));
+    }
+  };
+
+  BUILTINS.fração = function (args, node) {
+    return toFraction(asSingleNumber(args, 'fração', node));
+  };
+  BUILTINS.fracao = BUILTINS.fração;
+  BUILTINS['aleatório'] = function (args, node) {
+    if (args.length !== 2) {
+      throw new W.RunError('A função "aleatório" espera 2 argumentos, recebeu ' + args.length, node.line, node.col);
+    }
+    const a = Math.trunc(asNumber(args[0], node, 'argumento de "aleatório"'));
+    const b = Math.trunc(asNumber(args[1], node, 'argumento de "aleatório"'));
+    if (!isFinite(a) || !isFinite(b)) {
+      throw new W.RunError('A função "aleatório" espera números finitos', node.line, node.col);
+    }
+    const lo = Math.min(a, b);
+    const hi = Math.max(a, b);
+    return Math.floor(Math.random() * (hi - lo + 1)) + lo;
+  };
+  BUILTINS.aleatorio = BUILTINS['aleatório'];
+  BUILTINS.paratexto = BUILTINS.paraTexto;
+  BUILTINS.paranumero = BUILTINS['paraNúmero'];
+  BUILTINS.paraNumero = BUILTINS['paraNúmero'];
+  BUILTINS.potencia = BUILTINS['potência'];
+  BUILTINS.minimo = BUILTINS['mínimo'];
+  BUILTINS.maximo = BUILTINS['máximo'];
+
+  /* --- Execução ----------------------------------------------------------- */
+
+  function run(source, options) {
+    options = options || {};
+    const output = [];
+    const emit = options.onOutput || function () {};
+
+    function print(text) {
+      output.push(text);
+      emit(text);
+    }
+
+    function readInput(promptText, node) {
+      let resposta;
+      if (typeof options.onInput === 'function') {
+        resposta = options.onInput(promptText);
+        if (resposta && typeof resposta.then === 'function') {
+          throw new Error('async_input');
+        }
+      } else if (typeof global.prompt === 'function') {
+        const r = global.prompt(promptText);
+        resposta = r === null || r === undefined ? '' : r;
+      } else {
+        throw new W.RunError('Entrada de dados não está disponível neste ambiente', node && node.line, node && node.col);
+      }
+
+      resposta = String(resposta);
+      const trimmed = resposta.trim();
+      if (trimmed === '') return 0;
+      const num = Number(trimmed);
+      if (!isNaN(num) && isFinite(num) && /^[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$/.test(trimmed)) {
+        return num;
+      }
+      return resposta;
+    }
+
+    const tokens = W.lex(source);
+    const ast = W.parse(tokens);
+
+    const env = new Map();
+
+    function getVar(node) {
+      const key = node.name.toUpperCase();
+      if (!env.has(key)) {
+        throw new W.RunError('Variável "' + node.name + '" não foi definida', node.line, node.col);
+      }
+      return env.get(key).value;
+    }
+
+    function setVar(name, value, isConstant, node) {
+      const key = name.toUpperCase();
+      if (env.has(key) && env.get(key).constant) {
+        throw new W.RunError('Não é possível alterar a constante "' + key + '"', node && node.line, node && node.col);
+      }
+      env.set(key, { value: value, constant: !!isConstant });
+    }
+
+    function evalExpressionSource(text, node) {
+      let ast;
+      try {
+        ast = W.parse(W.lex(text));
+      } catch (e) {
+        throw new W.RunError('Interpolação inválida: "' + text + '"', node && node.line, node && node.col);
+      }
+      const stmts = ast.statements;
+      if (stmts.length !== 1 || stmts[0].type !== 'ExpressionStatement') {
+        throw new W.RunError('Interpolação inválida: "' + text + '"', node && node.line, node && node.col);
+      }
+      return evaluate(stmts[0].expression);
+    }
+
+    // Substitui {expressão} dentro de um texto pelo valor correspondente.
+    function interpolate(text, node) {
+      if (text.indexOf('{') === -1 && text.indexOf('}') === -1) return text;
+      let out = '';
+      let i = 0;
+      while (i < text.length) {
+        const ch = text[i];
+        if (ch === '{' && text[i + 1] === '{') { out += '{'; i += 2; continue; }
+        if (ch === '}' && text[i + 1] === '}') { out += '}'; i += 2; continue; }
+        if (ch === '{') {
+          let depth = 1;
+          let j = i + 1;
+          while (j < text.length && depth > 0) {
+            if (text[j] === '{') depth++;
+            else if (text[j] === '}') depth--;
+            if (depth === 0) break;
+            j++;
+          }
+          if (depth !== 0) {
+            throw new W.RunError('Interpolação sem "}" de fechamento', node && node.line, node && node.col);
+          }
+          const inner = text.slice(i + 1, j);
+          const a = W.parse(W.lex(inner));
+          if (a.statements.length !== 1 || a.statements[0].type !== 'ExpressionStatement') {
+            throw new W.RunError('Interpolação inválida: "' + inner + '"', node && node.line, node && node.col);
+          }
+          out += stringify(evaluate(a.statements[0].expression));
+          i = j + 1;
+          continue;
+        }
+        out += ch;
+        i++;
+      }
+      return out;
+    }
+
+    function stmtsEvalWrapper(src, node) {
+      const a = W.parse(W.lex(src));
+      if (a.statements.length !== 1 || a.statements[0].type !== 'ExpressionStatement') {
+        throw new W.RunError('Interpolação inválida: "' + src + '"', node && node.line, node && node.col);
+      }
+      return a.statements[0].expression;
+    }
+
+    function evaluate(node) {
+      switch (node.type) {
+        case 'Number':
+          return node.value;
+        case 'String':
+          return interpolate(node.value, node);
+        case 'Boolean':
+          return node.value;
+        case 'Not':
+          return !isTruthy(evaluate(node.operand));
+        case 'Identifier':
+          return getVar(node);
+        case 'List':
+          return node.elements.map(evaluate);
+        case 'Unary': {
+          const v = asNumber(evaluate(node.operand), node);
+          return node.op === '-' ? -v : +v;
+        }
+        case 'Binary':
+          return evalBinary(node);
+        case 'Exists':
+          return existsIn(evaluate(node.item), evaluate(node.collection), node);
+        case 'Call':
+          return evalCall(node);
+        case 'Property':
+          return evalProperty(node);
+        case 'Read': {
+          const promptText = node.prompt ? stringify(evaluate(node.prompt)) : '';
+          return readInput(promptText, node);
+        }
+        default:
+          throw new W.RunError('Expressão desconhecida: ' + node.type);
+      }
+    }
+
+    function evalBinary(node) {
+      // Lógicos com curto-circuito (usam verdade/falsidade do Willog)
+      if (node.op === 'e') {
+        return isTruthy(evaluate(node.left)) && isTruthy(evaluate(node.right));
+      }
+      if (node.op === 'ou') {
+        return isTruthy(evaluate(node.left)) || isTruthy(evaluate(node.right));
+      }
+
+      const a = evaluate(node.left);
+      const b = evaluate(node.right);
+
+      // Comparações devolvem verdadeiro/falso
+      if (node.op === '==' || node.op === '!=') {
+        let eq;
+        if (typeof a === 'number' && typeof b === 'number') eq = a === b;
+        else if (typeof a === 'boolean' && typeof b === 'boolean') eq = a === b;
+        else if (Array.isArray(a) && Array.isArray(b)) eq = stringify(a) === stringify(b);
+        else if (typeof a !== typeof b) eq = stringify(a) === stringify(b);
+        else eq = a === b;
+        return node.op === '==' ? eq : !eq;
+      }
+      if (node.op === '<' || node.op === '>' || node.op === '<=' || node.op === '>=') {
+        let cmp;
+        if (typeof a === 'number' && typeof b === 'number') cmp = a - b;
+        else cmp = compareValues(a, b);
+        if (node.op === '<') return cmp < 0;
+        if (node.op === '>') return cmp > 0;
+        if (node.op === '<=') return cmp <= 0;
+        return cmp >= 0;
+      }
+
+      switch (node.op) {
+        case '+':
+          if (typeof a === 'string' || typeof b === 'string') {
+            return stringify(a) + stringify(b);
+          }
+          return asNumber(a, node) + asNumber(b, node);
+        case '-':
+          return asNumber(a, node) - asNumber(b, node);
+        case '*':
+          return asNumber(a, node) * asNumber(b, node);
+        case '/': {
+          const d = asNumber(b, node);
+          if (d === 0) throw new W.RunError('Divisão por zero', node.line, node.col);
+          return asNumber(a, node) / d;
+        }
+        case '//': {
+          const d = asNumber(b, node);
+          if (d === 0) throw new W.RunError('Divisão por zero', node.line, node.col);
+          return Math.trunc(asNumber(a, node) / d);
+        }
+        case '**':
+          return Math.pow(asNumber(a, node), asNumber(b, node));
+        case '..': {
+          const s = Math.trunc(asNumber(a, node, 'início do intervalo'));
+          const e = Math.trunc(asNumber(b, node, 'fim do intervalo'));
+          if (!isFinite(s) || !isFinite(e)) {
+            throw new W.RunError('Intervalo inválido: esperado números finitos', node.line, node.col);
+          }
+          if (Math.abs(e - s) > 100000) {
+            throw new W.RunError('Intervalo grande demais (máximo de 100000 elementos)', node.line, node.col);
+          }
+          const list = [];
+          if (s <= e) {
+            for (let v = s; v <= e; v++) list.push(v);
+          } else {
+            for (let v = s; v >= e; v--) list.push(v);
+          }
+          return list;
+        }
+        default:
+          throw new W.RunError('Operador desconhecido: ' + node.op);
+      }
+    }
+
+    function evalCall(node) {
+      const fn = BUILTINS[node.callee];
+      if (typeof fn !== 'function') {
+        throw new W.RunError('Função desconhecida "' + node.callee + '"', node.line, node.col);
+      }
+      const args = node.args.map(evaluate);
+      return fn(args, node);
+    }
+
+    function evalProperty(node) {
+      const obj = evaluate(node.object);
+      if (!Array.isArray(obj) && node.name !== 'separar') {
+        throw new W.RunError('A propriedade "' + node.name + '" só existe em listas', node.line, node.col);
+      }
+      const args = (node.args || []).map(evaluate);
+      function need(n) {
+        if (args.length !== n) {
+          throw new W.RunError(
+            'A propriedade "' + node.name + '" espera ' + n + ' argumento(s), recebeu ' + args.length,
+            node.line, node.col
+          );
+        }
+      }
+      switch (node.name) {
+        case 'crescente':
+          need(0);
+          return obj.slice().sort(compareValues);
+        case 'decrescente':
+          need(0);
+          return obj.slice().sort(compareValues).reverse();
+        case 'aleatório':
+        case 'aleatorio':
+          need(0);
+          if (obj.length === 0) throw new W.RunError('Não é possível sortear de uma lista vazia', node.line, node.col);
+          return obj[Math.floor(Math.random() * obj.length)];
+        case 'primeiro':
+          need(0);
+          if (obj.length === 0) throw new W.RunError('A lista está vazia', node.line, node.col);
+          return obj[0];
+        case 'último':
+        case 'ultimo':
+          need(0);
+          if (obj.length === 0) throw new W.RunError('A lista está vazia', node.line, node.col);
+          return obj[obj.length - 1];
+        case 'menor':
+          need(0);
+          if (obj.length === 0) throw new W.RunError('A lista está vazia', node.line, node.col);
+          return obj.reduce(function (m, v) { return compareValues(v, m) < 0 ? v : m; });
+        case 'maior':
+          need(0);
+          if (obj.length === 0) throw new W.RunError('A lista está vazia', node.line, node.col);
+          return obj.reduce(function (m, v) { return compareValues(v, m) > 0 ? v : m; });
+        case 'distintos':
+        case 'distinto':
+          need(0);
+          return Array.from(new Set(obj));
+        case 'contar':
+          need(0);
+          return obj.length;
+        case 'contarDistintos':
+        case 'contarDistinto':
+          need(0);
+          return Array.from(new Set(obj)).length;
+        case 'contarItem': {
+          need(1);
+          try {
+            let n = 0;
+            for (let i = 0; i < obj.length; i++) {
+              const partes = separarValor(obj[i]);
+              for (let j = 0; j < partes.length; j++) {
+                if (valuesEqual(partes[j], args[0])) n++;
+              }
+            }
+            return n;
+          } catch (e) {
+            throw new W.RunError('Não é possível contar o item', node.line, node.col);
+          }
+        }
+        case 'separar':
+          need(0);
+          try {
+            return separarValor(obj);
+          } catch (e) {
+            throw new W.RunError('Não é possível separar o valor', node.line, node.col);
+          }
+        case 'adicionar':
+          need(1);
+          return obj.concat([args[0]]);
+        case 'posição':
+        case 'posicao': {
+          need(1);
+          const idx = Math.trunc(asNumber(args[0], node, 'posição'));
+          if (!isFinite(idx) || idx < 0 || idx >= obj.length) {
+            throw new W.RunError('Posição ' + stringify(args[0]) + ' fora da lista (0 a ' + (obj.length - 1) + ')', node.line, node.col);
+          }
+          return obj[idx];
+        }
+        case 'retirar':
+          need(1);
+          return obj.filter(function (v) { return !valuesEqual(v, args[0]); });
+        case 'recortar':
+        case 'fatiar': {
+          if (args.length < 1 || args.length > 2) {
+            throw new W.RunError('A propriedade "' + node.name + '" espera 1 ou 2 argumentos, recebeu ' + args.length, node.line, node.col);
+          }
+          if (obj.length === 0) return [];
+          const ini = Math.trunc(asNumber(args[0], node, 'início'));
+          const fim = args.length > 1 ? Math.trunc(asNumber(args[1], node, 'fim')) : obj.length - 1;
+          const lo = Math.max(0, Math.min(ini, fim));
+          const hi = Math.min(obj.length - 1, Math.max(ini, fim));
+          if (lo > hi) return [];
+          return obj.slice(lo, hi + 1);
+        }
+        default:
+          throw new W.RunError('Propriedade desconhecida "' + node.name + '"', node.line, node.col);
+      }
+    }
+
+    function execStatement(stmt) {
+      switch (stmt.type) {
+        case 'ConstDecl':
+          setVar(stmt.name, evaluate(stmt.value), true, stmt);
+          break;
+        case 'Assignment':
+          setVar(stmt.name, evaluate(stmt.value), false, stmt);
+          break;
+        case 'Print':
+          for (let i = 0; i < stmt.args.length; i++) {
+            print(stringify(evaluate(stmt.args[i])));
+          }
+          break;
+        case 'ExpressionStatement':
+          print(stringify(evaluate(stmt.expression)));
+          break;
+        case 'ForEach':
+          execForEach(stmt);
+          break;
+        case 'Repeat':
+          execRepeat(stmt);
+          break;
+        case 'If':
+          execIf(stmt);
+          break;
+        default:
+          throw new W.RunError('Comando desconhecido: ' + stmt.type);
+      }
+    }
+
+    function execIf(stmt) {
+      const cond = evaluate(stmt.condition);
+      const body = isTruthy(cond) ? stmt.thenBody : stmt.elseBody;
+      if (!body) return;
+      for (let b = 0; b < body.length; b++) execStatement(body[b]);
+    }
+
+    function execForEach(stmt) {
+      const list = evaluate(stmt.iterable);
+      if (!Array.isArray(list)) {
+        throw new W.RunError('Esperado uma lista após "em" (ex.: (1..5))', stmt.line, stmt.col);
+      }
+      for (let k = 0; k < list.length; k++) {
+        setVar(stmt.name, list[k], false, stmt);
+        for (let b = 0; b < stmt.body.length; b++) execStatement(stmt.body[b]);
+      }
+    }
+
+    function execRepeat(stmt) {
+      const n = Math.trunc(asNumber(evaluate(stmt.count), stmt, 'quantidade'));
+      if (!isFinite(n)) {
+        throw new W.RunError('Quantidade inválida em "repetir"', stmt.line, stmt.col);
+      }
+      if (n > 100000) {
+        throw new W.RunError('Repetições demais (máximo de 100000)', stmt.line, stmt.col);
+      }
+      for (let k = 0; k < n; k++) {
+        for (let b = 0; b < stmt.body.length; b++) execStatement(stmt.body[b]);
+      }
+    }
+
+    const variables = [];
+
+    function captureVariables() {
+      variables.length = 0;
+      env.forEach(function (entry, name) {
+        variables.push({ name: name, value: entry.value, constant: !!entry.constant });
+      });
+      W.lastVariables = variables;
+    }
+
+    try {
+      for (let s = 0; s < ast.statements.length; s++) execStatement(ast.statements[s]);
+    } finally {
+      captureVariables();
+    }
+
+    return { output: output, variables: variables };
+  }
+
+  async function runAsync(source, options) {
+    options = options || {};
+    const output = [];
+    const emit = options.onOutput || function () {};
+
+    function print(text) {
+      output.push(text);
+      emit(text);
+    }
+
+    async function readInputAsync(promptText, node) {
+      let resposta;
+      if (typeof options.onInput === 'function') {
+        resposta = await options.onInput(promptText);
+      } else if (typeof global.prompt === 'function') {
+        const r = global.prompt(promptText);
+        resposta = r === null || r === undefined ? '' : r;
+      } else {
+        throw new W.RunError('Entrada de dados não está disponível neste ambiente', node && node.line, node && node.col);
+      }
+      resposta = String(resposta);
+      const trimmed = resposta.trim();
+      if (trimmed === '') return 0;
+      const num = Number(trimmed);
+      if (!isNaN(num) && isFinite(num) && /^[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$/.test(trimmed)) {
+        return num;
+      }
+      return resposta;
+    }
+
+    const tokens = W.lex(source);
+    const ast = W.parse(tokens);
+    const env = new Map();
+
+    function getVar(node) {
+      const key = node.name.toUpperCase();
+      if (!env.has(key)) throw new W.RunError('Variável "' + node.name + '" não foi definida', node.line, node.col);
+      return env.get(key).value;
+    }
+
+    function setVar(name, value, isConstant, node) {
+      const key = name.toUpperCase();
+      if (env.has(key) && env.get(key).constant) {
+        throw new W.RunError('Não é possível alterar a constante "' + key + '"', node && node.line, node && node.col);
+      }
+      env.set(key, { value: value, constant: !!isConstant });
+    }
+
+    async function interpolate(text, node) {
+      if (text.indexOf('{') === -1 && text.indexOf('}') === -1) return text;
+      let out = '';
+      let i = 0;
+      while (i < text.length) {
+        const ch = text[i];
+        if (ch === '{' && text[i + 1] === '{') { out += '{'; i += 2; continue; }
+        if (ch === '}' && text[i + 1] === '}') { out += '}'; i += 2; continue; }
+        if (ch === '{') {
+          let depth = 1;
+          let j = i + 1;
+          while (j < text.length && depth > 0) {
+            if (text[j] === '{') depth++; else if (text[j] === '}') depth--;
+            if (depth === 0) break;
+            j++;
+          }
+          if (depth !== 0) throw new W.RunError('Interpolação sem "}" de fechamento', node && node.line, node && node.col);
+          const inner = text.slice(i + 1, j);
+          const a = W.parse(W.lex(inner));
+          if (a.statements.length !== 1 || a.statements[0].type !== 'ExpressionStatement') {
+            throw new W.RunError('Interpolação inválida: "' + inner + '"', node && node.line, node && node.col);
+          }
+          out += stringify(await evaluate(a.statements[0].expression));
+          i = j + 1;
+          continue;
+        }
+        out += ch;
+        i++;
+      }
+      return out;
+    }
+
+    async function evaluate(node) {
+      switch (node.type) {
+        case 'Number':
+          return node.value;
+        case 'String':
+          return await interpolate(node.value, node);
+        case 'Boolean':
+          return node.value;
+        case 'Not':
+          return !isTruthy(await evaluate(node.operand));
+        case 'Identifier':
+          return getVar(node);
+        case 'List': {
+          const elements = [];
+          for (let i = 0; i < node.elements.length; i++) elements.push(await evaluate(node.elements[i]));
+          return elements;
+        }
+        case 'Unary': {
+          const v = asNumber(await evaluate(node.operand), node);
+          return node.op === '-' ? -v : +v;
+        }
+        case 'Binary':
+          return await evalBinary(node);
+        case 'Exists':
+          return existsIn(await evaluate(node.item), await evaluate(node.collection), node);
+        case 'Call':
+          return await evalCall(node);
+        case 'Property':
+          return await evalProperty(node);
+        case 'Read': {
+          const promptText = node.prompt ? stringify(await evaluate(node.prompt)) : '';
+          return await readInputAsync(promptText, node);
+        }
+        default:
+          throw new W.RunError('Expressão desconhecida: ' + node.type);
+      }
+    }
+
+    async function evalBinary(node) {
+      if (node.op === 'e') {
+        const l = isTruthy(await evaluate(node.left));
+        if (!l) return false;
+        return isTruthy(await evaluate(node.right));
+      }
+      if (node.op === 'ou') {
+        const l = isTruthy(await evaluate(node.left));
+        if (l) return true;
+        return isTruthy(await evaluate(node.right));
+      }
+      const a = await evaluate(node.left);
+      const b = await evaluate(node.right);
+      if (node.op === '==' || node.op === '!=') {
+        let eq;
+        if (typeof a === 'number' && typeof b === 'number') eq = a === b;
+        else if (typeof a === 'boolean' && typeof b === 'boolean') eq = a === b;
+        else if (Array.isArray(a) && Array.isArray(b)) eq = stringify(a) === stringify(b);
+        else if (typeof a !== typeof b) eq = stringify(a) === stringify(b);
+        else eq = a === b;
+        return node.op === '==' ? eq : !eq;
+      }
+      if (node.op === '<' || node.op === '>' || node.op === '<=' || node.op === '>=') {
+        let cmp;
+        if (typeof a === 'number' && typeof b === 'number') cmp = a - b;
+        else cmp = compareValues(a, b);
+        if (node.op === '<') return cmp < 0;
+        if (node.op === '>') return cmp > 0;
+        if (node.op === '<=') return cmp <= 0;
+        return cmp >= 0;
+      }
+      switch (node.op) {
+        case '+':
+          if (typeof a === 'string' || typeof b === 'string') return stringify(a) + stringify(b);
+          return asNumber(a, node) + asNumber(b, node);
+        case '-':
+          return asNumber(a, node) - asNumber(b, node);
+        case '*':
+          return asNumber(a, node) * asNumber(b, node);
+        case '/': {
+          const d = asNumber(b, node);
+          if (d === 0) throw new W.RunError('Divisão por zero', node.line, node.col);
+          return asNumber(a, node) / d;
+        }
+        case '//': {
+          const d = asNumber(b, node);
+          if (d === 0) throw new W.RunError('Divisão por zero', node.line, node.col);
+          return Math.trunc(asNumber(a, node) / d);
+        }
+        case '**':
+          return Math.pow(asNumber(a, node), asNumber(b, node));
+        case '..': {
+          const s = Math.trunc(asNumber(a, node, 'início do intervalo'));
+          const e = Math.trunc(asNumber(b, node, 'fim do intervalo'));
+          if (!isFinite(s) || !isFinite(e)) {
+            throw new W.RunError('Intervalo inválido: esperado números finitos', node.line, node.col);
+          }
+          if (Math.abs(e - s) > 100000) {
+            throw new W.RunError('Intervalo grande demais (máximo de 100000 elementos)', node.line, node.col);
+          }
+          const list = [];
+          if (s <= e) {
+            for (let v = s; v <= e; v++) list.push(v);
+          } else {
+            for (let v = s; v >= e; v--) list.push(v);
+          }
+          return list;
+        }
+        default:
+          throw new W.RunError('Operador desconhecido: ' + node.op);
+      }
+    }
+
+    async function evalCall(node) {
+      const fn = BUILTINS[node.callee];
+      if (typeof fn !== 'function') {
+        throw new W.RunError('Função desconhecida "' + node.callee + '"', node.line, node.col);
+      }
+      const args = [];
+      for (let i = 0; i < node.args.length; i++) args.push(await evaluate(node.args[i]));
+      return fn(args, node);
+    }
+
+    async function evalProperty(node) {
+      const obj = await evaluate(node.object);
+      if (!Array.isArray(obj) && node.name !== 'separar') {
+        throw new W.RunError('A propriedade "' + node.name + '" só existe em listas', node.line, node.col);
+      }
+      const args = [];
+      for (let i = 0; i < (node.args || []).length; i++) args.push(await evaluate(node.args[i]));
+      function need(n) {
+        if (args.length !== n) {
+          throw new W.RunError(
+            'A propriedade "' + node.name + '" espera ' + n + ' argumento(s), recebeu ' + args.length,
+            node.line, node.col
+          );
+        }
+      }
+      switch (node.name) {
+        case 'crescente':
+          need(0);
+          return obj.slice().sort(compareValues);
+        case 'decrescente':
+          need(0);
+          return obj.slice().sort(compareValues).reverse();
+        case 'aleatório':
+        case 'aleatorio':
+          need(0);
+          if (obj.length === 0) throw new W.RunError('Não é possível sortear de uma lista vazia', node.line, node.col);
+          return obj[Math.floor(Math.random() * obj.length)];
+        case 'primeiro':
+          need(0);
+          if (obj.length === 0) throw new W.RunError('A lista está vazia', node.line, node.col);
+          return obj[0];
+        case 'último':
+        case 'ultimo':
+          need(0);
+          if (obj.length === 0) throw new W.RunError('A lista está vazia', node.line, node.col);
+          return obj[obj.length - 1];
+        case 'menor':
+          need(0);
+          if (obj.length === 0) throw new W.RunError('A lista está vazia', node.line, node.col);
+          return obj.reduce(function (m, v) { return compareValues(v, m) < 0 ? v : m; });
+        case 'maior':
+          need(0);
+          if (obj.length === 0) throw new W.RunError('A lista está vazia', node.line, node.col);
+          return obj.reduce(function (m, v) { return compareValues(v, m) > 0 ? v : m; });
+        case 'distintos':
+        case 'distinto':
+          need(0);
+          return Array.from(new Set(obj));
+        case 'contar':
+          need(0);
+          return obj.length;
+        case 'contarDistintos':
+        case 'contarDistinto':
+          need(0);
+          return Array.from(new Set(obj)).length;
+        case 'contarItem': {
+          need(1);
+          try {
+            let n = 0;
+            for (let i = 0; i < obj.length; i++) {
+              const partes = separarValor(obj[i]);
+              for (let j = 0; j < partes.length; j++) {
+                if (valuesEqual(partes[j], args[0])) n++;
+              }
+            }
+            return n;
+          } catch (e) {
+            throw new W.RunError('Não é possível contar o item', node.line, node.col);
+          }
+        }
+        case 'separar':
+          need(0);
+          try {
+            return separarValor(obj);
+          } catch (e) {
+            throw new W.RunError('Não é possível separar o valor', node.line, node.col);
+          }
+        case 'adicionar':
+          need(1);
+          return obj.concat([args[0]]);
+        case 'posição':
+        case 'posicao': {
+          need(1);
+          const idx = Math.trunc(asNumber(args[0], node, 'posição'));
+          if (!isFinite(idx) || idx < 0 || idx >= obj.length) {
+            throw new W.RunError('Posição ' + stringify(args[0]) + ' fora da lista (0 a ' + (obj.length - 1) + ')', node.line, node.col);
+          }
+          return obj[idx];
+        }
+        case 'retirar':
+          need(1);
+          return obj.filter(function (v) { return !valuesEqual(v, args[0]); });
+        case 'recortar':
+        case 'fatiar': {
+          if (args.length < 1 || args.length > 2) {
+            throw new W.RunError('A propriedade "' + node.name + '" espera 1 ou 2 argumentos, recebeu ' + args.length, node.line, node.col);
+          }
+          if (obj.length === 0) return [];
+          const ini = Math.trunc(asNumber(args[0], node, 'início'));
+          const fim = args.length > 1 ? Math.trunc(asNumber(args[1], node, 'fim')) : obj.length - 1;
+          const lo = Math.max(0, Math.min(ini, fim));
+          const hi = Math.min(obj.length - 1, Math.max(ini, fim));
+          if (lo > hi) return [];
+          return obj.slice(lo, hi + 1);
+        }
+        default:
+          throw new W.RunError('Propriedade desconhecida "' + node.name + '"', node.line, node.col);
+      }
+    }
+
+    async function execStatement(stmt) {
+      switch (stmt.type) {
+        case 'ConstDecl':
+          setVar(stmt.name, await evaluate(stmt.value), true, stmt);
+          break;
+        case 'Assignment':
+          setVar(stmt.name, await evaluate(stmt.value), false, stmt);
+          break;
+        case 'Print':
+          for (let i = 0; i < stmt.args.length; i++) { print(stringify(await evaluate(stmt.args[i]))); }
+          break;
+        case 'ExpressionStatement':
+          print(stringify(await evaluate(stmt.expression)));
+          break;
+        case 'ForEach':
+          await execForEach(stmt);
+          break;
+        case 'Repeat':
+          await execRepeat(stmt);
+          break;
+        case 'If':
+          await execIf(stmt);
+          break;
+        default:
+          throw new W.RunError('Comando desconhecido: ' + stmt.type);
+      }
+    }
+
+    async function execIf(stmt) {
+      const cond = await evaluate(stmt.condition);
+      const body = isTruthy(cond) ? stmt.thenBody : stmt.elseBody;
+      if (!body) return;
+      for (let b = 0; b < body.length; b++) await execStatement(body[b]);
+    }
+
+    async function execForEach(stmt) {
+      const list = await evaluate(stmt.iterable);
+      if (!Array.isArray(list)) {
+        throw new W.RunError('Esperado uma lista após "em" (ex.: (1..5))', stmt.line, stmt.col);
+      }
+      for (let k = 0; k < list.length; k++) {
+        setVar(stmt.name, list[k], false, stmt);
+        for (let b = 0; b < stmt.body.length; b++) await execStatement(stmt.body[b]);
+      }
+    }
+
+    async function execRepeat(stmt) {
+      const n = Math.trunc(asNumber(await evaluate(stmt.count), stmt, 'quantidade'));
+      if (!isFinite(n)) {
+        throw new W.RunError('Quantidade inválida em "repetir"', stmt.line, stmt.col);
+      }
+      if (n > 100000) {
+        throw new W.RunError('Repetições demais (máximo de 100000)', stmt.line, stmt.col);
+      }
+      for (let k = 0; k < n; k++) {
+        for (let b = 0; b < stmt.body.length; b++) await execStatement(stmt.body[b]);
+      }
+    }
+
+    const variables = [];
+
+    function captureVariables() {
+      variables.length = 0;
+      env.forEach(function (entry, name) {
+        variables.push({ name: name, value: entry.value, constant: !!entry.constant });
+      });
+      W.lastVariables = variables;
+    }
+
+    try {
+      for (let s = 0; s < ast.statements.length; s++) await execStatement(ast.statements[s]);
+    } finally {
+      captureVariables();
+    }
+    return { output: output, variables: variables };
+  }
+
+  W.run = run;
+  W.runAsync = runAsync;
+  W.formatNumber = formatNumber;
+  W.toFraction = toFraction;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+  </script>
+  <script>
+/* js/ide.js (embutido; fonte em js/ide.js) */
+/*
+ * Willog - Camada da IDE
+ * Liga o editor e o console ao interpretador da linguagem.
+ */
+(function () {
+  'use strict';
+
+  const W = window.Willog;
+  const STORAGE_KEY = 'willog.code';
+  const STORAGE_KEY_FILE = 'willog.filename';
+  const DEFAULT_FILENAME = 'programa.wil';
+
+  /* --- Elementos da interface --------------------------------------------- */
+
+  const codeEl = document.getElementById('code');
+  const highlightEl = document.getElementById('highlight');
+  const highlightCodeEl = document.getElementById('highlightCode');
+  const gutterEl = document.getElementById('gutter');
+  const consoleEl = document.getElementById('console');
+  const statusEl = document.getElementById('status');
+  const cursorInfoEl = document.getElementById('cursorInfo');
+  const statsEl = document.getElementById('stats');
+  const fileNameEl = document.getElementById('fileName');
+  const btnFileEl = document.getElementById('btnFile');
+  const fileMenuEl = document.getElementById('fileMenu');
+  const fileOpenEl = document.getElementById('fileOpen');
+  const helpOverlay = document.getElementById('helpOverlay');
+  const helpTabsEl = document.getElementById('helpTabs');
+  const helpSearchEl = document.getElementById('helpSearch');
+  const helpEmptyEl = document.getElementById('helpEmpty');
+  const workspaceEl = document.querySelector('.workspace');
+  const consolePaneEl = document.querySelector('.console-pane');
+  const splitterEl = document.getElementById('splitter');
+
+  /* --- Realce de sintaxe -------------------------------------------------- */
+
+  const TOKEN_RE = new RegExp(
+    [
+      '(#[^\\n]*)',                                                       // 1 comentário
+      '("(?:[^"\\\\\\n]|\\\\.)*")',                                      // 2 texto com "
+      "('(?:[^'\\\\\\n]|\\\\.)*')",                                      // 3 texto com '
+      '\\b(cada|constante|em|entao|então|existe|falso|leia|mostre|nao|não|para|repetir|se|senao|senão|verdadeiro|e|ou)\\b', // 4 palavra reservada
+      '\\b(abs|raiz|decimal|fração|fracao|inteiro|arredonda|paraNúmero|paraNumero|paranumero|paraTexto|paratexto|potência|potencia|mínimo|minimo|máximo|maximo|crescente|decrescente|aleatório|aleatorio|primeiro|último|ultimo|menor|maior|distintos|distinto|adicionar|posição|posicao|retirar|recortar|fatiar|contar|contarDistintos|contarDistinto|contarItem|separar)\\b', // 5 função/propriedade
+      '([0-9]+(?:\\.[0-9]+)?)',                                          // 6 número
+      '(//|\\*\\*|\\.\\.|<=|>=|==|!=|\\.|[+\\-*/=,(){}\\[\\]:<>!])',           // 7 operador
+      '([\\p{L}_][\\p{L}\\p{N}_]*)'                                      // 8 identificador
+    ].join('|'),
+    'gu'
+  );
+
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  // Dentro de um texto, destaca {expressão} (interpolação) em amarelo.
+  // {{ e }} são chaves literais e não são destacadas.
+  function renderString(raw) {
+    const out = [];
+    let last = 0;
+    let i = 0;
+    while (i < raw.length) {
+      if (raw[i] === '{' && raw[i + 1] === '{') { i += 2; continue; }
+      if (raw[i] !== '{') { i++; continue; }
+
+      let depth = 1;
+      let j = i + 1;
+      while (j < raw.length && depth > 0) {
+        if (raw[j] === '{') depth++;
+        else if (raw[j] === '}') depth--;
+        if (depth === 0) break;
+        j++;
+      }
+      if (depth !== 0) { i++; continue; }
+
+      out.push(escapeHtml(raw.slice(last, i)));
+      out.push('<span class="tk-var">' + escapeHtml(raw.slice(i, j + 1)) + '</span>');
+      last = j + 1;
+      i = j + 1;
+    }
+    out.push(escapeHtml(raw.slice(last)));
+    return out.join('');
+  }
+
+  function classForToken(match) {
+    if (match[1]) return 'tk-comment';
+    if (match[2] || match[3]) return 'tk-string';
+    if (match[4]) return 'tk-keyword';
+    if (match[5]) return 'tk-func';
+    if (match[6]) return 'tk-number';
+    if (match[7]) return 'tk-op';
+    return 'tk-var';
+  }
+
+  // Realça uma linha; após o "=" de uma atribuição, o valor fica em azul.
+  function highlightLine(line) {
+    const out = [];
+    let last = 0;
+    let inValue = false;
+    let match;
+    TOKEN_RE.lastIndex = 0;
+
+    while ((match = TOKEN_RE.exec(line)) !== null) {
+      if (match.index > last) out.push(escapeHtml(line.slice(last, match.index)));
+      last = TOKEN_RE.lastIndex;
+
+      if (match[1]) {
+        out.push('<span class="tk-comment">' + escapeHtml(match[0]) + '</span>');
+        continue;
+      }
+
+      const isString = !!(match[2] || match[3]);
+      const cls = inValue ? 'tk-value' : classForToken(match);
+      const inner = isString ? renderString(match[0]) : undefined;
+
+      out.push('<span class="' + cls + '">' + (inner === undefined ? escapeHtml(match[0]) : inner) + '</span>');
+
+      if (match[7] === '=') inValue = true;
+    }
+
+    if (last < line.length) out.push(escapeHtml(line.slice(last)));
+    return out.join('');
+  }
+
+  function highlight(source) {
+    return source.split('\n').map(highlightLine).join('\n');
+  }
+
+  /* --- Atualização do editor ---------------------------------------------- */
+
+  function updateGutter() {
+    const lines = codeEl.value.split('\n').length;
+    let html = '';
+    for (let i = 1; i <= lines; i++) html += '<div>' + i + '</div>';
+    gutterEl.innerHTML = html;
+    gutterEl.scrollTop = codeEl.scrollTop;
+  }
+
+  function updateHighlight() {
+    highlightCodeEl.innerHTML = highlight(codeEl.value + '\n');
+    syncScroll();
+  }
+
+  function syncScroll() {
+    highlightEl.scrollTop = codeEl.scrollTop;
+    highlightEl.scrollLeft = codeEl.scrollLeft;
+    gutterEl.scrollTop = codeEl.scrollTop;
+  }
+
+  function updateCursorInfo() {
+    const upto = codeEl.value.slice(0, codeEl.selectionStart);
+    const line = upto.split('\n').length;
+    const col = upto.length - upto.lastIndexOf('\n');
+    cursorInfoEl.textContent = 'linha ' + line + ', col ' + col;
+  }
+
+  function updateStats() {
+    const lines = codeEl.value.split('\n').length;
+    statsEl.textContent = lines + (lines === 1 ? ' linha' : ' linhas');
+  }
+
+  function refresh() {
+    updateGutter();
+    updateHighlight();
+    updateStats();
+    updateCursorInfo();
+  }
+
+  function setStatus(text, kind) {
+    statusEl.textContent = text;
+    statusEl.className = 'status ' + (kind || 'ok');
+  }
+
+  /* --- Console ------------------------------------------------------------ */
+
+  function appendLine(text, cls) {
+    const div = document.createElement('div');
+    div.className = 'line ' + (cls || 'out');
+    div.textContent = text;
+    consoleEl.appendChild(div);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+  }
+
+  function clearConsole() {
+    consoleEl.innerHTML = '';
+  }
+
+  function appendError(err) {
+    let text = err && err.message ? err.message : String(err);
+    if (err && typeof err.line === 'number') {
+      text = 'Erro na linha ' + err.line + ': ' + text;
+    } else {
+      text = 'Erro: ' + text;
+    }
+    appendLine(text, 'err');
+  }
+
+  let running = false;
+  let currentInputResolve = null;
+  let inputContainer = null;
+
+  function startInput(promptText, resolve) {
+    if (currentInputResolve) currentInputResolve('');
+    currentInputResolve = resolve;
+
+    const line = document.createElement('div');
+    line.className = 'line input-line';
+    const prefix = document.createElement('span');
+    prefix.className = 'input-prefix';
+    prefix.textContent = promptText ? promptText : '>';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'input-field';
+    input.autocomplete = 'off';
+    input.spellcheck = false;
+    input.placeholder = 'Digite o valor e pressione Enter...';
+    line.appendChild(prefix);
+    line.appendChild(input);
+    consoleEl.appendChild(line);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+    inputContainer = line;
+    input.focus();
+    setStatus('Aguardando entrada...', 'running');
+
+    function finish(value) {
+      line.remove();
+      inputContainer = null;
+      currentInputResolve = null;
+      appendLine(value, 'in');
+      setStatus('Executando...', 'running');
+      resolve(value);
+    }
+
+    function onKey(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        input.removeEventListener('keydown', onKey);
+        const valor = input.value;
+        finish(valor);
+      }
+    }
+    input.addEventListener('keydown', onKey);
+  }
+
+  /* --- Variáveis ---------------------------------------------------------- */
+
+  let lastRunVariables = null;
+
+  function formatVarValue(value) {
+    if (Array.isArray(value)) return value.map(formatVarValue).join(',');
+    if (typeof value === 'boolean') return value ? 'verdadeiro' : 'falso';
+    if (typeof value === 'number') return W.formatNumber(value);
+    if (typeof value === 'string') return '"' + value + '"';
+    return String(value);
+  }
+
+  function mostrarVariaveis() {
+    if (!lastRunVariables) {
+      appendLine('(execute o programa para ver as variáveis)', 'sys');
+      return;
+    }
+    if (lastRunVariables.length === 0) {
+      appendLine('(nenhuma variável definida)', 'sys');
+      return;
+    }
+    appendLine('variáveis:', 'info');
+    lastRunVariables.forEach(function (v) {
+      appendLine(v.name + ' = ' + formatVarValue(v.value) + (v.constant ? '  (constante)' : ''), 'out');
+    });
+  }
+
+  /* --- Execução ----------------------------------------------------------- */
+
+  function executar() {
+    if (running) return;
+    hideComplete();
+    const codigo = codeEl.value;
+    clearConsole();
+    appendLine('$ willog ' + currentFileName, 'sys');
+    setStatus('Executando...', 'running');
+    running = true;
+
+    // Deixa a interface atualizar antes de rodar (execução é síncrona).
+    window.setTimeout(function () {
+      const inicio = performance.now();
+      let produziu = false;
+
+      try {
+        W.runAsync(codigo, {
+          onOutput: function (linha) {
+            produziu = true;
+            appendLine(linha, 'out');
+          },
+          onInput: function (texto) {
+            produziu = true;
+            return new Promise(function (resolve) {
+              startInput(texto, resolve);
+            });
+          }
+        }).then(function (result) {
+          lastRunVariables = (result && result.variables) || W.lastVariables || [];
+          if (!produziu) appendLine('(o programa não produziu saída)', 'sys');
+          const tempo = (performance.now() - inicio).toFixed(1);
+          setStatus('Concluído em ' + tempo + ' ms', 'ok');
+          running = false;
+        }, function (err) {
+          lastRunVariables = W.lastVariables || [];
+          appendError(err);
+          setStatus('Erro', 'error');
+          running = false;
+          if (err && typeof err.line === 'number') {
+            focusEditorLine(err.line);
+          }
+        });
+      } catch (err) {
+        appendError(err);
+        setStatus('Erro', 'error');
+        running = false;
+        if (err && typeof err.line === 'number') {
+          focusEditorLine(err.line);
+        }
+      }
+    }, 0);
+  }
+
+  function focusEditorLine(line) {
+    const linhas = codeEl.value.split('\n');
+    let pos = 0;
+    for (let i = 0; i < line - 1 && i < linhas.length; i++) pos += linhas[i].length + 1;
+    codeEl.focus();
+    codeEl.setSelectionRange(pos, pos + (linhas[line - 1] ? linhas[line - 1].length : 0));
+  }
+
+  /* --- Carregar e salvar -------------------------------------------------- */
+
+  function salvar() {
+    try {
+      localStorage.setItem(STORAGE_KEY, codeEl.value);
+    } catch (e) {
+      /* ignora indisponibilidade do armazenamento local */
+    }
+  }
+
+  function carregarSalvo() {
+    try {
+      const salvo = localStorage.getItem(STORAGE_KEY);
+      if (salvo !== null) return salvo;
+    } catch (e) {
+      /* ignora */
+    }
+    return '';
+  }
+
+  /* --- Arquivo (.wil): Abrir, Salvar, Salvar como, Sair -------------------- */
+
+  let currentFileName = DEFAULT_FILENAME;
+  let fileHandle = null; // FileSystemFileHandle quando o navegador permite
+  let dirty = false;
+
+  function ensureWil(name) {
+    let base = String(name === undefined || name === null ? '' : name).trim().replace(/[\\/:*?"<>|]/g, '_');
+    if (!base) base = DEFAULT_FILENAME;
+    base = base.replace(/\.+$/, '');
+    if (/\.willog$/i.test(base)) base = base.replace(/\.willog$/i, '.wil');
+    if (!/\.wil$/i.test(base)) {
+      const dot = base.lastIndexOf('.');
+      base = (dot > 0 ? base.slice(0, dot) : base) + '.wil';
+    }
+    return base;
+  }
+
+  function persistFileName() {
+    try {
+      localStorage.setItem(STORAGE_KEY_FILE, currentFileName);
+    } catch (e) {
+      /* ignora */
+    }
+  }
+
+  function loadFileName() {
+    try {
+      const salvo = localStorage.getItem(STORAGE_KEY_FILE);
+      if (salvo) return ensureWil(salvo);
+    } catch (e) {
+      /* ignora */
+    }
+    return DEFAULT_FILENAME;
+  }
+
+  function setFileName(name) {
+    currentFileName = ensureWil(name);
+    if (fileNameEl) fileNameEl.textContent = currentFileName + (dirty ? ' •' : '');
+    try {
+      document.title = currentFileName + ' - Willog IDE';
+    } catch (e) {
+      /* ignora */
+    }
+    persistFileName();
+  }
+
+  function markDirty() {
+    if (!dirty) {
+      dirty = true;
+      setFileName(currentFileName);
+    } else if (fileNameEl) {
+      fileNameEl.textContent = currentFileName + ' •';
+    }
+  }
+
+  function markClean() {
+    dirty = false;
+    setFileName(currentFileName);
+  }
+
+  function loadIntoEditor(text, name) {
+    codeEl.value = text;
+    fileHandle = null;
+    hideComplete();
+    refresh();
+    salvar();
+    lastRunVariables = null;
+    setFileName(name || DEFAULT_FILENAME);
+    markClean();
+    codeEl.focus();
+  }
+
+  function downloadArquivo(name, text) {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  async function escreverNoHandle(handle, text) {
+    const writable = await handle.createWritable();
+    await writable.write(text);
+    await writable.close();
+  }
+
+  async function abrirArquivo() {
+    // File System Access API quando disponível; senão, <input type="file">
+    if (typeof window.showOpenFilePicker === 'function') {
+      try {
+        const handles = await window.showOpenFilePicker({
+          multiple: false,
+          types: [{ description: 'Programa Willog', accept: { 'text/plain': ['.wil', '.willog'] } }]
+        });
+        if (!handles || handles.length === 0) return;
+        const handle = handles[0];
+        const file = await handle.getFile();
+        const text = await file.text();
+        fileHandle = handle;
+        codeEl.value = text;
+        hideComplete();
+        refresh();
+        salvar();
+        lastRunVariables = null;
+        setFileName(file.name || DEFAULT_FILENAME);
+        markClean();
+        setStatus('Arquivo aberto: ' + currentFileName, 'ok');
+        codeEl.focus();
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return; // usuário cancelou
+        /* cai para o input tradicional */
+      }
+    }
+    if (fileOpenEl) fileOpenEl.click();
+  }
+
+  function abrirViaInput(file) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      loadIntoEditor(String(reader.result === undefined || reader.result === null ? '' : reader.result), file.name);
+      setStatus('Arquivo aberto: ' + currentFileName, 'ok');
+    };
+    reader.onerror = function () {
+      setStatus('Não foi possível abrir o arquivo', 'error');
+    };
+    reader.readAsText(file, 'utf-8');
+  }
+
+  async function salvarArquivo() {
+    const text = codeEl.value;
+    if (fileHandle) {
+      try {
+        await escreverNoHandle(fileHandle, text);
+        markClean();
+        setStatus('Salvo: ' + currentFileName, 'ok');
+        return;
+      } catch (e) {
+        fileHandle = null; // cai para download
+      }
+    }
+    if (typeof window.showSaveFilePicker === 'function') {
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: currentFileName,
+          types: [{ description: 'Programa Willog', accept: { 'text/plain': ['.wil'] } }]
+        });
+        await escreverNoHandle(handle, text);
+        fileHandle = handle;
+        const nome = (handle && handle.name) ? handle.name : currentFileName;
+        setFileName(nome);
+        markClean();
+        setStatus('Salvo: ' + currentFileName, 'ok');
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return; // usuário cancelou
+        /* cai para download */
+      }
+    }
+    downloadArquivo(currentFileName, text);
+    markClean();
+    setStatus('Salvo: ' + currentFileName, 'ok');
+  }
+
+  async function salvarComo() {
+    const sugerido = window.prompt('Nome do arquivo:', currentFileName);
+    if (sugerido === null) return; // cancelou
+    const nome = ensureWil(sugerido);
+    const text = codeEl.value;
+    if (typeof window.showSaveFilePicker === 'function') {
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: nome,
+          types: [{ description: 'Programa Willog', accept: { 'text/plain': ['.wil'] } }]
+        });
+        await escreverNoHandle(handle, text);
+        fileHandle = handle;
+        setFileName((handle && handle.name) ? handle.name : nome);
+        markClean();
+        setStatus('Salvo: ' + currentFileName, 'ok');
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+        /* cai para download */
+      }
+    }
+    fileHandle = null;
+    setFileName(nome);
+    downloadArquivo(currentFileName, text);
+    markClean();
+    setStatus('Salvo: ' + currentFileName, 'ok');
+  }
+
+  function sairIDE() {
+    closeFileMenu();
+    if (dirty && !window.confirm('Há alterações não salvas. Sair mesmo assim?')) return;
+    salvar();
+    persistFileName();
+    appendLine('Sessão encerrada. Feche a aba do navegador para sair.', 'sys');
+    setStatus('Encerrado', 'ok');
+    window.close();
+    window.setTimeout(function () {
+      setStatus('Feche a aba do navegador para sair.', 'ok');
+    }, 300);
+  }
+
+  function closeFileMenu() {
+    if (!fileMenuEl || fileMenuEl.hidden) return;
+    fileMenuEl.hidden = true;
+    if (btnFileEl) btnFileEl.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleFileMenu() {
+    if (!fileMenuEl) return;
+    const willOpen = fileMenuEl.hidden;
+    fileMenuEl.hidden = !willOpen;
+    if (btnFileEl) btnFileEl.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    if (willOpen) {
+      const first = fileMenuEl.querySelector('.menu-item');
+      if (first) first.focus();
+    }
+  }
+
+  /* --- Zoom (fonte independente do editor e do console) ------------------- */
+
+  const ZOOM = {
+    editor: { base: 15, min: 60, max: 300, step: 10, prop: '--editor-font', key: 'willog.zoom.editor', value: 100 },
+    console: { base: 14, min: 60, max: 300, step: 10, prop: '--console-font', key: 'willog.zoom.console', value: 100 }
+  };
+
+  function applyZoom(target) {
+    const cfg = ZOOM[target];
+    const px = cfg.base * cfg.value / 100;
+    document.documentElement.style.setProperty(cfg.prop, px + 'px');
+
+    const wrap = document.querySelector('.zoom[data-target="' + target + '"]');
+    if (wrap) {
+      const val = wrap.querySelector('.zoom-val');
+      if (val) val.textContent = cfg.value + '%';
+      const out = wrap.querySelector('.zoom-out');
+      const inp = wrap.querySelector('.zoom-in');
+      if (out) out.disabled = cfg.value <= cfg.min;
+      if (inp) inp.disabled = cfg.value >= cfg.max;
+    }
+
+    if (target === 'editor') syncScroll();
+
+    try {
+      localStorage.setItem(cfg.key, String(cfg.value));
+    } catch (e) {
+      /* ignora */
+    }
+  }
+
+  function changeZoom(target, delta) {
+    const cfg = ZOOM[target];
+    cfg.value = Math.min(cfg.max, Math.max(cfg.min, cfg.value + delta));
+    applyZoom(target);
+  }
+
+  function initZoom() {
+    ['editor', 'console'].forEach(function (target) {
+      const cfg = ZOOM[target];
+      try {
+        const salvo = parseInt(localStorage.getItem(cfg.key), 10);
+        if (!isNaN(salvo)) cfg.value = Math.min(cfg.max, Math.max(cfg.min, salvo));
+      } catch (e) {
+        /* ignora */
+      }
+
+      const wrap = document.querySelector('.zoom[data-target="' + target + '"]');
+      if (wrap) {
+        const out = wrap.querySelector('.zoom-out');
+        const inp = wrap.querySelector('.zoom-in');
+        if (out) out.addEventListener('click', function () { changeZoom(target, -cfg.step); });
+        if (inp) inp.addEventListener('click', function () { changeZoom(target, cfg.step); });
+      }
+
+      applyZoom(target);
+    });
+  }
+
+  /* --- Redimensionar o console com o mouse -------------------------------- */
+
+  const SPLIT_KEY = 'willog.consoleWidth';
+  const SPLIT_MIN = 220;
+  let arrastandoSplit = false;
+
+  function clampConsoleWidth(width) {
+    const total = workspaceEl.getBoundingClientRect().width;
+    const max = Math.max(SPLIT_MIN, total - SPLIT_MIN);
+    return Math.max(SPLIT_MIN, Math.min(max, width));
+  }
+
+  function setConsoleWidth(width) {
+    document.documentElement.style.setProperty('--console-width', clampConsoleWidth(width) + 'px');
+  }
+
+  function consoleWidthAtual() {
+    return consolePaneEl.getBoundingClientRect().width;
+  }
+
+  function saveConsoleWidth() {
+    try {
+      localStorage.setItem(SPLIT_KEY, String(Math.round(consoleWidthAtual())));
+    } catch (e) {
+      /* ignora */
+    }
+  }
+
+  function iniciarArraste(event) {
+    if (typeof event.button === 'number' && event.button !== 0) return;
+    arrastandoSplit = true;
+    splitterEl.classList.add('dragging');
+    document.body.classList.add('resizing');
+    if (event.cancelable) event.preventDefault();
+  }
+
+  function moverArraste(clientX) {
+    if (!arrastandoSplit) return;
+    const rect = workspaceEl.getBoundingClientRect();
+    setConsoleWidth(rect.right - clientX);
+  }
+
+  function terminarArraste() {
+    if (!arrastandoSplit) return;
+    arrastandoSplit = false;
+    splitterEl.classList.remove('dragging');
+    document.body.classList.remove('resizing');
+    saveConsoleWidth();
+  }
+
+  splitterEl.addEventListener('mousedown', iniciarArraste);
+  document.addEventListener('mousemove', function (event) { moverArraste(event.clientX); });
+  document.addEventListener('mouseup', terminarArraste);
+
+  // Suporte a toque
+  splitterEl.addEventListener('touchstart', iniciarArraste, { passive: false });
+  document.addEventListener('touchmove', function (event) {
+    if (!arrastandoSplit || event.touches.length !== 1) return;
+    moverArraste(event.touches[0].clientX);
+    if (event.cancelable) event.preventDefault();
+  }, { passive: false });
+  document.addEventListener('touchend', terminarArraste);
+
+  // Ajuste por teclado (setas) com o divisor focado
+  splitterEl.addEventListener('keydown', function (event) {
+    const passo = event.shiftKey ? 40 : 12;
+    if (event.key === 'ArrowLeft') {
+      setConsoleWidth(consoleWidthAtual() + passo);
+      saveConsoleWidth();
+      event.preventDefault();
+    } else if (event.key === 'ArrowRight') {
+      setConsoleWidth(consoleWidthAtual() - passo);
+      saveConsoleWidth();
+      event.preventDefault();
+    }
+  });
+
+  function initSplitter() {
+    try {
+      const salvo = parseInt(localStorage.getItem(SPLIT_KEY), 10);
+      if (!isNaN(salvo)) setConsoleWidth(salvo);
+    } catch (e) {
+      /* ignora */
+    }
+  }
+
+  window.addEventListener('resize', function () {
+    if (consoleWidthAtual() > 0) setConsoleWidth(consoleWidthAtual());
+  });
+
+  /* --- Autocompletar (variáveis primeiro, depois comandos e funções) ----- */
+
+  const completeBoxEl = document.getElementById('completeBox');
+
+  const COMPLETE_COMMANDS = [
+    'cada', 'constante', 'e', 'em', 'então', 'entao', 'existe', 'falso',
+    'leia', 'mostre', 'não', 'nao', 'ou', 'para', 'repetir', 'se',
+    'senao', 'senão', 'verdadeiro'
+  ];
+
+  const COMPLETE_FUNCS = [
+    'abs', 'aleatório', 'arredonda', 'decimal', 'fração', 'inteiro',
+    'máximo', 'mínimo', 'paraNúmero', 'paraTexto', 'potência', 'raiz'
+  ];
+
+  const COMPLETE_PROPS = [
+    { label: 'adicionar', args: true },
+    { label: 'aleatório', args: false },
+    { label: 'contar', args: false },
+    { label: 'contarDistintos', args: false },
+    { label: 'contarItem', args: true },
+    { label: 'crescente', args: false },
+    { label: 'decrescente', args: false },
+    { label: 'distintos', args: false },
+    { label: 'maior', args: false },
+    { label: 'menor', args: false },
+    { label: 'posição', args: true },
+    { label: 'primeiro', args: false },
+    { label: 'recortar', args: true },
+    { label: 'retirar', args: true },
+    { label: 'separar', args: false },
+    { label: 'último', args: false }
+  ];
+
+  let completeItems = [];
+  let completeSel = 0;
+  let completeStart = 0;
+
+  // Minúsculas sem acento, para casar "posicao" com "posição".
+  function normComplete(s) {
+    return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  // Nomes de variáveis: da última execução + do texto atual
+  // (constante NOME=, NOME=, para cada NOME em). Sem distinção de maiúsculas.
+  function collectVarNames() {
+    const seen = Object.create(null);
+    const names = [];
+    function add(spelling) {
+      const key = spelling.toUpperCase();
+      if (seen[key]) return;
+      seen[key] = true;
+      names.push(spelling);
+    }
+    (lastRunVariables || []).forEach(function (v) {
+      if (v && v.name) add(v.name);
+    });
+    const semTextos = codeEl.value
+      .replace(/"(?:[^"\\\n]|\\.)*"?/g, ' ')
+      .replace(/'(?:[^'\\\n]|\\.)*'?/g, ' ');
+    const linhas = semTextos.split('\n');
+    for (let i = 0; i < linhas.length; i++) {
+      const trecho = linhas[i].split('#')[0];
+      let m;
+      const reConst = /\bconstante\s+([\p{L}_][\p{L}\p{N}_]*)/gu;
+      while ((m = reConst.exec(trecho)) !== null) add(m[1]);
+      const reFor = /\bpara\s+cada\s+([\p{L}_][\p{L}\p{N}_]*)\s+em\b/gu;
+      while ((m = reFor.exec(trecho)) !== null) add(m[1]);
+      const reAssign = /(^|[\s;:,({[])([\p{L}_][\p{L}\p{N}_]*)\s*=(?![=>])/gu;
+      while ((m = reAssign.exec(trecho)) !== null) add(m[2]);
+    }
+    return names;
+  }
+
+  // Contexto no cursor: propriedade após "." ou palavra em digitação.
+  // Devolve null dentro de textos e comentários.
+  function completeContext(force) {
+    const pos = codeEl.selectionStart;
+    if (codeEl.selectionEnd !== pos) return null;
+    const upto = codeEl.value.slice(0, pos);
+    const lineStart = upto.lastIndexOf('\n') + 1;
+    const line = upto.slice(lineStart);
+    let emTexto = false;
+    let quote = '';
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (emTexto) {
+        if (ch === '\\') { i++; continue; }
+        if (ch === quote) emTexto = false;
+      } else if (ch === '"' || ch === "'") {
+        emTexto = true;
+        quote = ch;
+      } else if (ch === '#') {
+        return null;
+      }
+    }
+    if (emTexto) return null;
+    let m = line.match(/\.([\p{L}\p{N}_]*)$/u);
+    if (m) {
+      if (m[1] === '' && line.slice(-2) === '..') return null; // intervalo (a..b)
+      return { tipo: 'prop', prefixo: m[1], inicio: pos - m[1].length };
+    }
+    m = line.match(/([\p{L}_][\p{L}\p{N}_]*)$/u);
+    if (m) return { tipo: 'palavra', prefixo: m[1], inicio: pos - m[1].length };
+    if (force) return { tipo: 'palavra', prefixo: '', inicio: pos };
+    return null;
+  }
+
+  function buildComplete(ctx) {
+    const items = [];
+    const pref = normComplete(ctx.prefixo);
+    function casa(texto) {
+      return pref === '' || normComplete(texto).indexOf(pref) === 0;
+    }
+    if (ctx.tipo === 'prop') {
+      COMPLETE_PROPS.forEach(function (p) {
+        if (casa(p.label)) items.push({ texto: p.label, tipo: 'prop', detalhe: p.args ? 'método' : 'lista', args: p.args });
+      });
+      return items;
+    }
+    collectVarNames().forEach(function (n) {
+      if (casa(n)) items.push({ texto: n, tipo: 'var', detalhe: 'variável' });
+    });
+    COMPLETE_COMMANDS.forEach(function (c) {
+      if (casa(c)) items.push({ texto: c, tipo: 'cmd', detalhe: 'comando' });
+    });
+    COMPLETE_FUNCS.forEach(function (f) {
+      if (casa(f)) items.push({ texto: f, tipo: 'fn', detalhe: 'função' });
+    });
+    return items.slice(0, 30);
+  }
+
+  function hideComplete() {
+    completeItems = [];
+    if (completeBoxEl) completeBoxEl.hidden = true;
+  }
+
+  function renderComplete() {
+    if (!completeBoxEl) return;
+    let html = '';
+    for (let i = 0; i < completeItems.length; i++) {
+      const it = completeItems[i];
+      html += '<div class="complete-item' + (i === completeSel ? ' sel' : '') + '" data-i="' + i + '" role="option">'
+        + '<span class="complete-kind k-' + it.tipo + '">' + it.tipo + '</span>'
+        + '<span class="complete-label">' + escapeHtml(it.texto) + '</span>'
+        + '<span class="complete-detail">' + escapeHtml(it.detalhe || '') + '</span>'
+        + '</div>';
+    }
+    completeBoxEl.innerHTML = html;
+    const sel = completeBoxEl.querySelector('.complete-item.sel');
+    if (sel && sel.scrollIntoView) sel.scrollIntoView({ block: 'nearest' });
+  }
+
+  // Posiciona a caixa junto ao cursor (espelho do textarea).
+  function placeComplete() {
+    const pos = codeEl.selectionStart;
+    const cs = window.getComputedStyle(codeEl);
+    const espelho = document.createElement('div');
+    ['fontFamily', 'fontSize', 'lineHeight', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'tabSize', 'letterSpacing'].forEach(function (p) {
+      try { espelho.style[p] = cs[p]; } catch (e) { /* ignora */ }
+    });
+    espelho.style.position = 'absolute';
+    espelho.style.visibility = 'hidden';
+    espelho.style.whiteSpace = 'pre';
+    espelho.style.width = codeEl.clientWidth + 'px';
+    espelho.textContent = codeEl.value.slice(0, pos);
+    const marca = document.createElement('span');
+    marca.textContent = '​';
+    espelho.appendChild(marca);
+    document.body.appendChild(espelho);
+    const espRect = espelho.getBoundingClientRect();
+    const marcaRect = marca.getBoundingClientRect();
+    let x = marcaRect.left - espRect.left - codeEl.scrollLeft;
+    let y = marcaRect.bottom - espRect.top - codeEl.scrollTop;
+    document.body.removeChild(espelho);
+
+    const box = completeBoxEl;
+    box.style.left = '0px';
+    box.style.top = '0px';
+    box.hidden = false;
+    const area = codeEl.parentElement;
+    const bw = box.offsetWidth;
+    const bh = box.offsetHeight;
+    const maxX = Math.max(0, area.clientWidth - bw - 4);
+    const maxY = Math.max(0, area.clientHeight - bh - 4);
+    if (x > maxX) x = maxX;
+    if (y > maxY) {
+      const alturaLinha = parseFloat(cs.lineHeight) || 18;
+      y = y - bh - alturaLinha - 4; // abre para cima
+    }
+    if (y < 0) y = 0;
+    box.style.left = Math.max(0, x) + 'px';
+    box.style.top = y + 'px';
+  }
+
+  function updateComplete(force) {
+    if (!completeBoxEl || running) { hideComplete(); return; }
+    const ctx = completeContext(force);
+    if (!ctx) { hideComplete(); return; }
+    if (!force && ctx.prefixo === '' && ctx.tipo !== 'prop') { hideComplete(); return; }
+    completeItems = buildComplete(ctx);
+    if (completeItems.length === 0) { hideComplete(); return; }
+    if (completeItems.length === 1 && completeItems[0].texto.toLowerCase() === ctx.prefixo.toLowerCase()) {
+      hideComplete();
+      return;
+    }
+    completeSel = 0;
+    completeStart = ctx.inicio;
+    renderComplete();
+    placeComplete();
+  }
+
+  function acceptComplete() {
+    if (!completeBoxEl || completeBoxEl.hidden || completeItems.length === 0) return false;
+    const it = completeItems[completeSel] || completeItems[0];
+    const pos = codeEl.selectionStart;
+    let insere = it.texto;
+    const querParen = (it.tipo === 'fn') || (it.tipo === 'prop' && it.args);
+    if (querParen && codeEl.value[pos] !== '(') insere += '(';
+    codeEl.value = codeEl.value.slice(0, completeStart) + insere + codeEl.value.slice(pos);
+    const nova = completeStart + insere.length;
+    codeEl.selectionStart = codeEl.selectionEnd = nova;
+    hideComplete();
+    refresh();
+    salvar();
+    markDirty();
+    codeEl.focus();
+    return true;
+  }
+
+  /* --- Eventos ------------------------------------------------------------ */
+
+  function inserirTexto(texto) {
+    if (!document.execCommand || !document.execCommand('insertText', false, texto)) {
+      const start = codeEl.selectionStart;
+      const end = codeEl.selectionEnd;
+      const valor = codeEl.value;
+      codeEl.value = valor.slice(0, start) + texto + valor.slice(end);
+      codeEl.selectionStart = codeEl.selectionEnd = start + texto.length;
+    }
+    refresh();
+    salvar();
+    markDirty();
+  }
+
+  codeEl.addEventListener('input', function () {
+    refresh();
+    salvar();
+    markDirty();
+    updateComplete(false);
+    lastRunVariables = null;
+  });
+
+  codeEl.addEventListener('scroll', function () {
+    syncScroll();
+    hideComplete();
+  });
+  codeEl.addEventListener('click', function () {
+    updateCursorInfo();
+    hideComplete();
+  });
+  codeEl.addEventListener('blur', function () {
+    window.setTimeout(hideComplete, 150);
+  });
+  codeEl.addEventListener('keyup', function (event) {
+    updateCursorInfo();
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') return; // navegação do autocompletar
+    if (!completeBoxEl.hidden && (event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'Home' || event.key === 'End')) {
+      updateComplete(false);
+    }
+  });
+
+  codeEl.addEventListener('keydown', function (event) {
+    const boxAberta = completeBoxEl && !completeBoxEl.hidden && completeItems.length > 0;
+    if (boxAberta) {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        completeSel = (completeSel + 1) % completeItems.length;
+        renderComplete();
+        return;
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        completeSel = (completeSel - 1 + completeItems.length) % completeItems.length;
+        renderComplete();
+        return;
+      }
+      if ((event.key === 'Enter' || event.key === 'Tab') && !event.ctrlKey && !event.metaKey) {
+        event.preventDefault();
+        acceptComplete();
+        return;
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        hideComplete();
+        return;
+      }
+    }
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      inserirTexto('\t');
+      return;
+    }
+    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      executar();
+    }
+    if (event.key === ' ' && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      updateComplete(true);
+    }
+  });
+
+  if (completeBoxEl) {
+    completeBoxEl.addEventListener('mousedown', function (event) {
+      event.preventDefault();
+      const item = event.target.closest ? event.target.closest('.complete-item') : null;
+      if (item && item.dataset && item.dataset.i !== undefined) {
+        completeSel = parseInt(item.dataset.i, 10) || 0;
+        acceptComplete();
+      }
+    });
+  }
+
+  document.getElementById('btnRun').addEventListener('click', executar);
+  document.getElementById('btnClearEditor').addEventListener('click', function () {
+    codeEl.value = '';
+    hideComplete();
+    refresh();
+    salvar();
+    markDirty();
+    setStatus('Pronto', 'ok');
+    codeEl.focus();
+  });
+  document.getElementById('btnConsoleClear').addEventListener('click', function () {
+    clearConsole();
+    setStatus('Pronto', 'ok');
+  });
+  document.getElementById('btnVars').addEventListener('click', mostrarVariaveis);
+
+  document.getElementById('btnHelp').addEventListener('click', function () {
+    helpOverlay.hidden = false;
+  });
+  document.getElementById('btnHelpClose').addEventListener('click', function () {
+    helpOverlay.hidden = true;
+  });
+  helpOverlay.addEventListener('click', function (event) {
+    if (event.target === helpOverlay) helpOverlay.hidden = true;
+  });
+
+  function activateHelpTab(nome) {
+    helpTabsEl.querySelectorAll('.tab').forEach(function (tab) {
+      tab.classList.toggle('active', tab.dataset.tab === nome);
+    });
+    helpOverlay.querySelectorAll('.help-panel').forEach(function (panel) {
+      panel.hidden = panel.dataset.panel !== nome;
+    });
+    applyHelpSearch();
+  }
+
+  function applyHelpSearch() {
+    const q = helpSearchEl.value.trim().toLowerCase();
+    let visible = 0;
+    helpOverlay.querySelectorAll('.help-panel').forEach(function (panel) {
+      if (panel.hidden) return;
+      panel.querySelectorAll('.ref-item').forEach(function (item) {
+        const hay = ((item.dataset.name || '') + ' ' + item.textContent).toLowerCase();
+        const show = q === '' || hay.indexOf(q) >= 0;
+        item.hidden = !show;
+        if (show) visible++;
+      });
+    });
+    helpEmptyEl.hidden = visible > 0;
+  }
+
+  helpTabsEl.addEventListener('click', function (event) {
+    const tab = event.target.closest('.tab');
+    if (tab) activateHelpTab(tab.dataset.tab);
+  });
+  helpSearchEl.addEventListener('input', applyHelpSearch);
+
+  // Botão "usar": carrega o exemplo do cartão no editor
+  helpOverlay.addEventListener('click', function (event) {
+    const btn = event.target.closest('.ref-use');
+    if (!btn) return;
+    const item = btn.closest('.ref-item');
+    const code = item ? item.querySelector('.ref-ex-code') : null;
+    if (!code) return;
+    codeEl.value = code.textContent.replace(/\n$/, '');
+    hideComplete();
+    refresh();
+    salvar();
+    markDirty();
+    helpOverlay.hidden = true;
+    codeEl.focus();
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && !helpOverlay.hidden) helpOverlay.hidden = true;
+  });
+
+  /* --- Menu Arquivo ------------------------------------------------------- */
+
+  if (btnFileEl) {
+    btnFileEl.addEventListener('click', function (event) {
+      event.stopPropagation();
+      toggleFileMenu();
+    });
+  }
+
+  document.addEventListener('click', function (event) {
+    if (!fileMenuEl || fileMenuEl.hidden) return;
+    if (event.target.closest && (event.target.closest('.menu-wrap'))) return;
+    closeFileMenu();
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') closeFileMenu();
+  });
+
+  function runAndClose(fn) {
+    return function () {
+      closeFileMenu();
+      fn();
+    };
+  }
+
+  var mnuOpen = document.getElementById('mnuOpen');
+  var mnuSave = document.getElementById('mnuSave');
+  var mnuSaveAs = document.getElementById('mnuSaveAs');
+  var mnuExit = document.getElementById('mnuExit');
+  if (mnuOpen) mnuOpen.addEventListener('click', runAndClose(abrirArquivo));
+  if (mnuSave) mnuSave.addEventListener('click', runAndClose(salvarArquivo));
+  if (mnuSaveAs) mnuSaveAs.addEventListener('click', runAndClose(salvarComo));
+  if (mnuExit) mnuExit.addEventListener('click', runAndClose(sairIDE));
+
+  if (fileOpenEl) {
+    fileOpenEl.addEventListener('change', function () {
+      if (fileOpenEl.files && fileOpenEl.files.length > 0) {
+        abrirViaInput(fileOpenEl.files[0]);
+      }
+      fileOpenEl.value = '';
+    });
+  }
+
+  // Atalhos: Ctrl+O abre, Ctrl+S salva (Ctrl+Enter continua executando)
+  document.addEventListener('keydown', function (event) {
+    if (!(event.ctrlKey || event.metaKey) || event.shiftKey || event.altKey) return;
+    const k = (event.key || '').toLowerCase();
+    if (k === 'o') {
+      event.preventDefault();
+      abrirArquivo();
+    } else if (k === 's') {
+      event.preventDefault();
+      if (event.shiftKey) salvarComo();
+      else salvarArquivo();
+    }
+  });
+
+  window.addEventListener('beforeunload', function (event) {
+    if (!dirty) return;
+    event.preventDefault();
+    event.returnValue = '';
+  });
+
+  /* --- Inicialização ------------------------------------------------------ */
+
+  currentFileName = loadFileName();
+  codeEl.value = carregarSalvo();
+  refresh();
+  markClean();
+  setFileName(currentFileName);
+  refresh();
+  initZoom();
+  initSplitter();
+  activateHelpTab('comandos');
+  setStatus('Pronto', 'ok');
+  appendLine('Willog IDE pronta. Pressione Executar (Ctrl+Enter).', 'info');
+  codeEl.focus({ preventScroll: true });
+
+})();
+  </script>
+</body>
+</html>
