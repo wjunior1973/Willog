@@ -53,5 +53,8 @@ nova precisa de: um botão em `.help-tabs` com `data-tab`, e um `.help-panel` co
 - Comentários começam com `#`.
 - Comparações `< > <= >= == !=` (em expressão, `=` sozinho vale como `==`), lógicos `e`, `ou`, `não`, pertinência `existe ITEM em COLEÇÃO` (lista, texto ou número) e valores `verdadeiro`/`falso`; 0, texto vazio e lista vazia contam como falso no `se`.
 - Intervalos `(a..b)` e literais `[1,2,3]` geram listas; laços `para cada NOME em (a..b):` com corpo indentado (ou em uma linha); `repetir(n):` repete o corpo indentado n vezes (ou em uma linha).
+- Matrizes são listas de listas (`[[1,2],[3,4]]`), exibidas uma linha por linha; `existe` busca dentro das linhas; `para cada LINHA em MATRIZ:` percorre as linhas.
+- Multiplicação escalar: número `*` lista multiplica cada item (`2*[1,2,3,4]` → `2,4,6,8`); vale para matrizes, por linha.
+- Soma de listas item a item (`[1,3,5,7]+[1,2,3,4]` → `2,5,8,11`); mesmo tamanho, vale para matrizes.
 - Condicional `se condição [então] [:]` com corpo indentado (ou em uma linha), `senão [:]` opcional no mesmo nível de indentação do `se`; ex.: `se N<50 então:` / `senão:`.
 - Listas têm propriedades via ponto: `.crescente .decrescente .aleatório .primeiro .último .menor .maior .distintos .contar .contarDistintos .separar` (funcionam com números e textos; `separar` também aceita texto ou número direto) e métodos com argumentos: `.adicionar(v) .posição(i) .retirar(v) .recortar(ini,fim) .contarItem(v)` (conta ocorrências separando textos em letras e números em algarismos).

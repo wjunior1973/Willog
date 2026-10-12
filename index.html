@@ -904,12 +904,13 @@ senão:
         </section>
 
         <section class="help-panel" data-panel="operadores" hidden>
-          <div class="ref-item" data-name="+ adição soma somar">
+          <div class="ref-item" data-name="+ adição soma somar listas">
             <code class="ref-sig">a + b</code>
-            <p class="ref-desc">Adição.</p>
+            <p class="ref-desc">Adição; com duas listas de mesmo tamanho, soma item a item.</p>
             <div class="ref-ex">
-              <pre class="ref-ex-code">mostre 2+3</pre>
-              <pre class="ref-ex-out">5</pre>
+              <pre class="ref-ex-code">mostre 2+3,[1,3,5,7]+[1,2,3,4]</pre>
+              <pre class="ref-ex-out">5
+2,5,8,11</pre>
               <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
             </div>
           </div>
@@ -1012,12 +1013,13 @@ senão:
               <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
             </div>
           </div>
-          <div class="ref-item" data-name="* multiplicação vezes multiplicar">
+          <div class="ref-item" data-name="* multiplicação vezes multiplicar escalar lista">
             <code class="ref-sig">a * b</code>
-            <p class="ref-desc">Multiplicação.</p>
+            <p class="ref-desc">Multiplicação; com lista, multiplica cada item (vale para matrizes).</p>
             <div class="ref-ex">
-              <pre class="ref-ex-code">mostre 3*7</pre>
-              <pre class="ref-ex-out">21</pre>
+              <pre class="ref-ex-code">mostre 3*7,2*[1,2,3,4]</pre>
+              <pre class="ref-ex-out">21
+2,4,6,8</pre>
               <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
             </div>
           </div>
@@ -1187,6 +1189,18 @@ mostre X</pre>
             <div class="ref-ex">
               <pre class="ref-ex-code">mostre [1,4,3,2,5].maior</pre>
               <pre class="ref-ex-out">5</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="matriz matrizes tabela linhas lista de listas">
+            <code class="ref-sig">[[1,2],[3,4]]</code>
+            <p class="ref-desc">Matriz: lista de listas; cada linha é exibida em uma linha. Percorra com <code>para cada LINHA em MATRIZ:</code> e pegue a linha com <code>MATRIZ.posição(i)</code>.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">MATRIZ=[[1,2,3],[4,5,6],[7,8,9]]
+mostre MATRIZ</pre>
+              <pre class="ref-ex-out">1,2,3
+4,5,6
+7,8,9</pre>
               <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
             </div>
           </div>
@@ -2015,7 +2029,13 @@ mostre IDADE</pre>
   }
 
   function stringify(value) {
-    if (Array.isArray(value)) return value.map(stringify).join(',');
+    if (Array.isArray(value)) {
+      // Matriz (lista com listas): cada linha em uma linha.
+      for (let i = 0; i < value.length; i++) {
+        if (Array.isArray(value[i])) return value.map(stringify).join('\n');
+      }
+      return value.map(stringify).join(',');
+    }
     if (typeof value === 'boolean') return value ? 'verdadeiro' : 'falso';
     if (typeof value === 'number') return formatNumber(value);
     return String(value);
@@ -2054,10 +2074,12 @@ mostre IDADE</pre>
   }
 
   // Pertinência: existe ITEM em COLEÇÃO (lista, texto ou número).
+  // Em matrizes a busca desce nas linhas.
   function existsIn(item, collection, node) {
     if (Array.isArray(collection)) {
       for (let i = 0; i < collection.length; i++) {
         if (equalsWillog(item, collection[i])) return true;
+        if (Array.isArray(collection[i]) && existsIn(item, collection[i], node)) return true;
       }
       return false;
     }
@@ -2077,6 +2099,32 @@ mostre IDADE</pre>
       return false;
     }
     throw new W.RunError('Esperado lista, texto ou número após "em" (ex.: existe "b" em "banana")', node && node.line, node && node.col);
+  }
+
+  // Multiplicação escalar: número * lista (vale para matrizes, por linha).
+  function scaleList(list, n, node) {
+    return list.map(function (v) {
+      if (Array.isArray(v)) return scaleList(v, n, node);
+      if (typeof v !== 'number') {
+        throw new W.RunError('Só é possível multiplicar números em listas', node && node.line, node && node.col);
+      }
+      return v * n;
+    });
+  }
+
+  // Soma de listas item a item (vale para matrizes, por linha).
+  function addLists(la, lb, node) {
+    if (la.length !== lb.length) {
+      throw new W.RunError('Para somar listas, elas precisam ter o mesmo tamanho (' + la.length + ' e ' + lb.length + ')', node && node.line, node && node.col);
+    }
+    return la.map(function (v, i) {
+      const w = lb[i];
+      if (Array.isArray(v) && Array.isArray(w)) return addLists(v, w, node);
+      if (typeof v !== 'number' || typeof w !== 'number') {
+        throw new W.RunError('Só é possível somar números em listas', node && node.line, node && node.col);
+      }
+      return v + w;
+    });
   }
 
   // Separa um valor: texto em letras, número em algarismos, lista achatada.
@@ -2425,15 +2473,20 @@ mostre IDADE</pre>
       }
 
       switch (node.op) {
-        case '+':
+        case '+': {
+          if (Array.isArray(a) && Array.isArray(b)) return addLists(a, b, node);
           if (typeof a === 'string' || typeof b === 'string') {
             return stringify(a) + stringify(b);
           }
           return asNumber(a, node) + asNumber(b, node);
+        }
         case '-':
           return asNumber(a, node) - asNumber(b, node);
-        case '*':
+        case '*': {
+          if (Array.isArray(a) && typeof b === 'number') return scaleList(a, b, node);
+          if (typeof a === 'number' && Array.isArray(b)) return scaleList(b, a, node);
           return asNumber(a, node) * asNumber(b, node);
+        }
         case '/': {
           const d = asNumber(b, node);
           if (d === 0) throw new W.RunError('Divisão por zero', node.line, node.col);
@@ -2816,13 +2869,18 @@ mostre IDADE</pre>
         return cmp >= 0;
       }
       switch (node.op) {
-        case '+':
+        case '+': {
+          if (Array.isArray(a) && Array.isArray(b)) return addLists(a, b, node);
           if (typeof a === 'string' || typeof b === 'string') return stringify(a) + stringify(b);
           return asNumber(a, node) + asNumber(b, node);
+        }
         case '-':
           return asNumber(a, node) - asNumber(b, node);
-        case '*':
+        case '*': {
+          if (Array.isArray(a) && typeof b === 'number') return scaleList(a, b, node);
+          if (typeof a === 'number' && Array.isArray(b)) return scaleList(b, a, node);
           return asNumber(a, node) * asNumber(b, node);
+        }
         case '/': {
           const d = asNumber(b, node);
           if (d === 0) throw new W.RunError('Divisão por zero', node.line, node.col);
@@ -3313,7 +3371,12 @@ mostre IDADE</pre>
   let lastRunVariables = null;
 
   function formatVarValue(value) {
-    if (Array.isArray(value)) return value.map(formatVarValue).join(',');
+    if (Array.isArray(value)) {
+      for (let i = 0; i < value.length; i++) {
+        if (Array.isArray(value[i])) return value.map(formatVarValue).join('\n');
+      }
+      return value.map(formatVarValue).join(',');
+    }
     if (typeof value === 'boolean') return value ? 'verdadeiro' : 'falso';
     if (typeof value === 'number') return W.formatNumber(value);
     if (typeof value === 'string') return '"' + value + '"';
