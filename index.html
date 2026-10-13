@@ -51,7 +51,11 @@
 }
 
 [data-theme="light"] .ref-item { background: rgba(255, 255, 255, .65); }
-[data-theme="light"] .about-title { background: linear-gradient(135deg, #3b63d8, #7a4fd0 55%, #0277bd); }
+[data-theme="light"] .about-title {
+  background: linear-gradient(135deg, #3b63d8, #7a4fd0 55%, #0277bd);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 [data-theme="light"] .help-box { box-shadow: 0 20px 60px rgba(35, 40, 66, .25); }
 [data-theme="light"] .menu,
 [data-theme="light"] .complete-box { box-shadow: 0 14px 40px rgba(35, 40, 66, .25); }
@@ -206,6 +210,81 @@
   --green: #333333; --orange: #555555; --red: #111111; --yellow: #555555;
   --cyan: #333333; --blue: #222222;
   --inset: #efefef; --btn: #e0e0e0; --btn-hover: #cfcfcf;
+}
+
+[data-paleta="lima"] {
+  --bg: #0d1a08; --panel: #16270d; --panel-2: #101e0a; --border: #2a4417;
+  --text: #d8efb8; --muted: #71915a; --accent: #a3e635; --accent-2: #34d399;
+  --green: #bef264; --orange: #ffb74d; --red: #f87171; --yellow: #fde047;
+  --cyan: #22d3ee; --blue: #7aa2f7;
+  --inset: #111f0b; --btn: #1f3513; --btn-hover: #2b4719;
+}
+[data-theme="light"][data-paleta="lima"] {
+  --bg: #f2f9e4; --panel: #ffffff; --panel-2: #e0f0cf; --border: #bde0a6;
+  --text: #1d330e; --muted: #5b7a45; --accent: #4d7c0f; --accent-2: #047857;
+  --green: #3f6212; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0e7490; --blue: #1565c0;
+  --inset: #f2faec; --btn: #dcecc9; --btn-hover: #c9e0b2;
+}
+
+[data-paleta="meianoite"] {
+  --bg: #04060d; --panel: #0a0f1c; --panel-2: #060a14; --border: #1b2740;
+  --text: #d6e2f5; --muted: #5d6b8c; --accent: #7aa2f7; --accent-2: #bb9af7;
+  --green: #9ece6a; --orange: #ff9e64; --red: #f0718a; --yellow: #e5c07b;
+  --cyan: #89ddff; --blue: #82aaff;
+  --inset: #070b15; --btn: #111a2e; --btn-hover: #182442;
+}
+[data-theme="light"][data-paleta="meianoite"] {
+  --bg: #e8edf6; --panel: #ffffff; --panel-2: #d7dfee; --border: #b4c1d8;
+  --text: #131c2e; --muted: #5a6a86; --accent: #1e3a8a; --accent-2: #5b21b6;
+  --green: #2e7d32; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0277bd; --blue: #1565c0;
+  --inset: #edf1f8; --btn: #d0d9e8; --btn-hover: #bcc9de;
+}
+
+[data-paleta="oliva"] {
+  --bg: #141208; --panel: #1f1c0e; --panel-2: #171408; --border: #383312;
+  --text: #e2d9ae; --muted: #837948; --accent: #cddc39; --accent-2: #ff9e64;
+  --green: #a5b63f; --orange: #d98e32; --red: #e57373; --yellow: #ffd54f;
+  --cyan: #80cbc4; --blue: #90caf9;
+  --inset: #181508; --btn: #2b2613; --btn-hover: #3a3319;
+}
+[data-theme="light"][data-paleta="oliva"] {
+  --bg: #f4f1e2; --panel: #ffffff; --panel-2: #e8e3cb; --border: #cfc49c;
+  --text: #2e2a10; --muted: #777052; --accent: #5f6e00; --accent-2: #0277bd;
+  --green: #3f6212; --orange: #b45309; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0e7490; --blue: #1565c0;
+  --inset: #f4f0e1; --btn: #e5dfc4; --btn-hover: #d8cdae;
+}
+
+[data-paleta="terracota"] {
+  --bg: #1f0f0a; --panel: #2c150d; --panel-2: #230f0b; --border: #47251a;
+  --text: #f0cdb8; --muted: #8f6a58; --accent: #e2725b; --accent-2: #e0af68;
+  --green: #9ece6a; --orange: #ffab40; --red: #ff6b6b; --yellow: #ffd54f;
+  --cyan: #80deea; --blue: #82aaff;
+  --inset: #241009; --btn: #3a1e13; --btn-hover: #4e2819;
+}
+[data-theme="light"][data-paleta="terracota"] {
+  --bg: #faefe8; --panel: #ffffff; --panel-2: #f3ddd0; --border: #e0bda6;
+  --text: #38160c; --muted: #866354; --accent: #9a4a1f; --accent-2: #6d28d9;
+  --green: #2e7d32; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0277bd; --blue: #1565c0;
+  --inset: #f8f0e7; --btn: #eed7c4; --btn-hover: #e2c5ab;
+}
+
+[data-paleta="vinho"] {
+  --bg: #190a10; --panel: #241019; --panel-2: #1b0b12; --border: #421c2c;
+  --text: #eecbd8; --muted: #8c5f70; --accent: #c9567c; --accent-2: #bb9af7;
+  --green: #9ece6a; --orange: #ff9e64; --red: #ff5252; --yellow: #ffd54f;
+  --cyan: #80deea; --blue: #82aaff;
+  --inset: #1e0c14; --btn: #341624; --btn-hover: #472033;
+}
+[data-theme="light"][data-paleta="vinho"] {
+  --bg: #f9ecf1; --panel: #ffffff; --panel-2: #f2d8e2; --border: #dfb3c4;
+  --text: #33101d; --muted: #86606e; --accent: #8e1243; --accent-2: #6d28d9;
+  --green: #2e7d32; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0277bd; --blue: #1565c0;
+  --inset: #f8edf1; --btn: #eed0db; --btn-hover: #e0b7c5;
 }
 
 * { box-sizing: border-box; }
@@ -958,17 +1037,22 @@ body.resizing { cursor: col-resize; user-select: none; }
       <button id="btnHelp" class="btn" title="Referências da linguagem">Referências</button>
       <button id="btnAbout" class="btn" title="Sobre o Willog">Sobre</button>
       <select id="selPaleta" class="sel-paleta" title="Paleta de cores">
-        <option value="padrao">Padrão</option>
-        <option value="oceano">Oceano</option>
-        <option value="floresta">Floresta</option>
-        <option value="pordosol">Pôr do sol</option>
-        <option value="uva">Uva</option>
-        <option value="cafe">Café</option>
-        <option value="menta">Menta</option>
-        <option value="rosa">Rosa</option>
         <option value="ardosia">Ardósia</option>
+        <option value="cafe">Café</option>
         <option value="dourado">Dourado</option>
+        <option value="floresta">Floresta</option>
+        <option value="lima">Lima</option>
+        <option value="meianoite">Meia-noite</option>
+        <option value="menta">Menta</option>
         <option value="mono">Mono</option>
+        <option value="oceano">Oceano</option>
+        <option value="oliva">Oliva</option>
+        <option value="padrao">Padrão</option>
+        <option value="pordosol">Pôr do sol</option>
+        <option value="rosa">Rosa</option>
+        <option value="terracota">Terracota</option>
+        <option value="uva">Uva</option>
+        <option value="vinho">Vinho</option>
       </select>
       <button id="btnTheme" class="btn" title="Mudar para tema claro">☀</button>
     </div>
@@ -5778,7 +5862,7 @@ mostre T</pre>
 
   const THEME_KEY = 'willog.theme';
   const PALETA_KEY = 'willog.paleta';
-  const PALETAS = ['padrao', 'oceano', 'floresta', 'pordosol', 'uva', 'cafe', 'menta', 'rosa', 'ardosia', 'dourado', 'mono'];
+  const PALETAS = ['padrao', 'oceano', 'floresta', 'pordosol', 'uva', 'cafe', 'menta', 'rosa', 'ardosia', 'dourado', 'mono', 'lima', 'meianoite', 'oliva', 'terracota', 'vinho'];
 
   function applyTheme(nome) {
     const t = nome === 'light' ? 'light' : 'dark';

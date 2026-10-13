@@ -6,7 +6,7 @@
 - Programas salvos com extensão `.wil` (`ensureWil()`); nome atual em `#fileName`, `document.title` e `localStorage willog.filename`; `•` indica alterações não salvas.
 - Autocompletar no editor (`#completeBox`, estilos `.complete-box`): variáveis primeiro (da última execução + `constante NOME=`/`NOME=`/`para cada NOME em` no texto), depois comandos e funções; após `.` só propriedades; `↑`/`↓` navegam, `Enter`/`Tab` aceitam, `Esc` fecha, `Ctrl+Espaço` força; suprimido em textos, comentários e intervalos `..`.
 - Tema claro/escuro (`#btnTheme`, `[data-theme]`): começa sempre no último selecionado (`localStorage willog.theme`; padrão escuro).
-- Paletas (`#selPaleta`, `[data-paleta]`): Padrão + 10 (Oceano, Floresta, Pôr do sol, Uva, Café, Menta, Rosa, Ardósia, Dourado, Mono), cada uma com variante escura e clara; começa na última selecionada (`localStorage willog.paleta`).
+- Paletas (`#selPaleta`, `[data-paleta]`, em ordem alfabética no seletor): Padrão + 15 (Ardósia, Café, Dourado, Floresta, Lima, Meia-noite, Menta, Mono, Oceano, Oliva, Pôr do sol, Rosa, Terracota, Uva, Vinho), cada uma com variante escura e clara; começa na última selecionada (`localStorage willog.paleta`).
 
 ## Regra obrigatória: manter as Referências atualizadas
 
