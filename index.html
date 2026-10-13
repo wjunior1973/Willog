@@ -554,11 +554,6 @@ body.resizing { cursor: col-resize; user-select: none; }
   text-align: center;
 }
 
-.about-rainbow {
-  height: 6px;
-  background: linear-gradient(90deg, #f7768e, #ff9e64, #e0af68, #9ece6a, #89ddff, #7aa2f7, #bb9af7);
-}
-
 .about-head {
   display: flex;
   align-items: center;
@@ -580,7 +575,7 @@ body.resizing { cursor: col-resize; user-select: none; }
 
 .about-title {
   margin: 14px 0 2px;
-  font-size: 34px;
+  font-size: 42px;
   letter-spacing: 5px;
   background: linear-gradient(135deg, #8bb4ff, #bb9af7 55%, #89ddff);
   -webkit-background-clip: text;
@@ -588,11 +583,11 @@ body.resizing { cursor: col-resize; user-select: none; }
   color: transparent;
 }
 
-.about-sub { margin: 0; color: var(--muted); font-size: 13px; }
+.about-sub { margin: 0; color: var(--muted); font-size: 15px; }
 
 .about-name {
   margin: 8px 0 4px;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--green);
 }
@@ -600,21 +595,21 @@ body.resizing { cursor: col-resize; user-select: none; }
 .about-mail {
   display: inline-block;
   margin: 2px 0;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--cyan);
   text-decoration: none;
   border-bottom: 1px dashed var(--cyan);
 }
 .about-mail:hover { color: var(--text); border-color: var(--text); }
 
-.about-place { margin: 8px 0 0; color: var(--orange); font-size: 14px; }
+.about-place { margin: 8px 0 0; color: var(--orange); font-size: 16px; }
 
 .about-year {
   display: inline-block;
   margin: 12px 0 0;
   padding: 4px 22px;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   color: #10121b;
   background: linear-gradient(135deg, #e0af68, #ff9e64);
   border-radius: 999px;
@@ -1817,7 +1812,6 @@ mostre T</pre>
 
   <div class="about-overlay" id="aboutOverlay" hidden>
     <div class="about-box" role="dialog" aria-label="Sobre o Willog">
-      <div class="about-rainbow"></div>
       <div class="about-head">
         <strong>Sobre</strong>
         <button id="btnAboutClose" class="mini">fechar</button>
