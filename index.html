@@ -20,10 +20,192 @@
   --yellow: #e0af68;
   --cyan: #89ddff;
   --blue: #5c9dff;
+  --inset: #12131c;
+  --btn: #2a2f45;
+  --btn-hover: #333a55;
   --mono: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, "Courier New", monospace;
   --editor-font: 15px;
   --console-font: 14px;
   --console-width: 45%;
+}
+
+/* Tema claro (padrão: escuro) */
+[data-theme="light"] {
+  --bg: #eef0f8;
+  --panel: #ffffff;
+  --panel-2: #e2e7f4;
+  --border: #c3cbe4;
+  --text: #232842;
+  --muted: #68718f;
+  --accent: #3b63d8;
+  --accent-2: #7a4fd0;
+  --green: #2e7d32;
+  --orange: #b25b00;
+  --red: #c62828;
+  --yellow: #7a6200;
+  --cyan: #0277bd;
+  --blue: #1a56db;
+  --inset: #e8edf8;
+  --btn: #dde3f3;
+  --btn-hover: #ccd4ea;
+}
+
+[data-theme="light"] .ref-item { background: rgba(255, 255, 255, .65); }
+[data-theme="light"] .about-title { background: linear-gradient(135deg, #3b63d8, #7a4fd0 55%, #0277bd); }
+[data-theme="light"] .help-box { box-shadow: 0 20px 60px rgba(35, 40, 66, .25); }
+[data-theme="light"] .menu,
+[data-theme="light"] .complete-box { box-shadow: 0 14px 40px rgba(35, 40, 66, .25); }
+
+/* --- Paletas (valem no modo escuro e no claro) ---------------------------- */
+
+[data-paleta="oceano"] {
+  --bg: #081826; --panel: #0e2233; --panel-2: #0a1a28; --border: #1f3a52;
+  --text: #c4e2f2; --muted: #5f7f95; --accent: #4fc3f7; --accent-2: #7aa2f7;
+  --green: #7fdc8c; --orange: #ffa25e; --red: #f0718a; --yellow: #e5c07b;
+  --cyan: #56d4dd; --blue: #6ea8ff;
+  --inset: #0a1c2b; --btn: #16324a; --btn-hover: #1e4262;
+}
+[data-theme="light"][data-paleta="oceano"] {
+  --bg: #e9f3f9; --panel: #ffffff; --panel-2: #d9e9f2; --border: #b8d2e2;
+  --text: #0f2c3f; --muted: #55788c; --accent: #0277bd; --accent-2: #5c6bc0;
+  --green: #2e7d32; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #00838f; --blue: #1565c0;
+  --inset: #eef4fa; --btn: #d4e6f2; --btn-hover: #c2d9e9;
+}
+
+[data-paleta="floresta"] {
+  --bg: #0c1a12; --panel: #122619; --panel-2: #0d1e14; --border: #23402e;
+  --text: #c9e7cb; --muted: #66876c; --accent: #66bb6a; --accent-2: #4db6ac;
+  --green: #8fd694; --orange: #ffb74d; --red: #e57373; --yellow: #e5c07b;
+  --cyan: #4dd0e1; --blue: #7aa2f7;
+  --inset: #0e2015; --btn: #1a3325; --btn-hover: #234433;
+}
+[data-theme="light"][data-paleta="floresta"] {
+  --bg: #edf5ec; --panel: #ffffff; --panel-2: #dcebd9; --border: #bcd8b8;
+  --text: #17301d; --muted: #5c7a60; --accent: #2e7d32; --accent-2: #00897b;
+  --green: #1b5e20; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #00838f; --blue: #1565c0;
+  --inset: #eef6ed; --btn: #d8e8d5; --btn-hover: #c4dbc0;
+}
+
+[data-paleta="pordosol"] {
+  --bg: #221019; --panel: #2e1622; --panel-2: #241220; --border: #4a2a3a;
+  --text: #f2cfc0; --muted: #96707f; --accent: #ff9e64; --accent-2: #c792ea;
+  --green: #9ece6a; --orange: #ffab40; --red: #f07178; --yellow: #ffcb6b;
+  --cyan: #89ddff; --blue: #82aaff;
+  --inset: #261320; --btn: #3d2130; --btn-hover: #522b40;
+}
+[data-theme="light"][data-paleta="pordosol"] {
+  --bg: #fdf0e8; --panel: #ffffff; --panel-2: #f6e2d3; --border: #e3c4ac;
+  --text: #3d1f16; --muted: #8a6a5c; --accent: #c2410c; --accent-2: #7e57c2;
+  --green: #2e7d32; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0277bd; --blue: #1565c0;
+  --inset: #faf1e8; --btn: #f0dcc8; --btn-hover: #e5cdb4;
+}
+
+[data-paleta="uva"] {
+  --bg: #171226; --panel: #221838; --panel-2: #191430; --border: #372a5c;
+  --text: #d9ccf5; --muted: #7d6fa0; --accent: #bb9af7; --accent-2: #7aa2f7;
+  --green: #9ece6a; --orange: #ff9e64; --red: #f0718a; --yellow: #e5c07b;
+  --cyan: #89ddff; --blue: #82aaff;
+  --inset: #1b152e; --btn: #2c2350; --btn-hover: #3a2f66;
+}
+[data-theme="light"][data-paleta="uva"] {
+  --bg: #f1ebfb; --panel: #ffffff; --panel-2: #e2d6f3; --border: #c9b8e6;
+  --text: #2a1d4d; --muted: #6f6390; --accent: #6d28d9; --accent-2: #3b63d8;
+  --green: #2e7d32; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0277bd; --blue: #1565c0;
+  --inset: #f2edfb; --btn: #ded2f2; --btn-hover: #cfbde8;
+}
+
+[data-paleta="cafe"] {
+  --bg: #1a130d; --panel: #251b12; --panel-2: #1c150e; --border: #3d2f20;
+  --text: #e6d3b8; --muted: #8a7560; --accent: #e0af68; --accent-2: #8ecae6;
+  --green: #9ece6a; --orange: #ffab40; --red: #e57373; --yellow: #ffd54f;
+  --cyan: #80deea; --blue: #82aaff;
+  --inset: #1e1710; --btn: #33261a; --btn-hover: #453323;
+}
+[data-theme="light"][data-paleta="cafe"] {
+  --bg: #f5efe4; --panel: #ffffff; --panel-2: #e9ddc8; --border: #d3c2a4;
+  --text: #332619; --muted: #7d6f5c; --accent: #8a5a00; --accent-2: #0277bd;
+  --green: #2e7d32; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #00838f; --blue: #1565c0;
+  --inset: #f7f2e6; --btn: #e7d9bf; --btn-hover: #dcc9ab;
+}
+
+[data-paleta="menta"] {
+  --bg: #0b1f1c; --panel: #102b27; --panel-2: #0d2320; --border: #1f4a44;
+  --text: #c8ece4; --muted: #5f8a82; --accent: #4ade80; --accent-2: #7aa2f7;
+  --green: #6ee7a0; --orange: #ffb74d; --red: #f0718a; --yellow: #ffe082;
+  --cyan: #4dd0e1; --blue: #82aaff;
+  --inset: #0e2522; --btn: #173a35; --btn-hover: #1f4d47;
+}
+[data-theme="light"][data-paleta="menta"] {
+  --bg: #e9f6f1; --panel: #ffffff; --panel-2: #d5ebe2; --border: #b5d9cb;
+  --text: #12332c; --muted: #577a6f; --accent: #047857; --accent-2: #3b63d8;
+  --green: #166534; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0e7490; --blue: #1565c0;
+  --inset: #edf6f1; --btn: #d2e9df; --btn-hover: #beddcd;
+}
+
+[data-paleta="rosa"] {
+  --bg: #220f1c; --panel: #2f1526; --panel-2: #251020; --border: #4e2740;
+  --text: #f3cfe0; --muted: #967086; --accent: #f48fb1; --accent-2: #bb9af7;
+  --green: #9ece6a; --orange: #ffab74; --red: #ff6b81; --yellow: #ffd54f;
+  --cyan: #80deea; --blue: #82aaff;
+  --inset: #281221; --btn: #402030; --btn-hover: #552a40;
+}
+[data-theme="light"][data-paleta="rosa"] {
+  --bg: #fceef4; --panel: #ffffff; --panel-2: #f5d9e5; --border: #e3b7ca;
+  --text: #3d1526; --muted: #8a6577; --accent: #be185d; --accent-2: #7a4fd0;
+  --green: #2e7d32; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0277bd; --blue: #1565c0;
+  --inset: #faf0f5; --btn: #f2d3e0; --btn-hover: #e7bfd2;
+}
+
+[data-paleta="ardosia"] {
+  --bg: #12161d; --panel: #1a2029; --panel-2: #141922; --border: #2c3542;
+  --text: #c9d3e0; --muted: #667088; --accent: #8fa8d0; --accent-2: #a89bd4;
+  --green: #8fce8f; --orange: #e0a266; --red: #e08080; --yellow: #d9bd7a;
+  --cyan: #7fc4d4; --blue: #7f9fe0;
+  --inset: #151a23; --btn: #232b37; --btn-hover: #2f3947;
+}
+[data-theme="light"][data-paleta="ardosia"] {
+  --bg: #edf0f4; --panel: #ffffff; --panel-2: #dde3ec; --border: #bcc7d6;
+  --text: #1d232e; --muted: #5f6b7e; --accent: #375180; --accent-2: #5b4b8a;
+  --green: #2e7d32; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0277bd; --blue: #1565c0;
+  --inset: #eef2f7; --btn: #d6dde8; --btn-hover: #c3cddd;
+}
+
+[data-paleta="dourado"] {
+  --bg: #171204; --panel: #221a08; --panel-2: #1a1506; --border: #3d3010;
+  --text: #ecdcb0; --muted: #87794f; --accent: #ffd54f; --accent-2: #ff9e64;
+  --green: #9ece6a; --orange: #ffab40; --red: #f07178; --yellow: #ffe082;
+  --cyan: #80deea; --blue: #82aaff;
+  --inset: #1b1607; --btn: #322910; --btn-hover: #453917;
+}
+[data-theme="light"][data-paleta="dourado"] {
+  --bg: #faf4e2; --panel: #ffffff; --panel-2: #f0e5c6; --border: #dccb98;
+  --text: #332a0e; --muted: #7c6f4d; --accent: #8a6d00; --accent-2: #b25b00;
+  --green: #2e7d32; --orange: #b25b00; --red: #c62828; --yellow: #7a6200;
+  --cyan: #0277bd; --blue: #1565c0;
+  --inset: #faf5e6; --btn: #ece0bd; --btn-hover: #e0d1a4;
+}
+
+[data-paleta="mono"] {
+  --bg: #111111; --panel: #1c1c1c; --panel-2: #141414; --border: #383838;
+  --text: #ededed; --muted: #8f8f8f; --accent: #f5f5f5; --accent-2: #bdbdbd;
+  --green: #a3a3a3; --orange: #c9c9c9; --red: #efefef; --yellow: #d4d4d4;
+  --cyan: #b0b0b0; --blue: #9a9a9a;
+  --inset: #161616; --btn: #2a2a2a; --btn-hover: #3a3a3a;
+}
+[data-theme="light"][data-paleta="mono"] {
+  --bg: #f7f7f7; --panel: #ffffff; --panel-2: #e4e4e4; --border: #c6c6c6;
+  --text: #1a1a1a; --muted: #6e6e6e; --accent: #111111; --accent-2: #444444;
+  --green: #333333; --orange: #555555; --red: #111111; --yellow: #555555;
+  --cyan: #333333; --blue: #222222;
+  --inset: #efefef; --btn: #e0e0e0; --btn-hover: #cfcfcf;
 }
 
 * { box-sizing: border-box; }
@@ -68,7 +250,7 @@ body {
   justify-content: space-between;
   gap: 12px;
   padding: 10px 16px;
-  background: linear-gradient(180deg, #232842, #1b1e2e);
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
   border-bottom: 1px solid var(--border);
 }
 
@@ -91,15 +273,28 @@ body {
   font: inherit;
   font-size: 13px;
   color: var(--text);
-  background: #2a2f45;
+  background: var(--btn);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 14px;
   cursor: pointer;
   transition: background .15s, border-color .15s, transform .05s;
 }
-.btn:hover { background: #333a55; border-color: #3d4463; }
+.btn:hover { background: var(--btn-hover); border-color: #3d4463; }
 .btn:active { transform: translateY(1px); }
+
+.sel-paleta {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--btn);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  max-width: 130px;
+  cursor: pointer;
+}
+.sel-paleta:hover { border-color: #3d4463; }
 
 .menu-wrap { position: relative; }
 
@@ -292,7 +487,7 @@ body.resizing { cursor: col-resize; user-select: none; }
   overflow: hidden;
   padding: 14px 0;
   text-align: right;
-  background: #171823;
+  background: var(--panel-2);
   border-right: 1px solid var(--border);
   color: var(--muted);
   font-family: var(--mono);
@@ -393,7 +588,7 @@ body.resizing { cursor: col-resize; user-select: none; }
   flex: 1;
   overflow: auto;
   padding: 12px 16px;
-  background: #12131c;
+  background: var(--inset);
   font-family: var(--mono);
   font-size: var(--console-font);
   line-height: 1.55;
@@ -514,7 +709,7 @@ body.resizing { cursor: col-resize; user-select: none; }
   font: inherit;
   font-size: 13px;
   color: var(--text);
-  background: #12131c;
+  background: var(--inset);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 12px;
@@ -691,7 +886,7 @@ body.resizing { cursor: col-resize; user-select: none; }
 .ref-desc em { color: var(--muted); font-style: normal; }
 .ref-desc code {
   font-family: var(--mono);
-  background: #12131c;
+  background: var(--inset);
   padding: 1px 5px;
   border-radius: 4px;
   color: var(--cyan);
@@ -701,7 +896,7 @@ body.resizing { cursor: col-resize; user-select: none; }
   grid-template-columns: 1fr auto;
   gap: 2px 12px;
   align-items: start;
-  background: #12131c;
+  background: var(--inset);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
@@ -762,6 +957,20 @@ body.resizing { cursor: col-resize; user-select: none; }
       </div>
       <button id="btnHelp" class="btn" title="Referências da linguagem">Referências</button>
       <button id="btnAbout" class="btn" title="Sobre o Willog">Sobre</button>
+      <select id="selPaleta" class="sel-paleta" title="Paleta de cores">
+        <option value="padrao">Padrão</option>
+        <option value="oceano">Oceano</option>
+        <option value="floresta">Floresta</option>
+        <option value="pordosol">Pôr do sol</option>
+        <option value="uva">Uva</option>
+        <option value="cafe">Café</option>
+        <option value="menta">Menta</option>
+        <option value="rosa">Rosa</option>
+        <option value="ardosia">Ardósia</option>
+        <option value="dourado">Dourado</option>
+        <option value="mono">Mono</option>
+      </select>
+      <button id="btnTheme" class="btn" title="Mudar para tema claro">☀</button>
     </div>
   </header>
 
@@ -5565,6 +5774,70 @@ mostre T</pre>
     event.returnValue = '';
   });
 
+  /* --- Tema claro/escuro (começa no último selecionado) -------------------- */
+
+  const THEME_KEY = 'willog.theme';
+  const PALETA_KEY = 'willog.paleta';
+  const PALETAS = ['padrao', 'oceano', 'floresta', 'pordosol', 'uva', 'cafe', 'menta', 'rosa', 'ardosia', 'dourado', 'mono'];
+
+  function applyTheme(nome) {
+    const t = nome === 'light' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    const btn = document.getElementById('btnTheme');
+    if (btn) {
+      btn.textContent = t === 'light' ? '☾' : '☀';
+      btn.title = t === 'light' ? 'Mudar para tema escuro' : 'Mudar para tema claro';
+    }
+    try {
+      localStorage.setItem(THEME_KEY, t);
+    } catch (e) {
+      /* ignora */
+    }
+  }
+
+  function initTheme() {
+    let salvo = null;
+    try {
+      salvo = localStorage.getItem(THEME_KEY);
+    } catch (e) {
+      /* ignora */
+    }
+    applyTheme(salvo === 'light' ? 'light' : 'dark');
+    document.getElementById('btnTheme').addEventListener('click', function () {
+      applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    });
+    initPaleta();
+  }
+
+  function applyPaleta(nome) {
+    const p = PALETAS.indexOf(nome) !== -1 ? nome : 'padrao';
+    if (p === 'padrao') {
+      document.documentElement.removeAttribute('data-paleta');
+    } else {
+      document.documentElement.setAttribute('data-paleta', p);
+    }
+    const sel = document.getElementById('selPaleta');
+    if (sel) sel.value = p;
+    try {
+      localStorage.setItem(PALETA_KEY, p);
+    } catch (e) {
+      /* ignora */
+    }
+  }
+
+  function initPaleta() {
+    let salvo = null;
+    try {
+      salvo = localStorage.getItem(PALETA_KEY);
+    } catch (e) {
+      /* ignora */
+    }
+    applyPaleta(salvo);
+    document.getElementById('selPaleta').addEventListener('change', function () {
+      applyPaleta(document.getElementById('selPaleta').value);
+    });
+  }
+
   /* --- Inicialização ------------------------------------------------------ */
 
   currentFileName = loadFileName();
@@ -5573,6 +5846,7 @@ mostre T</pre>
   markClean();
   setFileName(currentFileName);
   refresh();
+  initTheme();
   initZoom();
   initSplitter();
   activateHelpTab('comandos');
