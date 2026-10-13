@@ -20,6 +20,7 @@ Abas atuais (`index.html`):
 - **Listas** -> `data-panel="listas"` (propriedades e métodos de listas/matrizes)
 - **Operadores** -> `data-panel="operadores"` (ordenados pelo nome, ex.: Adição, Divisão, ...)
 - **Propriedades** -> `data-panel="propriedades"` (só recursos da linguagem: comentários, constantes, expressões, interpolação, nomes, textos, variáveis, verdadeiro/falso)
+- **Textos** -> `data-panel="textos"` (propriedades aplicadas a textos: mesma ordem das de listas)
 
 Cada item usa a estrutura de cartão (assinatura + descrição + exemplo verificado com saída + botão "usar"):
 
@@ -50,8 +51,9 @@ nova precisa de: um botão em `.help-tabs` com `data-tab`, e um `.help-panel` co
 ## Linguagem
 
 - Variáveis e constantes em MAIÚSCULAS ou minúsculas, sem distinção (`nome` e `NOME` são a mesma variável; o inspetor exibe em MAIÚSCULAS).
-- Palavras reservadas: `constante`, `leia`, `mostre`, `para`, `cada`, `em`, `repetir`, `enquanto`, `pare`, `continue`, `se`, `senão`/`senao`, `então`/`entao`, `e`, `ou`, `não`/`nao`, `verdadeiro`, `falso`, `existe`, `função`/`funcao`, `retorne`.
+- Palavras reservadas: `constante`, `leia`, `mensagem`, `mostre`, `para`, `cada`, `em`, `repetir`, `enquanto`, `pare`, `continue`, `se`, `senão`/`senao`, `então`/`entao`, `e`, `ou`, `não`/`nao`, `verdadeiro`, `falso`, `existe`, `função`/`funcao`, `retorne`, `vá`/`va`.
 - Comentários começam com `#`.
+- Só `mostre` exibe valores no console; expressão solta na linha apenas executa (sem exibir).
 - Comparações `< > <= >= == !=` (em expressão, `=` sozinho vale como `==`), lógicos `e`, `ou`, `não`, pertinência `existe ITEM em COLEÇÃO` (lista, texto ou número), resto `%`, união `&` (listas ou textos) e valores `verdadeiro`/`falso`; 0, texto vazio e lista vazia contam como falso no `se` e no `enquanto`.
 - Atribuição com operação: `+= -= *=` (ex.: `N+=1` vale `N=N+1`).
 - Intervalos `(a..b)` e literais `[1,2,3]` geram listas; laços `para cada NOME em (a..b):` com corpo indentado (ou em uma linha); `repetir(n):` repete o corpo indentado n vezes (ou em uma linha); `enquanto condição:` repete enquanto for verdadeira (limite de 100000 voltas); `pare`/`continue` valem nos três laços.
@@ -60,5 +62,8 @@ nova precisa de: um botão em `.help-tabs` com `data-tab`, e um `.help-panel` co
 - Soma de listas item a item (`[1,3,5,7]+[1,2,3,4]` → `2,5,8,11`); mesmo tamanho, vale para matrizes.
 - Condicional `se condição [então] [:]` com corpo indentado (ou em uma linha), `senão [:]` opcional no mesmo nível de indentação do `se`; ex.: `se N<50 então:` / `senão:`.
 - Funções do usuário: `função NOME(p1, p2):` com corpo indentado (ou em uma linha); chamada `NOME(args)` como expressão; `retorne [expr]` devolve o valor (sem expressão, 0); variáveis criadas dentro são locais; recursão funciona.
-- Funções internas: `tamanho(x)` (letras/itens/algarismos), `maiúsculas(t)`, `minúsculas(t)`, `tipo(x)` (`número`/`texto`/`lista`/`lógico`).
-- Listas têm propriedades via ponto: `.crescente .decrescente .aleatório .primeiro .último .menor .maior .soma .média .inverter .distintos .contar .contarDistintos .separar` (funcionam com números e textos; `separar` também aceita texto ou número direto) e métodos com argumentos: `.adicionar(v) .posição(i) .retirar(v) .recortar(ini,fim) .contarItem(v) .unir(sep)` (conta ocorrências separando textos em letras e números em algarismos; `unir` junta em texto, separador opcional).
+- Caixa de mensagem: `mensagem(título, texto)` abre modal com botão Ok (IDE, assíncrona); devolve texto vazio.
+- Marcadores e salto: `:nome` no nível principal (duplicado é erro); `vá para nome` pula para lá de qualquer lugar, abandonando o bloco atual (limite de 100000 pulos).
+- Funções internas: `tamanho(x)` (letras/itens/algarismos), `maiúsculas(t)`, `minúsculas(t)`, `tipo(x)` (`número`/`texto`/`lista`/`lógico`), `pausa(s)` (pausa em segundos; assíncrona, só na IDE).
+- Listas têm propriedades via ponto: `.crescente .decrescente .aleatório .primeiro .último .menor .maior .soma .média .inverter .distintos .contar .contarDistintos .separar` (funcionam com números e textos; `separar` também aceita texto ou número direto) e métodos com argumentos: `.adicionar(v) .posição(i) .retirar(v) .recortar(ini,fim) .contarItem(v) .unir(sep)` (conta ocorrências separando textos em letras e números em algarismos; `unir` junta em texto, separador opcional; `adicionar` e `retirar` alteram a própria lista).
+- Textos aceitam quase todas as propriedades de lista (`adicionar`, `aleatório`, `contar`, `contarDistintos`, `contarItem`, `crescente`, `decrescente`, `distintos`, `inverter`, `maior`, `menor`, `posição`, `primeiro`, `recortar`, `retirar`, `separar`, `último`); `soma`, `média` e `unir` só em listas; `adicionar`/`retirar` em variável-texto reatribuem o texto.

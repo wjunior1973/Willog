@@ -620,6 +620,51 @@ body.resizing { cursor: col-resize; user-select: none; }
   border-radius: 999px;
 }
 
+/* --- Caixa de mensagem (mensagem) ---------------------------------------- */
+
+.msg-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(8, 9, 14, .72);
+  z-index: 70;
+}
+
+.msg-overlay[hidden] { display: none; }
+
+.msg-box {
+  width: min(400px, 100%);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+  padding: 20px 22px 18px;
+  text-align: center;
+}
+
+.msg-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--accent-2);
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.msg-text {
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 20px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.msg-box .action-run { min-width: 130px; font-size: 15px; padding: 8px 18px; }
+
 .ref-item {
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -638,6 +683,7 @@ body.resizing { cursor: col-resize; user-select: none; }
 .help-panel[data-panel="listas"] .ref-item { border-left: 3px solid var(--green); }
 .help-panel[data-panel="operadores"] .ref-item { border-left: 3px solid var(--orange); }
 .help-panel[data-panel="propriedades"] .ref-item { border-left: 3px solid var(--yellow); }
+.help-panel[data-panel="textos"] .ref-item { border-left: 3px solid var(--red); }
 .ref-sig {
   display: block;
   font-family: var(--mono);
@@ -786,9 +832,10 @@ body.resizing { cursor: col-resize; user-select: none; }
       <div class="help-tabs" id="helpTabs">
         <button class="tab active" data-tab="comandos">Comandos</button>
         <button class="tab" data-tab="funcoes">Funções</button>
-          <button class="tab" data-tab="listas">Listas</button>
+        <button class="tab" data-tab="listas">Listas</button>
         <button class="tab" data-tab="operadores">Operadores</button>
         <button class="tab" data-tab="propriedades">Propriedades</button>
+        <button class="tab" data-tab="textos">Textos</button>
       </div>
       <div class="help-search">
         <input id="helpSearch" type="text" placeholder="Buscar na referência..." autocomplete="off" spellcheck="false">
@@ -864,9 +911,18 @@ mostre dobro(21)</pre>
               <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
             </div>
           </div>
+          <div class="ref-item" data-name="mensagem caixa diálogo alerta título botão ok">
+            <code class="ref-sig">mensagem(título, texto)</code>
+            <p class="ref-desc">Abre uma caixa com título, mensagem e botão Ok; sozinha na linha, não exibe nada. Funciona na IDE.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mensagem("Olá!","Como vai você?")</pre>
+              <pre class="ref-ex-out">(abre a caixa de mensagem)</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
           <div class="ref-item" data-name="mostre exibir imprimir saída">
             <code class="ref-sig">mostre expr, expr...</code>
-            <p class="ref-desc">Exibe os valores, um por linha.</p>
+            <p class="ref-desc">Exibe os valores, um por linha. É o único jeito de mostrar algo no console: expressão solta apenas executa.</p>
             <div class="ref-ex">
               <pre class="ref-ex-code">mostre 2+8,10-3</pre>
               <pre class="ref-ex-out">10
@@ -947,6 +1003,22 @@ se NUMERO&lt;50 então:
 senão:
     mostre "Numero maior ou igual a 50"</pre>
               <pre class="ref-ex-out">Numero maior ou igual a 50</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="vá para va goto marcador dois-pontos pular voltar laço">
+            <code class="ref-sig">vá para nome</code>
+            <p class="ref-desc">Pula para o marcador <code>:nome</code> no nível principal do programa, abandonando o bloco atual. Cuidado com loop infinito (limite de 100000 pulos).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">N=0
+:início
+N+=1
+mostre N
+se N&lt;3:
+    vá para início</pre>
+              <pre class="ref-ex-out">1
+2
+3</pre>
               <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
             </div>
           </div>
@@ -1053,12 +1125,25 @@ senão:
               <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
             </div>
           </div>
-          <div class="ref-item" data-name="paratexto converter texto string">
+          <div class="ref-item" data-name="paratexto converter texto string lista">
             <code class="ref-sig">paraTexto(x)</code>
-            <p class="ref-desc">Converte em texto.</p>
+            <p class="ref-desc">Converte em texto (listas viram <code>1,2,3</code>).</p>
             <div class="ref-ex">
-              <pre class="ref-ex-code">mostre paraTexto(12345)</pre>
-              <pre class="ref-ex-out">12345</pre>
+              <pre class="ref-ex-code">mostre paraTexto(12345),paraTexto([1,2,3,4,5])</pre>
+              <pre class="ref-ex-out">12345
+1,2,3,4,5</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="pausa pausar esperar dormir segundos sleep">
+            <code class="ref-sig">pausa(s)</code>
+            <p class="ref-desc">Pausa por s segundos (aceita decimais); sozinha na linha, não exibe nada. Funciona na IDE.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "antes"
+pausa(0.1)
+mostre "depois"</pre>
+              <pre class="ref-ex-out">antes
+depois</pre>
               <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
             </div>
           </div>
@@ -1103,7 +1188,7 @@ senão:
         <section class="help-panel" data-panel="listas" hidden>
           <div class="ref-item" data-name="adicionar acrescentar incluir lista">
             <code class="ref-sig">LISTA.adicionar(v)</code>
-            <p class="ref-desc">Devolve a lista com um item a mais no fim.</p>
+            <p class="ref-desc">Acrescenta o item no fim da lista (a lista muda; também devolve a lista). Sozinho na linha, não exibe nada.</p>
             <div class="ref-ex">
               <pre class="ref-ex-code">mostre [1,2].adicionar(3)</pre>
               <pre class="ref-ex-out">1,2,3</pre>
@@ -1258,9 +1343,9 @@ mostre MATRIZ</pre>
               <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
             </div>
           </div>
-<div class="ref-item" data-name="retirar remover excluir tirar">
+          <div class="ref-item" data-name="retirar remover excluir tirar">
             <code class="ref-sig">LISTA.retirar(v)</code>
-            <p class="ref-desc">Devolve a lista sem o valor indicado.</p>
+            <p class="ref-desc">Tira o valor da lista (a lista muda; também devolve a lista). Sozinho na linha, não exibe nada.</p>
             <div class="ref-ex">
               <pre class="ref-ex-code">mostre [1,4,2,4].retirar(4)</pre>
               <pre class="ref-ex-out">1,2</pre>
@@ -1515,16 +1600,7 @@ mostre EULER</pre>
               <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
             </div>
           </div>
-<div class="ref-item" data-name="expressões solta resultado">
-            <code class="ref-sig">expressão</code>
-            <p class="ref-desc">Uma expressão sozinha na linha é exibida (igual a <code>mostre</code>).</p>
-            <div class="ref-ex">
-              <pre class="ref-ex-code">2+3</pre>
-              <pre class="ref-ex-out">5</pre>
-              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
-            </div>
-          </div>
-<div class="ref-item" data-name="interpolação chaves variável texto">
+          <div class="ref-item" data-name="interpolação chaves variável texto">
             <code class="ref-sig">"{expressão}"</code>
             <p class="ref-desc">Use <code>{expressão}</code> dentro de um texto (destacada em amarelo no editor). Chaves literais com <code>{{</code> e <code>}}</code>.</p>
             <div class="ref-ex">
@@ -1574,6 +1650,166 @@ mostre IDADE</pre>
             </div>
           </div>
         </section>
+
+        <section class="help-panel" data-panel="textos" hidden>
+          <div class="ref-item" data-name="adicionar acrescentar texto colar fim">
+            <code class="ref-sig">TEXTO.adicionar(v)</code>
+            <p class="ref-desc">Cola no fim do texto (em variável, reatribui o texto). Sozinho na linha, não exibe nada.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">TEXTO="Ban"
+TEXTO.adicionar("ana")
+mostre TEXTO</pre>
+              <pre class="ref-ex-out">Banana</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="aleatório sortear sorte letra texto">
+            <code class="ref-sig">TEXTO.aleatório</code>
+            <p class="ref-desc">Sorteia uma letra do texto.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "abc".aleatório</pre>
+              <pre class="ref-ex-out">(uma letra sorteada do texto)</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="contar letras tamanho texto">
+            <code class="ref-sig">TEXTO.contar</code>
+            <p class="ref-desc">Quantidade de letras do texto.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "banana".contar</pre>
+              <pre class="ref-ex-out">6</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="contardistintos letras diferentes texto">
+            <code class="ref-sig">TEXTO.contarDistintos</code>
+            <p class="ref-desc">Quantidade de letras diferentes do texto.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "banana".contarDistintos</pre>
+              <pre class="ref-ex-out">3</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="contaritem ocorrências trecho texto">
+            <code class="ref-sig">TEXTO.contarItem(v)</code>
+            <p class="ref-desc">Conta quantas vezes o trecho aparece no texto.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "banana".contarItem("an")</pre>
+              <pre class="ref-ex-out">2</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="crescente ordenar letras texto">
+            <code class="ref-sig">TEXTO.crescente</code>
+            <p class="ref-desc">Letras ordenadas (A-Z).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "dcba".crescente</pre>
+              <pre class="ref-ex-out">abcd</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="decrescente ordenar letras texto">
+            <code class="ref-sig">TEXTO.decrescente</code>
+            <p class="ref-desc">Letras ordenadas (Z-A).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "abcd".decrescente</pre>
+              <pre class="ref-ex-out">dcba</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="distintos letras únicas texto sem repetir">
+            <code class="ref-sig">TEXTO.distintos</code>
+            <p class="ref-desc">Texto sem letras repetidas.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "banana".distintos</pre>
+              <pre class="ref-ex-out">ban</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="inverter reverso texto contrário">
+            <code class="ref-sig">TEXTO.inverter</code>
+            <p class="ref-desc">Texto de trás para frente.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "cba".inverter</pre>
+              <pre class="ref-ex-out">abc</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="maior letra texto">
+            <code class="ref-sig">TEXTO.maior</code>
+            <p class="ref-desc">Maior letra do texto.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "banana".maior</pre>
+              <pre class="ref-ex-out">n</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="menor letra texto">
+            <code class="ref-sig">TEXTO.menor</code>
+            <p class="ref-desc">Menor letra do texto.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "banana".menor</pre>
+              <pre class="ref-ex-out">a</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="posição índice letra texto">
+            <code class="ref-sig">TEXTO.posição(i)</code>
+            <p class="ref-desc">Letra na posição indicada (começa em 0).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "banana".posição(1)</pre>
+              <pre class="ref-ex-out">a</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="primeiro início letra texto">
+            <code class="ref-sig">TEXTO.primeiro</code>
+            <p class="ref-desc">Primeira letra do texto.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "abc".primeiro</pre>
+              <pre class="ref-ex-out">a</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="recortar fatiar pedaço texto">
+            <code class="ref-sig">TEXTO.recortar(ini, fim)</code>
+            <p class="ref-desc">Devolve o pedaço do texto, do início ao fim (inclusive).</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "banana".recortar(1,3)</pre>
+              <pre class="ref-ex-out">ana</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="retirar remover trecho texto">
+            <code class="ref-sig">TEXTO.retirar(v)</code>
+            <p class="ref-desc">Tira o trecho do texto (em variável, reatribui). Sozinho na linha, não exibe nada.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">T="banana"
+T.retirar("an")
+mostre T</pre>
+              <pre class="ref-ex-out">ba</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="separar letras texto">
+            <code class="ref-sig">TEXTO.separar</code>
+            <p class="ref-desc">Separa o texto em letras.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "oi".separar</pre>
+              <pre class="ref-ex-out">o,i</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+          <div class="ref-item" data-name="último fim letra texto">
+            <code class="ref-sig">TEXTO.último</code>
+            <p class="ref-desc">Última letra do texto.</p>
+            <div class="ref-ex">
+              <pre class="ref-ex-code">mostre "abc".último</pre>
+              <pre class="ref-ex-out">c</pre>
+              <button class="mini ref-use" title="Carregar este exemplo no editor">usar</button>
+            </div>
+          </div>
+        </section>
         <div class="help-empty" id="helpEmpty" hidden>Nenhum item encontrado.</div>
       </div>
     </div>
@@ -1595,6 +1831,14 @@ mostre IDADE</pre>
         <p class="about-place">Pomerode - SC</p>
         <p class="about-year">2026</p>
       </div>
+    </div>
+  </div>
+
+  <div class="msg-overlay" id="msgOverlay" hidden>
+    <div class="msg-box" role="dialog" aria-label="Mensagem">
+      <div class="msg-title" id="msgTitle"></div>
+      <div class="msg-text" id="msgText"></div>
+      <button id="btnMsgOk" class="action-run" title="Fechar (Enter)">Ok</button>
     </div>
   </div>
 
@@ -1640,7 +1884,7 @@ mostre IDADE</pre>
 
   /* --- Palavras reservadas ------------------------------------------------ */
 
-  const KEYWORDS = new Set(['constante', 'leia', 'mostre', 'para', 'cada', 'em', 'repetir', 'se', 'senão', 'senao', 'então', 'entao', 'e', 'ou', 'não', 'nao', 'verdadeiro', 'falso', 'existe', 'enquanto', 'pare', 'continue', 'função', 'funcao', 'retorne']);
+  const KEYWORDS = new Set(['constante', 'leia', 'mostre', 'para', 'cada', 'em', 'repetir', 'se', 'senão', 'senao', 'então', 'entao', 'e', 'ou', 'não', 'nao', 'verdadeiro', 'falso', 'existe', 'enquanto', 'pare', 'continue', 'função', 'funcao', 'retorne', 'vá', 'va', 'mensagem']);
 
   /* --- Utilidades de caracteres (suporta acentos) ------------------------- */
 
@@ -1853,7 +2097,7 @@ mostre IDADE</pre>
     function startsExpression(tok) {
       if (!tok) return false;
       if (tok.type === 'NUMBER' || tok.type === 'STRING' || tok.type === 'IDENT') return true;
-      if (tok.type === 'KEYWORD') return tok.value === 'leia' || tok.value === 'verdadeiro' || tok.value === 'falso' || tok.value === 'não' || tok.value === 'nao' || tok.value === 'existe';
+      if (tok.type === 'KEYWORD') return tok.value === 'leia' || tok.value === 'mensagem' || tok.value === 'verdadeiro' || tok.value === 'falso' || tok.value === 'não' || tok.value === 'nao' || tok.value === 'existe';
       if (tok.type === 'OP') return tok.value === '(' || tok.value === '[' || tok.value === '-' || tok.value === '+' || tok.value === '!';
       return false;
     }
@@ -1872,6 +2116,16 @@ mostre IDADE</pre>
           throw new W.SyntaxError('Token inesperado "' + t.value + '"', t.line, t.col);
         }
       }
+      const vistos = Object.create(null);
+      for (let i = 0; i < statements.length; i++) {
+        if (statements[i].type === 'Label') {
+          const k = statements[i].name.toUpperCase();
+          if (vistos[k]) {
+            throw new W.SyntaxError('Marcador ":' + statements[i].name + '" repetido', statements[i].line, statements[i].col);
+          }
+          vistos[k] = true;
+        }
+      }
       return { type: 'Program', statements: statements };
     }
 
@@ -1886,6 +2140,8 @@ mostre IDADE</pre>
       if (at('KEYWORD', 'continue')) { const t = next(); return { type: 'Continue', line: t.line, col: t.col }; }
       if (at('KEYWORD') && (peek().value === 'função' || peek().value === 'funcao')) return parseFuncDecl();
       if (at('KEYWORD', 'retorne')) return parseReturn();
+      if (at('KEYWORD') && (peek().value === 'vá' || peek().value === 'va')) return parseGoto();
+      if (at('OP', ':')) return parseLabel();
       if (at('KEYWORD') && (peek().value === 'senão' || peek().value === 'senao')) {
         const t = peek();
         throw new W.SyntaxError('"senão" sem "se" correspondente', t.line, t.col);
@@ -2018,6 +2274,25 @@ mostre IDADE</pre>
       let value = null;
       if (startsExpression(peek())) value = parseExpression();
       return { type: 'Return', value: value, line: retTok.line, col: retTok.col };
+    }
+
+    // Marcador: :nome (alvo do "vá para", no nível principal do programa).
+    function parseLabel() {
+      const colon = next(); // consome ":"
+      const nameTok = expect('IDENT', undefined, 'Esperado o nome do marcador depois de ":" (ex.: :início)');
+      return { type: 'Label', name: nameTok.value, line: colon.line, col: colon.col };
+    }
+
+    // Salto: vá para nome.
+    function parseGoto() {
+      const vaTok = next(); // consome "vá"/"va"
+      const emTok = peek();
+      if (!(emTok.type === 'KEYWORD' && emTok.value === 'para')) {
+        throw new W.SyntaxError('Esperado "para" depois de "vá" (ex.: vá para início)', emTok.line, emTok.col);
+      }
+      next(); // consome "para"
+      const nameTok = expect('IDENT', undefined, 'Esperado o nome do marcador depois de "vá para"');
+      return { type: 'Goto', name: nameTok.value, line: vaTok.line, col: vaTok.col };
     }
 
     function isSenao(tok) {
@@ -2298,6 +2573,17 @@ mostre IDADE</pre>
         return { type: 'Read', prompt: prompt, line: t.line, col: t.col };
       }
 
+      // mensagem(título, texto)
+      if (t.type === 'KEYWORD' && t.value === 'mensagem') {
+        next();
+        expect('OP', '(', 'Esperado "(" depois de "mensagem"');
+        const titulo = parseExpression();
+        expect('OP', ',', 'Esperado "," entre o título e a mensagem');
+        const texto = parseExpression();
+        expect('OP', ')', 'Esperado ")" para fechar "mensagem"');
+        return { type: 'Message', title: titulo, text: texto, line: t.line, col: t.col };
+      }
+
       if (t.type === 'IDENT') {
         next();
         if (at('OP', '(')) {
@@ -2468,6 +2754,103 @@ mostre IDADE</pre>
     });
   }
 
+  // Propriedades de lista aplicadas a textos (devolvem texto ou número).
+  // soma, média e unir não se aplicam (erro padrão "só existe em listas").
+  function textProperty(texto, name, args, node) {
+    function need(n) {
+      if (args.length !== n) {
+        throw new W.RunError(
+          'A propriedade "' + name + '" espera ' + n + ' argumento(s), recebeu ' + args.length,
+          node.line, node.col
+        );
+      }
+    }
+    const letras = Array.from(texto);
+    switch (name) {
+      case 'adicionar':
+        need(1);
+        return texto + stringify(args[0]);
+      case 'aleatório':
+      case 'aleatorio':
+        need(0);
+        if (letras.length === 0) throw new W.RunError('Não é possível sortear de um texto vazio', node.line, node.col);
+        return letras[Math.floor(Math.random() * letras.length)];
+      case 'contar':
+        need(0);
+        return letras.length;
+      case 'contarDistintos':
+      case 'contarDistinto':
+        need(0);
+        return Array.from(new Set(letras)).length;
+      case 'contarItem': {
+        need(1);
+        const parte = stringify(args[0]);
+        if (parte === '') return 0;
+        return texto.split(parte).length - 1;
+      }
+      case 'crescente':
+        need(0);
+        return letras.slice().sort(compareValues).join('');
+      case 'decrescente':
+        need(0);
+        return letras.slice().sort(compareValues).reverse().join('');
+      case 'distintos':
+      case 'distinto':
+        need(0);
+        return Array.from(new Set(letras)).join('');
+      case 'inverter':
+        need(0);
+        return letras.slice().reverse().join('');
+      case 'maior':
+        need(0);
+        if (letras.length === 0) throw new W.RunError('O texto está vazio', node.line, node.col);
+        return letras.reduce(function (m, v) { return compareValues(v, m) > 0 ? v : m; });
+      case 'menor':
+        need(0);
+        if (letras.length === 0) throw new W.RunError('O texto está vazio', node.line, node.col);
+        return letras.reduce(function (m, v) { return compareValues(v, m) < 0 ? v : m; });
+      case 'posição':
+      case 'posicao': {
+        need(1);
+        const idx = Math.trunc(asNumber(args[0], node, 'posição'));
+        if (!isFinite(idx) || idx < 0 || idx >= letras.length) {
+          throw new W.RunError('Posição ' + stringify(args[0]) + ' fora do texto (0 a ' + (letras.length - 1) + ')', node.line, node.col);
+        }
+        return letras[idx];
+      }
+      case 'primeiro':
+        need(0);
+        if (letras.length === 0) throw new W.RunError('O texto está vazio', node.line, node.col);
+        return letras[0];
+      case 'último':
+      case 'ultimo':
+        need(0);
+        if (letras.length === 0) throw new W.RunError('O texto está vazio', node.line, node.col);
+        return letras[letras.length - 1];
+      case 'recortar':
+      case 'fatiar': {
+        if (args.length < 1 || args.length > 2) {
+          throw new W.RunError('A propriedade "' + name + '" espera 1 ou 2 argumentos, recebeu ' + args.length, node.line, node.col);
+        }
+        if (letras.length === 0) return '';
+        const ini = Math.trunc(asNumber(args[0], node, 'início'));
+        const fim = args.length > 1 ? Math.trunc(asNumber(args[1], node, 'fim')) : letras.length - 1;
+        const lo = Math.max(0, Math.min(ini, fim));
+        const hi = Math.min(letras.length - 1, Math.max(ini, fim));
+        if (lo > hi) return '';
+        return letras.slice(lo, hi + 1).join('');
+      }
+      case 'retirar': {
+        need(1);
+        const parte = stringify(args[0]);
+        if (parte === '') return texto;
+        return texto.split(parte).join('');
+      }
+      default:
+        throw new W.RunError('A propriedade "' + name + '" só existe em listas', node.line, node.col);
+    }
+  }
+
   // Separa um valor: texto em letras, número em algarismos, lista achatada.
   function separarValor(v) {
     if (typeof v === 'number') {
@@ -2564,6 +2947,7 @@ mostre IDADE</pre>
   const SINAL_PARE = { sinal: 'pare' };
   const SINAL_CONTINUE = { sinal: 'continue' };
   function SinalRetorno(valor) { this.valor = valor; }
+  function SinalVaPara(nome, line, col) { this.nome = nome; this.line = line; this.col = col; }
 
   /* --- Funções internas --------------------------------------------------- */
 
@@ -2676,6 +3060,16 @@ mostre IDADE</pre>
     if (Array.isArray(v)) return 'lista';
     return 'lógico';
   };
+  BUILTINS.pausa = function (args, node) {
+    if (args.length !== 1) {
+      throw new W.RunError('A função "pausa" espera 1 argumento, recebeu ' + args.length, node.line, node.col);
+    }
+    const x = asNumber(args[0], node, 'argumento de "pausa"');
+    const ms = (x > 0) ? Math.min(x * 1000, 2147483647) : 0;
+    return new Promise(function (resolve) {
+      setTimeout(function () { resolve(x); }, ms);
+    });
+  };
 
   /* --- Execução ----------------------------------------------------------- */
 
@@ -2711,6 +3105,17 @@ mostre IDADE</pre>
         return num;
       }
       return resposta;
+    }
+
+    function showMessage(titulo, texto, node) {
+      if (typeof options.onMessage === 'function') {
+        const r = options.onMessage(titulo, texto);
+        if (r && typeof r.then === 'function') {
+          throw new W.RunError('A "mensagem" só funciona na IDE (execução assíncrona)', node && node.line, node && node.col);
+        }
+        return r === undefined ? '' : r;
+      }
+      throw new W.RunError('Caixa de mensagem não está disponível neste ambiente', node && node.line, node && node.col);
     }
 
     const tokens = W.lex(source);
@@ -2827,6 +3232,9 @@ mostre IDADE</pre>
           const promptText = node.prompt ? stringify(evaluate(node.prompt)) : '';
           return readInput(promptText, node);
         }
+        case 'Message': {
+          return showMessage(stringify(evaluate(node.title)), stringify(evaluate(node.text)), node);
+        }
         default:
           throw new W.RunError('Expressão desconhecida: ' + node.type);
       }
@@ -2927,7 +3335,11 @@ mostre IDADE</pre>
       const fn = BUILTINS[node.callee];
       if (typeof fn === 'function') {
         const args = node.args.map(evaluate);
-        return fn(args, node);
+        const r = fn(args, node);
+        if (r && typeof r.then === 'function') {
+          throw new W.RunError('A função "' + node.callee + '" só funciona na IDE (execução assíncrona)', node.line, node.col);
+        }
+        return r;
       }
       const user = funcoes.get(node.callee.toUpperCase());
       if (!user) {
@@ -2941,10 +3353,17 @@ mostre IDADE</pre>
 
     function evalProperty(node) {
       const obj = evaluate(node.object);
+      const args = (node.args || []).map(evaluate);
+      if (typeof obj === 'string' && node.name !== 'separar') {
+        const r = textProperty(obj, node.name, args, node);
+        if ((node.name === 'adicionar' || node.name === 'retirar') && node.object && node.object.type === 'Identifier') {
+          setVar(node.object.name, r, false, node);
+        }
+        return r;
+      }
       if (!Array.isArray(obj) && node.name !== 'separar') {
         throw new W.RunError('A propriedade "' + node.name + '" só existe em listas', node.line, node.col);
       }
-      const args = (node.args || []).map(evaluate);
       function need(n) {
         if (args.length !== n) {
           throw new W.RunError(
@@ -3017,7 +3436,8 @@ mostre IDADE</pre>
           }
         case 'adicionar':
           need(1);
-          return obj.concat([args[0]]);
+          obj.push(args[0]);
+          return obj;
         case 'posição':
         case 'posicao': {
           need(1);
@@ -3027,9 +3447,13 @@ mostre IDADE</pre>
           }
           return obj[idx];
         }
-        case 'retirar':
+        case 'retirar': {
           need(1);
-          return obj.filter(function (v) { return !valuesEqual(v, args[0]); });
+          for (let i = obj.length - 1; i >= 0; i--) {
+            if (valuesEqual(obj[i], args[0])) obj.splice(i, 1);
+          }
+          return obj;
+        }
         case 'recortar':
         case 'fatiar': {
           if (args.length < 1 || args.length > 2) {
@@ -3096,7 +3520,7 @@ mostre IDADE</pre>
           }
           break;
         case 'ExpressionStatement':
-          print(stringify(evaluate(stmt.expression)));
+          evaluate(stmt.expression); // só executa; para exibir, use mostre
           break;
         case 'ForEach':
           execForEach(stmt);
@@ -3125,6 +3549,10 @@ mostre IDADE</pre>
             throw new W.RunError('"continue" só pode ser usado dentro de um laço', stmt.line, stmt.col);
           }
           throw SINAL_CONTINUE;
+        case 'Label':
+          break;
+        case 'Goto':
+          throw new SinalVaPara(stmt.name, stmt.line, stmt.col);
         case 'If':
           execIf(stmt);
           break;
@@ -3238,8 +3666,35 @@ mostre IDADE</pre>
       W.lastVariables = variables;
     }
 
+    const marcadores = new Map();
+    ast.statements.forEach(function (st, idx) {
+      if (st.type === 'Label' && !marcadores.has(st.name.toUpperCase())) {
+        marcadores.set(st.name.toUpperCase(), idx);
+      }
+    });
+
     try {
-      for (let s = 0; s < ast.statements.length; s++) execStatement(ast.statements[s]);
+      let pc = 0;
+      let pulos = 0;
+      while (pc < ast.statements.length) {
+        try {
+          execStatement(ast.statements[pc]);
+          pc++;
+        } catch (e) {
+          if (e instanceof SinalVaPara) {
+            const alvo = marcadores.get(e.nome.toUpperCase());
+            if (alvo === undefined) {
+              throw new W.RunError('Marcador ":' + e.nome + '" não encontrado', e.line, e.col);
+            }
+            if (++pulos > 100000) {
+              throw new W.RunError('Passou de 100000 pulos com "vá para" (loop infinito?)', e.line, e.col);
+            }
+            pc = alvo;
+            continue;
+          }
+          throw e;
+        }
+      }
     } finally {
       captureVariables();
     }
@@ -3275,6 +3730,14 @@ mostre IDADE</pre>
         return num;
       }
       return resposta;
+    }
+
+    async function showMessageAsync(titulo, texto, node) {
+      if (typeof options.onMessage === 'function') {
+        const r = await options.onMessage(titulo, texto);
+        return r === undefined ? '' : r;
+      }
+      throw new W.RunError('Caixa de mensagem não está disponível neste ambiente', node && node.line, node && node.col);
     }
 
     const tokens = W.lex(source);
@@ -3366,6 +3829,9 @@ mostre IDADE</pre>
         case 'Read': {
           const promptText = node.prompt ? stringify(await evaluate(node.prompt)) : '';
           return await readInputAsync(promptText, node);
+        }
+        case 'Message': {
+          return await showMessageAsync(stringify(await evaluate(node.title)), stringify(await evaluate(node.text)), node);
         }
         default:
           throw new W.RunError('Expressão desconhecida: ' + node.type);
@@ -3481,11 +3947,18 @@ mostre IDADE</pre>
 
     async function evalProperty(node) {
       const obj = await evaluate(node.object);
+      const args = [];
+      for (let i = 0; i < (node.args || []).length; i++) args.push(await evaluate(node.args[i]));
+      if (typeof obj === 'string' && node.name !== 'separar') {
+        const r = textProperty(obj, node.name, args, node);
+        if ((node.name === 'adicionar' || node.name === 'retirar') && node.object && node.object.type === 'Identifier') {
+          setVar(node.object.name, r, false, node);
+        }
+        return r;
+      }
       if (!Array.isArray(obj) && node.name !== 'separar') {
         throw new W.RunError('A propriedade "' + node.name + '" só existe em listas', node.line, node.col);
       }
-      const args = [];
-      for (let i = 0; i < (node.args || []).length; i++) args.push(await evaluate(node.args[i]));
       function need(n) {
         if (args.length !== n) {
           throw new W.RunError(
@@ -3558,7 +4031,8 @@ mostre IDADE</pre>
           }
         case 'adicionar':
           need(1);
-          return obj.concat([args[0]]);
+          obj.push(args[0]);
+          return obj;
         case 'posição':
         case 'posicao': {
           need(1);
@@ -3568,9 +4042,13 @@ mostre IDADE</pre>
           }
           return obj[idx];
         }
-        case 'retirar':
+        case 'retirar': {
           need(1);
-          return obj.filter(function (v) { return !valuesEqual(v, args[0]); });
+          for (let i = obj.length - 1; i >= 0; i--) {
+            if (valuesEqual(obj[i], args[0])) obj.splice(i, 1);
+          }
+          return obj;
+        }
         case 'recortar':
         case 'fatiar': {
           if (args.length < 1 || args.length > 2) {
@@ -3635,7 +4113,7 @@ mostre IDADE</pre>
           for (let i = 0; i < stmt.args.length; i++) { print(stringify(await evaluate(stmt.args[i]))); }
           break;
         case 'ExpressionStatement':
-          print(stringify(await evaluate(stmt.expression)));
+          await evaluate(stmt.expression); // só executa; para exibir, use mostre
           break;
         case 'ForEach':
           await execForEach(stmt);
@@ -3664,6 +4142,10 @@ mostre IDADE</pre>
             throw new W.RunError('"continue" só pode ser usado dentro de um laço', stmt.line, stmt.col);
           }
           throw SINAL_CONTINUE;
+        case 'Label':
+          break;
+        case 'Goto':
+          throw new SinalVaPara(stmt.name, stmt.line, stmt.col);
         case 'If':
           await execIf(stmt);
           break;
@@ -3777,8 +4259,35 @@ mostre IDADE</pre>
       W.lastVariables = variables;
     }
 
+    const marcadores = new Map();
+    ast.statements.forEach(function (st, idx) {
+      if (st.type === 'Label' && !marcadores.has(st.name.toUpperCase())) {
+        marcadores.set(st.name.toUpperCase(), idx);
+      }
+    });
+
     try {
-      for (let s = 0; s < ast.statements.length; s++) await execStatement(ast.statements[s]);
+      let pc = 0;
+      let pulos = 0;
+      while (pc < ast.statements.length) {
+        try {
+          await execStatement(ast.statements[pc]);
+          pc++;
+        } catch (e) {
+          if (e instanceof SinalVaPara) {
+            const alvo = marcadores.get(e.nome.toUpperCase());
+            if (alvo === undefined) {
+              throw new W.RunError('Marcador ":' + e.nome + '" não encontrado', e.line, e.col);
+            }
+            if (++pulos > 100000) {
+              throw new W.RunError('Passou de 100000 pulos com "vá para" (loop infinito?)', e.line, e.col);
+            }
+            pc = alvo;
+            continue;
+          }
+          throw e;
+        }
+      }
     } finally {
       captureVariables();
     }
@@ -3834,8 +4343,8 @@ mostre IDADE</pre>
       '(#[^\\n]*)',                                                       // 1 comentário
       '("(?:[^"\\\\\\n]|\\\\.)*")',                                      // 2 texto com "
       "('(?:[^'\\\\\\n]|\\\\.)*')",                                      // 3 texto com '
-      '\\b(cada|constante|continue|em|entao|então|enquanto|existe|falso|funcao|função|leia|mostre|nao|não|para|pare|repetir|retorne|se|senao|senão|verdadeiro|e|ou)\\b', // 4 palavra reservada
-      '\\b(abs|raiz|decimal|fração|fracao|inteiro|arredonda|maiúsculas|maiusculas|máximo|maximo|mínimo|minimo|minúsculas|minusculas|paraNúmero|paraNumero|paranumero|paraTexto|paratexto|potência|potencia|tamanho|tipo|crescente|decrescente|aleatório|aleatorio|primeiro|último|ultimo|menor|maior|media|média|soma|inverter|unir|distintos|distinto|adicionar|posição|posicao|retirar|recortar|fatiar|contar|contarDistintos|contarDistinto|contarItem|separar)\\b', // 5 função/propriedade
+      '\\b(cada|constante|continue|em|entao|então|enquanto|existe|falso|funcao|função|leia|mensagem|mostre|nao|não|para|pare|repetir|retorne|se|senao|senão|va|vá|verdadeiro|e|ou)\\b', // 4 palavra reservada
+      '\\b(abs|raiz|decimal|fração|fracao|inteiro|arredonda|maiúsculas|maiusculas|máximo|maximo|mínimo|minimo|minúsculas|minusculas|paraNúmero|paraNumero|paranumero|paraTexto|paratexto|pausa|potência|potencia|tamanho|tipo|crescente|decrescente|aleatório|aleatorio|primeiro|último|ultimo|menor|maior|media|média|soma|inverter|unir|distintos|distinto|adicionar|posição|posicao|retirar|recortar|fatiar|contar|contarDistintos|contarDistinto|contarItem|separar)\\b', // 5 função/propriedade
       '([0-9]+(?:\\.[0-9]+)?)',                                          // 6 número
       '(//|\\*\\*|\\.\\.|<=|>=|==|!=|\\+=|-=|\\*=|\\.|[+\\-*/%=&,(){}\\[\\]:<>!])',           // 7 operador
       '([\\p{L}_][\\p{L}\\p{N}_]*)'                                      // 8 identificador
@@ -4039,6 +4548,48 @@ mostre IDADE</pre>
     input.addEventListener('keydown', onKey);
   }
 
+  /* --- Caixa de mensagem (mensagem) --------------------------------------- */
+
+  const msgOverlay = document.getElementById('msgOverlay');
+  const msgTitle = document.getElementById('msgTitle');
+  const msgText = document.getElementById('msgText');
+  const btnMsgOk = document.getElementById('btnMsgOk');
+  let currentMsgResolve = null;
+
+  function showMsgBox(titulo, texto) {
+    return new Promise(function (resolve) {
+      if (currentMsgResolve) currentMsgResolve('');
+      currentMsgResolve = resolve;
+      msgTitle.textContent = titulo || '';
+      msgText.textContent = texto || '';
+      msgOverlay.hidden = false;
+      btnMsgOk.focus();
+      setStatus('Aguardando Ok...', 'running');
+    });
+  }
+
+  function closeMsgBox() {
+    if (msgOverlay.hidden) return;
+    msgOverlay.hidden = true;
+    const resolve = currentMsgResolve;
+    currentMsgResolve = null;
+    setStatus('Executando...', 'running');
+    codeEl.focus();
+    if (resolve) resolve('');
+  }
+
+  if (btnMsgOk) {
+    btnMsgOk.addEventListener('click', closeMsgBox);
+  }
+  if (msgOverlay) {
+    msgOverlay.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === 'Escape') {
+        event.preventDefault();
+        closeMsgBox();
+      }
+    });
+  }
+
   /* --- Variáveis ---------------------------------------------------------- */
 
   let lastRunVariables = null;
@@ -4098,6 +4649,10 @@ mostre IDADE</pre>
             return new Promise(function (resolve) {
               startInput(texto, resolve);
             });
+          },
+          onMessage: function (titulo, texto) {
+            produziu = true;
+            return showMsgBox(titulo, texto);
           }
         }).then(function (result) {
           lastRunVariables = (result && result.variables) || W.lastVariables || [];
@@ -4536,14 +5091,14 @@ mostre IDADE</pre>
 
   const COMPLETE_COMMANDS = [
     'cada', 'constante', 'continue', 'e', 'em', 'então', 'entao', 'enquanto', 'existe', 'falso',
-    'função', 'leia', 'mostre', 'não', 'nao', 'ou', 'para', 'pare', 'repetir', 'retorne', 'se',
-    'senao', 'senão', 'verdadeiro'
+    'função', 'leia', 'mensagem', 'mostre', 'não', 'nao', 'ou', 'para', 'pare', 'repetir', 'retorne', 'se',
+    'senao', 'senão', 'vá', 'verdadeiro'
   ];
 
   const COMPLETE_FUNCS = [
     'abs', 'aleatório', 'arredonda', 'decimal', 'fração', 'inteiro',
     'maiúsculas', 'máximo', 'mínimo', 'minúsculas', 'paraNúmero', 'paraTexto',
-    'potência', 'raiz', 'tamanho', 'tipo'
+    'pausa', 'potência', 'raiz', 'tamanho', 'tipo'
   ];
 
   const COMPLETE_PROPS = [
